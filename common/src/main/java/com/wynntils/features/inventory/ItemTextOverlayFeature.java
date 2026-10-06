@@ -40,7 +40,9 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
+import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.wynn.ColorScaleUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
@@ -112,6 +114,12 @@ public class ItemTextOverlayFeature extends Feature {
 
     @Persisted
     private final Config<ConfigMountStat> mountItemStat = new Config<>(ConfigMountStat.POTENTIAL);
+
+    @Persisted
+    private final Config<Boolean> estimatePotential = new Config<>(true);
+
+    @Persisted
+    private final Config<Boolean> dynamicPotentialColor = new Config<>(true);
 
     @Persisted
     private final Config<TextShadow> mountItemShadow = new Config<>(TextShadow.OUTLINE);
@@ -474,22 +482,35 @@ public class ItemTextOverlayFeature extends Feature {
         public TextOverlay getTextOverlay() {
             int value = getSelectedMountStatValue();
             String text = String.valueOf(value);
-            float scale = text.length() >= 4 ? 0.75f : 0.9f;
             TextRenderSetting style = TextRenderSetting.DEFAULT
-                    .withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA))
-                    .withTextShadow(mountItemShadow.get());
+                    .withCustomColor(getTextColor())
+                    .withTextShadow(mountItemShadow.get())
+                    .withHorizontalAlignment(HorizontalAlignment.CENTER);
 
-            return new TextOverlay(new TextRenderTask(text, style), -1, 1, scale);
+            return new TextOverlay(new TextRenderTask(text, style), 8, 2, 0.65f);
         }
 
         private int getSelectedMountStatValue() {
             if (mountItemStat.get() == ConfigMountStat.POTENTIAL) {
-                return item.getMountInfo().potential();
+                return estimatePotential.get()
+                        ? item.getMountInfo().maxStats().values().stream()
+                                .mapToInt(Integer::intValue)
+                                .sum()
+                        : item.getMountInfo().potential();
             } else {
                 return item.getMountInfo()
                         .stats()
                         .get(mountItemStat.get().getMountStat())
                         .current();
+            }
+        }
+
+        private CustomColor getTextColor() {
+            if (mountItemStat.get() == ConfigMountStat.POTENTIAL && dynamicPotentialColor.get()) {
+                return CustomColor.fromTextColor(ColorScaleUtils.getPotentialColor(
+                        Models.Mount.POTENTIAL_COLOR_MAP, getSelectedMountStatValue()));
+            } else {
+                return CustomColor.fromChatFormatting(ChatFormatting.DARK_AQUA);
             }
         }
     }

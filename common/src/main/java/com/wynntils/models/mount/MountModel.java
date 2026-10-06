@@ -37,11 +37,14 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.NavigableMap;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
@@ -51,6 +54,13 @@ public final class MountModel extends Model {
     // How long we wait before assuming mount failure
     private static final int MOUNT_TIME_TICKS = 10;
 
+    public static final NavigableMap<Integer, TextColor> POTENTIAL_COLOR_MAP = new TreeMap<>(Map.of(
+            240, TextColor.fromLegacyFormat(ChatFormatting.RED),
+            555, TextColor.fromLegacyFormat(ChatFormatting.GOLD),
+            870, TextColor.fromLegacyFormat(ChatFormatting.YELLOW),
+            1185, TextColor.fromLegacyFormat(ChatFormatting.GREEN),
+            1500, TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
+
     private Map<String, MountColorInfo> mountColors = new HashMap<>();
 
     // Parsed from the UI element so is not as accurate as the item tooltip
@@ -58,8 +68,10 @@ public final class MountModel extends Model {
 
     private boolean hideMountEnergy = false;
     private int summonTick = -1;
+    private int dismountTick = -1;
     private MountType expectedMountType = null;
     private Optional<MountType> currentMountType = Optional.empty();
+    private Optional<MountType> previousMountType = Optional.empty();
 
     public MountModel() {
         super(List.of());
@@ -97,6 +109,10 @@ public final class MountModel extends Model {
             summonTick = -1;
             expectedMountType = null;
         }
+
+        if (dismountTick != -1 && currentTick > dismountTick) {
+            dismountTick = -1;
+        }
     }
 
     @SubscribeEvent
@@ -104,12 +120,18 @@ public final class MountModel extends Model {
         if (!Models.WorldState.onWorld()) return;
 
         if (event.getVehicle() == null && currentMountType.isPresent()) {
+            previousMountType = currentMountType;
             currentMountType = Optional.empty();
             WynntilsMod.postEvent(new MountEvent.Dismount());
+            dismountTick = McUtils.player().tickCount;
         } else if (summonTick != -1) {
             currentMountType = Optional.of(expectedMountType);
             expectedMountType = null;
-            WynntilsMod.postEvent(new MountEvent.Mount(currentMountType.get()));
+            WynntilsMod.postEvent(new MountEvent.Mount(currentMountType.get(), true));
+        } else if (McUtils.player().tickCount == dismountTick && previousMountType.isPresent()) {
+            currentMountType = previousMountType;
+            previousMountType = Optional.empty();
+            WynntilsMod.postEvent(new MountEvent.Mount(currentMountType.get(), false));
         }
     }
 

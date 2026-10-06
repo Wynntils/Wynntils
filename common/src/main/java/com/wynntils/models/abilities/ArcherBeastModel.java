@@ -77,7 +77,7 @@ public class ArcherBeastModel extends Model {
     }
 
     @SubscribeEvent
-    public void onBeastRemoved(RemoveEntitiesEvent event) {
+    public void onBeastRemoved(RemoveEntitiesEvent.Post event) {
         if (!Models.WorldState.onWorld()) return;
         if (Models.Character.getClassType() != ClassType.ARCHER) return;
 

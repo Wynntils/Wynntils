@@ -12,12 +12,14 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
+import com.wynntils.models.containers.event.LootChestOpenedEvent;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.models.containers.type.MythicFind;
@@ -105,12 +107,13 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
+    public void onLeftClick(PlayerAttackEvent event) {
+        handleEntity(event.getTarget());
+    }
+
+    @SubscribeEvent
     public void onRightClick(PlayerInteractEvent.Interact event) {
-        Entity entity = event.getTarget();
-        if (entity != null && entity.getType() == EntityTypes.SLIME) {
-            // We don't actually know if this is a chest, but it's a good enough guess.
-            lastChestPos = entity.blockPosition();
-        }
+        handleEntity(event.getTarget());
     }
 
     @SubscribeEvent
@@ -254,5 +257,13 @@ public final class LootChestModel extends Model {
         dryCount.store(0);
         dryEmeralds.store(0);
         dryItemTiers.store(new EnumMap<>(GearTier.class));
+    }
+
+    private void handleEntity(Entity entity) {
+        if (entity != null && entity.getType() == EntityTypes.INTERACTION) {
+            // We don't actually know if this is a chest, but it's a good enough guess.
+            lastChestPos = entity.blockPosition();
+            WynntilsMod.postEvent(new LootChestOpenedEvent(entity.blockPosition()));
+        }
     }
 }
