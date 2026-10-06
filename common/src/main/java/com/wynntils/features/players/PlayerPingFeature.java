@@ -225,7 +225,8 @@ public class PlayerPingFeature extends Feature {
                 }
             }
 
-            Gizmos.cuboid(new AABB(minX, minY, minZ, maxX, maxY, maxZ), GizmoStyle.stroke(color));
+            Gizmos.cuboid(new AABB(minX, minY, minZ, maxX, maxY, maxZ), GizmoStyle.stroke(color))
+                    .setAlwaysOnTop();
             PlayerPingRenderer.submitTargetText(
                     event.getSubmitNodeCollector(),
                     event.getCameraRenderState().pos,
