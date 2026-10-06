@@ -149,7 +149,7 @@ public class ItemGuessFeature extends Feature {
                 }
 
                 lineWidth += McUtils.mc().font.width(Component.literal(", ").append(itemsForLevel.get(i)));
-                if (lineWidth > maxWidth) {
+                if (lineWidth > maxWidth || i==0) {
                     if (i != 0) {
                         guessLine.append(",");
                     }
@@ -158,7 +158,7 @@ public class ItemGuessFeature extends Feature {
                     lineWidth = McUtils.mc().font.width(guessLine);
                     continue;
                 }
-                guessLine.append(", ").append(itemsForLevel.get(i));
+                guessLine.append(Component.literal(", ")).append(itemsForLevel.get(i));
             }
             addon.add(guessLine);
         }
