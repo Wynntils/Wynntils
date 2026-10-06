@@ -195,7 +195,7 @@ public final class TokenModel extends Model {
 
     // This happens if we log out, switch class, etc
     @SubscribeEvent
-    public void onEntitiesRemoved(RemoveEntitiesEvent event) {
+    public void onEntitiesRemoved(RemoveEntitiesEvent.Post event) {
         for (int id : event.getEntityIds()) {
             if (activeGatekeepers.containsKey(id)) {
                 removeGatekeeper(id, activeGatekeepers.get(id));

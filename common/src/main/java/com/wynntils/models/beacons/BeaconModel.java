@@ -122,7 +122,7 @@ public final class BeaconModel extends Model {
     }
 
     @SubscribeEvent
-    public void onEntityRemoved(RemoveEntitiesEvent event) {
+    public void onEntityRemoved(RemoveEntitiesEvent.Post event) {
         event.getEntityIds().stream().filter(beacons::containsKey).forEach(entityId -> {
             Beacon removedBeacon = beacons.get(entityId);
             beacons.remove(entityId);
