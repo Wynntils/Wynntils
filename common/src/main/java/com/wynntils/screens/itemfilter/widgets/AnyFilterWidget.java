@@ -22,7 +22,7 @@ public class AnyFilterWidget extends GeneralFilterWidget {
     protected AnyFilterWidget(int x, int y, ProviderFilterListWidget parent) {
         super(x, y, 195, 145, Component.literal("Any Filter Widget"), parent);
 
-        this.removeButton = new Button.Builder(Component.translatable("screens.wynntils.itemFilter.removeAny"), (b -> {
+        this.removeButton = Button.builder(Component.translatable("screens.wynntils.itemFilter.removeAny"), (b -> {
                     parent.updateQuery();
                     parent.createWidgets();
                 }))

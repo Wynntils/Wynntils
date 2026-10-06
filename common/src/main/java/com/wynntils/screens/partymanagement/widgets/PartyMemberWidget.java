@@ -31,30 +31,30 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
         super((int) x, (int) y, width, height, playerName, isOffline, gridDivisions);
         int baseButtonWidth = (int) (this.width / gridDivisions);
 
-        this.promoteButton = new Button.Builder(
+        this.promoteButton = Button.builder(
                         Component.translatable("screens.wynntils.partyManagementGui.promote"),
                         (button) -> Models.Party.partyPromote(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 16)) + 1, this.getY())
                 .size(baseButtonWidth * 4, height)
                 .build();
-        this.kickButton = new Button.Builder(
+        this.kickButton = Button.builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kick"),
                         (button) -> Models.Party.partyKick(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())
                 .size(baseButtonWidth * 4, height)
                 .build();
-        this.disbandButton = new Button.Builder(
+        this.disbandButton = Button.builder(
                         Component.translatable("screens.wynntils.partyManagementGui.disband"),
                         (button) -> Models.Party.partyDisband())
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())
                 .size(baseButtonWidth * 4, height)
                 .build();
-        this.moveUpButton = new Button.Builder(
+        this.moveUpButton = Button.builder(
                         Component.literal("🠝"), (button) -> Models.Party.increasePlayerPriority(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 24)) + 1, this.getY())
                 .size(baseButtonWidth * 2, height)
                 .build();
-        this.moveDownButton = new Button.Builder(
+        this.moveDownButton = Button.builder(
                         Component.literal("🠟"), (button) -> Models.Party.decreasePlayerPriority(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 26)) + 1, this.getY())
                 .size(baseButtonWidth * 2, height)

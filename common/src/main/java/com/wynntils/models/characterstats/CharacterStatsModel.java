@@ -49,7 +49,6 @@ import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.core.BlockPos;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemCooldowns;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -141,7 +140,7 @@ public final class CharacterStatsModel extends Model {
         float total = cooldown.endTime() - cooldown.startTime();
         float remaining = cooldown.endTime() - (cooldowns.tickCount + deltaTracker.getGameTimeDeltaPartialTick(true));
 
-        return Mth.clamp(remaining / total, 0.0F, 1.0F);
+        return Math.clamp(remaining / total, 0.0F, 1.0F);
     }
 
     public CappedValue getItemCooldownTicks() {

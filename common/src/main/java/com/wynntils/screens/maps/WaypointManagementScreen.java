@@ -117,7 +117,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     protected void doInit() {
         // region exit button
         this.addRenderableWidget(
-                new Button.Builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> this.onClose())
+                Button.builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> this.onClose())
                         .pos((int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10), (int)
                                 (getTranslationY() - 25))
                         .size(20, 20)
@@ -143,7 +143,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         // endregion
 
         // region import/export
-        importButton = new Button.Builder(
+        importButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.import"),
                         (button) -> importFromClipboard())
                 .pos((width / 2) - 102, (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))
@@ -154,7 +154,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         this.addRenderableWidget(importButton);
 
-        exportButton = new Button.Builder(
+        exportButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.export"),
                         (button) -> exportToClipboard())
                 .pos((width / 2) + 42, (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))
@@ -167,7 +167,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         // endregion
 
         // region delete buttons
-        undoDeleteButton = new Button.Builder(
+        undoDeleteButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.undo"), (button) -> undoDelete())
                 .pos((int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10), (int)
                         (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))
@@ -176,7 +176,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         this.addRenderableWidget(undoDeleteButton);
 
-        deleteSelectedButton = new Button.Builder(
+        deleteSelectedButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.deleteSelected"),
                         (button) -> deleteSelectedWaypoints())
                 .pos(
@@ -191,7 +191,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         // endregion
 
         // region add waypoint button
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.add"),
                         (button) -> McUtils.setScreen(PoiCreationScreen.create(this)))
                 .pos(
@@ -202,7 +202,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         // endregion
 
         // region marker buttons
-        setMarkersButton = new Button.Builder(
+        setMarkersButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.setMarkers"),
                         (button) -> toggleMarkers(true))
                 .pos(
@@ -217,7 +217,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         this.addRenderableWidget(setMarkersButton);
 
-        removeMarkersButton = new Button.Builder(
+        removeMarkersButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.removeMarkers"),
                         (button) -> toggleMarkers(false))
                 .pos(
@@ -234,7 +234,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         // endregion
 
         // region select buttons
-        deselectAllButton = new Button.Builder(
+        deselectAllButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.deselectAll"),
                         (button) -> toggleSelectAll(false))
                 .pos((int) (getTranslationX() - 100), (int)
@@ -246,7 +246,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         this.addRenderableWidget(deselectAllButton);
 
-        selectAllButton = new Button.Builder(
+        selectAllButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.selectAll"),
                         (button) -> toggleSelectAll(true))
                 .pos(
@@ -261,7 +261,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         // endregion
 
         // region up/down buttons
-        upButton = new Button.Builder(Component.literal("🠝"), (button) -> updateSelectedWaypointPositions(-1))
+        upButton = Button.builder(Component.literal("🠝"), (button) -> updateSelectedWaypointPositions(-1))
                 .pos((width / 2) - 22, (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))
                 .size(20, 20)
                 .build();
@@ -270,7 +270,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
 
         this.addRenderableWidget(upButton);
 
-        downButton = new Button.Builder(Component.literal("🠟"), (button) -> updateSelectedWaypointPositions(1))
+        downButton = Button.builder(Component.literal("🠟"), (button) -> updateSelectedWaypointPositions(1))
                 .pos((width / 2) + 2, (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))
                 .size(20, 20)
                 .build();
@@ -886,7 +886,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
             int renderX = (int) (getTranslationX() + 15 + Texture.WAYPOINT_MANAGER_BACKGROUND.width() / 2f);
 
             if (filteredIcons.size() > MAX_ICONS_NO_PAGE) {
-                previousIconButton = new Button.Builder(Component.literal("<"), (b) -> {
+                previousIconButton = Button.builder(Component.literal("<"), (b) -> {
                             if (iconsScrollOffset - 1 < 0) {
                                 iconsScrollOffset = filteredIcons.size() - 1;
                             } else {
@@ -921,7 +921,7 @@ public final class WaypointManagementScreen extends WynntilsScreen {
             }
 
             if (filteredIcons.size() > MAX_ICONS_NO_PAGE) {
-                nextIconButton = new Button.Builder(Component.literal(">"), (b) -> {
+                nextIconButton = Button.builder(Component.literal(">"), (b) -> {
                             if (iconsScrollOffset + 1 >= filteredIcons.size()) {
                                 iconsScrollOffset = 0;
                             } else {

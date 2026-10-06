@@ -11,7 +11,6 @@ import java.util.List;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
-import net.minecraft.util.Mth;
 import org.joml.Matrix3x2f;
 
 public record MulticoloredRectangleRenderState(
@@ -58,9 +57,9 @@ public record MulticoloredRectangleRenderState(
 
         for (int i = 0; i < colors.size(); i++) {
             CustomColor color = colors.get(i);
-            float leftX = Mth.clamp(x1 + splitX * (i - 1), x1, x2);
-            float centerX = Mth.clamp(x1 + splitX * i, x1, x2);
-            float rightX = Mth.clamp(x1 + splitX * (i + 1), x1, x2);
+            float leftX = Math.clamp(x1 + splitX * (i - 1), x1, x2);
+            float centerX = Math.clamp(x1 + splitX * i, x1, x2);
+            float rightX = Math.clamp(x1 + splitX * (i + 1), x1, x2);
 
             // bottom left
             consumer.addVertexWith2DPose(pose, leftX, y2).setColor(color.r(), color.g(), color.b(), color.a());

@@ -13,7 +13,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 
 public class AlphaSlider extends AbstractSliderButton {
     private final ColorPickerScreen colorPickerScreen;
@@ -73,7 +72,7 @@ public class AlphaSlider extends AbstractSliderButton {
     private void updateValue(double mouseX) {
         int newAlpha = (int) ((mouseX - getX()) / getWidth() * 255);
 
-        colorPickerScreen.setAlpha(Mth.clamp(newAlpha, 0, 255));
+        colorPickerScreen.setAlpha(Math.clamp(newAlpha, 0, 255));
         setValue((mouseX - (this.getX() + 0.5)) / (double) (this.width - 1));
     }
 }

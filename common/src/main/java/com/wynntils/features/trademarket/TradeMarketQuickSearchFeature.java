@@ -267,7 +267,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
             final int yStart = (screen.height - listHeight) / 2;
             for (int col = 0; col < colCount; col++) {
                 for (int row = 0; row < rowCount; row++) {
-                    guessedGearList.add(new Button.Builder(
+                    guessedGearList.add(Button.builder(
                                     Component.literal(possibleGear
                                             .get(col * rowCount + row)
                                             .name()),
@@ -293,7 +293,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
                                             "feature.wynntils.tradeMarketQuickSearch.guessGearList.help2")
                                     .withStyle(ChatFormatting.GRAY))));
 
-            guessedGearList.add(new Button.Builder(
+            guessedGearList.add(Button.builder(
                             Component.literal("X").withStyle(ChatFormatting.RED), button -> guessedGearList.clear())
                     .pos(xStart + listWidth - BUTTON_SIZE, yStart - BUTTON_SIZE)
                     .size(BUTTON_SIZE, BUTTON_SIZE)

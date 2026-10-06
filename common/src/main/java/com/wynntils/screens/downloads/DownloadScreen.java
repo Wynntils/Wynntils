@@ -101,7 +101,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                     (int) (dividedWidth * 10),
                     (c, b) -> toggleShowAgain(b)));
 
-            this.addRenderableWidget(new Button.Builder(
+            this.addRenderableWidget(Button.builder(
                             Component.translatable("screens.wynntils.downloads.connect"), (button -> connectToServer()))
                     .pos((int) dividedWidth, (int) (dividedHeight * 18))
                     .size((int) (dividedWidth * 14), 20)
@@ -109,7 +109,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         }
 
         this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.downloads.back"), (button -> onClose()))
+                Button.builder(Component.translatable("screens.wynntils.downloads.back"), (button -> onClose()))
                         .pos((int) (dividedWidth * 5), (int) (dividedHeight * 24))
                         .size((int) (dividedWidth * 6), 20)
                         .build());
@@ -165,14 +165,14 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         customInput.setTooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.customInputTooltip")));
         this.addRenderableWidget(customInput);
 
-        decrementTimeoutButton = new Button.Builder(Component.literal("-"), (b -> adjustTimeout(-1000)))
+        decrementTimeoutButton = Button.builder(Component.literal("-"), (b -> adjustTimeout(-1000)))
                 .pos((int) (dividedWidth * 5), (int) (dividedHeight * 52))
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.timeoutDecrease")))
                 .build();
         this.addRenderableWidget(decrementTimeoutButton);
 
-        incrementTimeoutButton = new Button.Builder(Component.literal("+"), (b -> adjustTimeout(1000)))
+        incrementTimeoutButton = Button.builder(Component.literal("+"), (b -> adjustTimeout(1000)))
                 .pos((int) (dividedWidth * 9), (int) (dividedHeight * 52))
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.timeoutIncrease")))
@@ -182,7 +182,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         decrementTimeoutButton.active = Managers.Net.getTimeoutMillis() > 1000;
         incrementTimeoutButton.active = Managers.Net.getTimeoutMillis() < 30000;
 
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.downloads.reloadCaches")
                                 .withStyle(ChatFormatting.BLUE),
                         (b -> Managers.Url.loadUrls()))
@@ -191,7 +191,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.downloads.reloadCachesTooltip")))
                 .build());
 
-        clearCachesButton = new Button.Builder(
+        clearCachesButton = Button.builder(
                         Component.translatable("screens.wynntils.downloads.clearCaches", clearCount)
                                 .withStyle(ChatFormatting.RED),
                         (b -> {

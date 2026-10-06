@@ -52,7 +52,7 @@ public class SecretsScreen extends WynntilsScreen {
         offsetY = (this.height - Texture.SECRETS_BACKGROUND.height()) / 2;
 
         this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.secrets.close"), (b) -> onClose())
+                Button.builder(Component.translatable("screens.wynntils.secrets.close"), (b) -> onClose())
                         .pos(offsetX + 50, offsetY - 21)
                         .size(250, 20)
                         .build());

@@ -62,7 +62,7 @@ public class WynncraftPauseScreenFeature extends Feature {
     }
 
     private Button createTerritoryButton(Button oldButton) {
-        return new Button.Builder(
+        return Button.builder(
                         Component.translatable("feature.wynntils.wynncraftPauseScreen.territoryMap.name")
                                 .withStyle(ChatFormatting.DARK_AQUA),
                         (button) -> McUtils.setScreen(GuildMapScreen.create()))
@@ -72,7 +72,7 @@ public class WynncraftPauseScreenFeature extends Feature {
     }
 
     private Button createWynntilsButton(Button oldButton) {
-        return new Button.Builder(
+        return Button.builder(
                         Component.translatable("feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name"),
                         (button) -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()))
                 .pos(oldButton.getX(), oldButton.getY())

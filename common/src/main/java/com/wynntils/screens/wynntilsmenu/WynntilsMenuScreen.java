@@ -44,7 +44,7 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.social.EntityPortraitWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -435,7 +435,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         final int renderWidth = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 100);
         final int renderHeight = 70;
 
-        InventoryScreen.extractEntityInInventoryFollowsMouse(
+        EntityPortraitWidget.extractEntityInInventoryFollowsMouse(
                 guiGraphics,
                 posX,
                 posY,

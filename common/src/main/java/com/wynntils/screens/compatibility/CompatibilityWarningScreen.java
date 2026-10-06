@@ -66,7 +66,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
                     List.of(Component.translatable("screens.wynntils.compatibility.continueOutdated"))));
         }
 
-        Button continueButton = new Button.Builder(
+        Button continueButton = Button.builder(
                         Component.translatable("screens.wynntils.compatibility.continue"),
                         (b) -> continueWithoutWynntils())
                 .pos(offsetX + 60, offsetY + 150)
@@ -83,7 +83,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
             updateTooltip = Component.translatable("screens.wynntils.compatibility.updateUnavailable");
         }
 
-        Button updateButton = new Button.Builder(
+        Button updateButton = Button.builder(
                         Component.translatable("screens.wynntils.compatibility.update"),
                         (b) -> McUtils.setScreen(UpdateScreen.create(this)))
                 .pos(offsetX + 160, offsetY + 150)

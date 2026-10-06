@@ -75,7 +75,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 inviteInput);
         this.addRenderableWidget(inviteInput);
 
-        inviteButton = new Button.Builder(
+        inviteButton = Button.builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> inviteFromField())
                 .pos((int) (dividedWidth * 57) + 1, (int) (dividedHeight * START_HEIGHT) + 1)
@@ -85,7 +85,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         // endregion
 
         // region Management button row (except create/leave)
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.partyManagementGui.refreshButton")
                                 .withStyle(ChatFormatting.GREEN),
                         (button) -> refreshAll())
@@ -93,7 +93,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 .size(mgmtButtonWidth, BUTTON_SIZE)
                 .build());
 
-        kickOfflineButton = new Button.Builder(
+        kickOfflineButton = Button.builder(
                         Component.translatable("screens.wynntils.partyManagementGui.kickOfflineButton")
                                 .withStyle(ChatFormatting.RED),
                         (button) -> Models.Party.partyKickOffline())

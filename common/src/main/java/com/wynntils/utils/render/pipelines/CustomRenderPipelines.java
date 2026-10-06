@@ -24,7 +24,6 @@ public class CustomRenderPipelines extends RenderPipelines {
             .withColorTargetState(new ColorTargetState(CustomBlendFunction.SEMI_TRANSPARENT_BLEND_FUNCTION))
             .withVertexBinding(0, DefaultVertexFormat.POSITION_COLOR)
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
-            .withDepthStencilState(new DepthStencilState(CompareOp.GREATER_THAN_OR_EQUAL, false))
             .buildSnippet();
 
     public static final RenderPipeline LOOTRUN_QUAD_PIPELINE =

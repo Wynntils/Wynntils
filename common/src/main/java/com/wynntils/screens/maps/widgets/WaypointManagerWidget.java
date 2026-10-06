@@ -65,14 +65,14 @@ public class WaypointManagerWidget extends AbstractWidget {
 
         color = waypoint.getVisibility() == CustomPoi.Visibility.HIDDEN ? CommonColors.GRAY : CommonColors.WHITE;
 
-        editButton = new Button.Builder(
+        editButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.edit"),
                         (button) -> McUtils.setScreen(PoiCreationScreen.create(managementScreen, waypoint)))
                 .pos(x + width - 20 - (40 * 2), y)
                 .size(40, 20)
                 .build();
 
-        deleteButton = new Button.Builder(
+        deleteButton = Button.builder(
                         Component.translatable("screens.wynntils.waypointManagementGui.delete"), (button) -> {
                             managementScreen.deleteWaypoint(waypoint, true);
                         })
@@ -80,13 +80,13 @@ public class WaypointManagerWidget extends AbstractWidget {
                 .size(40, 20)
                 .build();
 
-        upButton = new Button.Builder(
+        upButton = Button.builder(
                         Component.literal("ʌ"), (button) -> managementScreen.updateWaypointPosition(waypoint, -1))
                 .pos(x + width - 20, y)
                 .size(10, 20)
                 .build();
 
-        downButton = new Button.Builder(
+        downButton = Button.builder(
                         Component.literal("v"), (button) -> managementScreen.updateWaypointPosition(waypoint, 1))
                 .pos(x + width - 10, y)
                 .size(10, 20)
@@ -96,7 +96,7 @@ public class WaypointManagerWidget extends AbstractWidget {
                 ? Component.translatable("screens.wynntils.waypointManagementGui.deselect")
                 : Component.translatable("screens.wynntils.waypointManagementGui.select");
 
-        selectButton = new Button.Builder(selectButtonText, (button) -> managementScreen.selectWaypoint(waypoint))
+        selectButton = Button.builder(selectButtonText, (button) -> managementScreen.selectWaypoint(waypoint))
                 .pos(x + width - (40 * 2 + 20), y)
                 .size(40 * 2 + 20, 20)
                 .build();

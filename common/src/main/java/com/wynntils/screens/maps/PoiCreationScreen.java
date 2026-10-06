@@ -195,7 +195,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         // endregion
 
         // region Icon
-        this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
+        this.addRenderableWidget(Button.builder(Component.literal("<"), (button) -> {
                     if (iconScrollOffset - 1 < 0) {
                         iconScrollOffset = Services.Poi.POI_ICONS.size() - 1;
                     } else {
@@ -208,7 +208,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 .size(20, 20)
                 .build());
 
-        this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
+        this.addRenderableWidget(Button.builder(Component.literal(">"), (button) -> {
                     if (iconScrollOffset + 1 >= Services.Poi.POI_ICONS.size()) {
                         iconScrollOffset = 0;
                     } else {
@@ -314,7 +314,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             }
         }
 
-        this.addRenderableWidget(new Button.Builder(Component.literal("🧍"), (button) -> {
+        this.addRenderableWidget(Button.builder(Component.literal("🧍"), (button) -> {
                     xInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockX()));
                     yInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockY()));
                     zInput.setTextBoxInput(String.valueOf(McUtils.player().getBlockZ()));
@@ -324,7 +324,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiCreation.centerPlayer")))
                 .build());
 
-        this.addRenderableWidget(new Button.Builder(Component.literal("🌍"), (button) -> {
+        this.addRenderableWidget(Button.builder(Component.literal("🌍"), (button) -> {
                     xInput.setTextBoxInput(String.valueOf(MAP_CENTER_X));
                     yInput.setTextBoxInput("0");
                     zInput.setTextBoxInput(String.valueOf(MAP_CENTER_Z));
@@ -336,7 +336,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         // endregion
 
         // region Visibility
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.literal("<"),
                         (button) -> selectedVisibility = CustomPoi.Visibility.values()[
                                 (selectedVisibility.ordinal() - 1 + CustomPoi.Visibility.values().length)
@@ -344,7 +344,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                 .pos((int) (dividedWidth * 8), (int) (dividedHeight * 47))
                 .size(20, 20)
                 .build());
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.literal(">"),
                         (button) -> selectedVisibility = CustomPoi.Visibility.values()[
                                 (selectedVisibility.ordinal() + 1 + CustomPoi.Visibility.values().length)
@@ -359,13 +359,13 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         // endregion
 
         // region Screen Interactions
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
                 .pos((int) (dividedWidth * 6), (int) (dividedHeight * 54))
                 .size((int) (dividedWidth * 8), 20)
                 .build());
 
-        saveButton = new Button.Builder(Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
+        saveButton = Button.builder(Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
                     savePoi();
                     this.onClose();
                 })

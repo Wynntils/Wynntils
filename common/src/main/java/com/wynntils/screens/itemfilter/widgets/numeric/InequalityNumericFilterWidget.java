@@ -43,12 +43,12 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
                 }),
                 filterScreen);
 
-        this.inequalityButton = new Button.Builder(Component.literal(inequalityType.getMessage()), null)
+        this.inequalityButton = Button.builder(Component.literal(inequalityType.getMessage()), null)
                 .pos(getX() + width - 74, getY())
                 .size(20, 20)
                 .build();
 
-        this.removeButton = new Button.Builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
+        this.removeButton = Button.builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
                 .pos(getX() + width - 20, getY())
                 .size(20, 20)
                 .build();

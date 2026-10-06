@@ -38,7 +38,7 @@ public abstract class SingleNumericFilterWidget<T> extends GeneralFilterWidget {
                 }),
                 filterScreen);
 
-        this.removeButton = new Button.Builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
+        this.removeButton = Button.builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
                 .pos(getX() + width - 20, getY())
                 .size(20, 20)
                 .build();

@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.services.mapdata.attributes.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import java.io.IOException;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.resources.Identifier;
 
 public class JsonIcon implements MapIcon {
@@ -33,7 +33,9 @@ public class JsonIcon implements MapIcon {
         if (!registered) {
             // We cannot do this in the constructor since GL is not initiated at that time
             registered = true;
-            McUtils.mc().getTextureManager().register(resource, new DynamicTexture(() -> iconId, nativeImage));
+            McUtils.mc()
+                    .getTextureManager()
+                    .register(resource, TextureResources.from2dImage(() -> iconId, nativeImage));
         }
 
         return resource;

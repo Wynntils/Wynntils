@@ -61,7 +61,7 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
     protected void doInit() {
         calculateBarPosition();
 
-        textureButton = this.addRenderableWidget(new Button.Builder(
+        textureButton = this.addRenderableWidget(Button.builder(
                         Component.literal(availableBars
                                 .get(barTypeIndex)
                                 .b()
@@ -73,25 +73,25 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.customBarSelection.textureTooltip")))
                 .build());
 
-        this.addRenderableWidget(new Button.Builder(Component.literal("🠜"), (button) -> scrollBars(-1))
+        this.addRenderableWidget(Button.builder(Component.literal("🠜"), (button) -> scrollBars(-1))
                 .pos((int) (this.width / 2f) - 120, (int) (barY + 45))
                 .size(20, 20)
                 .build());
 
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.customBarSelection.cancel"), (button) -> onClose())
                 .pos((int) (this.width / 2f) - 90, (int) (barY + 45))
                 .size(80, 20)
                 .build());
 
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.customBarSelection.select"),
                         (button) -> addCustomBar())
                 .pos((int) (this.width / 2f) + 10, (int) (barY + 45))
                 .size(80, 20)
                 .build());
 
-        this.addRenderableWidget(new Button.Builder(Component.literal("🠞"), (button) -> scrollBars(1))
+        this.addRenderableWidget(Button.builder(Component.literal("🠞"), (button) -> scrollBars(1))
                 .pos((int) (this.width / 2f) + 100, (int) (barY + 45))
                 .size(20, 20)
                 .build());

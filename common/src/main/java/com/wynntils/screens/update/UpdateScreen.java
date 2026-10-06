@@ -66,7 +66,7 @@ public final class UpdateScreen extends WynntilsScreen {
     protected void doInit() {
         super.doInit();
 
-        updateButton = new Button.Builder(
+        updateButton = Button.builder(
                         Component.translatable("screens.wynntils.update.update"), (button) -> downloadUpdate(false))
                 .pos(this.width / 2 - 150, this.height / 2 + 40)
                 .size(140, 20)
@@ -74,7 +74,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 .build();
         this.addRenderableWidget(updateButton);
 
-        updateNowButton = new Button.Builder(
+        updateNowButton = Button.builder(
                         Component.translatable("screens.wynntils.update.updateExit"), (button) -> downloadUpdate(true))
                 .pos(this.width / 2 + 10, this.height / 2 + 40)
                 .size(140, 20)
@@ -82,7 +82,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 .build();
         this.addRenderableWidget(updateNowButton);
 
-        ignoreNowButton = new Button.Builder(
+        ignoreNowButton = Button.builder(
                         Component.translatable("screens.wynntils.update.ignoreNow"), (button) -> ignoreUpdate(false))
                 .pos(this.width / 2 - 150, this.height / 2 + 70)
                 .size(140, 20)
@@ -90,7 +90,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 .build();
         this.addRenderableWidget(ignoreNowButton);
 
-        ignoreUpdateButton = new Button.Builder(
+        ignoreUpdateButton = Button.builder(
                         Component.translatable("screens.wynntils.update.ignorePermenantly"),
                         (button) -> ignoreUpdate(true))
                 .pos(this.width / 2 + 10, this.height / 2 + 70)
@@ -101,7 +101,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 .build();
         this.addRenderableWidget(ignoreUpdateButton);
 
-        changelogButton = new Button.Builder(
+        changelogButton = Button.builder(
                         Component.translatable("screens.wynntils.update.changelog"), (button) -> showChangelog())
                 .pos(this.width / 2 - 150, this.height / 2 + 100)
                 .size(140, 20)
@@ -112,7 +112,7 @@ public final class UpdateScreen extends WynntilsScreen {
                 .build();
         this.addRenderableWidget(changelogButton);
 
-        previousScreenButton = new Button.Builder(
+        previousScreenButton = Button.builder(
                         Component.translatable("screens.wynntils.update.previousScreen"), (button) -> onClose())
                 .pos(this.width / 2 + 10, this.height / 2 + 100)
                 .size(140, 20)

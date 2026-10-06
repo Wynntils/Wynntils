@@ -260,13 +260,13 @@ public final class ItemSharingScreen extends WynntilsScreen {
         // region Share buttons
         int shareButtonWidth = (Texture.ITEM_SHARING_BACKGROUND.width() - 20) / 2 - 5;
 
-        options.add(this.addRenderableWidget(new Button.Builder(
+        options.add(this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.itemSharing.shareParty"), (b) -> shareItem("party"))
                 .pos(backgroundX + 10, backgroundY + 45)
                 .size(shareButtonWidth, 20)
                 .build()));
 
-        options.add(this.addRenderableWidget(new Button.Builder(
+        options.add(this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.itemSharing.shareGuild"), (b) -> shareItem("guild"))
                 .pos(backgroundX + 20 + shareButtonWidth, backgroundY + 45)
                 .size(shareButtonWidth, 20)
@@ -277,7 +277,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 ? Component.translatable("screens.wynntils.itemSharing.openRecord")
                 : Component.translatable("screens.wynntils.itemSharing.save");
 
-        saveButton = new Button.Builder(saveButtonMessage, (b) -> {
+        saveButton = Button.builder(saveButtonMessage, (b) -> {
                     if (!savedItem) {
                         shareItem("save");
                     } else {
@@ -292,7 +292,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
         options.add(saveButton);
 
-        options.add(this.addRenderableWidget(new Button.Builder(
+        options.add(this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.itemSharing.copy"), (b) -> shareItem("clipboard"))
                 .pos(backgroundX + 20 + shareButtonWidth, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
                 .size(shareButtonWidth, 20)
@@ -301,11 +301,10 @@ public final class ItemSharingScreen extends WynntilsScreen {
     }
 
     private void addError(String error) {
-        this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.itemSharing.error"), (b) -> {})
-                        .pos(backgroundX + 10, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
-                        .size(Texture.ITEM_SHARING_BACKGROUND.width() - 20, 20)
-                        .tooltip(Tooltip.create(Component.literal(error)))
-                        .build());
+        this.addRenderableWidget(Button.builder(Component.translatable("screens.wynntils.itemSharing.error"), (b) -> {})
+                .pos(backgroundX + 10, backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() - 30)
+                .size(Texture.ITEM_SHARING_BACKGROUND.width() - 20, 20)
+                .tooltip(Tooltip.create(Component.literal(error)))
+                .build());
     }
 }

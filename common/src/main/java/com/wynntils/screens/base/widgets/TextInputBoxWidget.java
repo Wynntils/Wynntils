@@ -33,7 +33,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.Mth;
 
 public class TextInputBoxWidget extends AbstractWidget {
     private static final Component DEFAULT_TEXT =
@@ -279,8 +278,8 @@ public class TextInputBoxWidget extends AbstractWidget {
             b = Math.min(renderedInterval.b(), highlightedInterval.b());
         }
 
-        a = Mth.clamp(a, 0, length);
-        b = Mth.clamp(b, 0, length);
+        a = Math.clamp(a, 0, length);
+        b = Math.clamp(b, 0, length);
 
         return Pair.of(a, b);
     }
@@ -628,7 +627,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     protected void setHighlightPosition(int position) {
         int length = this.textBoxInput.length();
-        this.highlightPosition = Mth.clamp(position, 0, length);
+        this.highlightPosition = Math.clamp(position, 0, length);
     }
 
     private void replaceHighlighted(String text) {

@@ -40,9 +40,9 @@ import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.gui.GuiItemRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureHandle;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -237,10 +237,10 @@ public final class RenderUtils {
             float v,
             int textureWidth,
             int textureHeight) {
-        AbstractTexture abstractTexture = McUtils.mc().getTextureManager().getTexture(identifier);
+        TextureHandle abstractTexture = McUtils.mc().getTextureManager().getTexture(identifier);
         guiGraphics.guiRenderState.addGuiElement(new FloatBlitRenderState(
                 pipeline,
-                TextureSetup.singleTexture(abstractTexture.getTextureView(), abstractTexture.getSampler()),
+                TextureSetup.singleTexture(abstractTexture.textureView(), abstractTexture.sampler()),
                 new Matrix3x2f(guiGraphics.pose()),
                 x,
                 y,
@@ -420,7 +420,9 @@ public final class RenderUtils {
         TextureAtlasSprite sprite = textureAtlas.getSprite(identifier);
         guiGraphics.guiRenderState.addGuiElement(new FloatBlitRenderState(
                 pipeline,
-                TextureSetup.singleTexture(textureAtlas.getTextureView(), textureAtlas.getSampler()),
+                TextureSetup.singleTexture(
+                        textureAtlas.getTexture().textureView(),
+                        textureAtlas.getTexture().sampler()),
                 new Matrix3x2f(guiGraphics.pose()),
                 x,
                 y,
@@ -1439,9 +1441,9 @@ public final class RenderUtils {
 
         for (int i = 0; i < colors.size(); i++) {
             CustomColor color = colors.get(i);
-            float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
-            float centerX = Mth.clamp(x + splitX * i, x, x + width);
-            float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
+            float leftX = Math.clamp(x + splitX * (i - 1), x, x + width);
+            float centerX = Math.clamp(x + splitX * i, x, x + width);
+            float rightX = Math.clamp(x + splitX * (i + 1), x, x + width);
 
             // bottom left to bottom center (always drawn)
             drawLine(guiGraphics, color, leftX, y + height, centerX, y + height, externalLineWidth);

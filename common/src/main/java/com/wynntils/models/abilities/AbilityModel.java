@@ -39,7 +39,6 @@ import java.util.Map;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.util.Mth;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -160,7 +159,7 @@ public final class AbilityModel extends Model {
             float dtSeconds = (now - lastTickNanos) / 1_000_000_000.0f;
             lastTickNanosMap.put(cooldown, now);
 
-            dtSeconds = Mth.clamp(dtSeconds, 0.0f, 0.5f);
+            dtSeconds = Math.clamp(dtSeconds, 0.0f, 0.5f);
 
             float server = cooldown.getServerRemainingSeconds();
             float interpolated = interpolatedCooldowns.getOrDefault(cooldown, server);

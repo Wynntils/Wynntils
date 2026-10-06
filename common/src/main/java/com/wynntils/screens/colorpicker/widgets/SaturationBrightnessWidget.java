@@ -15,7 +15,6 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 
 public class SaturationBrightnessWidget extends AbstractWidget {
     private final ColorPickerScreen colorPickerScreen;
@@ -35,8 +34,8 @@ public class SaturationBrightnessWidget extends AbstractWidget {
 
         color = CustomColor.fromHSV(hsbColor[0], 1.0f, 1.0f, 1.0f);
 
-        cursorX = (int) Mth.clamp(width * hsbColor[1], 0, width);
-        cursorY = (int) Mth.clamp(height * (1.0f - hsbColor[2]), 0, height);
+        cursorX = (int) Math.clamp(width * hsbColor[1], 0, width);
+        cursorY = (int) Math.clamp(height * (1.0f - hsbColor[2]), 0, height);
     }
 
     @Override
@@ -93,8 +92,8 @@ public class SaturationBrightnessWidget extends AbstractWidget {
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
         if (!cursorHeld) return false;
 
-        cursorX = Mth.clamp((int) (event.x() - getX()), 0, getWidth());
-        cursorY = Mth.clamp((int) (event.y() - getY()), 0, getHeight());
+        cursorX = Math.clamp((int) (event.x() - getX()), 0, getWidth());
+        cursorY = Math.clamp((int) (event.y() - getY()), 0, getHeight());
 
         updateValue(cursorX, cursorY);
 
@@ -113,13 +112,13 @@ public class SaturationBrightnessWidget extends AbstractWidget {
     }
 
     public void updateCursor(float saturation, float brightness) {
-        cursorX = (int) Mth.clamp(width * saturation, 0, width);
-        cursorY = (int) Mth.clamp(height * (1.0f - brightness), 0, height);
+        cursorX = (int) Math.clamp(width * saturation, 0, width);
+        cursorY = (int) Math.clamp(height * (1.0f - brightness), 0, height);
     }
 
     private void updateValue(double x, double y) {
-        float newSaturation = (float) Mth.clamp(x / getWidth(), 0.0f, 1.0f);
-        float newBrightness = (float) (1.0f - Mth.clamp(y / getHeight(), 0.0f, 1.0f));
+        float newSaturation = (float) Math.clamp(x / getWidth(), 0.0f, 1.0f);
+        float newBrightness = (float) (1.0f - Math.clamp(y / getHeight(), 0.0f, 1.0f));
 
         colorPickerScreen.setSaturation(newSaturation);
         colorPickerScreen.setBrightness(newBrightness);

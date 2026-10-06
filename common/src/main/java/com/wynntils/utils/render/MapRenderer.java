@@ -25,7 +25,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.texture.AbstractTexture;
+import net.minecraft.client.renderer.texture.TextureHandle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.level.ChunkPos;
@@ -560,14 +560,14 @@ public final class MapRenderer {
             float v1,
             float v2,
             CircleMask mask) {
-        AbstractTexture texture = McUtils.mc().getTextureManager().getTexture(identifier);
+        TextureHandle texture = McUtils.mc().getTextureManager().getTexture(identifier);
         Matrix3x2f pose = new Matrix3x2f(guiGraphics.pose());
         List<Vertex> vertices = clipTexturedRectToCircle(pose, x1, y1, x2, y2, u1, u2, v1, v2, mask);
         if (vertices.isEmpty()) return;
 
         guiGraphics.guiRenderState.addGuiElement(new TexturedPolygonRenderState(
                 RenderPipelines.GUI_TEXTURED,
-                TextureSetup.singleTexture(texture.getTextureView(), texture.getSampler()),
+                TextureSetup.singleTexture(texture.textureView(), texture.sampler()),
                 pose,
                 vertices,
                 color,
