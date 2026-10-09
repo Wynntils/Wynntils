@@ -979,6 +979,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Translucidité du Fantôme de Joueur",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "L'armure des fantômes de joueur doit-elle être transparente ?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "Armure de Fantôme Transparente",
+  "feature.wynntils.playerPing.textShadow.description": "À quoi devrait ressembler l'ombre du texte?",
   "feature.wynntils.playerViewer.description": "Ajoute la possibilité de voir l'équipement des autres joueurs dans une interface graphique.",
   "feature.wynntils.playerViewer.name": "Visionneuse d'Équipement",
   "feature.wynntils.powderSpecialBarOverlay.description": "Ajoute une superposition pour voir la barre spéciale de poudre actuelle.",
