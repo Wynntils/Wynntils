@@ -979,6 +979,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Játékos Szellem А́tlátszóság",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "А́tlátszó legyen a játékos szellemek páncélja?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "А́tlátszó Szellem Páncél",
+  "feature.wynntils.playerPing.textShadow.description": "Milyen legyen a szöveg árnyéka?",
   "feature.wynntils.playerViewer.description": "Lehetőséget ad más játékosok felszerelésének megtekintésére egy GUI-ban.",
   "feature.wynntils.playerViewer.name": "Felszerelés Néző",
   "feature.wynntils.powderSpecialBarOverlay.description": "Hozzáad egy átfedést az aktuális por különleges sáv megtekintéséhez.",
