@@ -1177,6 +1177,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Прозрачность Призрака Игрока",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "Должна ли броня призраков игроков быть прозрачной?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "Прозрачная Броня Призрака",
+  "feature.wynntils.playerPing.textShadow.description": "Как должна выглядеть тень текста?",
   "feature.wynntils.playerViewer.description": "Добавляет возможность просматривать снаряжение других игроков в графическом интерфейсе.",
   "feature.wynntils.playerViewer.name": "Просмотр Снаряжения",
   "feature.wynntils.powderSpecialBarOverlay.description": "Добавляет наложение для просмотра текущей специальной полосы порошка.",
