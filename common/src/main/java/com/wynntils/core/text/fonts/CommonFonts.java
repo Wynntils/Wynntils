@@ -27,6 +27,9 @@ public final class CommonFonts {
     public static final FontDescription TOOLTIP_REQUIREMENT_FRAME_FONT = font("tooltip/requirement/frame");
     public static final FontDescription TOOLTIP_REQUIREMENT_SPRITE_FONT = font("tooltip/requirement/sprite");
 
+    // This should be used in place of LANGUAGE_WYNNCRAFT_FONT where possible as this provides a fallback of the default
+    // font
+    public static final FontDescription WYNNTILS_LANGUAGE_WYNNCRAFT_FONT = wynntilsFont("language/wynncraft");
     public static final FontDescription WYNNTILS_TOOLTIP_ICONS = wynntilsFont("tooltip/icons");
     public static final FontDescription WYNNTILS_TOOLTIP_DIVIDER_FONT = wynntilsFont("tooltip/divider");
 

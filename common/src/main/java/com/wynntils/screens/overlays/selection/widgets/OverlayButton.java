@@ -15,7 +15,7 @@ import com.wynntils.overlays.custombars.CustomBarOverlayBase;
 import com.wynntils.overlays.infobox.InfoBoxOverlay;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -45,26 +45,26 @@ public class OverlayButton extends WynntilsButton {
     private static final CustomColor DISABLED_FEATURE_COLOR_BORDER_HOVERED = new CustomColor(70, 0, 0, 255);
 
     private static final List<Component> EDIT_NAME_TOOLTIP =
-            List.of(Component.translatable("screens.wynntils.overlaySelection.editName"));
+            List.of(Component.translatable("screens.wynntils.overlaySettings.editName"));
 
     private static final List<Component> SAVE_NAME_TOOLTIP =
-            List.of(Component.translatable("screens.wynntils.overlaySelection.stopEdit"));
+            List.of(Component.translatable("screens.wynntils.overlaySettings.stopEdit"));
 
     private static final List<Component> VIEW_TOOLTIP =
-            List.of(Component.translatable("screens.wynntils.overlaySelection.viewTooltip"));
+            List.of(Component.translatable("screens.wynntils.overlaySettings.viewTooltip"));
 
     private final List<Component> descriptionTooltip;
     private final Overlay overlay;
-    private final OverlaySelectionScreen selectionScreen;
+    private final OverlaySettingsScreen settingsScreen;
 
     private String textToRender;
     private TextInputBoxWidget editInput;
 
-    public OverlayButton(int x, int y, int width, int height, Overlay overlay, OverlaySelectionScreen selectionScreen) {
+    public OverlayButton(int x, int y, int width, int height, Overlay overlay, OverlaySettingsScreen settingsScreen) {
         super(x, y, width, height, Component.literal(overlay.getTranslatedName()));
 
         this.overlay = overlay;
-        this.selectionScreen = selectionScreen;
+        this.settingsScreen = settingsScreen;
 
         // Use custom name of overlay if present
         if (overlay instanceof CustomNameProperty customNameProperty) {
@@ -93,7 +93,7 @@ public class OverlayButton extends WynntilsButton {
         }
 
         if (overlay instanceof CustomNameProperty customNameOverlay) {
-            editInput = new TextInputBoxWidget(x, y, width, height, null, selectionScreen);
+            editInput = new TextInputBoxWidget(x, y, width, height, null, settingsScreen);
 
             editInput.visible = false;
             String currentName = customNameOverlay.getCustomName().get();
@@ -134,8 +134,7 @@ public class OverlayButton extends WynntilsButton {
 
         // Don't want to display tooltip when the tile is outside the mask from the screen
         if (isHovered
-                && (mouseY <= selectionScreen.getConfigMaskTopY()
-                        || mouseY >= selectionScreen.getConfigMaskBottomY())) {
+                && (mouseY <= settingsScreen.getConfigMaskTopY() || mouseY >= settingsScreen.getConfigMaskBottomY())) {
             isHovered = false;
         }
 
@@ -148,7 +147,7 @@ public class OverlayButton extends WynntilsButton {
                         Lists.transform(
                                 ComponentUtils.wrapTooltips(
                                         List.of(Component.translatable(
-                                                "screens.wynntils.overlaySelection.parentDisabled",
+                                                "screens.wynntils.overlaySettings.parentDisabled",
                                                 overlay.getParentTranslatedName())),
                                         200),
                                 Component::getVisualOrderText),
@@ -168,7 +167,7 @@ public class OverlayButton extends WynntilsButton {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies and released
-        if ((event.y() <= selectionScreen.getConfigMaskTopY() || event.y() >= selectionScreen.getConfigMaskBottomY())) {
+        if ((event.y() <= settingsScreen.getConfigMaskTopY() || event.y() >= settingsScreen.getConfigMaskBottomY())) {
             return false;
         }
 
@@ -179,9 +178,9 @@ public class OverlayButton extends WynntilsButton {
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
             if (isSelected() && editInput != null) {
                 editInput.visible = true;
-                selectionScreen.setFocusedTextInput(editInput);
+                settingsScreen.setFocusedTextInput(editInput);
             } else {
-                selectionScreen.selectOverlay(overlay);
+                settingsScreen.selectOverlay(overlay);
             }
         }
 
@@ -191,7 +190,7 @@ public class OverlayButton extends WynntilsButton {
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies and released
-        if ((event.y() <= selectionScreen.getConfigMaskTopY() || event.y() >= selectionScreen.getConfigMaskBottomY())) {
+        if ((event.y() <= settingsScreen.getConfigMaskTopY() || event.y() >= settingsScreen.getConfigMaskBottomY())) {
             return false;
         }
 
@@ -270,6 +269,6 @@ public class OverlayButton extends WynntilsButton {
     }
 
     private boolean isSelected() {
-        return selectionScreen.getSelectedOverlay() == overlay;
+        return settingsScreen.getSelectedOverlay() == overlay;
     }
 }

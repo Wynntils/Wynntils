@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.bonustotems;
@@ -13,7 +13,7 @@ public class BonusTotem {
     private final BonusTotemType bonusTotemType;
     private final Position position;
     private final String owner;
-    private String timerString;
+    private int secondsLeft;
 
     public BonusTotem(BonusTotemType bonusTotemType, Position position, String owner) {
         this.bonusTotemType = bonusTotemType;
@@ -34,11 +34,17 @@ public class BonusTotem {
     }
 
     public String getTimerString() {
-        return timerString;
+        if (secondsLeft < 60) return secondsLeft + "s";
+
+        return secondsLeft / 60 + "m " + secondsLeft % 60 + "s";
     }
 
-    public void setTimerString(String timerString) {
-        this.timerString = timerString;
+    public void setSecondsLeft(int secondsLeft) {
+        this.secondsLeft = secondsLeft;
+    }
+
+    public int getSecondsLeft() {
+        return secondsLeft;
     }
 
     public double getDistanceToPlayer() {

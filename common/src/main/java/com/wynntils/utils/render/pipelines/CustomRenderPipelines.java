@@ -39,6 +39,13 @@ public class CustomRenderPipelines extends RenderPipelines {
                     .withCull(false)
                     .build());
 
+    public static final RenderPipeline PLAYER_PING_QUAD_PIPELINE =
+            register(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
+                    .withLocation("pipeline/wynntils_player_ping_quad")
+                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .withCull(false)
+                    .build());
+
     public static final RenderPipeline PROGRESS_BAR_PIPELINE =
             register(RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
                     .withLocation("pipeline/wynntils_progress_bar")

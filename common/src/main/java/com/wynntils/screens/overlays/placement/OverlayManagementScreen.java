@@ -20,7 +20,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.overlays.ordering.OverlayOrderingScreen;
 import com.wynntils.screens.overlays.placement.OverlaySnapAxis.SnapTarget;
-import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
+import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -373,7 +373,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             Managers.Config.saveConfig();
             onClose();
-            McUtils.setScreen(OverlaySelectionScreen.create(selectedOverlay));
+            McUtils.setScreen(OverlaySettingsScreen.create(selectedOverlay));
             return true;
         }
 
