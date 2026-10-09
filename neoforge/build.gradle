@@ -32,7 +32,11 @@ dependencies {
     shadowCommon(project(path: ":common", configuration: "transformProductionNeoForge")) { transitive = false }
 
     // Hades Protocol
-    include(forgeRuntimeLibrary("com.github.wynntils:hades:v${hades_version}"))
+    if (file("${rootDir}/../Hades/build/libs/HadesProtocol-${hades_version}.jar").exists()) {
+        include(files("${rootDir}/../Hades/build/libs/HadesProtocol-${hades_version}.jar"))
+    } else {
+        include(forgeRuntimeLibrary("com.github.wynntils:hades:v${hades_version}"))
+    }
     include(forgeRuntimeLibrary("com.github.wynntils:antiope:v${antiope_version}"))
 
     implementation(annotationProcessor("io.github.llamalad7:mixinextras-common:${mixinextras_version}"))
