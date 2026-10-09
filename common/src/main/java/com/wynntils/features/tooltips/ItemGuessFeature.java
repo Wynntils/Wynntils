@@ -149,7 +149,7 @@ public class ItemGuessFeature extends Feature {
                 }
 
                 lineWidth += McUtils.mc().font.width(Component.literal(", ").append(itemsForLevel.get(i)));
-                if (lineWidth > maxWidth || i==0) {
+                if (lineWidth > maxWidth || i == 0) {
                     if (i != 0) {
                         guessLine.append(",");
                     }
