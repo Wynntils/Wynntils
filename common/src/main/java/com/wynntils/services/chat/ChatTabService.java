@@ -155,7 +155,7 @@ public final class ChatTabService extends Service {
         McUtils.getChat().allMessages.reversed().forEach(msg -> {
             Component component = msg.content();
             StyledText styledText = StyledText.fromComponent(component);
-            RecipientType recipientType = Handlers.Chat.getRecipientType(styledText);
+            RecipientType recipientType = Handlers.Chat.getDisplayRecipientType(styledText);
             List<ChatTab> recipientTabs = Services.ChatTab.getRecipientTabs(recipientType, styledText);
 
             recipientTabs.forEach(tab -> {
@@ -205,7 +205,7 @@ public final class ChatTabService extends Service {
             vanillaChatComponent.addMessage(component, headerSignature, tag);
 
             StyledText styledText = StyledText.fromComponent(component);
-            RecipientType recipientType = Handlers.Chat.getRecipientType(styledText);
+            RecipientType recipientType = Handlers.Chat.getDisplayRecipientType(styledText);
 
             List<ChatTab> recipientTabs = getRecipientTabs(recipientType, styledText);
             recipientTabs.forEach(tab -> {
@@ -273,7 +273,7 @@ public final class ChatTabService extends Service {
     private boolean matchMessage(ChatTab chatTab, RecipientType recipientType, StyledText originalStyledText) {
         if (chatTab.filteredTypes() != null) {
             if (!chatTab.filteredTypes().isEmpty()) {
-                if (!chatTab.filteredTypes().contains(recipientType)) {
+                if (!chatTab.filteredTypes().contains(recipientType.getFilterType())) {
                     return false;
                 }
             }
