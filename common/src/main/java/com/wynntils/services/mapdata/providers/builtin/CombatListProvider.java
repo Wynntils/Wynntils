@@ -36,7 +36,7 @@ public class CombatListProvider extends BuiltInProvider {
 
     @Override
     public Component getDescription() {
-        return Component.translatable("service.wynntils.mapdata.provider.categories.description");
+        return Component.translatable("service.wynntils.mapdata.provider.combatList.description");
     }
 
     @Override
