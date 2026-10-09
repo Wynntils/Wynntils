@@ -4,4 +4,12 @@
  */
 package com.wynntils.models.profession.type;
 
-public record HarvestMaterial(ResourceType resourceType, SourceMaterial sourceMaterial, int tier) {}
+public record HarvestMaterial(ResourceType resourceType, SourceMaterial sourceMaterial, int tier) {
+    public HarvestMaterial(ResourceType resourceType, SourceMaterial sourceMaterial) {
+        this(resourceType, sourceMaterial, -1);
+    }
+
+    public HarvestMaterial withTier(int tier) {
+        return new HarvestMaterial(this.resourceType(), this.sourceMaterial(), tier);
+    }
+}

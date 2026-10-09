@@ -7,6 +7,7 @@ package com.wynntils.models.profession;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
@@ -14,6 +15,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
 import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.event.ProfessionXpGainEvent;
 import com.wynntils.models.profession.label.CraftingStationLabelParser;
 import com.wynntils.models.profession.label.GatheringNodeHarvestLabelInfo;
@@ -87,6 +90,7 @@ public final class ProfessionModel extends Model {
 
     private long lastGatherTime = 0L;
     private HarvestInfo lastHarvest;
+    private Pair<Long, MaterialItem> lastHarvestItemGain = Pair.of(0L, null);
 
     private final TimedSet<Integer> harvestIds = new TimedSet<>(MAX_HARVEST_LABEL_AGE, TimeUnit.MILLISECONDS, true);
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
@@ -113,6 +117,15 @@ public final class ProfessionModel extends Model {
     }
 
     @SubscribeEvent
+    public void onContainerSetSlot(ContainerSetSlotEvent.Post event) {
+        Optional<MaterialItem> materialItem = Models.Item.asWynnItem(event.getItemStack(), MaterialItem.class);
+
+        if (materialItem.isEmpty()) return;
+
+        lastHarvestItemGain = Pair.of(System.currentTimeMillis(), materialItem.get());
+    }
+
+    @SubscribeEvent
     public void onLabelIdentified(LabelIdentifiedEvent event) {
         if (event.getLabelInfo() instanceof GatheringNodeHarvestLabelInfo gatheringInfo) {
             if (harvestIds.stream()
@@ -123,8 +136,19 @@ public final class ProfessionModel extends Model {
                     lastHarvest = new HarvestInfo(
                             lastGatherTime, gatheringInfo.getHarvestMaterial().get(), gatheringInfo.getXpGain());
                     lastGatherTime = 0L;
+                }
 
-                    if (lastHarvest.harvestMaterial().tier() == 3) {
+                if (lastHarvestItemGain.a() + MAX_HARVEST_LABEL_AGE >= System.currentTimeMillis()
+                        && lastHarvestItemGain.b() != null) {
+                    MaterialItem materialItem = lastHarvestItemGain.b();
+                    int tier = materialItem.getQualityTier();
+
+                    lastHarvest = new HarvestInfo(
+                            lastGatherTime, lastHarvest.harvestMaterial().withTier(tier), gatheringInfo.getXpGain());
+
+                    lastHarvestItemGain = Pair.of(0L, null);
+
+                    if (tier == 3) {
                         professionDryStreak.store(0);
                     } else {
                         professionDryStreak.store(professionDryStreak.get() + 1);

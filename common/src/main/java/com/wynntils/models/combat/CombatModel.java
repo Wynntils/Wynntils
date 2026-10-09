@@ -13,6 +13,7 @@ import com.wynntils.handlers.labels.event.LabelIdentifiedEvent;
 import com.wynntils.handlers.labels.event.LabelsRemovedEvent;
 import com.wynntils.handlers.labels.event.TextDisplayChangedEvent;
 import com.wynntils.handlers.labels.type.LabelInfo;
+import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.label.DamageLabelInfo;
 import com.wynntils.models.combat.label.DamageLabelParser;
@@ -26,19 +27,26 @@ import com.wynntils.models.combat.type.DebuffLabelEntry;
 import com.wynntils.models.combat.type.FocusedDamageEvent;
 import com.wynntils.models.combat.type.KillCreditType;
 import com.wynntils.models.combat.type.MobElementals;
+import com.wynntils.models.combat.type.MobKillEvent;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
 import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.world.entity.Display;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -47,6 +55,10 @@ public final class CombatModel extends Model {
     // to lose the entire focused mob state every time the boss bar is recreated, so we delay invalidation by this many
     // milliseconds and revalidate if a recreation/update event arrives during the delay
     private static final long FOCUSED_MOB_INVALIDATION_DELAY = 1000L;
+    private static final double KILL_ATTRIBUTION_DISTANCE_SQR = 0.25d;
+
+    private static final Pattern MOB_KILL_NAME_PATTERN =
+            Pattern.compile("^(?:§k)?((?:[a-zA-Z0-9,\\-']|(?: (?=[a-zA-Z0-9\\-'])))+)(?= )");
 
     private final DamageBar damageBar = new DamageBar();
 
@@ -54,6 +66,7 @@ public final class CombatModel extends Model {
     private final Map<Integer, Map<DamageType, Long>> liveDamageInfo = new HashMap<>();
 
     private final TimedSet<KillCreditType> killSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
+    private final TimedSet<Pair<Vec3, KillCreditType>> recentKillSet = new TimedSet<>(1, TimeUnit.SECONDS, true);
 
     private final Map<Integer, DebuffLabelEntry> debuffTextDisplays = new HashMap<>();
 
@@ -120,6 +133,7 @@ public final class CombatModel extends Model {
             lastDamageDealtTimestamp = System.currentTimeMillis();
         } else if (trackKills.get() && event.getLabelInfo() instanceof KillLabelInfo killLabelInfo) {
             killSet.put(killLabelInfo.getKillCredit());
+            recentKillSet.put(new Pair<>(killLabelInfo.getEntity().position(), killLabelInfo.getKillCredit()));
 
             if (killLabelInfo.getKillCredit() == KillCreditType.SELF) {
                 lastSelfKillTimestamp = System.currentTimeMillis();
@@ -156,6 +170,42 @@ public final class CombatModel extends Model {
             debuffTextDisplays.remove(id);
             liveDamageInfo.remove(id);
         });
+    }
+
+    @SubscribeEvent
+    public void onEntityRemoveEvent(RemoveEntitiesEvent.Pre event) {
+        if (!trackKills.get()) {
+            return;
+        }
+
+        for (Entity entity : event.getEntities()) {
+            if (entity == null) {
+                return;
+            }
+
+            if (!(entity instanceof Display.TextDisplay textDisplay)) {
+                return;
+            }
+
+            Iterator<Pair<Vec3, KillCreditType>> it = recentKillSet.iterator();
+            while (it.hasNext()) {
+                Vec3 pos = textDisplay.position();
+                Pair<Vec3, KillCreditType> entry = it.next();
+                Vec3 other = entry.a();
+                double xDiff = pos.x() - other.x();
+                double zDiff = pos.z() - other.z();
+                if (xDiff * xDiff + zDiff * zDiff < KILL_ATTRIBUTION_DISTANCE_SQR) {
+                    Matcher match =
+                            MOB_KILL_NAME_PATTERN.matcher(textDisplay.getText().getString());
+                    if (match.find()) {
+                        WynntilsMod.postEvent(new MobKillEvent(
+                                match.group(1), entry.b(), new Location((int) other.x, (int) other.y, (int) other.z)));
+                        it.remove();
+                        break;
+                    }
+                }
+            }
+        }
     }
 
     @SubscribeEvent
