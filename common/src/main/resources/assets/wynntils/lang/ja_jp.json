@@ -979,6 +979,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "プレイヤーゴーストの透過性",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "プレイヤーゴーストの鎧を透明にしますか？",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "透明なゴーストアーマー",
+  "feature.wynntils.playerPing.textShadow.description": "テキストの影はどのように見えるべきですか？",
   "feature.wynntils.playerViewer.description": "他のプレイヤーの装備をGUIで表示する機能を追加します。",
   "feature.wynntils.playerViewer.name": "装備ビューアー",
   "feature.wynntils.powderSpecialBarOverlay.description": "現在のパウダースペシャルバーを表示するオーバーレイを追加します。",
