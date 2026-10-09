@@ -979,6 +979,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Przezroczystość Ducha Gracza",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "Czy zbroja duchów graczy powinna być przezroczysta?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "Przezroczysta Zbroja Ducha",
+  "feature.wynntils.playerPing.textShadow.description": "Jak powinien wyglądać cień tekstu?",
   "feature.wynntils.playerViewer.description": "Dodaje możliwość przeglądania ekwipunku innych graczy w GUI.",
   "feature.wynntils.playerViewer.name": "Podgląd Ekwipunku",
   "feature.wynntils.powderSpecialBarOverlay.description": "Dodaje nakładkę do wyświetlania bieżącego paska specjalnego proszku.",
