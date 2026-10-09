@@ -987,6 +987,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Spelargastars genomskinlighet",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "Ska spelargastars rustning vara genomskinlig?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "Genomskinlig gastarustning",
+  "feature.wynntils.playerPing.textShadow.description": "Hur ska textskuggan se ut?",
   "feature.wynntils.playerViewer.description": "Lägger till möjligheten att se andra spelares utrustning i ett GUI.",
   "feature.wynntils.playerViewer.name": "Utrustningsvisare",
   "feature.wynntils.powderSpecialBarOverlay.description": "Lägger till en överlagring för att se den aktuella pulver-specialbaren.",
