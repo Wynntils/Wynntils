@@ -1111,6 +1111,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "플레이어 고스트 투명도",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "플레이어 고스트의 갑옷을 투명하게 할까요?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "플레이어 고스트 갑옷 투명화",
+  "feature.wynntils.playerPing.textShadow.description": "텍스트 그림자의 색을 결정합니다.",
   "feature.wynntils.playerViewer.description": "다른 플레이어의 정보를 보는 GUI를 추가합니다.",
   "feature.wynntils.playerViewer.name": "플레이어 뷰어",
   "feature.wynntils.powderSpecialBarOverlay.description": "파우더 특수 능력 충전도를 표시하는 막대를 제공합니다.",
