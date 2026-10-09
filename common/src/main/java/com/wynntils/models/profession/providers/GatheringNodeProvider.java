@@ -19,6 +19,8 @@ import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
+import net.minecraft.network.chat.Component;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -51,6 +53,16 @@ public class GatheringNodeProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "gathering-nodes";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.gatheringNodes.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.gatheringNodes.description");
     }
 
     @Override

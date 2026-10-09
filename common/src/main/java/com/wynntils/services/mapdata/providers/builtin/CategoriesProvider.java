@@ -26,6 +26,8 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
+import net.minecraft.network.chat.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -71,6 +73,16 @@ public class CategoriesProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "categories";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.categories.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.categories.description");
     }
 
     @Override

@@ -8,6 +8,8 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.stream.Stream;
+
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 
 public class MapIconsProvider extends BuiltInProvider {
@@ -79,6 +81,16 @@ public class MapIconsProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "icons";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.icons.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.icons.description");
     }
 
     @Override

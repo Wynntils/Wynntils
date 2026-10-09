@@ -4290,6 +4290,55 @@
   "service.wynntils.wynntilsAccount.clickToConnect2": "here",
   "service.wynntils.wynntilsAccount.clickToConnect3": " to try and reconnect.",
   "service.wynntils.wynntilsAccount.failedToConnect": "Trying to connect and set up the Wynntils Account with your data has failed. ",
+
+  "service.wynntils.mapdata.provider.waypoints.name": "Waypoints",
+  "service.wynntils.mapdata.provider.waypoints.description": "Provides player-created waypoints, player-made icons that can be used for any map feature, and categories specific to these waypoints.",
+
+  "service.wynntils.mapdata.provider.categories.name": "Categories",
+  "service.wynntils.mapdata.provider.categories.description": "Provides all the categories used by other map data providers to organize their features.",
+
+  "service.wynntils.mapdata.provider.icons.name": "Map Icons",
+  "service.wynntils.mapdata.provider.icons.description": "Provides the icons that all other providers use for rendering map features.",
+
+  "service.wynntils.mapdata.provider.serviceList.name": "Service Locations",
+  "service.wynntils.mapdata.provider.serviceList.description": "Provides map features for service points, including profession stations, booth shops, blacksmiths, emerald merchants, fast travel locations, and more.",
+
+  "service.wynntils.mapdata.provider.combatList.name": "Combat Locations",
+  "service.wynntils.mapdata.provider.combatList.description": "Provides map features for combat-related locations, including dungeons, boss altars, caves, and grind spots.",
+
+  "service.wynntils.mapdata.provider.placeList.name": "Places",
+  "service.wynntils.mapdata.provider.placeList.description": "Provides map features for towns, places, cities, and provinces.",
+
+  "service.wynntils.mapdata.provider.userMarkers.name": "User Markers",
+  "service.wynntils.mapdata.provider.userMarkers.description": "Shows markers placed by the player.",
+
+  "service.wynntils.mapdata.provider.players.name": "Players",
+  "service.wynntils.mapdata.provider.players.description": "Provides map features for nearby players.",
+
+  "service.wynntils.mapdata.provider.activities.name": "Activities",
+  "service.wynntils.mapdata.provider.activities.description": "Provides map features for the currently tracked activity from the content book, such as quests, caves, or boss altars.",
+
+  "service.wynntils.mapdata.provider.manageTerritory.name": "Manage Territory",
+  "service.wynntils.mapdata.provider.manageTerritory.description": "Provides map features for the custom territory management screen.",
+
+  "service.wynntils.mapdata.provider.territory.name": "Territory",
+  "service.wynntils.mapdata.provider.territory.description": "Provides map features for all guild territories displayed on the guild map.",
+
+  "service.wynntils.mapdata.provider.seaskipperDestination.name": "Seaskipper Destinations",
+  "service.wynntils.mapdata.provider.seaskipperDestination.description": "Provides Seaskipper locations.",
+
+  "service.wynntils.mapdata.provider.gatheringNodes.name": "Gathering Nodes",
+  "service.wynntils.mapdata.provider.gatheringNodes.description": "Displays the locations of gathering nodes (wood, ore, crops, fish, etc.).",
+
+  "service.wynntils.mapdata.provider.lootrunLocations.name": "Lootrun Locations",
+  "service.wynntils.mapdata.provider.lootrunLocations.description": "Shows markers during Lootruns.",
+
+  "service.wynntils.mapdata.provider.lootChests.name": "Loot Chests",
+  "service.wynntils.mapdata.provider.lootChests.description": "Provides map features for loot chests.",
+
+  "service.wynntils.mapdata.provider.guildAttacks.name": "Guild Attacks",
+  "service.wynntils.mapdata.provider.guildAttacks.description": "Provides map features for territories where a guild attack has been queued.",
+
   "statistics.wynntils.annihilationsCompleted.name": "Annihilations completed",
   "statistics.wynntils.annihilationsFailed.name": "Annihilations failed",
   "statistics.wynntils.corruptedCachesFound.name": "Corrupted Caches Found",

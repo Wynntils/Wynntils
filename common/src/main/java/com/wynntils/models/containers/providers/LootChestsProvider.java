@@ -7,6 +7,8 @@ package com.wynntils.models.containers.providers;
 import com.wynntils.services.mapdata.features.builtin.FoundChestLocation;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
+import net.minecraft.network.chat.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -17,6 +19,16 @@ public class LootChestsProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "loot-chests";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.lootChests.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.lootChests.description");
     }
 
     @Override

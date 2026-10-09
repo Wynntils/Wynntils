@@ -10,6 +10,8 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.services.mapdata.features.builtin.CombatLocation;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import net.minecraft.network.chat.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -25,6 +27,16 @@ public class CombatListProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "combat-list";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.combatList.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.categories.description");
     }
 
     @Override

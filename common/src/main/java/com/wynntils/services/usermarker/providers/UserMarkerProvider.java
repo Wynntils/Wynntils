@@ -7,6 +7,8 @@ package com.wynntils.services.usermarker.providers;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.usermarker.type.UserMarkerLocation;
+import net.minecraft.network.chat.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -18,6 +20,16 @@ public final class UserMarkerProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "user-markers";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.userMarkers.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.userMarkers.description");
     }
 
     @Override

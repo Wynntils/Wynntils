@@ -12,6 +12,7 @@ import com.wynntils.services.mapdata.impl.MapCategoryImpl;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.StringUtils;
+import net.minecraft.network.chat.Component;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,6 +28,16 @@ public class WaypointsProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "waypoints";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.waypoints.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.waypoints.description");
     }
 
     @Override

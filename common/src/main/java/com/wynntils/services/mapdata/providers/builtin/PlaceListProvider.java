@@ -10,6 +10,8 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.services.mapdata.features.builtin.PlaceLocation;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import net.minecraft.network.chat.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -25,6 +27,16 @@ public class PlaceListProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "place-list";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.placeList.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.placeList.description");
     }
 
     @Override

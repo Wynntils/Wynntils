@@ -8,6 +8,8 @@ import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
+import net.minecraft.network.chat.Component;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -18,6 +20,16 @@ public class SeaskipperDestinationAreaProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "seaskipper-destination";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.seaskipperDestination.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.seaskipperDestination.description");
     }
 
     @Override

@@ -27,6 +27,7 @@ import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -62,6 +63,16 @@ public class PlayerProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "players";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.players.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.players.description");
     }
 
     @Override

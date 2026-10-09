@@ -20,6 +20,8 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
+import net.minecraft.network.chat.Component;
+
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
@@ -45,6 +47,16 @@ public class GuildAttackLocationProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "guild-attacks";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.guildAttacks.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.guildAttacks.description");
     }
 
     @Override
