@@ -68,7 +68,7 @@ public class ShamanSummonModel extends Model {
     }
 
     @SubscribeEvent
-    public void onPuppetRemoved(RemoveEntitiesEvent event) {
+    public void onPuppetRemoved(RemoveEntitiesEvent.Post event) {
         if (!Models.WorldState.onWorld()) return;
         if (Models.Character.getClassType() != ClassType.SHAMAN) return;
         event.getEntityIds().forEach(activePuppetsMap::remove);

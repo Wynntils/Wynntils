@@ -53,7 +53,7 @@ public final class BonusTotemModel extends Model {
     }
 
     @SubscribeEvent
-    public void onTotemDestroy(RemoveEntitiesEvent e) {
+    public void onTotemDestroy(RemoveEntitiesEvent.Post e) {
         if (!Models.WorldState.onWorld()) return;
 
         e.getEntityIds().forEach(entity -> {

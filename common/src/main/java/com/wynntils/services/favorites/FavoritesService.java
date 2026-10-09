@@ -13,11 +13,10 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
-import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.models.items.items.game.IngredientItem;
-import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.network.chat.Component;
@@ -38,28 +37,25 @@ public final class FavoritesService extends Service {
         return isFavorite(StyledText.fromComponent(component).getStringWithoutFormatting());
     }
 
+    public boolean isFavorite(NamedItemProperty namedItemProperty) {
+        return isFavorite(namedItemProperty.getName());
+    }
+
     public boolean isFavorite(ItemStack itemStack) {
         return isFavorite(itemStack.getHoverName());
     }
 
     public boolean calculateFavorite(ItemStack itemStack, WynnItem wynnItem) {
-        String unformattedName = StyledText.fromComponent(itemStack.getHoverName())
+        String unformattedName = WynnUtils.stripItemNameMarkers(StyledText.fromComponent(itemStack.getHoverName())
                 .getNormalized()
-                .getStringWithoutFormatting();
+                .getStringWithoutFormatting());
 
         if (isFavorite(unformattedName)) {
             return true;
         }
 
-        if (wynnItem instanceof IngredientItem ingredientItem) {
-            return isFavorite(ingredientItem.getIngredientInfo().name());
-        }
-
-        // This is for unidentified items that have been revealed
-        if (wynnItem instanceof GearItem gearItem) {
-            return isFavorite(gearItem.getName());
-        } else if (wynnItem instanceof TomeItem tomeItem) {
-            return isFavorite(tomeItem.getName());
+        if (wynnItem instanceof NamedItemProperty namedItemProperty) {
+            return isFavorite(namedItemProperty);
         }
 
         if (wynnItem instanceof IngredientPouchItem pouchItem) {

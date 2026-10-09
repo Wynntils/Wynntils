@@ -18,10 +18,9 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
-import com.wynntils.mc.event.PlayerAttackEvent;
-import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
+import com.wynntils.models.containers.event.LootChestOpenedEvent;
 import com.wynntils.models.containers.type.LootChestTier;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -42,8 +41,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
@@ -156,17 +153,10 @@ public class MainMapFeature extends Feature implements ExternalConfigurationScre
     }
 
     @SubscribeEvent
-    public void onLeftClick(PlayerAttackEvent event) {
+    public void onLootChestOpened(LootChestOpenedEvent event) {
         if (!autoWaypointChests.get()) return;
 
-        handleEntity(event.getTarget());
-    }
-
-    @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.InteractAt event) {
-        if (!autoWaypointChests.get()) return;
-
-        handleEntity(event.getEntityHitResult().getEntity());
+        lastChestPos = event.getBlockPos();
     }
 
     @SubscribeEvent
@@ -220,13 +210,6 @@ public class MainMapFeature extends Feature implements ExternalConfigurationScre
         // TODO: Waypoints provider integration - PR2+
         // WaypointsProvider.resetFeatures();
         // customPois.get().forEach(WaypointsProvider::registerFeature);
-    }
-
-    private void handleEntity(Entity entity) {
-        if (entity != null && entity.getType() == EntityType.INTERACTION) {
-            // We don't actually know if this is a chest, but it's a good enough guess.
-            lastChestPos = entity.blockPosition();
-        }
     }
 
     @Override
