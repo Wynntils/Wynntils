@@ -13,7 +13,6 @@ import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
 import com.wynntils.models.account.AccountModel;
 import com.wynntils.models.activities.ActivityModel;
-import com.wynntils.models.activities.DungeonModel;
 import com.wynntils.models.activities.caves.CaveModel;
 import com.wynntils.models.activities.discoveries.DiscoveryModel;
 import com.wynntils.models.activities.quests.QuestModel;
@@ -99,7 +98,6 @@ public final class Models {
     public static final ContainerModel Container = new ContainerModel();
     public static final DialogueModel Dialogue = new DialogueModel();
     public static final DiscoveryModel Discovery = new DiscoveryModel();
-    public static final DungeonModel Dungeon = new DungeonModel();
     public static final ElementModel Element = new ElementModel();
     public static final EmeraldModel Emerald = new EmeraldModel();
     public static final EmoteModel Emote = new EmoteModel();
