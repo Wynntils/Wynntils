@@ -41,6 +41,7 @@ public class ConfigTile extends WynntilsButton {
     private final GeneralSettingsButton resetButton;
     private final StyledText displayName;
     private final Overlay overlay;
+    private final Config<?> config;
     private AbstractWidget configOptionElement;
 
     public ConfigTile(int x, int y, int width, int height, Screen screen, Config<?> config, Overlay overlay) {
@@ -66,6 +67,7 @@ public class ConfigTile extends WynntilsButton {
         }
 
         this.overlay = overlay;
+        this.config = config;
         this.configOptionElement = getWidgetFromConfig(config);
         this.resetButton = new ResetButton(
                 config,
@@ -116,6 +118,10 @@ public class ConfigTile extends WynntilsButton {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         // Prevent interaction when the tile is outside of the mask from the screen, same applies to drag and released
         if ((event.y() <= maskTopY || event.y() >= maskBottomY)) return false;
+
+        if (screen instanceof OverlaySettingsScreen settings && overlay != null) {
+            settings.beginSettingEdit(overlay, config);
+        }
 
         if (McUtils.screen() instanceof BaseWynntilsBookSettingsScreen bookSettingsScreen) {
             bookSettingsScreen.changesMade();
