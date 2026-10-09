@@ -979,6 +979,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "玩家幽灵的透明度",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "玩家幽灵的盔甲是否应该透明？",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "透明幽灵盔甲",
+  "feature.wynntils.playerPing.textShadow.description": "文字阴影应该是什么样的？",
   "feature.wynntils.playerViewer.description": "在GUI中添加查看其他玩家装备的功能。",
   "feature.wynntils.playerViewer.name": "装备查看器",
   "feature.wynntils.powderSpecialBarOverlay.description": "增加一个覆盖层以查看当前的粉末特殊条。",
