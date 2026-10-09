@@ -982,6 +982,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Durchsichtigkeit des Spieler-Geistes",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "Sollte die Rüstung der Spieler-Geister transparent sein?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "Transparente Geisterrüstung",
+  "feature.wynntils.playerPing.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.playerViewer.description": "Fügt die Möglichkeit hinzu, die Ausrüstung anderer Spieler in einer GUI anzuzeigen.",
   "feature.wynntils.playerViewer.name": "Ausrüstungsanzeige",
   "feature.wynntils.powderSpecialBarOverlay.description": "Fügt eine Überlagerung hinzu, um die aktuelle Pulverspezialleiste zu sehen.",
