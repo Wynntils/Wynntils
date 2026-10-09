@@ -979,6 +979,7 @@
   "feature.wynntils.playerGhostTransparency.playerGhostTranslucenceLevel.name": "Spelersgeest Doorzichtigheid",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.description": "Moet de bepantsering van spelersgeesten transparant zijn?",
   "feature.wynntils.playerGhostTransparency.transparentPlayerGhostArmor.name": "Transparante Geestbepantsering",
+  "feature.wynntils.playerPing.textShadow.description": "Hoe moet de tekstschaduw eruitzien?",
   "feature.wynntils.playerViewer.description": "Voegt de mogelijkheid toe om de uitrusting van andere spelers in een GUI te bekijken.",
   "feature.wynntils.playerViewer.name": "Uitrusting Viewer",
   "feature.wynntils.powderSpecialBarOverlay.description": "Voegt een overlay toe om de huidige poeder speciale balk te zien.",
