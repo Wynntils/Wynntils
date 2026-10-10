@@ -23,8 +23,11 @@ import com.wynntils.screens.hadesinteraction.HadesInteractionWheelScreen;
 import com.wynntils.screens.playerviewer.GearSharingSettingsScreen;
 import com.wynntils.services.hades.HadesUser;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.world.entity.player.Player;
 
 @ConfigCategory(Category.PLAYERS)
 public class HadesFeature extends Feature implements ExternalConfigurationScreen {
@@ -101,19 +104,28 @@ public class HadesFeature extends Feature implements ExternalConfigurationScreen
         return GearSharingSettingsScreen.create(previousScreen);
     }
 
-    public void tryOpenPlayerViewer() {
-        playerViewer.tryOpenPlayerViewer();
+    public void tryOpenPlayerViewer(Optional<Player> hoveredPlayer) {
+        playerViewer.tryOpenPlayerViewer(hoveredPlayer);
     }
 
     private void openInteractionWheel() {
         List<HadesUser> hadesUsingPartyMembers = Services.Hades.getPingEligibleHadesUsers();
+        Optional<Player> hoveredPlayer = RaycastUtils.getHoveredPlayer();
 
-        if (!hadesUsingPartyMembers.isEmpty() && playerPing.isEnabled()) {
+        if (shouldOpenWheelScreen(hadesUsingPartyMembers, hoveredPlayer)) {
             if (McUtils.screen() == null) {
-                McUtils.setScreen(HadesInteractionWheelScreen.create(this, playerPing, playerViewer));
+                McUtils.setScreen(HadesInteractionWheelScreen.create(this, playerPing, playerViewer, hoveredPlayer));
             }
         } else if (playerViewer.isEnabled()) {
-            tryOpenPlayerViewer();
+            tryOpenPlayerViewer(hoveredPlayer);
         }
+    }
+
+    private boolean shouldOpenWheelScreen(List<HadesUser> hadesUsingPartyMembers, Optional<Player> hoveredPlayer) {
+        boolean playerSneaking = McUtils.options().keyShift.isDown();
+
+        return !hadesUsingPartyMembers.isEmpty()
+                && playerPing.isEnabled()
+                && !(hoveredPlayer.isPresent() && playerSneaking);
     }
 }
