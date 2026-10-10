@@ -122,6 +122,10 @@ public class HadesFeature extends Feature implements ExternalConfigurationScreen
     }
 
     private boolean shouldOpenWheelScreen(List<HadesUser> hadesUsingPartyMembers, Optional<Player> hoveredPlayer) {
-        return !hadesUsingPartyMembers.isEmpty() && playerPing.isEnabled();
+        boolean playerSneaking = McUtils.options().keyShift.isDown();
+
+        return !hadesUsingPartyMembers.isEmpty()
+                && playerPing.isEnabled()
+                && !(hoveredPlayer.isPresent() && playerSneaking);
     }
 }
