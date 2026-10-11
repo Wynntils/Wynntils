@@ -13,6 +13,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
@@ -93,6 +94,9 @@ public final class LootrunBeaconModel extends Model {
 
     private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
             new LootrunBeaconMarkerProvider();
+
+    @Persisted
+    public final Config<Boolean> logDebugBeaconInfo = new Config<>(false);
 
     @Persisted
     private final Storage<Map<String, LootrunBeaconDetails>> lootrunBeaconDetailsStorage =
@@ -255,6 +259,28 @@ public final class LootrunBeaconModel extends Model {
             // so add a new "unknown" task location to the set.
             Location location = Location.containing(event.getParticle().position());
             possibleTaskLocations.add(new TaskLocation(location.toString(), location, LootrunTaskType.UNKNOWN));
+        }
+
+        if (!logDebugBeaconInfo.get()) return;
+
+        // Check if we have tasks from multiple locations, log in case we do.
+        for (LootrunLocation location : LootrunLocation.values()) {
+            List<TaskLocation> tasksInLocation = possibleTaskLocations.stream()
+                    .filter(taskLocation ->
+                            taskLocations.getOrDefault(location, Set.of()).contains(taskLocation))
+                    .toList();
+
+            if (!tasksInLocation.isEmpty() && tasksInLocation.size() < possibleTaskLocations.size()) {
+                List<TaskLocation> tasksNotInLocation = possibleTaskLocations.stream()
+                        .filter(taskLocation -> !tasksInLocation.contains(taskLocation))
+                        .toList();
+
+                WynntilsMod.warn("Found tasks from multiple locations: " + possibleTaskLocations);
+                WynntilsMod.warn("Task location is: " + location);
+                WynntilsMod.warn("Tasks in location: " + tasksInLocation);
+                WynntilsMod.warn("Tasks outside location: " + tasksNotInLocation);
+                break;
+            }
         }
     }
 
