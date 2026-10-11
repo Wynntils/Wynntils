@@ -15,7 +15,6 @@ import com.wynntils.models.players.event.FriendsEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.screens.playerviewer.PlayerViewerScreen;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.entity.player.Player;
@@ -36,8 +35,7 @@ public class PlayerViewerFeature extends Feature {
                         ConfigDependency.functionality(Services.Hades.connectToHades)));
     }
 
-    public void tryOpenPlayerViewer() {
-        Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();
+    public void tryOpenPlayerViewer(Optional<Player> hitPlayer) {
         if (hitPlayer.isEmpty()) return;
 
         if (!Models.Player.isLocalPlayer(hitPlayer.get())) return;
