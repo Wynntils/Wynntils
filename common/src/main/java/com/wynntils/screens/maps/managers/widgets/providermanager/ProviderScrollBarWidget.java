@@ -56,7 +56,7 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
             }
         }
 
-        Services.MapData.getJsonProviderInfos().forEach((jsonProviderInfo, isActive) -> {
+        Services.MapData.getJsonProviderInfos().forEach((providerId, jsonProviderInfo) -> {
             registeredWidgets.add(ProviderEntryWidget.createJsonProviderEntry(
                     jsonProviderInfo,
                     ProviderType.fromJsonProviderType(jsonProviderInfo.providerType()),
@@ -141,11 +141,12 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
             return true;
         }
 
-        for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-            if (isInsideViewport(event.x(), event.y())
-                    && abstractProviderWidget.isHovered()
-                    && abstractProviderWidget.mouseClicked(event, isDoubleClick)) {
-                return true;
+        if (isInsideViewport(event.x(), event.y())) {
+            for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
+                if (abstractProviderWidget.isHovered()
+                        && abstractProviderWidget.mouseClicked(event, isDoubleClick)) {
+                    return true;
+                }
             }
         }
 
@@ -156,14 +157,14 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
     public boolean mouseReleased(MouseButtonEvent event) {
         super.mouseReleased(event);
 
-        for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-            if (isInsideViewport(event.x(), event.y())
-                    && abstractProviderWidget.isHovered()
-                    && abstractProviderWidget.mouseReleased(event)) {
-                return true;
+        if (isInsideViewport(event.x(), event.y())) {
+            for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
+                if (abstractProviderWidget.isHovered()
+                        && abstractProviderWidget.mouseReleased(event)) {
+                    return true;
+                }
             }
         }
-
         return false;
     }
 
@@ -173,11 +174,12 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
             return true;
         }
 
-        for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-            if (isInsideViewport(event.x(), event.y())
-                    && abstractProviderWidget.isHovered()
-                    && abstractProviderWidget.mouseDragged(event, dragX, dragY)) {
-                return true;
+        if (isInsideViewport(event.x(), event.y())) {
+            for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
+                if (abstractProviderWidget.isHovered()
+                        && abstractProviderWidget.mouseDragged(event, dragX, dragY)) {
+                    return true;
+                }
             }
         }
         return false;
@@ -190,12 +192,10 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
         }
 
         for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-            if (isInsideViewport(mouseX, mouseY)) {
                 if (abstractProviderWidget.isHovered()
                         && abstractProviderWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
                     return true;
                 }
-            }
         }
 
         return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);

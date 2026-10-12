@@ -441,13 +441,14 @@ public class MapDataService extends Service {
         invalidateCaches(providerInfo.provider());
     }
 
-    private Optional<MapDataProvider> getJsonProviderFromInfo(JsonProviderInfo info) {
-        String prefix = switch (info.providerType()) {
-            case BUNDLED -> "bundled:";
-            case LOCAL -> "local:";
-            case REMOTE -> "online:";
-        };
-        return Optional.ofNullable(allProviders.get(prefix + info.providerId()));
+    public Optional<JsonProviderInfo> getJsonProviderInfo(MapDataProvider provider) {
+        if (provider == null) return Optional.empty();
+
+        return jsonProviders.get().values().stream()
+                .filter(info -> getJsonProviderFromInfo(info)
+                        .map(p -> p == provider || p.equals(provider))
+                        .orElse(false))
+                .findFirst();
     }
 
     private void registerJsonProvider(JsonProviderInfo providerInfo) {
@@ -568,17 +569,24 @@ public class MapDataService extends Service {
         iconCache.keySet().removeAll(toBeRemovedIcons);
     }
 
-    private Stream<MapDataProvider> getProviders() {
+    public Stream<MapDataProvider> getProviders() {
         return registeredProviders.entrySet().stream()
                 .filter(entry -> isProviderEnabled(entry.getKey()))
                 .map(entry -> entry.getValue().provider());
     }
 
     public Optional<MapDataProvider> getProviderFromId(String providerId) {
-        return allProviders.entrySet().stream()
-                .filter(entry -> entry.getKey().endsWith(providerId))
-                .map(Map.Entry::getValue)
+        return registeredProviders.entrySet().stream()
+                .filter(entry -> entry.getKey().equals(providerId)
+                        || entry.getKey().endsWith(":" + providerId))
+                .map(entry -> entry.getValue().provider())
                 .findFirst();
+    }
+
+
+    private Optional<MapDataProvider> getJsonProviderFromInfo(JsonProviderInfo info) {
+        return Optional.ofNullable(registeredProviders.get(info.completeId()))
+                .map(MapDataProviderInfo::provider);
     }
 
     // endregion

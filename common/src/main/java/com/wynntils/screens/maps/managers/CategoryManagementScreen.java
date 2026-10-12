@@ -48,7 +48,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     private static final int WIDTH_OFFSET = 15;
     private static final int HEIGHT_OFFSET = 18;
 
-    private final AbstractMapScreen previousScreen;
+    private final Screen previousScreen;
     private int offsetX;
     private int offsetY;
 
@@ -97,15 +97,24 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     // endregion
 
     private String selectedCategory;
-    private OverrideType selectedOverrideType = OverrideType.MAP_LOCATION_OVERRIDE;
+    private OverrideType selectedOverrideType;
 
-    private CategoryManagementScreen(AbstractMapScreen previousScreen) {
+    private CategoryManagementScreen(Screen previousScreen, String initialCategory, OverrideType initialOverrideType) {
         super(Component.literal("Category Management Screen"));
         this.previousScreen = previousScreen;
+        this.selectedCategory = initialCategory;
+        this.selectedOverrideType = initialOverrideType;
     }
 
-    public static Screen create(AbstractMapScreen previousScreen) {
-        return new CategoryManagementScreen(previousScreen);
+    public static Screen create(Screen previousScreen) {
+        return create(previousScreen, null, OverrideType.MAP_LOCATION_OVERRIDE);
+    }
+
+    /**
+     * Opens the screen with the given category already selected (null for none).
+     */
+    public static Screen create(Screen previousScreen, String categoryId, OverrideType overrideType) {
+        return new CategoryManagementScreen(previousScreen, categoryId, overrideType);
     }
 
     // This makes it so when we open a color picker screen or an icon selection screen that the widgets do not get
@@ -393,6 +402,12 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
         updateMenu();
         updateOptionWidgetsVisibility();
+
+        // Restore the selection, for when we are opened on a specific category or get resized
+        if (selectedCategory != null) {
+            categoryTreeWidget.selectCategory(selectedCategory);
+            setSelectedCategory(selectedCategory);
+        }
     }
 
     @Override
@@ -567,3 +582,4 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         return overrideName;
     }
 }
+

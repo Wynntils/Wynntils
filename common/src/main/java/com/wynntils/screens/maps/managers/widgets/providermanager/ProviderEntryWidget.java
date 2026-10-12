@@ -34,6 +34,7 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
     private final BuiltInProvider builtInProvider;
     private final JsonProviderInfo jsonProviderInfo;
     private final String providerId;
+    private final Component name;
 
     private ProviderEntryWidget(
             BuiltInProvider builtInProvider,
@@ -44,8 +45,11 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
         this.builtInProvider = builtInProvider;
         this.jsonProviderInfo = jsonProviderInfo;
         this.providerId = builtInProvider != null ? builtInProvider.getProviderId() : jsonProviderInfo.providerId();
-        message = Component.literal(this.providerId);
+        this.name = builtInProvider != null ? builtInProvider.getName() : Component.literal(this.providerId);
         this.parent = parent;
+
+        // Used for searching.
+        message = this.name;
     }
 
     public static ProviderEntryWidget createBuiltInProviderEntry(
@@ -78,7 +82,7 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString(providerId),
+                        StyledText.fromComponent(name),
                         getX() + PADDING,
                         getY() + this.height / 2f,
                         CommonColors.WHITE,

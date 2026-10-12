@@ -50,6 +50,33 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
         rebuildVisibleRows();
     }
 
+    public void selectCategory(String categoryId) {
+        if (fullTree == null || categoryId == null) return;
+
+        int separator = categoryId.indexOf(':');
+        while (separator != -1) {
+            expandedFullIds.add(categoryId.substring(0, separator));
+            separator = categoryId.indexOf(':', separator + 1);
+        }
+
+        selectedFullId = categoryId;
+        rebuildVisibleRows();
+
+        for (int i = 0; i < rowWidgets.size(); i++) {
+            if (categoryId.equals(rowWidgets.get(i).getNode().getFullId())) {
+                scrollOffsetY = Math.max(
+                        0,
+                        i * CategoryTreeEntryWidget.ROW_HEIGHT
+                                + TREE_TOP_PADDING
+                                - (this.height - CategoryTreeEntryWidget.ROW_HEIGHT) / 2);
+                break;
+            }
+        }
+
+        recalculateCanvasSize();
+        updateRowPositions();
+    }
+
     public void filter(String searchText) {
         if (fullTree == null) return;
 

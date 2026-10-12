@@ -370,6 +370,7 @@ public enum Texture {
 
     // Provider Management Screen
     PROVIDER_MANAGER_ICON("map/managers/provider_manager/provider_manager_icon.png", 16, 16),
+    PROVIDER_SCROLL_LIST_TOP_BUTTON_RED("map/managers/provider_manager/scroll_list_top_button_red.png", 40, 18, 13, 13, 10, 2),
 
     // Map Managers
     MANAGER_BACKGROUND("map/managers/manager_background.png", 576, 320),

@@ -48,7 +48,7 @@ public class NewProviderButton extends AbstractWidget implements TooltipProvider
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                Texture.MANAGER_WIDGET_BACKGROUND,
+                Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
                 x,
                 y,
                 this.width,

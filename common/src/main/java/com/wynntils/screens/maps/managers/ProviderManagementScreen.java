@@ -5,21 +5,30 @@
 package com.wynntils.screens.maps.managers;
 
 import com.google.common.collect.Lists;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.screens.maps.managers.type.ProviderManagerMode;
 import com.wynntils.screens.maps.managers.type.ProviderType;
 import com.wynntils.screens.maps.managers.widgets.ManagerSearchWidget;
 import com.wynntils.screens.maps.managers.widgets.StyledButton;
 import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
+import com.wynntils.screens.maps.managers.widgets.providermanager.DescriptionScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.NewProviderButton;
 import com.wynntils.screens.maps.managers.widgets.providermanager.OpenLocalProviderFolderButton;
-import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderInfoWidget;
+import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderInfoScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderManagerInfoWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.RefreshLocalProvidersButton;
+import com.wynntils.screens.maps.managers.widgets.providermanager.RemoveProviderButton;
+import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
+import com.wynntils.services.mapdata.providers.json.JsonProvider;
+import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
+import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -31,7 +40,10 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+
+import java.util.Optional;
 
 public final class ProviderManagementScreen extends WynntilsScreen {
     private static final int WIDTH_OFFSET = 15;
@@ -50,7 +62,9 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     public ManagerSearchWidget providerSearchWidget;
     public ProviderScrollBarWidget providerScrollBarWidget;
 
-    public ProviderInfoWidget providerInfoWidget;
+    public ProviderInfoScrollBarWidget providerInfoScrollBarWidget;
+    public DescriptionScrollBarWidget descriptionScrollBarWidget;
+    public RemoveProviderButton removeProviderButton;
 
     public NewProviderButton newProviderButton;
     public RefreshLocalProvidersButton refreshLocalProvidersButton;
@@ -67,6 +81,20 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
     public static Screen create(AbstractMapScreen oldMapScreen) {
         return new ProviderManagementScreen(oldMapScreen);
+    }
+
+    // This makes it so when we open a color picker screen or an icon selection screen that the widgets do not get
+    // cleared.
+    @Override
+    protected void rebuildWidgets() {
+        providerInfoScrollBarWidget.populateWidgets();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        this.width = width;
+        this.height = height;
+        super.rebuildWidgets();
     }
 
     @Override
@@ -101,13 +129,35 @@ public final class ProviderManagementScreen extends WynntilsScreen {
                 this);
         this.addRenderableWidget(providerScrollBarWidget);
 
-        providerInfoWidget = new ProviderInfoWidget(
+        // provider info menu
+
+        providerInfoScrollBarWidget = new ProviderInfoScrollBarWidget(
                 offsetX + WIDTH_OFFSET + 250 + 5,
-                offsetY + HEIGHT_OFFSET + 25,
+                offsetY + HEIGHT_OFFSET + 25 + 18,
                 291,
-                284 - 25,
+                284 - 25 - 100 - 27,
                 this);
-        this.addRenderableWidget(providerInfoWidget);
+        this.addRenderableWidget(providerInfoScrollBarWidget);
+
+        descriptionScrollBarWidget = new DescriptionScrollBarWidget(
+                offsetX + WIDTH_OFFSET + 250 + 5,
+                offsetY + HEIGHT_OFFSET + 207 - 27,
+                291,
+                79,
+                this);
+        this.addRenderableWidget(descriptionScrollBarWidget);
+
+        removeProviderButton = new RemoveProviderButton(
+                offsetX + WIDTH_OFFSET + 250 + 5 + 291 / 2 - 100 /2,
+                offsetY + HEIGHT_OFFSET + 207 + 52 + 5,
+                100,
+                20,
+                this);
+        this.addRenderableWidget(removeProviderButton);
+
+        // end region
+
+        // new provider menu
 
         newProviderButton = new NewProviderButton(
                 offsetX + WIDTH_OFFSET,
@@ -163,6 +213,8 @@ public final class ProviderManagementScreen extends WynntilsScreen {
                 () -> {});
         this.addRenderableWidget(saveRemoteProviderButton);
 
+        // end region
+
         updateMenu();
     }
 
@@ -170,6 +222,17 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
 
+        renderNewProviderMenu(guiGraphics, mouseX, mouseY, partialTick);
+
+        renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderTooltips(guiGraphics, mouseX, mouseY);
+    }
+
+    private void renderBackgroundTexture(GuiGraphics guiGraphics) {
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.MANAGER_BACKGROUND, offsetX, offsetY);
+    }
+
+    private void renderNewProviderMenu(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (providerManagerMode == ProviderManagerMode.NEW_PROVIDER) {
             // Local provider
             RenderUtils.drawNineSliceScalingTexturedRect(
@@ -252,13 +315,6 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
             // end region
         }
-
-        renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
-        renderTooltips(guiGraphics, mouseX, mouseY);
-    }
-
-    private void renderBackgroundTexture(GuiGraphics guiGraphics) {
-        RenderUtils.drawTexturedRect(guiGraphics, Texture.MANAGER_BACKGROUND, offsetX, offsetY);
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
@@ -274,19 +330,49 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     }
 
     @Override
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        TextInputBoxWidget focused = getFocusedTextInput();
+        boolean handled = super.doMouseClicked(event, isDoubleClick);
+
+        if (focused != null && !focused.isMouseOver(event.x(), event.y())) {
+            setFocusedTextInput(null);
+        }
+
+        return handled;
+    }
+
+    @Override
     public void onClose() {
         McUtils.setScreen(previousScreen);
     }
 
     private void updateMenu() {
-        providerInfoWidget.visible = false;
+        providerInfoScrollBarWidget.visible = false;
+        descriptionScrollBarWidget.visible = false;
         openLocalProviderFolderButton.visible = false;
         remoteProviderNameTextBox.visible = false;
         remoteProviderURLTextBox.visible = false;
         saveRemoteProviderButton.visible = false;
+        removeProviderButton.visible = false;
 
         if (providerManagerMode == ProviderManagerMode.DEFAULT) {
-            providerInfoWidget.visible = true;
+            providerInfoScrollBarWidget.visible = true;
+            descriptionScrollBarWidget.visible = true;
+            descriptionScrollBarWidget.updateContentHeight();
+
+            String providerUrl = Services.MapData.getProviderFromId(getSelectedProviderId())
+                    .flatMap(Services.MapData::getJsonProviderInfo)
+                    .map(JsonProviderInfo::providerUrl)
+                    .orElse(null);
+
+            if (providerUrl != null) {
+                removeProviderButton.visible = true;
+                descriptionScrollBarWidget.setHeight(79);
+            } else {
+                removeProviderButton.visible = false;
+                descriptionScrollBarWidget.setHeight(79 + 25);
+            }
+
         } else if (providerManagerMode == ProviderManagerMode.NEW_PROVIDER) {
             openLocalProviderFolderButton.visible = true;
             remoteProviderNameTextBox.visible = true;
@@ -298,6 +384,28 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     public void setSelectedProvider(String providerId, ProviderType providerType) {
         selectedProviderId = providerId;
         selectedProviderType = providerType;
+        providerInfoScrollBarWidget.populateWidgets();
+
+        Optional<MapDataProvider> providerOptional = Services.MapData.getProviderFromId(getSelectedProviderId());
+
+        if (providerOptional.isPresent()) {
+            MapDataProvider provider = providerOptional.get();
+
+            if (provider instanceof BuiltInProvider builtInProvider) {
+                descriptionScrollBarWidget.setDescription(StyledText.fromComponent(builtInProvider.getDescription()));
+
+            } else if (provider instanceof JsonProvider jsonProvider) {
+                descriptionScrollBarWidget.setDescription(
+                        jsonProvider.getDescription()
+                                .map(StyledText::fromComponent)
+                                .orElse(null));
+
+            } else {
+                descriptionScrollBarWidget.setDescription(null);
+            }
+        }
+
+        descriptionScrollBarWidget.updateContentHeight();
         setProviderManagerMode(ProviderManagerMode.DEFAULT);
         updateMenu();
     }
