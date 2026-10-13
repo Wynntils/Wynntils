@@ -21,6 +21,7 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -46,13 +47,17 @@ public class ItemGuessFeature extends Feature {
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
+        int maxWidth = 0;
+        for (Component line : event.getTooltips()) {
+            maxWidth = Math.max(maxWidth, McUtils.mc().font.width(line));
+        }
 
         List<Component> tooltips = LoreUtils.appendTooltip(
-                event.getItemStack(), event.getTooltips(), getTooltipAddon(gearBoxItemOpt.get()));
+                event.getItemStack(), event.getTooltips(), getTooltipAddon(gearBoxItemOpt.get(), maxWidth));
         event.setTooltips(tooltips);
     }
 
-    private List<Component> getTooltipAddon(GearBoxItem gearBoxItem) {
+    private List<Component> getTooltipAddon(GearBoxItem gearBoxItem, int maxWidth) {
         List<Component> addon = new ArrayList<>();
         List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItem);
         GearTier gearTier = gearBoxItem.getGearTier();
@@ -65,7 +70,6 @@ public class ItemGuessFeature extends Feature {
                         .withStyle(ChatFormatting.GRAY)));
 
         Map<Integer, List<MutableComponent>> levelToItems = new TreeMap<>();
-
         for (GearInfo gearInfo : possibleGear) {
             int level = (gearInfo != null) ? gearInfo.requirements().level() : -1;
 
@@ -88,15 +92,15 @@ public class ItemGuessFeature extends Feature {
                 continue;
             }
 
-            MutableComponent guesses = Component.literal("    ");
+            MutableComponent guessLine = Component.literal("    ");
 
-            guesses.append(Component.literal("- ")
+            guessLine.append(Component.literal("- ")
                     .withStyle(ChatFormatting.GREEN)
                     .append(Component.translatable("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level)
                             .withStyle(ChatFormatting.GRAY)));
 
             if (showGuessesPrice.get() && level != -1) {
-                guesses.append(Component.literal(" [")
+                guessLine.append(Component.literal(" [")
                         .append(Component.literal((gearTier.getGearIdentificationCost(level) + " "
                                         + EmeraldUnits.EMERALD.getSymbol()))
                                 .withStyle(ChatFormatting.GREEN))
@@ -104,21 +108,59 @@ public class ItemGuessFeature extends Feature {
                         .withStyle(ChatFormatting.GRAY));
             }
 
-            guesses.append(StyledText.fromString("§7: ").getComponent());
+            guessLine.append(StyledText.fromString("§7: ").getComponent());
 
-            MutableComponent itemsComponent = Component.empty();
-            itemsComponent.append(itemsForLevel.getFirst());
-            itemsForLevel.stream()
-                    .skip(1)
-                    .forEach(i -> itemsComponent
-                            .append(Component.literal(", ").withStyle(ChatFormatting.GRAY))
-                            .append(i));
+            int lineWidth = McUtils.mc().font.width(guessLine);
+            for (int i = 0; i < itemsForLevel.size(); i++) {
+                if (McUtils.mc().font.width(itemsForLevel.get(i)) > maxWidth) {
+                    if (i != 0) {
+                        guessLine.append(",");
+                    }
+                    addon.add(guessLine);
+                    guessLine = Component.empty();
+                    String[] nameWords = itemsForLevel.get(i).getString().split(" ");
 
-            if (!itemsForLevel.isEmpty()) {
-                guesses.append(itemsComponent);
+                    if (nameWords.length == 1) {
+                        guessLine.append(Component.literal("        ")).append(itemsForLevel.get(i));
+                        lineWidth = McUtils.mc().font.width(guessLine);
+                        continue;
+                    }
 
-                addon.add(guesses);
+                    StringBuilder line = new StringBuilder("        ");
+
+                    for (String word : nameWords) {
+                        if (McUtils.mc().font.width(line.toString() + ' ' + word) < maxWidth) {
+                            if (line.length() > 8) {
+                                line.append(' ');
+                            }
+                            line.append(word);
+                            continue;
+                        }
+                        if (line.length() > 8) {
+                            addon.add(Component.literal(line.toString())
+                                    .withStyle(itemsForLevel.get(i).getStyle()));
+                        }
+                        line = new StringBuilder("        ").append(word);
+                    }
+                    guessLine.append(Component.literal(line.toString())
+                            .withStyle(itemsForLevel.get(i).getStyle()));
+                    lineWidth = McUtils.mc().font.width(guessLine);
+                    continue;
+                }
+
+                lineWidth += McUtils.mc().font.width(Component.literal(", ").append(itemsForLevel.get(i)));
+                if (lineWidth > maxWidth || i == 0) {
+                    if (i != 0) {
+                        guessLine.append(",");
+                    }
+                    addon.add(guessLine);
+                    guessLine = Component.empty().append("        ").append(itemsForLevel.get(i));
+                    lineWidth = McUtils.mc().font.width(guessLine);
+                    continue;
+                }
+                guessLine.append(Component.literal(", ")).append(itemsForLevel.get(i));
             }
+            addon.add(guessLine);
         }
 
         return addon;

@@ -129,7 +129,6 @@ import com.wynntils.features.players.HadesFeature;
 import com.wynntils.features.players.PartyManagementScreenFeature;
 import com.wynntils.features.players.PlayerArmorHidingFeature;
 import com.wynntils.features.players.PlayerGhostTransparencyFeature;
-import com.wynntils.features.players.PlayerViewerFeature;
 import com.wynntils.features.redirects.ChatRedirectFeature;
 import com.wynntils.features.redirects.InventoryRedirectFeature;
 import com.wynntils.features.redirects.TerritoryMessageRedirectFeature;
@@ -373,7 +372,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new PartyManagementScreenFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new PlayerViewerFeature());
         // endregion
 
         // region redirects

@@ -45,7 +45,7 @@ public class LootrunFunctions {
     public static class DryPullsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.dryPulls.get();
+            return Models.LootrunReward.dryPulls.get();
         }
 
         @Override
@@ -113,7 +113,7 @@ public class LootrunFunctions {
             LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
             if (lootrunBeaconKind == null) return -1;
 
-            return Models.Lootrun.getBeaconCount(lootrunBeaconKind);
+            return Models.LootrunBeacon.getBeaconCount(lootrunBeaconKind);
         }
 
         @Override
@@ -128,7 +128,7 @@ public class LootrunFunctions {
             int missionIndex = arguments.getArgument("index").getIntegerValue();
             boolean colored = arguments.getArgument("colored").getBooleanValue();
 
-            return Models.Lootrun.getMissionStatus(missionIndex, colored);
+            return Models.Mission.getMissionStatus(missionIndex, colored);
         }
 
         @Override
@@ -142,7 +142,7 @@ public class LootrunFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             boolean colored = arguments.getArgument("colored").getBooleanValue();
-            return Models.Lootrun.getCurrentMission(colored);
+            return Models.Mission.getCurrentMission(colored);
         }
 
         @Override
@@ -156,7 +156,7 @@ public class LootrunFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             int missionIndex = arguments.getArgument("index").getIntegerValue();
-            return Models.Lootrun.getCurrentMissionObjective(missionIndex);
+            return Models.Mission.getCurrentMissionObjective(missionIndex);
         }
 
         @Override
@@ -169,7 +169,7 @@ public class LootrunFunctions {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
             int missionIndex = arguments.getArgument("index").getIntegerValue();
-            return Models.Lootrun.getCurrentMissionProgress(missionIndex);
+            return Models.Mission.getCurrentMissionProgress(missionIndex);
         }
 
         @Override
@@ -183,7 +183,7 @@ public class LootrunFunctions {
         public String getValue(FunctionArguments arguments) {
             int trialIndex = arguments.getArgument("index").getIntegerValue();
 
-            return Models.Lootrun.getTrial(trialIndex);
+            return Models.Trial.getTrial(trialIndex);
         }
 
         @Override
@@ -195,7 +195,7 @@ public class LootrunFunctions {
     public static class LootrunCurrentTrialFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getCurrentTrial();
+            return Models.Trial.getCurrentTrial();
         }
     }
 
@@ -203,7 +203,7 @@ public class LootrunFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             int trialIndex = arguments.getArgument("index").getIntegerValue();
-            return Models.Lootrun.getCurrentTrialObjective(trialIndex);
+            return Models.Trial.getCurrentTrialObjective(trialIndex);
         }
 
         @Override
@@ -216,7 +216,7 @@ public class LootrunFunctions {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
             int trialIndex = arguments.getArgument("index").getIntegerValue();
-            return Models.Lootrun.getCurrentTrialProgress(trialIndex);
+            return Models.Trial.getCurrentTrialProgress(trialIndex);
         }
 
         @Override
@@ -233,7 +233,7 @@ public class LootrunFunctions {
             LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
             if (lootrunBeaconKind == null) return "";
 
-            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
+            TaskLocation taskLocation = Models.LootrunBeacon.getTaskForColor(lootrunBeaconKind);
             if (taskLocation == null) return "";
 
             return taskLocation.name();
@@ -253,7 +253,7 @@ public class LootrunFunctions {
             LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
             if (lootrunBeaconKind == null) return Location.ZERO;
 
-            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
+            TaskLocation taskLocation = Models.LootrunBeacon.getTaskForColor(lootrunBeaconKind);
             if (taskLocation == null) return Location.ZERO;
 
             return taskLocation.location();
@@ -273,7 +273,7 @@ public class LootrunFunctions {
             LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
             if (lootrunBeaconKind == null) return "";
 
-            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(lootrunBeaconKind);
+            TaskLocation taskLocation = Models.LootrunBeacon.getTaskForColor(lootrunBeaconKind);
             if (taskLocation == null) return "";
 
             return EnumUtils.toNiceString(taskLocation.taskType());
@@ -293,7 +293,7 @@ public class LootrunFunctions {
             LootrunBeaconKind lootrunBeaconKind = LootrunBeaconKind.fromName(color);
             if (lootrunBeaconKind == null) return false;
 
-            return Models.Lootrun.isBeaconVibrant(lootrunBeaconKind);
+            return Models.LootrunBeacon.isBeaconVibrant(lootrunBeaconKind);
         }
 
         @Override
@@ -319,7 +319,7 @@ public class LootrunFunctions {
     public static class LootrunLastSelectedBeaconColorFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            LootrunBeaconKind lootrunBeaconKind = Models.Lootrun.getLastTaskBeaconColor();
+            LootrunBeaconKind lootrunBeaconKind = Models.LootrunBeacon.getLastTaskBeaconColor();
             if (lootrunBeaconKind == null) return "";
 
             return EnumUtils.toNiceString(lootrunBeaconKind);
@@ -329,35 +329,35 @@ public class LootrunFunctions {
     public static class LootrunLastSelectedBeaconVibrantFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Lootrun.wasLastBeaconVibrant();
+            return Models.LootrunBeacon.wasLastBeaconVibrant();
         }
     }
 
     public static class LootrunRedBeaconChallengeCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getRedBeaconTaskCount();
+            return Models.LootrunBeacon.getRedBeaconTaskCount();
         }
     }
 
     public static class LootrunOrangeBeaconCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getActiveOrangeBeacons();
+            return Models.LootrunBeacon.getActiveOrangeBeacons();
         }
     }
 
     public static class LootrunNextOrangeExpireFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getChallengesTillNextOrangeExpires();
+            return Models.LootrunBeacon.getChallengesTillNextOrangeExpires();
         }
     }
 
     public static class LootrunRainbowBeaconCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getActiveRainbowBeacons();
+            return Models.LootrunBeacon.getActiveRainbowBeacons();
         }
     }
 

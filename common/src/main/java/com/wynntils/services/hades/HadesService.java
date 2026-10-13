@@ -15,11 +15,14 @@ import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
+import com.wynntils.hades.protocol.enums.Direction;
 import com.wynntils.hades.protocol.enums.PacketAction;
 import com.wynntils.hades.protocol.enums.PacketDirection;
+import com.wynntils.hades.protocol.enums.PlayerPingType;
 import com.wynntils.hades.protocol.enums.SocialType;
 import com.wynntils.hades.protocol.packets.client.HCPacketGearUpdate;
 import com.wynntils.hades.protocol.packets.client.HCPacketPing;
+import com.wynntils.hades.protocol.packets.client.HCPacketPlayerPing;
 import com.wynntils.hades.protocol.packets.client.HCPacketSocialUpdate;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateStatus;
 import com.wynntils.hades.protocol.packets.client.HCPacketUpdateWorld;
@@ -44,25 +47,33 @@ import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.wynn.RaycastUtils;
 import java.io.IOException;
 import java.net.InetAddress;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.NavigableMap;
 import java.util.Optional;
+import java.util.Set;
 import java.util.TreeMap;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.EntityHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public final class HadesService extends Service {
@@ -91,6 +102,9 @@ public final class HadesService extends Service {
     @Persisted
     private final Storage<Map<String, GearShareOptions>> characterGearShareOptions = new Storage<>(new TreeMap<>());
 
+    @Persisted
+    private final Storage<Set<String>> ignoredPingUsers = new Storage<>(ConcurrentHashMap.newKeySet());
+
     // Original WynnItem cache to avoid unnecessary encoding
     private NavigableMap<InventoryArmor, WynnItem> armorCache = new TreeMap<>();
     private NavigableMap<InventoryAccessory, WynnItem> accessoriesCache = new TreeMap<>();
@@ -106,6 +120,26 @@ public final class HadesService extends Service {
 
     public Stream<HadesUser> getHadesUsers() {
         return userRegistry.getHadesUserMap().values().stream();
+    }
+
+    public List<HadesUser> getPingEligibleHadesUsers() {
+        List<HadesUser> hadesUsers = getHadesUsers().toList();
+        List<String> partyMembers = Models.Party.getPartyMembers();
+
+        List<HadesUser> hadesUsingPartyMembers = new ArrayList<>(hadesUsers.stream()
+                .filter(hadesUser -> partyMembers.contains(hadesUser.getName()))
+                .toList());
+
+        List<HadesUser> warUsers = Models.War.getHadesUsers();
+
+        for (HadesUser warUser : warUsers) {
+            if (hadesUsingPartyMembers.stream()
+                    .noneMatch(partyUser -> partyUser.getUuid().equals(warUser.getUuid()))) {
+                hadesUsingPartyMembers.add(warUser);
+            }
+        }
+
+        return hadesUsingPartyMembers;
     }
 
     public Optional<HadesUser> getHadesUser(UUID uuid) {
@@ -407,6 +441,52 @@ public final class HadesService extends Service {
         gearShareOptions.touched();
         characterGearShareOptions.touched();
         refreshGear();
+    }
+
+    public void sendPlayerPing(PlayerPingType type, String pingTarget) {
+        if (!isConnected()) return;
+
+        Optional<HitResult> hitResultOpt = RaycastUtils.getTargetedHitResult(75.0, true, true);
+
+        if (hitResultOpt.isEmpty()) return;
+
+        HitResult hitResult = hitResultOpt.get();
+        BlockPos pos;
+        Direction direction;
+        if (hitResult instanceof BlockHitResult blockHitResult) {
+            pos = blockHitResult.getBlockPos().relative(blockHitResult.getDirection());
+            direction = Direction.valueOf(blockHitResult.getDirection().name());
+        } else {
+            EntityHitResult entityHitResult = (EntityHitResult) hitResult;
+            pos = entityHitResult.getEntity().blockPosition();
+            direction = Direction.UP;
+        }
+
+        hadesConnection.sendPacketAndFlush(
+                new HCPacketPlayerPing(pos.getX(), pos.getY(), pos.getZ(), direction, type, pingTarget));
+    }
+
+    public boolean shouldIgnorePing(String username) {
+        return ignoredPingUsers.get().contains(username);
+    }
+
+    public void addIgnoredPingUser(String username) {
+        ignoredPingUsers.get().add(username);
+        ignoredPingUsers.touched();
+    }
+
+    public void removeIgnoredPingUser(String username) {
+        ignoredPingUsers.get().remove(username);
+        ignoredPingUsers.touched();
+    }
+
+    public void clearIgnoredPingUsers() {
+        ignoredPingUsers.get().clear();
+        ignoredPingUsers.touched();
+    }
+
+    public Set<String> getIgnoredPingUsers() {
+        return ignoredPingUsers.get();
     }
 
     private void refreshGear() {
