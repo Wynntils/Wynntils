@@ -1960,7 +1960,7 @@
   "function.wynntils.xpReqRaw.description": "Points d'XP nécessaires pour monter de niveau (nombre brut)",
   "function.wynntils.xpReqRaw.name": "XP[req]",
   "model.wynntils.combat.name": "Combat",
-  "model.wynntils.lootrun.name": "Lootrun",
+  "model.wynntils.lootrunBeacon.name": "Balises de Lootrun",
   "model.wynntils.mount.alreadyRiding": "Vous êtes déjà à cheval.",
   "model.wynntils.mount.conflictingSlots": "Vous devez libérer un emplacement dans votre barre d'accès rapide pour monter votre cheval.",
   "model.wynntils.mount.noMount": "Votre cheval n'a pas pu être trouvé.",
