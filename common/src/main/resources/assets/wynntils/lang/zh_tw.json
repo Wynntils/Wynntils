@@ -1956,7 +1956,7 @@
   "function.wynntils.xpReqRaw.description": "升級所需的XP點數（原始數字）",
   "function.wynntils.xpReqRaw.name": "經驗值[需]",
   "model.wynntils.combat.name": "戰鬥",
-  "model.wynntils.lootrun.name": "Lootrun",
+  "model.wynntils.lootrunBeacon.name": "戰利品運行信標",
   "model.wynntils.mount.alreadyRiding": "您已經在騎馬了。",
   "model.wynntils.mount.conflictingSlots": "您必須在快捷欄中騰出一個空位才能騎馬。",
   "model.wynntils.mount.noMount": "找不到您的馬。",
