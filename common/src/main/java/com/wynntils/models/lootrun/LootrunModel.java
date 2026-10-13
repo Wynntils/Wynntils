@@ -98,13 +98,13 @@ public class LootrunModel extends Model {
         StyledText title = StyledText.fromComponent(event.getComponent());
 
         if (title.matches(PREPARE_TO_LOOTRUN_PATTERN)) {
-            setLootrunLocation(LootrunLocation.fromBlockPos(McUtils.player().blockPosition()));
-
-            WynntilsMod.postEvent(new LootrunStartedEvent(getLootrunLocation()));
-
             // Ensure we start with fresh details
             lootrunDetailsStorage.get().put(Models.Character.getId(), new LootrunDetails());
             lootrunDetailsStorage.touched();
+
+            setLootrunLocation(LootrunLocation.fromBlockPos(McUtils.player().blockPosition()));
+
+            WynntilsMod.postEvent(new LootrunStartedEvent(getLootrunLocation()));
         }
     }
 
