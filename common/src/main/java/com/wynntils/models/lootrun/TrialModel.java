@@ -17,6 +17,7 @@ import com.wynntils.models.lootrun.event.LootrunChallengeEvent;
 import com.wynntils.models.lootrun.event.LootrunStartedEvent;
 import com.wynntils.models.lootrun.event.LootrunStateEvent;
 import com.wynntils.models.lootrun.type.LootrunTrialDetails;
+import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.TrialType;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
@@ -84,7 +85,9 @@ public final class TrialModel extends Model {
 
     @SubscribeEvent
     private void onLootrunStateChanged(LootrunStateEvent event) {
-        resetTrials();
+        if (event.getNewState() == LootrunningState.NOT_RUNNING) {
+            resetTrials();
+        }
     }
 
     @SubscribeEvent

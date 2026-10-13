@@ -234,24 +234,23 @@ public final class LootrunBeaconModel extends Model {
         if (Models.Character.getId().equals("-")) return;
 
         boolean foundTaskLocation = false;
-        Set<TaskLocation> lootrunLocationTasks = Models.Lootrun.getLootrunLocation() != LootrunLocation.UNKNOWN
-                        && taskLocations.containsKey(Models.Lootrun.getLootrunLocation())
-                ? taskLocations.get(Models.Lootrun.getLootrunLocation())
-                : taskLocations.values().stream().flatMap(Set::stream).collect(Collectors.toSet());
+        for (Set<TaskLocation> taskLocationsForLocation : taskLocations.values()) {
+            for (TaskLocation taskLocation : taskLocationsForLocation) {
+                if (PosUtils.closerThanIgnoringY(
+                        taskLocation.location().toVec3(), event.getParticle().position(), TASK_POSITION_ERROR)) {
+                    // Note: We do this re-allocation so we always display the correct location,
+                    //       even if it slightly changed, or our data is imprecise.
+                    possibleTaskLocations.add(new TaskLocation(
+                            taskLocation.name(),
+                            Location.containing(event.getParticle().position()),
+                            taskLocation.taskType()));
 
-        for (TaskLocation taskLocation : lootrunLocationTasks) {
-            if (PosUtils.closerThanIgnoringY(
-                    taskLocation.location().toVec3(), event.getParticle().position(), TASK_POSITION_ERROR)) {
-                // Note: We do this re-allocation so we always display the correct location,
-                //       even if it slightly changed, or our data is imprecise.
-                possibleTaskLocations.add(new TaskLocation(
-                        taskLocation.name(),
-                        Location.containing(event.getParticle().position()),
-                        taskLocation.taskType()));
-
-                foundTaskLocation = true;
-                break;
+                    foundTaskLocation = true;
+                    break;
+                }
             }
+
+            if (foundTaskLocation) break;
         }
 
         if (!foundTaskLocation) {
@@ -424,6 +423,8 @@ public final class LootrunBeaconModel extends Model {
     @SubscribeEvent
     private void onLootrunStateChanged(LootrunStateEvent event) {
         if (event.getNewState() == LootrunningState.NOT_RUNNING) {
+            resetBeaconStorage();
+
             setClosestBeacon(null);
             setLastTaskBeaconColor(null);
             resetBeaconCounts();
@@ -557,6 +558,11 @@ public final class LootrunBeaconModel extends Model {
 
     private void setClosestBeacon(Beacon beacon) {
         getCurrentLootrunBeaconDetails().setClosestBeacon(beacon);
+        lootrunBeaconDetailsStorage.touched();
+    }
+
+    private void resetBeaconStorage() {
+        getCurrentLootrunBeaconDetails().setSelectedBeacons(new TreeMap<>());
         lootrunBeaconDetailsStorage.touched();
     }
 

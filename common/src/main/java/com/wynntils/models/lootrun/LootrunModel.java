@@ -186,6 +186,8 @@ public class LootrunModel extends Model {
         this.taskType = taskType;
 
         if (newState == LootrunningState.NOT_RUNNING) {
+            this.taskType = null;
+
             resetSacrifices();
             resetRerolls();
 

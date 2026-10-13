@@ -17,6 +17,7 @@ import com.wynntils.models.lootrun.event.LootrunChallengeEvent;
 import com.wynntils.models.lootrun.event.LootrunStartedEvent;
 import com.wynntils.models.lootrun.event.LootrunStateEvent;
 import com.wynntils.models.lootrun.type.LootrunMissionDetails;
+import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.MissionType;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
@@ -97,7 +98,9 @@ public final class MissionModel extends Model {
 
     @SubscribeEvent
     private void onLootrunStateChanged(LootrunStateEvent event) {
-        resetMissions();
+        if (event.getNewState() == LootrunningState.NOT_RUNNING) {
+            resetMissions();
+        }
     }
 
     @SubscribeEvent
