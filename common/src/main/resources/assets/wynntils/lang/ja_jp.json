@@ -1956,7 +1956,7 @@
   "function.wynntils.xpReqRaw.description": "レベルアップに必要なXPポイント（生の数値）",
   "function.wynntils.xpReqRaw.name": "XP[req]",
   "model.wynntils.combat.name": "戦闘",
-  "model.wynntils.lootrun.name": "Lootrun",
+  "model.wynntils.lootrunBeacon.name": "ルートランビーコン",
   "model.wynntils.mount.alreadyRiding": "すでに馬に乗っています。",
   "model.wynntils.mount.conflictingSlots": "馬に乗るには、ホットバーのスロットを空ける必要があります。",
   "model.wynntils.mount.noMount": "馬が見つかりませんでした。",
