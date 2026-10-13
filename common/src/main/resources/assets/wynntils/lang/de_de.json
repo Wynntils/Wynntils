@@ -1959,7 +1959,7 @@
   "function.wynntils.xpReqRaw.description": "XP-Punkte, die zum Aufleveln benötigt werden (Rohzahl)",
   "function.wynntils.xpReqRaw.name": "XP[req]",
   "model.wynntils.combat.name": "Kampf",
-  "model.wynntils.lootrun.name": "Lootrun",
+  "model.wynntils.lootrunBeacon.name": "Lootrun-Leuchtfeuer",
   "model.wynntils.mount.alreadyRiding": "Sie reiten bereits auf einem Pferd.",
   "model.wynntils.mount.conflictingSlots": "Sie müssen einen Platz in Ihrer Schnellzugriffsleiste freimachen, um Ihr Pferd zu besteigen.",
   "model.wynntils.mount.noMount": "Ihr Pferd konnte nicht gefunden werden.",
