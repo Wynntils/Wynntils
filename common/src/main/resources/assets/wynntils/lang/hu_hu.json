@@ -1956,7 +1956,7 @@
   "function.wynntils.xpReqRaw.description": "XP pontok szükségesek a szintlépéshez (nyers szám)",
   "function.wynntils.xpReqRaw.name": "XP[szükséges]",
   "model.wynntils.combat.name": "Harci",
-  "model.wynntils.lootrun.name": "Lootrun",
+  "model.wynntils.lootrunBeacon.name": "Lootrun jelzőfények",
   "model.wynntils.mount.alreadyRiding": "Már lovagolsz egy lovon.",
   "model.wynntils.mount.conflictingSlots": "Fel kell szabadítanod egy helyet a gyorselérési sávban, hogy felülhess a lóra.",
   "model.wynntils.mount.noMount": "A lovad nem található.",
