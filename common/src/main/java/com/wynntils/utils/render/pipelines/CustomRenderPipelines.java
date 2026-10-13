@@ -50,7 +50,7 @@ public class CustomRenderPipelines extends RenderPipelines {
     public static final RenderPipeline PLAYER_PING_QUAD_PIPELINE =
             register(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
                     .withLocation("pipeline/wynntils_player_ping_quad")
-                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
+                    .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
                     .withCull(false)
                     .build());
 

@@ -73,7 +73,7 @@ public final class PlayerPingRenderer {
                 faceCenter.x - cameraPosition.x, faceCenter.y - cameraPosition.y, faceCenter.z - cameraPosition.z);
 
         poseStack.pushPose();
-        poseStack.mulPose(direction.getRotation());
+        poseStack.rotate(direction.getRotation());
         poseStack.scale(markerScale, markerScale, markerScale);
 
         submitNodeCollector.submitCustomGeometry(
@@ -760,7 +760,7 @@ public final class PlayerPingRenderer {
                 direction.getStepY() * labelDistance,
                 direction.getStepZ() * labelDistance);
 
-        poseStack.mulPose(McUtils.mc().gameRenderer.getMainCamera().rotation());
+        poseStack.rotate(McUtils.mc().gameRenderer.mainCamera().rotation());
         poseStack.scale(0.025f, -0.025f, 0.025f);
 
         List<FormattedCharSequence> lines = font.split(

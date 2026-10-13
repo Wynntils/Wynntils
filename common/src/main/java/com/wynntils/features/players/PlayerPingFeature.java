@@ -170,8 +170,8 @@ public class PlayerPingFeature extends Feature {
             String pingTarget,
             PlayerPingType pingType,
             int color) {
-        ChunkPos chunk = new ChunkPos(BlockPos.containing(worldPosition));
-        if (McUtils.mc().level == null || !McUtils.mc().level.hasChunk(chunk.x, chunk.z)) return;
+        ChunkPos chunk = ChunkPos.containing(BlockPos.containing(worldPosition));
+        if (McUtils.mc().level == null || !McUtils.mc().level.hasChunk(chunk.x(), chunk.z())) return;
         if (isObscuredByMobEffect(worldPosition, event.getCameraRenderState().pos)) return;
 
         if (markerStyle.get() == MarkerStyle.FLOATING_ICON) {

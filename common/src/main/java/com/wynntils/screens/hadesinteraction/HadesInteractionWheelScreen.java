@@ -32,7 +32,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -99,7 +99,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
         MutableComponent selectMessage = Component.empty()
                 .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class)
                         .withStyle(Style::withoutShadow))
@@ -175,10 +175,10 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    protected void renderBlurredBackground(GuiGraphics guiGraphics) {}
+    protected void extractBlurredBackground(GuiGraphicsExtractor guiGraphics) {}
 
     @Override
-    protected void renderMenuBackground(GuiGraphics partialTick) {}
+    protected void extractMenuBackground(GuiGraphicsExtractor partialTick) {}
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
@@ -240,7 +240,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
         pingTarget = "";
     }
 
-    private void renderPingTargetSelector(GuiGraphics guiGraphics) {
+    private void renderPingTargetSelector(GuiGraphicsExtractor guiGraphics) {
         int widgetX = Math.min(
                 centerX + DIST_FROM_CENTER + BUTTON_SIZE / 2 + PARTY_MEMBER_WIDGET_MARGIN,
                 width - PARTY_MEMBER_WIDGET_WIDTH - PARTY_MEMBER_SELECTOR_INDICATOR_WIDTH - PARTY_MEMBER_WIDGET_MARGIN);
@@ -310,7 +310,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
         }
     }
 
-    private void renderPlayerHead(GuiGraphics guiGraphics, String playerName, int x, int y) {
+    private void renderPlayerHead(GuiGraphicsExtractor guiGraphics, String playerName, int x, int y) {
         PlayerInfo playerInfo = McUtils.mc().getConnection() == null
                 ? null
                 : McUtils.mc().getConnection().getPlayerInfo(playerName);
@@ -354,7 +354,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
         return hoveredOption == index ? playerPingFeature.textColorHovered.get() : playerPingFeature.textColor.get();
     }
 
-    private void renderWheelStyle(GuiGraphics guiGraphics, CustomColor color, int buttonNum) {
+    private void renderWheelStyle(GuiGraphicsExtractor guiGraphics, CustomColor color, int buttonNum) {
         float segmentFillPercent = (float) 1 / options.size();
         double segmentAngleDegrees = 360.0 / options.size();
         int innerRadius = DIST_FROM_CENTER - 5 - BUTTON_SIZE / 2;
