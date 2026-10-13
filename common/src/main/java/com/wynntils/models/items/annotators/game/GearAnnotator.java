@@ -21,7 +21,14 @@ public final class GearAnnotator implements GameItemAnnotator {
 
         // Lookup Gear Profile
         String itemName = matcher.group("name");
+        boolean isShiny = matcher.group("isShiny") != null;
         GearInfo gearInfo = Models.Gear.getGearInfoFromDisplayName(itemName);
+        if (gearInfo == null && isShiny) {
+            // There is an item with the name "Shiny Coin", this makes it get looked up as "Coin" so if we think it is
+            // shiny but no API info then add the prefix back and try again
+            gearInfo = Models.Gear.getGearInfoFromDisplayName("Shiny " + itemName);
+        }
+
         if (gearInfo == null) return null;
 
         String rarity = matcher.group("rarity");
