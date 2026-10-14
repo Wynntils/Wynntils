@@ -7,6 +7,7 @@ package com.wynntils.screens.maps.managers.widgets.providermanager;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -72,9 +73,9 @@ public class ProviderInfoScrollBarSelectorWidget extends AbstractWidget {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
-        this.playDownSound(Minecraft.getInstance().getSoundManager());
-
         parent.providerInfoScrollBarWidget.setSelectedMode(scrollListCategory);
+
+        this.playDownSound(McUtils.mc().getSoundManager());
 
         return true;
     }

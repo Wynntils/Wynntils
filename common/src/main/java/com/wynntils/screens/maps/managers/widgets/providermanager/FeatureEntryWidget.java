@@ -141,7 +141,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
             McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
         } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
-            McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
+            this.playDownSound(McUtils.mc().getSoundManager());
 
             McUtils.setScreen(CategoryManagementScreen.create(McUtils.mc().screen, categoryId, getOverrideType()));
             return true;

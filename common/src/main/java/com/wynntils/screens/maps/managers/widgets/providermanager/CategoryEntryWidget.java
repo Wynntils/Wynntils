@@ -142,7 +142,7 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
         if (!isMouseOver(event.x(), event.y())) return false;
 
         if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
-            McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
+            this.playDownSound(McUtils.mc().getSoundManager());
 
             McUtils.setScreen(CategoryManagementScreen.create(
                     McUtils.mc().screen, categoryId, OverrideType.MAP_LOCATION_OVERRIDE));

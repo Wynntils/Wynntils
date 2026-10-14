@@ -11,6 +11,7 @@ import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -100,13 +101,13 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
         if (isMouseInsideButton(event.x(), event.y())) {
-            this.playDownSound(Minecraft.getInstance().getSoundManager());
+            this.playDownSound(McUtils.mc().getSoundManager());
 
             enabled = !enabled;
 
             return true;
         } else {
-            this.playDownSound(Minecraft.getInstance().getSoundManager());
+            this.playDownSound(McUtils.mc().getSoundManager());
 
             parent.setSelectedProvider(providerId, providerType);
         }

@@ -8,6 +8,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -61,7 +62,7 @@ public class RefreshLocalProvidersButton extends AbstractWidget {
         Services.MapData.refreshLocalJsonProviders();
         parent.providerScrollBarWidget.populateWidgets();
 
-        this.playDownSound(Minecraft.getInstance().getSoundManager());
+        this.playDownSound(McUtils.mc().getSoundManager());
 
         return true;
     }

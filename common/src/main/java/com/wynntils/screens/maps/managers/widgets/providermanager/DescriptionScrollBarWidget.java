@@ -112,15 +112,11 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         private Component url = null; // Only remote JSON providers have a URL.
 
         private PropertiesBoxWidget(ProviderManagementScreen parent) {
-            super(
-                    0,
-                    0,
-                    0,
-                    0,
-                    Component.translatable(
-                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.title"));
+            super(0, 0, 0, 0, Component.literal("Properties Box Widget"));
             this.parent = parent;
-            this.title = StyledText.fromComponent(getMessage().copy().withStyle(ChatFormatting.BOLD));
+            this.title = StyledText.fromComponent(Component.translatable(
+                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.title")
+                    .withStyle(ChatFormatting.BOLD));
         }
 
         private void refresh() {
@@ -213,14 +209,10 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         private StyledText[] wrappedDescription = new StyledText[0];
 
         private DescriptionBoxWidget() {
-            super(
-                    0,
-                    0,
-                    0,
-                    0,
-                    Component.translatable(
-                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.description.title"));
-            this.title = StyledText.fromComponent(getMessage().copy().withStyle(ChatFormatting.BOLD));
+            super(0, 0, 0, 0, Component.literal("Description Box Widget"));
+            this.title = StyledText.fromComponent(Component.translatable(
+                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.description.title")
+                    .withStyle(ChatFormatting.BOLD));
             rewrap();
         }
 
