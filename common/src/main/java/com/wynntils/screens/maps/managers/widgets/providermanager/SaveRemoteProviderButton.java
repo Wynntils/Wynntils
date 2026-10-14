@@ -81,9 +81,7 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (!this.visible) return false;
-        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
-        if (!this.active) return false;
+        if (!this.visible || event.button() != InputConstants.MOUSE_BUTTON_LEFT || !this.active) return false;
 
         this.playDownSound(McUtils.mc().getSoundManager());
         save();

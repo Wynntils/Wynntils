@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
@@ -25,7 +26,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public class ProviderEntryWidget extends AbstractProviderWidget {
     private static final int PADDING = 5;
@@ -111,7 +111,7 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
         if (toggleable && isMouseInsideButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());
