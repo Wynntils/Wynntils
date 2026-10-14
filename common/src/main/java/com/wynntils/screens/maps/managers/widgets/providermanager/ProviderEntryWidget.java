@@ -4,9 +4,11 @@
  */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.managers.type.ProviderType;
+import com.wynntils.services.mapdata.providers.MapDataProviderInfo;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.utils.MathUtils;
@@ -19,7 +21,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Objects;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -31,12 +32,14 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
 
     private final ProviderManagementScreen parent;
 
-    public boolean enabled = true;
+    public boolean enabled;
 
     private final BuiltInProvider builtInProvider;
     private final JsonProviderInfo jsonProviderInfo;
     private final String providerId;
+    private final String completeProviderId;
     private final Component name;
+    private final boolean toggleable;
 
     private ProviderEntryWidget(
             BuiltInProvider builtInProvider,
@@ -47,8 +50,15 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
         this.builtInProvider = builtInProvider;
         this.jsonProviderInfo = jsonProviderInfo;
         this.providerId = builtInProvider != null ? builtInProvider.getProviderId() : jsonProviderInfo.providerId();
+        this.completeProviderId = builtInProvider != null
+                ? "built-in:" + builtInProvider.getProviderId()
+                : jsonProviderInfo.completeId();
         this.name = builtInProvider != null ? builtInProvider.getName() : Component.literal(this.providerId);
         this.parent = parent;
+        this.enabled = Services.MapData.isProviderEnabled(this.completeProviderId);
+
+        MapDataProviderInfo info = Services.MapData.getProviderInfos().get(this.completeProviderId);
+        this.toggleable = info != null && info.toggleable();
 
         // Used for searching.
         message = this.name;
@@ -89,21 +99,25 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        RenderUtils.drawTexturedRect(
-                guiGraphics,
-                getButtonTexture(),
-                getButtonX(),
-                getY() + (this.height - getButtonTexture().height()) / 2f);
+        if (toggleable) {
+            RenderUtils.drawTexturedRect(
+                    guiGraphics,
+                    getButtonTexture(),
+                    getButtonX(),
+                    getY() + (this.height - getButtonTexture().height()) / 2f);
+        }
     }
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
-        if (isMouseInsideButton(event.x(), event.y())) {
+        if (toggleable && isMouseInsideButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());
 
-            enabled = !enabled;
+            if (Services.MapData.toggleProvider(completeProviderId)) {
+                enabled = Services.MapData.isProviderEnabled(completeProviderId);
+            }
 
             return true;
         } else {
