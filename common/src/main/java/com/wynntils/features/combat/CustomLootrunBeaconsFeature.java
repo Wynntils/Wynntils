@@ -25,9 +25,23 @@ public class CustomLootrunBeaconsFeature extends Feature {
     }
 
     @Override
+    public void onEnable() {
+        toggleHideBeacons();
+    }
+
+    @Override
+    public void onDisable() {
+        toggleHideBeacons();
+    }
+
+    @Override
     protected void onConfigUpdate(Config<?> config) {
-        if (config == removeOriginalBeacons) {
-            Models.Lootrun.toggleBeacons(removeOriginalBeacons.get());
+        if (config == removeOriginalBeacons || config == userEnabled) {
+            toggleHideBeacons();
         }
+    }
+
+    private void toggleHideBeacons() {
+        Models.LootrunBeacon.toggleHideBeacons(isEnabled() && removeOriginalBeacons.get());
     }
 }
