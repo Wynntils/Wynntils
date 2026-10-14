@@ -108,7 +108,8 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         private Component url = null; // Only remote JSON providers have a URL.
 
         private PropertiesBoxWidget(ProviderManagementScreen parent) {
-            super(0, 0, 0, 0, Component.literal("Properties"));
+            super(0, 0, 0, 0, Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.title"));
             this.parent = parent;
             this.title = StyledText.fromComponent(getMessage().copy().withStyle(ChatFormatting.BOLD));
         }
@@ -118,14 +119,22 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
                     .orElseThrow();
 
             stats = List.of(
-                    Component.literal("Features: " + provider.getFeatures().count()),
-                    Component.literal("Categories: " + provider.getCategories().count()),
-                    Component.literal("Icons: " + provider.getIcons().count()));
+                    Component.translatable(
+                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.features",
+                            provider.getFeatures().count()),
+                    Component.translatable(
+                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.categories",
+                            provider.getCategories().count()),
+                    Component.translatable(
+                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.icons",
+                            provider.getIcons().count()));
 
             url = Services.MapData
                     .getJsonProviderInfo(provider)
                     .map(JsonProviderInfo::providerUrl)
-                    .map(providerUrl -> Component.literal("URL: " + providerUrl))
+                    .map(providerUrl -> Component.translatable(
+                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.url",
+                            providerUrl))
                     .orElse(null);
 
             int bodyHeight = LINE_HEIGHT + (url != null ? LINE_GAP + LINE_HEIGHT : 0);
@@ -196,7 +205,8 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         private StyledText[] wrappedDescription = new StyledText[0];
 
         private DescriptionBoxWidget() {
-            super(0, 0, 0, 0, Component.literal("Description"));
+            super(0, 0, 0, 0, Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.description.title"));
             this.title = StyledText.fromComponent(getMessage().copy().withStyle(ChatFormatting.BOLD));
             rewrap();
         }

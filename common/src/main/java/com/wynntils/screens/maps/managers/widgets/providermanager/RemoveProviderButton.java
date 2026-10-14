@@ -60,7 +60,7 @@ public class RemoveProviderButton extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Remove Provider"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.removeProviderButtonText")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,

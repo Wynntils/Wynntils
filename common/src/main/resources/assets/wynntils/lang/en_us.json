@@ -3735,6 +3735,55 @@
   "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonLocal.description": "JSON files placed in the local provider folder.",
   "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonRemote.description": "JSON files loaded from a web URL.",
 
+  "screens.wynntils.map.managers.providerManager.localProviderText": "Local Provider",
+
+  "screens.wynntils.map.managers.providerManager.entryWidgets.categoryId": "Category ID: ",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.iconId": "Icon ID: ",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.label": "Label: ",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.leftClickToSetMarker": "Left-Click to set a marker",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.location": "Location: ",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.mapArea": "Map Area",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.mapIcon": "Map Icon",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.mapLocation": "Map Location",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.mapPath": "Map Path",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.name": "Name: ",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.noCategoryName": "No category name",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.notFound": " (not found)",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.rightClickToEditCategory": "Right-Click to edit category",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.size": "Size: ",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.texture": "Texture: ",
+  "screens.wynntils.map.managers.providerManager.entryWidgets.type": "Type: ",
+
+  "screens.wynntils.map.managers.providerManager.newProviderButton.text": "New Provider",
+  "screens.wynntils.map.managers.providerManager.openLocalProviderFolderButton.text": "Open local Provider folder",
+
+  "screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.features.text": "Features",
+  "screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.categories.text": "Categories",
+  "screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.icons.text": "Icons",
+
+  "screens.wynntils.map.managers.providerManager.refreshLocalProvidersButton.text": "Refresh Local Providers",
+
+  "screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.remoteProviderText": "Remote Provider",
+  "screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.providerNameText": "Provider name:",
+  "screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.providerUrlText": "Provider URL:",
+
+  "screens.wynntils.map.managers.providerManager.removeProviderButton.text": "Remove Provider",
+
+  "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.text": "Save",
+  "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.nameEmpty": "Enter a name for the provider.",
+  "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.nameExists": "A provider with this name already exists.",
+  "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.urlEmpty": "Enter the provider's URL.",
+  "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.urlInvalid": "This URL is not valid and cannot be read.",
+  "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.urlScheme": "The URL must start with http:// or https://.",
+  "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.urlHost": "The URL must include a host, like example.com.",
+
+  "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.title": "Properties",
+  "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.features": "Features: %d",
+  "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.categories": "Categories: %d",
+  "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.icons": "Icons: %d",
+  "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.url": "URL: %s",
+  "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.description.title": "Description",
+
   "screens.wynntils.map.providerManager.description1": "Enable or disable map data providers.",
   "screens.wynntils.map.providerManager.name": "Provider Manager",
   "screens.wynntils.map.share.description1_1": "Left click",

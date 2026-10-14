@@ -56,7 +56,7 @@ public class RefreshLocalProvidersButton extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Refresh Local Providers"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.refreshLocalProvidersButton.text")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,

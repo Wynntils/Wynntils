@@ -106,7 +106,7 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
         Component title = categoryName.isPresent()
                 ? Component.literal(categoryName.get())
-                : Component.literal("No category name");
+                : Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.noCategoryName");
 
         FontRenderer.getInstance()
                 .renderScrollingText(
@@ -169,19 +169,28 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
         this.generatedTooltip.add(Component.literal(categoryId).withStyle(ChatFormatting.GOLD));
 
-        categoryName.ifPresent(name -> addLine(Component.literal("Name: "), name));
+        categoryName.ifPresent(name -> addLine(
+                Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.name"),
+                name));
 
         resolveAttribute(MapAttributes::getLabel)
-                .ifPresent(label -> addLine(Component.literal("Label: "), label));
+                .ifPresent(label -> addLine(
+                        Component.translatable(
+                                "screens.wynntils.map.managers.providerManager.entryWidgets.label"),
+                        label));
 
         if (!iconId.equals(MapIcon.NO_ICON_ID)) {
             MutableComponent iconValue = Component.literal(iconId).withStyle(ChatFormatting.WHITE);
 
             if (icon == null) {
-                iconValue.append(Component.literal(" (not found)").withStyle(ChatFormatting.RED));
+                iconValue.append(Component.translatable(
+                                "screens.wynntils.map.managers.providerManager.entryWidgets.notFound")
+                        .withStyle(ChatFormatting.RED));
             }
 
-            addLine(Component.literal("Icon ID: "), iconValue);
+            addLine(
+                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.iconId"),
+                    iconValue);
         }
 
         this.generatedTooltip.add(Component.empty());
@@ -189,7 +198,9 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
         this.generatedTooltip.add(Component.empty()
                 .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
                 .append(" ")
-                .append(Component.literal("Right-Click to edit category").withStyle(ChatFormatting.GREEN)));
+                .append(Component.translatable(
+                                "screens.wynntils.map.managers.providerManager.entryWidgets.rightClickToEditCategory")
+                        .withStyle(ChatFormatting.GREEN)));
     }
 
     private void addLine(Component label, String value) {

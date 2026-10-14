@@ -91,7 +91,7 @@ public class RemoteProviderCreationWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Remote Provider"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.remoteProviderText")),
                         getX() + 30,
                         getY() + 1,
                         CommonColors.WHITE,
@@ -102,7 +102,7 @@ public class RemoteProviderCreationWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Provider name:"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.providerNameText")),
                         getX() + PADDING,
                         getY() + 23,
                         CommonColors.WHITE,
@@ -113,7 +113,7 @@ public class RemoteProviderCreationWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Provider URL:"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.providerUrlText")),
                         getX() + PADDING,
                         getY() + 63,
                         CommonColors.WHITE,
@@ -158,7 +158,7 @@ public class RemoteProviderCreationWidget extends AbstractWidget {
 
         for (AbstractWidget child : children) {
             if (!child.isMouseOver(event.x(), event.y())) continue;
-            
+
             if (child.mouseDragged(event, dragX, dragY)) {
                 return true;
             }

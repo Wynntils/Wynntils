@@ -57,7 +57,7 @@ public class OpenLocalProviderFolderButton extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("Open local Provider folder"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.openLocalProviderFolderButton.text")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,

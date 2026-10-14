@@ -66,11 +66,6 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
         updateWidgetPositions();
     }
 
-
-    public List<AbstractProviderWidget> getRegisteredWidgets() {
-        return Collections.unmodifiableList(registeredWidgets);
-    }
-
     @Override
     protected int getWidgetHeightPadding() {
         return WIDGET_HEIGHT_PADDING;

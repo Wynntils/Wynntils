@@ -41,7 +41,7 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
         int buttonWidth = (this.width - 6) / 3;
         featuresButton = new ProviderInfoScrollBarSelectorWidget(
-                StyledText.fromString("Features"),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.features.text")),
                 Mode.FEATURES,
                 x + 3,
                 y - 2 - 15,
@@ -50,7 +50,7 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
                 parent);
 
         categoriesButton = new ProviderInfoScrollBarSelectorWidget(
-                StyledText.fromString("Categories"),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.categories.text")),
                 Mode.CATEGORIES,
                 x + 3 + buttonWidth - 1,
                 y - 2 - 15,
@@ -59,7 +59,7 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
                 parent);
 
         iconsButton = new ProviderInfoScrollBarSelectorWidget(
-                StyledText.fromString("Icons"),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.icons.text")),
                 Mode.ICONS,
                 x + 3 + buttonWidth * 2,
                 y - 2 - 15,

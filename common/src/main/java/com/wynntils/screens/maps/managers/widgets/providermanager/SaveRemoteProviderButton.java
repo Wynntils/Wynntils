@@ -42,7 +42,7 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
             ProviderManagementScreen parent,
             TexturedTextInputBoxWidget nameTextBox,
             TexturedTextInputBoxWidget urlTextBox) {
-        super(x, y, width, height, Component.literal("Save"));
+        super(x, y, width, height, Component.literal("Save Remote Provider Button"));
         this.parent = parent;
         this.nameTextBox = nameTextBox;
         this.urlTextBox = urlTextBox;
@@ -51,7 +51,7 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        refreshActive();
+        this.active = getValidationError() == null;
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
@@ -65,7 +65,8 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString(getMessage().getString()),
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.text")),
                         getX() + getWidth() / 2f,
                         getY() + getHeight() / 2f,
                         CommonColors.WHITE,
@@ -78,12 +79,11 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (!this.visible) return false;
         if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
-
-        refreshActive();
         if (!this.active) return false;
 
         this.playDownSound(McUtils.mc().getSoundManager());
         save();
+
         return true;
     }
 
@@ -99,7 +99,9 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
         List<Component> lines = new ArrayList<>();
 
         Component error = getValidationError();
-        if (error == null) return lines;
+        if (error == null) {
+            return lines;
+        }
 
         for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(error), TOOLTIP_WRAP_WIDTH)) {
             lines.add(Component.empty().append(line.getComponent()).withStyle(ChatFormatting.RED));
@@ -120,10 +122,6 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
         parent.providerScrollBarWidget.populateWidgets();
     }
 
-    private void refreshActive() {
-        this.active = getValidationError() == null;
-    }
-
     private String getName() {
         return nameTextBox.getTextBoxInput().trim();
     }
@@ -134,33 +132,40 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
 
     private Component getValidationError() {
         String name = getName();
+
         if (name.isEmpty()) {
-            return Component.literal("Enter a name for the provider.");
+            return Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.nameEmpty");
         }
 
         if (Services.MapData.getJsonProviderInfos().containsKey(name)) {
-            return Component.literal("A provider with this name already exists.");
+            return Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.nameExists");
         }
 
         String url = getUrl();
         if (url.isEmpty()) {
-            return Component.literal("Enter the provider's URL.");
+            return Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.urlEmpty");
         }
 
         URI uri;
         try {
             uri = URI.create(url);
         } catch (IllegalArgumentException e) {
-            return Component.literal("This URL is not valid and cannot be read.");
+            return Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.urlInvalid");
         }
 
         String scheme = uri.getScheme();
         if (scheme == null || !(scheme.equals("http") || scheme.equals("https"))) {
-            return Component.literal("The URL must start with http:// or https://.");
+            return Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.urlScheme");
         }
 
         if (uri.getHost() == null) {
-            return Component.literal("The URL must include a host, like example.com.");
+            return Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.urlHost");
         }
 
         return null;

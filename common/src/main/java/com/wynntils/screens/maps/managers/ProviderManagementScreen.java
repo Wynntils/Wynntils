@@ -40,6 +40,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 import java.util.List;
@@ -230,7 +231,8 @@ public final class ProviderManagementScreen extends WynntilsScreen {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromString("Local Provider"),
+                            StyledText.fromComponent(
+                                    Component.translatable("screens.wynntils.map.managers.providerManager.localProviderText")),
                             offsetX + WIDTH_OFFSET + 250 + 5 + 10 + 20,
                             offsetY + HEIGHT_OFFSET + 25 + 1,
                             CommonColors.WHITE,

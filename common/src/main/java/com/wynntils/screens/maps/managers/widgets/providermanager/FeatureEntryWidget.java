@@ -176,16 +176,30 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
         this.generatedTooltip.add(Component.literal(featureId).withStyle(ChatFormatting.GOLD));
 
         if (mapFeature instanceof MapLocation) {
-            addLine(Component.literal("Type: "), "Map Location");
+            addLine(
+                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
+                    Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.entryWidgets.mapLocation")
+                            .withStyle(ChatFormatting.WHITE));
         } else if (mapFeature instanceof MapPath) {
-            addLine(Component.literal("Type: "), "Map Path");
+            addLine(
+                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
+                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapPath")
+                            .withStyle(ChatFormatting.WHITE));
         } else if (mapFeature instanceof MapArea) {
-            addLine(Component.literal("Type: "), "Map Area");
+            addLine(
+                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
+                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapArea")
+                            .withStyle(ChatFormatting.WHITE));
         }
 
 
-        addLine(Component.literal("Label: "), attributes.label());
-        addLine(Component.literal("Category ID: "), categoryId);
+        addLine(
+                Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.label"),
+                attributes.label());
+        addLine(
+                Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.categoryId"),
+                categoryId);
 
         if (mapFeature instanceof MapLocation) {
             String iconId = attributes.iconId();
@@ -194,16 +208,24 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
                 MutableComponent iconValue = Component.literal(iconId).withStyle(ChatFormatting.WHITE);
 
                 if (icon == null) {
-                    iconValue.append(Component.literal(" (not found)").withStyle(ChatFormatting.RED));
+                    iconValue.append(Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.entryWidgets.notFound")
+                            .withStyle(ChatFormatting.RED));
                 }
 
-                addLine(Component.literal("Icon ID: "), iconValue);
+                addLine(
+                        Component.translatable(
+                                "screens.wynntils.map.managers.providerManager.entryWidgets.iconId"),
+                        iconValue);
             }
         }
 
         if (mapFeature instanceof MapLocation mapLocation) {
             Location location = mapLocation.getLocation();
-            addLine(Component.literal("Location: "), "%d, %d, %d".formatted(location.x(), location.y(), location.z()));
+            addLine(
+                    Component.translatable(
+                            "screens.wynntils.map.managers.providerManager.entryWidgets.location"),
+                    "%d, %d, %d".formatted(location.x(), location.y(), location.z()));
         }
 
         this.generatedTooltip.add(Component.empty());
@@ -212,13 +234,17 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
             this.generatedTooltip.add(Component.empty()
                     .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
                     .append(" ")
-                    .append(Component.literal("Left-Click to set a marker").withStyle(ChatFormatting.GREEN)));
+                    .append(Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.entryWidgets.leftClickToSetMarker")
+                            .withStyle(ChatFormatting.GREEN)));
         }
 
         this.generatedTooltip.add(Component.empty()
                 .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
                 .append(" ")
-                .append(Component.literal("Right-Click to edit category").withStyle(ChatFormatting.GREEN)));
+                .append(Component.translatable(
+                                "screens.wynntils.map.managers.providerManager.entryWidgets.rightClickToEditCategory")
+                        .withStyle(ChatFormatting.GREEN)));
 
     }
 

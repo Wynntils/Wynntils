@@ -55,7 +55,7 @@ public class NewProviderButton extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString("New Provider"),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.newProviderButton.text")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,

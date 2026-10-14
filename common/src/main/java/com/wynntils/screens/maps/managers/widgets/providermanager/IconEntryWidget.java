@@ -116,9 +116,16 @@ public class IconEntryWidget extends AbstractWidget implements TooltipProvider {
 
         this.generatedTooltip.add(Component.literal(iconId).withStyle(ChatFormatting.GOLD));
 
-        addLine(Component.literal("Type: "), "Map Icon");
-        addLine(Component.literal("Size: "), "%d x %d".formatted(mapIcon.getWidth(), mapIcon.getHeight()));
-        addLine(Component.literal("Texture: "), mapIcon.getIdentifier().toString());
+        addLine(
+                Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
+                Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapIcon")
+                        .withStyle(ChatFormatting.WHITE));
+        addLine(
+                Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.size"),
+                "%d x %d".formatted(mapIcon.getWidth(), mapIcon.getHeight()));
+        addLine(
+                Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.texture"),
+                mapIcon.getIdentifier().toString());
     }
 
     private void addLine(Component label, String value) {
