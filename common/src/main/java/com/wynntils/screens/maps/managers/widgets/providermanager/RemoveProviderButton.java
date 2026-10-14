@@ -4,11 +4,15 @@
  */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.managers.type.ProviderManagerMode;
+import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -27,19 +31,18 @@ import org.lwjgl.glfw.GLFW;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
-public class RemoveProviderButton extends AbstractWidget implements TooltipProvider {
+public class RemoveProviderButton extends AbstractWidget {
     private final int x;
     private final int y;
     private final ProviderManagementScreen parent;
-    private List<Component> generatedTooltip = new ArrayList<>();
 
     public RemoveProviderButton(int x, int y, int width, int height, ProviderManagementScreen parent) {
         super(x, y, width, height, Component.literal("Remove Provider Button"));
         this.x = x;
         this.y = y;
         this.parent = parent;
-        generateTooltip();
     }
 
     @Override
@@ -70,26 +73,15 @@ public class RemoveProviderButton extends AbstractWidget implements TooltipProvi
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
-        this.playDownSound(Minecraft.getInstance().getSoundManager());
-        parent.setProviderManagerMode(ProviderManagerMode.NEW_PROVIDER);
+        Services.MapData.removeJsonProvider(parent.getSelectedProviderId());
+        parent.providerScrollBarWidget.populateWidgets();
+        parent.setSelectedProvider("", null);
+
+        this.playDownSound(McUtils.mc().getSoundManager());
 
         return true;
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
-
-    @Override
-    public List<Component> getTooltipLines() {
-        return Collections.unmodifiableList(this.generatedTooltip);
-    }
-
-    public void generateTooltip() {
-        this.generatedTooltip = new ArrayList<>();
-
-        this.generatedTooltip.add(
-                Component.literal("Remove Provider")
-                        .withStyle(ChatFormatting.GOLD));
-
-    }
 }

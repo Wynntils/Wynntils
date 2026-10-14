@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps.managers;
 
 import com.google.common.collect.Lists;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -15,8 +14,6 @@ import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.screens.maps.managers.type.ProviderManagerMode;
 import com.wynntils.screens.maps.managers.type.ProviderType;
 import com.wynntils.screens.maps.managers.widgets.ManagerSearchWidget;
-import com.wynntils.screens.maps.managers.widgets.StyledButton;
-import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.DescriptionScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.NewProviderButton;
 import com.wynntils.screens.maps.managers.widgets.providermanager.OpenLocalProviderFolderButton;
@@ -24,7 +21,9 @@ import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderInfoSc
 import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderManagerInfoWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.RefreshLocalProvidersButton;
+import com.wynntils.screens.maps.managers.widgets.providermanager.RemoteProviderCreationWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.RemoveProviderButton;
+import com.wynntils.screens.maps.managers.widgets.providermanager.SaveRemoteProviderButton;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
@@ -43,6 +42,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
+import java.util.List;
 import java.util.Optional;
 
 public final class ProviderManagementScreen extends WynntilsScreen {
@@ -70,9 +70,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     public RefreshLocalProvidersButton refreshLocalProvidersButton;
 
     public OpenLocalProviderFolderButton openLocalProviderFolderButton;
-    public TexturedTextInputBoxWidget remoteProviderNameTextBox;
-    public TexturedTextInputBoxWidget remoteProviderURLTextBox;
-    public StyledButton saveRemoteProviderButton;
+    public RemoteProviderCreationWidget remoteProviderCreationWidget;
 
     private ProviderManagementScreen(AbstractMapScreen previousScreen) {
         super(Component.literal("Provider Management Screen"));
@@ -183,35 +181,13 @@ public final class ProviderManagementScreen extends WynntilsScreen {
                 this);
         this.addRenderableWidget(openLocalProviderFolderButton);
 
-        remoteProviderNameTextBox = new TexturedTextInputBoxWidget(
-                offsetX + WIDTH_OFFSET + 250 + 5 + 5,
-                offsetY + HEIGHT_OFFSET + 30 + 15 + 110,
-                291 - 10,
-                20,
-                (string) -> {},
-                this,
-                TexturedTextInputBoxWidget.Mode.STRING);
-        this.addRenderableWidget(remoteProviderNameTextBox);
-
-        remoteProviderURLTextBox = new TexturedTextInputBoxWidget(
-                offsetX + WIDTH_OFFSET + 250 + 5 + 5,
-                offsetY + HEIGHT_OFFSET + 55 + 30 + 110,
-                291 - 10,
-                20,
-                (string) -> {},
-                this,
-                TexturedTextInputBoxWidget.Mode.STRING);
-        this.addRenderableWidget(remoteProviderURLTextBox);
-
-        saveRemoteProviderButton = new StyledButton(
-                offsetX + WIDTH_OFFSET + 255 + (291 / 2) - 50,
-                offsetY + HEIGHT_OFFSET + 258 - 25,
-                100,
-                20,
-                Component.literal("Save"),
-                Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
-                () -> {});
-        this.addRenderableWidget(saveRemoteProviderButton);
+        remoteProviderCreationWidget = new RemoteProviderCreationWidget(
+                offsetX + WIDTH_OFFSET + 250 + 5,
+                offsetY + HEIGHT_OFFSET + 25 + 100,
+                291,
+                284 - 50 - 100,
+                this);
+        this.addRenderableWidget(remoteProviderCreationWidget);
 
         // end region
 
@@ -263,78 +239,45 @@ public final class ProviderManagementScreen extends WynntilsScreen {
                             TextShadow.NORMAL);
             // end region
 
-            // Remote provider
-            RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.MANAGER_WIDGET_BACKGROUND,
-                    offsetX + WIDTH_OFFSET + 250 + 5,
-                    offsetY + HEIGHT_OFFSET + 25 + 100,
-                    291,
-                    284 - 50 - 100);
-
-            RenderUtils.drawNineSliceScalingTexturedRect(
-                    guiGraphics,
-                    Texture.CATEGORY_MANAGER_OPTION_HEADER,
-                    offsetX + WIDTH_OFFSET + 250 + 5 + 10,
-                    offsetY + HEIGHT_OFFSET + 25 + 100 - 8 + 1,
-                    150,
-                    16);
-
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromString("Remote Provider"),
-                            offsetX + WIDTH_OFFSET + 250 + 5 + 10 + 20,
-                            offsetY + HEIGHT_OFFSET + 25 + 100 + 1,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromString("Provider name:"),
-                            offsetX + WIDTH_OFFSET + 250 + 5 + 5,
-                            offsetY + HEIGHT_OFFSET + 35 + 3 + 110,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromString("Provider URL:"),
-                            offsetX + WIDTH_OFFSET + 250 + 5 + 5,
-                            offsetY + HEIGHT_OFFSET + 55 + 20 + 3 + 110,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-
-            // end region
+            // The remote provider section is rendered by the RemoteProviderCreationWidget
         }
     }
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children()) {
-            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
-                break;
+            if (!child.isMouseOver(mouseX, mouseY)) continue;
+
+            TooltipProvider tooltipProvider = null;
+
+            if (child instanceof TooltipProvider provider) {
+                tooltipProvider = provider;
+
+            } else if (child == remoteProviderCreationWidget) {
+                SaveRemoteProviderButton saveButton = remoteProviderCreationWidget.getSaveButton();
+
+                if (saveButton.isMouseOver(mouseX, mouseY)) {
+                    tooltipProvider = saveButton;
+                }
             }
+
+            if (tooltipProvider == null) continue;
+
+            List<Component> lines = tooltipProvider.getTooltipLines();
+            if (lines.isEmpty()) continue;
+
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(lines, Component::getVisualOrderText), mouseX, mouseY);
+            break;
         }
     }
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        TextInputBoxWidget focused = getFocusedTextInput();
+        TextInputBoxWidget focusedBefore = getFocusedTextInput();
         boolean handled = super.doMouseClicked(event, isDoubleClick);
 
-        if (focused != null && !focused.isMouseOver(event.x(), event.y())) {
+        TextInputBoxWidget focusedAfter = getFocusedTextInput();
+        if (focusedAfter != null && focusedAfter == focusedBefore && !focusedAfter.isMouseOver(event.x(), event.y())) {
             setFocusedTextInput(null);
         }
 
@@ -350,10 +293,8 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         providerInfoScrollBarWidget.visible = false;
         descriptionScrollBarWidget.visible = false;
         openLocalProviderFolderButton.visible = false;
-        remoteProviderNameTextBox.visible = false;
-        remoteProviderURLTextBox.visible = false;
-        saveRemoteProviderButton.visible = false;
         removeProviderButton.visible = false;
+        remoteProviderCreationWidget.setVisible(providerManagerMode == ProviderManagerMode.NEW_PROVIDER);
 
         if (providerManagerMode == ProviderManagerMode.DEFAULT) {
             providerInfoScrollBarWidget.visible = true;
@@ -375,9 +316,6 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
         } else if (providerManagerMode == ProviderManagerMode.NEW_PROVIDER) {
             openLocalProviderFolderButton.visible = true;
-            remoteProviderNameTextBox.visible = true;
-            remoteProviderURLTextBox.visible = true;
-            saveRemoteProviderButton.visible = true;
         }
     }
 
@@ -387,6 +325,12 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         providerInfoScrollBarWidget.populateWidgets();
 
         Optional<MapDataProvider> providerOptional = Services.MapData.getProviderFromId(getSelectedProviderId());
+
+        if (providerOptional.isEmpty()) {
+            descriptionScrollBarWidget.setDescription(null);
+            setProviderManagerMode(ProviderManagerMode.NONE);
+            return;
+        }
 
         if (providerOptional.isPresent()) {
             MapDataProvider provider = providerOptional.get();

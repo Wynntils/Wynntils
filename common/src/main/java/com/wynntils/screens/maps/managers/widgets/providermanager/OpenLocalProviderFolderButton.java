@@ -8,6 +8,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.managers.type.ProviderManagerMode;
+import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -22,6 +23,7 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.ArrayList;
@@ -67,6 +69,8 @@ public class OpenLocalProviderFolderButton extends AbstractWidget {
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
+
+        Util.getPlatform().openFile(MapDataService.LOCAL_PROVIDERS);
 
         this.playDownSound(Minecraft.getInstance().getSoundManager());
 

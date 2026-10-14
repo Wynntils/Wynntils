@@ -28,18 +28,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class NewProviderButton extends AbstractWidget implements TooltipProvider {
+public class NewProviderButton extends AbstractWidget {
     private final int x;
     private final int y;
     private final ProviderManagementScreen parent;
-    private List<Component> generatedTooltip = new ArrayList<>();
 
     public NewProviderButton(int x, int y, int width, int height, ProviderManagementScreen parent) {
         super(x, y, width, height, Component.literal("New Provider Button"));
         this.x = x;
         this.y = y;
         this.parent = parent;
-        generateTooltip();
     }
 
     @Override
@@ -78,18 +76,4 @@ public class NewProviderButton extends AbstractWidget implements TooltipProvider
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
-
-    @Override
-    public List<Component> getTooltipLines() {
-        return Collections.unmodifiableList(this.generatedTooltip);
-    }
-
-    public void generateTooltip() {
-        this.generatedTooltip = new ArrayList<>();
-
-        this.generatedTooltip.add(
-                Component.literal("New Provider")
-                        .withStyle(ChatFormatting.GOLD));
-
-    }
 }

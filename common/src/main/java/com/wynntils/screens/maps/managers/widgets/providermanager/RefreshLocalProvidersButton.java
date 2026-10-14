@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
@@ -28,18 +29,16 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class RefreshLocalProvidersButton extends AbstractWidget implements TooltipProvider {
+public class RefreshLocalProvidersButton extends AbstractWidget {
     private final int x;
     private final int y;
     private final ProviderManagementScreen parent;
-    private List<Component> generatedTooltip = new ArrayList<>();
 
     public RefreshLocalProvidersButton(int x, int y, int width, int height, ProviderManagementScreen parent) {
         super(x, y, width, height, Component.literal("Refresh Local Providers Button"));
         this.x = x;
         this.y = y;
         this.parent = parent;
-        generateTooltip();
     }
 
     @Override
@@ -70,29 +69,14 @@ public class RefreshLocalProvidersButton extends AbstractWidget implements Toolt
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() != GLFW.GLFW_MOUSE_BUTTON_LEFT) return false;
 
+        Services.MapData.refreshLocalJsonProviders();
+        parent.providerScrollBarWidget.populateWidgets();
+
         this.playDownSound(Minecraft.getInstance().getSoundManager());
-        parent.setProviderManagerMode(ProviderManagerMode.NEW_PROVIDER);
 
         return true;
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
-
-    @Override
-    public List<Component> getTooltipLines() {
-        return Collections.unmodifiableList(this.generatedTooltip);
-    }
-
-    public void generateTooltip() {
-        this.generatedTooltip = new ArrayList<>();
-
-        this.generatedTooltip.add(
-                Component.literal("Refreshes the local providers.")
-                        .withStyle(ChatFormatting.GOLD));
-        this.generatedTooltip.add(
-                Component.literal("Click this if any new providers were added to the folder.")
-                        .withStyle(ChatFormatting.GOLD));
-
-    }
 }

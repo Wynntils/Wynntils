@@ -3724,6 +3724,17 @@
   "screens.wynntils.map.managers.categoryManager.visibilityOptionWidget.mode.always": "Always",
   "screens.wynntils.map.managers.categoryManager.visibilityOptionWidget.mode.custom": "Custom",
   "screens.wynntils.map.managers.categoryManager.visibilityOptionWidget.mode.never": "Never",
+
+  "screens.wynntils.map.managers.providerManager.infoWidget.overview.title": "Provider Manager",
+  "screens.wynntils.map.managers.providerManager.infoWidget.overview.description": "Providers supply the map data shown on the map, such as locations, paths and areas. Select a provider in the list to view its information and description.",
+  "screens.wynntils.map.managers.providerManager.infoWidget.types.title": "Provider Types",
+  "screens.wynntils.map.managers.providerManager.infoWidget.types.description": "Every provider is one of the following types.",
+  "screens.wynntils.map.managers.providerManager.infoWidget.types.current": "(Current)",
+  "screens.wynntils.map.managers.providerManager.infoWidget.types.builtIn.description": "Provided by Wynntils itself. Built-in providers cannot be removed.",
+  "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonBundled.description": "JSON files that ship with Wynntils. Bundled providers cannot be removed.",
+  "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonLocal.description": "JSON files placed in the local provider folder.",
+  "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonRemote.description": "JSON files loaded from a web URL.",
+
   "screens.wynntils.map.providerManager.description1": "Enable or disable map data providers.",
   "screens.wynntils.map.providerManager.name": "Provider Manager",
   "screens.wynntils.map.share.description1_1": "Left click",
