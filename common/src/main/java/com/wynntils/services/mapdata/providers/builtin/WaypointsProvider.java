@@ -12,13 +12,12 @@ import com.wynntils.services.mapdata.impl.MapCategoryImpl;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.StringUtils;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public class WaypointsProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
@@ -86,12 +85,8 @@ public class WaypointsProvider extends BuiltInProvider {
 
         String categoryId = waypoint.getCategoryId();
         String subcategory = categoryId.substring(categoryId.lastIndexOf(':') + 1);
-        String name = StringUtils.capitalizeFirst(
-                subcategory.replace('_', ' ').toLowerCase(Locale.ROOT));
+        String name = StringUtils.capitalizeFirst(subcategory.replace('_', ' ').toLowerCase(Locale.ROOT));
 
-        PROVIDED_CATEGORIES.add(new MapCategoryImpl(
-                categoryId,
-                name,
-                (MapAttributesImpl) attributes.get()));
+        PROVIDED_CATEGORIES.add(new MapCategoryImpl(categoryId, name, (MapAttributesImpl) attributes.get()));
     }
 }

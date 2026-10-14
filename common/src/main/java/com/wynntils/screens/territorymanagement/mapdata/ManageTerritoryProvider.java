@@ -18,7 +18,6 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Stream;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 

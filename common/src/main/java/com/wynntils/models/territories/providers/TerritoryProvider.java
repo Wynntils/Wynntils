@@ -12,7 +12,6 @@ import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 

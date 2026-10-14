@@ -13,8 +13,6 @@ import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapIcon;
-import net.minecraft.network.chat.Component;
-
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
@@ -28,6 +26,7 @@ import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public final class JsonProvider implements MapDataProvider {
     // Note: The version field is not used, but is kept for future compatibility
@@ -39,7 +38,12 @@ public final class JsonProvider implements MapDataProvider {
     private final List<MapIcon> icons;
     private final Component description;
 
-    public JsonProvider(int version, JsonFeatures features, List<MapCategory> categories, List<MapIcon> icons, Component description) {
+    public JsonProvider(
+            int version,
+            JsonFeatures features,
+            List<MapCategory> categories,
+            List<MapIcon> icons,
+            Component description) {
         this.version = version;
         this.features = features;
         this.categories = categories;

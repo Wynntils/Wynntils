@@ -10,13 +10,12 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.type.OverrideType;
 import com.wynntils.screens.maps.managers.widgets.ManagerSearchWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryInfoWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryTreeWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.DeleteButtonWidget;
-import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryInfoWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.OptionsScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.OverrideSelectionWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.ResetButtonWidget;
@@ -582,4 +581,3 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         return overrideName;
     }
 }
-

@@ -8,7 +8,6 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.stream.Stream;
-
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 

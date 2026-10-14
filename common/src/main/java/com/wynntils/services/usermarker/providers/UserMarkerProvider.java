@@ -7,12 +7,11 @@ package com.wynntils.services.usermarker.providers;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.usermarker.type.UserMarkerLocation;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public final class UserMarkerProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();

@@ -64,8 +64,8 @@ public class ProviderManagerInfoWidget extends AbstractWidget implements Tooltip
                 Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.overview.title")
                         .withStyle(ChatFormatting.GOLD));
 
-        Component overviewDescription = Component.translatable(
-                "screens.wynntils.map.managers.providerManager.infoWidget.overview.description");
+        Component overviewDescription =
+                Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.overview.description");
 
         for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(overviewDescription), 210)) {
             this.generatedTooltip.add(
@@ -79,8 +79,8 @@ public class ProviderManagerInfoWidget extends AbstractWidget implements Tooltip
                 Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.types.title")
                         .withStyle(ChatFormatting.GOLD));
 
-        Component typesDescription = Component.translatable(
-                "screens.wynntils.map.managers.providerManager.infoWidget.types.description");
+        Component typesDescription =
+                Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.types.description");
 
         for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(typesDescription), 210)) {
             this.generatedTooltip.add(
@@ -112,17 +112,17 @@ public class ProviderManagerInfoWidget extends AbstractWidget implements Tooltip
             Component typeDescription =
                     switch (type) {
                         case BUILT_IN ->
-                                Component.translatable(
-                                        "screens.wynntils.map.managers.providerManager.infoWidget.types.builtIn.description");
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.builtIn.description");
                         case JSON_BUNDLED ->
-                                Component.translatable(
-                                        "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonBundled.description");
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonBundled.description");
                         case JSON_LOCAL ->
-                                Component.translatable(
-                                        "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonLocal.description");
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonLocal.description");
                         case JSON_REMOTE ->
-                                Component.translatable(
-                                        "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonRemote.description");
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonRemote.description");
                     };
 
             for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(typeDescription), 210)) {

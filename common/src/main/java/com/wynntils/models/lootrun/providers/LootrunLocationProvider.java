@@ -21,11 +21,10 @@ import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.utils.MapDataUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.network.chat.Component;
-
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public class LootrunLocationProvider extends BuiltInProvider {
     @Override

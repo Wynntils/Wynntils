@@ -1,8 +1,11 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
-import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.type.ProviderType;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
@@ -14,15 +17,13 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Objects;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.Objects;
 
 public class ProviderEntryWidget extends AbstractProviderWidget {
     private static final int PADDING = 5;
@@ -53,15 +54,12 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
     }
 
     public static ProviderEntryWidget createBuiltInProviderEntry(
-            BuiltInProvider provider,
-            ProviderManagementScreen parent) {
+            BuiltInProvider provider, ProviderManagementScreen parent) {
         return new ProviderEntryWidget(provider, null, ProviderType.BUILT_IN, parent);
     }
 
     public static ProviderEntryWidget createJsonProviderEntry(
-            JsonProviderInfo provider,
-            ProviderType providerType,
-            ProviderManagementScreen parent) {
+            JsonProviderInfo provider, ProviderType providerType, ProviderManagementScreen parent) {
         return new ProviderEntryWidget(null, provider, providerType, parent);
     }
 

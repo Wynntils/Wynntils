@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
 import com.wynntils.core.components.Services;
@@ -108,8 +112,13 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         private Component url = null; // Only remote JSON providers have a URL.
 
         private PropertiesBoxWidget(ProviderManagementScreen parent) {
-            super(0, 0, 0, 0, Component.translatable(
-                    "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.title"));
+            super(
+                    0,
+                    0,
+                    0,
+                    0,
+                    Component.translatable(
+                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.title"));
             this.parent = parent;
             this.title = StyledText.fromComponent(getMessage().copy().withStyle(ChatFormatting.BOLD));
         }
@@ -129,8 +138,7 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
                             "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.icons",
                             provider.getIcons().count()));
 
-            url = Services.MapData
-                    .getJsonProviderInfo(provider)
+            url = Services.MapData.getJsonProviderInfo(provider)
                     .map(JsonProviderInfo::providerUrl)
                     .map(providerUrl -> Component.translatable(
                             "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.url",
@@ -205,8 +213,13 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         private StyledText[] wrappedDescription = new StyledText[0];
 
         private DescriptionBoxWidget() {
-            super(0, 0, 0, 0, Component.translatable(
-                    "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.description.title"));
+            super(
+                    0,
+                    0,
+                    0,
+                    0,
+                    Component.translatable(
+                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.description.title"));
             this.title = StyledText.fromComponent(getMessage().copy().withStyle(ChatFormatting.BOLD));
             rewrap();
         }

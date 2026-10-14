@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
 import com.wynntils.core.text.StyledText;
@@ -91,7 +95,9 @@ public class RemoteProviderCreationWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.remoteProviderText")),
+                        StyledText.fromComponent(
+                                Component.translatable(
+                                        "screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.remoteProviderText")),
                         getX() + 30,
                         getY() + 1,
                         CommonColors.WHITE,
@@ -102,7 +108,9 @@ public class RemoteProviderCreationWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.providerNameText")),
+                        StyledText.fromComponent(
+                                Component.translatable(
+                                        "screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.providerNameText")),
                         getX() + PADDING,
                         getY() + 23,
                         CommonColors.WHITE,
@@ -113,7 +121,9 @@ public class RemoteProviderCreationWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.providerUrlText")),
+                        StyledText.fromComponent(
+                                Component.translatable(
+                                        "screens.wynntils.map.managers.providerManager.remoteProviderCreationWidget.providerUrlText")),
                         getX() + PADDING,
                         getY() + 63,
                         CommonColors.WHITE,
@@ -123,7 +133,6 @@ public class RemoteProviderCreationWidget extends AbstractWidget {
 
         children.forEach(c -> c.render(guiGraphics, mouseX, mouseY, partialTick));
     }
-
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {

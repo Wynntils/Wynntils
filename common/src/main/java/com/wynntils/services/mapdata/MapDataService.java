@@ -577,16 +577,14 @@ public class MapDataService extends Service {
 
     public Optional<MapDataProvider> getProviderFromId(String providerId) {
         return registeredProviders.entrySet().stream()
-                .filter(entry -> entry.getKey().equals(providerId)
-                        || entry.getKey().endsWith(":" + providerId))
+                .filter(entry ->
+                        entry.getKey().equals(providerId) || entry.getKey().endsWith(":" + providerId))
                 .map(entry -> entry.getValue().provider())
                 .findFirst();
     }
 
-
     private Optional<MapDataProvider> getJsonProviderFromInfo(JsonProviderInfo info) {
-        return Optional.ofNullable(registeredProviders.get(info.completeId()))
-                .map(MapDataProviderInfo::provider);
+        return Optional.ofNullable(registeredProviders.get(info.completeId())).map(MapDataProviderInfo::provider);
     }
 
     // endregion

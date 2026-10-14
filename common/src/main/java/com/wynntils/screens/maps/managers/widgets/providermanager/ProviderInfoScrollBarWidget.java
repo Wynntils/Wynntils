@@ -13,15 +13,14 @@ import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapIcon;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 
 public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements TooltipProvider {
     private static final int WIDGET_HEIGHT_PADDING = 4;
@@ -41,7 +40,8 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
         int buttonWidth = (this.width - 6) / 3;
         featuresButton = new ProviderInfoScrollBarSelectorWidget(
-                StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.features.text")),
+                StyledText.fromComponent(Component.translatable(
+                        "screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.features.text")),
                 Mode.FEATURES,
                 x + 3,
                 y - 2 - 15,
@@ -50,7 +50,8 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
                 parent);
 
         categoriesButton = new ProviderInfoScrollBarSelectorWidget(
-                StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.categories.text")),
+                StyledText.fromComponent(Component.translatable(
+                        "screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.categories.text")),
                 Mode.CATEGORIES,
                 x + 3 + buttonWidth - 1,
                 y - 2 - 15,
@@ -59,7 +60,8 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
                 parent);
 
         iconsButton = new ProviderInfoScrollBarSelectorWidget(
-                StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.icons.text")),
+                StyledText.fromComponent(Component.translatable(
+                        "screens.wynntils.map.managers.providerManager.providerInfoScrollBarWidget.icons.text")),
                 Mode.ICONS,
                 x + 3 + buttonWidth * 2,
                 y - 2 - 15,
@@ -69,7 +71,6 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
         populateWidgets();
     }
-
 
     public void populateWidgets() {
         registeredWidgets = new ArrayList<>();
@@ -83,30 +84,15 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
         if (selectedMode == Mode.FEATURES) {
             for (MapFeature<?> mapFeature : provider.getFeatures().toList()) {
-                registeredWidgets.add(new FeatureEntryWidget(
-                        0,
-                        0,
-                        0,
-                        28,
-                        mapFeature));
+                registeredWidgets.add(new FeatureEntryWidget(0, 0, 0, 28, mapFeature));
             }
         } else if (selectedMode == Mode.CATEGORIES) {
             for (MapCategory mapCategory : provider.getCategories().toList()) {
-                registeredWidgets.add(new CategoryEntryWidget(
-                        0,
-                        0,
-                        0,
-                        28,
-                        mapCategory));
+                registeredWidgets.add(new CategoryEntryWidget(0, 0, 0, 28, mapCategory));
             }
         } else if (selectedMode == Mode.ICONS) {
             for (MapIcon mapIcon : provider.getIcons().toList()) {
-                registeredWidgets.add(new IconEntryWidget(
-                        0,
-                        0,
-                        0,
-                        28,
-                        mapIcon));
+                registeredWidgets.add(new IconEntryWidget(0, 0, 0, 28, mapIcon));
             }
         }
 
@@ -196,8 +182,7 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
         if (isInsideViewport(event.x(), event.y())) {
             for (AbstractWidget abstractWidget : getWidgets()) {
-                if (abstractWidget.isHovered()
-                        && abstractWidget.mouseClicked(event, isDoubleClick)) {
+                if (abstractWidget.isHovered() && abstractWidget.mouseClicked(event, isDoubleClick)) {
                     return true;
                 }
             }
@@ -212,8 +197,7 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
         if (isInsideViewport(event.x(), event.y())) {
             for (AbstractWidget abstractWidget : getWidgets()) {
-                if (abstractWidget.isHovered()
-                        && abstractWidget.mouseReleased(event)) {
+                if (abstractWidget.isHovered() && abstractWidget.mouseReleased(event)) {
                     return true;
                 }
             }
@@ -230,8 +214,7 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
         if (isInsideViewport(event.x(), event.y())) {
             for (AbstractWidget abstractWidget : getWidgets()) {
-                if (abstractWidget.isHovered()
-                        && abstractWidget.mouseDragged(event, dragX, dragY)) {
+                if (abstractWidget.isHovered() && abstractWidget.mouseDragged(event, dragX, dragY)) {
                     return true;
                 }
             }
@@ -247,8 +230,7 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
         }
 
         for (AbstractWidget abstractWidget : getWidgets()) {
-            if (abstractWidget.isHovered()
-                    && abstractWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
+            if (abstractWidget.isHovered() && abstractWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
                 return true;
             }
         }

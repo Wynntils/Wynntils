@@ -26,13 +26,12 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public class CategoriesProvider extends BuiltInProvider {
     private static final List<MapCategory> PROVIDED_CATEGORIES = new ArrayList<>();

@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -158,10 +162,10 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
     }
 
     private <T> Optional<T> resolveAttribute(Function<MapAttributes, Optional<T>> getter) {
-        return Services.MapData
-                .getOwnAttributesForCategory(categoryId)
+        return Services.MapData.getOwnAttributesForCategory(categoryId)
                 .flatMap(getter)
-                .or(() -> Services.MapData.getInheritedAttributesForCategory(categoryId).flatMap(getter));
+                .or(() -> Services.MapData.getInheritedAttributesForCategory(categoryId)
+                        .flatMap(getter));
     }
 
     private void generateTooltip() {
@@ -170,22 +174,20 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
         this.generatedTooltip.add(Component.literal(categoryId).withStyle(ChatFormatting.GOLD));
 
         categoryName.ifPresent(name -> addLine(
-                Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.name"),
-                name));
+                Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.name"), name));
 
         resolveAttribute(MapAttributes::getLabel)
                 .ifPresent(label -> addLine(
-                        Component.translatable(
-                                "screens.wynntils.map.managers.providerManager.entryWidgets.label"),
+                        Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.label"),
                         label));
 
         if (!iconId.equals(MapIcon.NO_ICON_ID)) {
             MutableComponent iconValue = Component.literal(iconId).withStyle(ChatFormatting.WHITE);
 
             if (icon == null) {
-                iconValue.append(Component.translatable(
-                                "screens.wynntils.map.managers.providerManager.entryWidgets.notFound")
-                        .withStyle(ChatFormatting.RED));
+                iconValue.append(
+                        Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.notFound")
+                                .withStyle(ChatFormatting.RED));
             }
 
             addLine(

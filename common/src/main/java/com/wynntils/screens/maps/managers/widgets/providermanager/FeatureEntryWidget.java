@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -8,19 +12,14 @@ import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OverrideType;
-import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
-import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.features.type.MapArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
 import com.wynntils.services.mapdata.features.type.MapPath;
 import com.wynntils.services.mapdata.type.MapIcon;
-import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -31,7 +30,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -178,8 +176,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
         if (mapFeature instanceof MapLocation) {
             addLine(
                     Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
-                    Component.translatable(
-                                    "screens.wynntils.map.managers.providerManager.entryWidgets.mapLocation")
+                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapLocation")
                             .withStyle(ChatFormatting.WHITE));
         } else if (mapFeature instanceof MapPath) {
             addLine(
@@ -192,7 +189,6 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
                     Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapArea")
                             .withStyle(ChatFormatting.WHITE));
         }
-
 
         addLine(
                 Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.label"),
@@ -214,8 +210,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
                 }
 
                 addLine(
-                        Component.translatable(
-                                "screens.wynntils.map.managers.providerManager.entryWidgets.iconId"),
+                        Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.iconId"),
                         iconValue);
             }
         }
@@ -223,8 +218,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
         if (mapFeature instanceof MapLocation mapLocation) {
             Location location = mapLocation.getLocation();
             addLine(
-                    Component.translatable(
-                            "screens.wynntils.map.managers.providerManager.entryWidgets.location"),
+                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.location"),
                     "%d, %d, %d".formatted(location.x(), location.y(), location.z()));
         }
 
@@ -245,7 +239,6 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
                 .append(Component.translatable(
                                 "screens.wynntils.map.managers.providerManager.entryWidgets.rightClickToEditCategory")
                         .withStyle(ChatFormatting.GREEN)));
-
     }
 
     private void addLine(Component label, String value) {

@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.managers.type.ProviderManagerMode;
 import com.wynntils.utils.colors.CommonColors;
@@ -15,7 +14,6 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -23,10 +21,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 public class NewProviderButton extends AbstractWidget {
     private final int x;
@@ -45,17 +39,13 @@ public class NewProviderButton extends AbstractWidget {
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics,
-                Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
-                x,
-                y,
-                this.width,
-                this.height);
+                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND_GREEN, x, y, this.width, this.height);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.map.managers.providerManager.newProviderButton.text")),
+                        StyledText.fromComponent(Component.translatable(
+                                "screens.wynntils.map.managers.providerManager.newProviderButton.text")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,

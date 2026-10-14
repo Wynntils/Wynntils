@@ -10,11 +10,10 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.services.mapdata.features.builtin.PlaceLocation;
 import com.wynntils.services.mapdata.features.type.MapFeature;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public class PlaceListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();

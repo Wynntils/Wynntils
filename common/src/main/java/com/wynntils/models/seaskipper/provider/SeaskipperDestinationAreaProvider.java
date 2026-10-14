@@ -8,11 +8,10 @@ import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public class SeaskipperDestinationAreaProvider extends BuiltInProvider {
     private static final List<SeaskipperDestinationArea> PROVIDED_FEATURES = new ArrayList<>();

@@ -4,26 +4,19 @@
  */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.managers.type.ProviderType;
 import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
-import com.wynntils.screens.maps.managers.widgets.providermanager.AbstractProviderWidget;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
-import com.wynntils.services.mapdata.providers.json.JsonProvider;
-import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.utils.StringUtils;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.input.MouseButtonEvent;
 
 public class ProviderScrollBarWidget extends ScrollBarWidget {
     private static final int WIDGET_HEIGHT_PADDING = 4;
@@ -44,23 +37,18 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
         populateWidgets();
     }
 
-
     public void populateWidgets() {
         registeredWidgets = new ArrayList<>();
 
         for (MapDataProvider provider : Services.MapData.getProviders().toList()) {
             if (provider instanceof BuiltInProvider builtInProvider) {
-                registeredWidgets.add(ProviderEntryWidget.createBuiltInProviderEntry(
-                        builtInProvider,
-                        parent));
+                registeredWidgets.add(ProviderEntryWidget.createBuiltInProviderEntry(builtInProvider, parent));
             }
         }
 
         Services.MapData.getJsonProviderInfos().forEach((providerId, jsonProviderInfo) -> {
             registeredWidgets.add(ProviderEntryWidget.createJsonProviderEntry(
-                    jsonProviderInfo,
-                    ProviderType.fromJsonProviderType(jsonProviderInfo.providerType()),
-                    parent));
+                    jsonProviderInfo, ProviderType.fromJsonProviderType(jsonProviderInfo.providerType()), parent));
         });
 
         updateWidgetPositions();
@@ -85,7 +73,8 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
             List<AbstractProviderWidget> inProviderType = registeredWidgets.stream()
                     .filter(widget -> widget.display)
                     .filter(widget -> widget.getProviderType() == providerType)
-                    .filter(widget -> !isSearching || searchMatches(widget.getMessage().getString()))
+                    .filter(widget ->
+                            !isSearching || searchMatches(widget.getMessage().getString()))
                     .toList();
 
             if (inProviderType.isEmpty()) continue;
@@ -138,8 +127,7 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
 
         if (isInsideViewport(event.x(), event.y())) {
             for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-                if (abstractProviderWidget.isHovered()
-                        && abstractProviderWidget.mouseClicked(event, isDoubleClick)) {
+                if (abstractProviderWidget.isHovered() && abstractProviderWidget.mouseClicked(event, isDoubleClick)) {
                     return true;
                 }
             }
@@ -154,8 +142,7 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
 
         if (isInsideViewport(event.x(), event.y())) {
             for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-                if (abstractProviderWidget.isHovered()
-                        && abstractProviderWidget.mouseReleased(event)) {
+                if (abstractProviderWidget.isHovered() && abstractProviderWidget.mouseReleased(event)) {
                     return true;
                 }
             }
@@ -171,8 +158,7 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
 
         if (isInsideViewport(event.x(), event.y())) {
             for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-                if (abstractProviderWidget.isHovered()
-                        && abstractProviderWidget.mouseDragged(event, dragX, dragY)) {
+                if (abstractProviderWidget.isHovered() && abstractProviderWidget.mouseDragged(event, dragX, dragY)) {
                     return true;
                 }
             }
@@ -187,10 +173,10 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
         }
 
         for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-                if (abstractProviderWidget.isHovered()
-                        && abstractProviderWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
-                    return true;
-                }
+            if (abstractProviderWidget.isHovered()
+                    && abstractProviderWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
+                return true;
+            }
         }
 
         return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);

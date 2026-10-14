@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2026.
+ * This file is released under LGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
 import com.mojang.blaze3d.platform.InputConstants;
@@ -91,7 +95,7 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
     public boolean isMouseOver(double mouseX, double mouseY) {
         return this.visible
                 && MathUtils.isInside(
-                (int) mouseX, (int) mouseY, getX(), getX() + getWidth(), getY(), getY() + getHeight());
+                        (int) mouseX, (int) mouseY, getX(), getX() + getWidth(), getY(), getY() + getHeight());
     }
 
     @Override
@@ -103,7 +107,8 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
             return lines;
         }
 
-        for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(error), TOOLTIP_WRAP_WIDTH)) {
+        for (StyledText line :
+                RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(error), TOOLTIP_WRAP_WIDTH)) {
             lines.add(Component.empty().append(line.getComponent()).withStyle(ChatFormatting.RED));
         }
 

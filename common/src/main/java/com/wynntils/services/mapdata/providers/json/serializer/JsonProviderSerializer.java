@@ -18,10 +18,9 @@ import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.JsonUtils;
-import net.minecraft.network.chat.Component;
-
 import java.lang.reflect.Type;
 import java.util.List;
+import net.minecraft.network.chat.Component;
 
 public final class JsonProviderSerializer implements JsonDeserializer<JsonProvider> {
     @Override

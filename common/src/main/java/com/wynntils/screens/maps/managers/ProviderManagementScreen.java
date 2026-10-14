@@ -36,15 +36,13 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-
-import java.util.List;
-import java.util.Optional;
 
 public final class ProviderManagementScreen extends WynntilsScreen {
     private static final int WIDTH_OFFSET = 15;
@@ -103,12 +101,8 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         offsetX = (int) ((this.width - Texture.MANAGER_BACKGROUND.width()) / 2f);
         offsetY = (int) ((this.height - Texture.MANAGER_BACKGROUND.height()) / 2f);
 
-        infoWidget =  new ProviderManagerInfoWidget(
-                offsetX + WIDTH_OFFSET + 546 - 20,
-                offsetY + HEIGHT_OFFSET,
-                20,
-                20,
-                this);
+        infoWidget =
+                new ProviderManagerInfoWidget(offsetX + WIDTH_OFFSET + 546 - 20, offsetY + HEIGHT_OFFSET, 20, 20, this);
         this.addRenderableWidget(infoWidget);
 
         providerSearchWidget = new ManagerSearchWidget(
@@ -120,34 +114,22 @@ public final class ProviderManagementScreen extends WynntilsScreen {
                 this);
         this.addRenderableWidget(providerSearchWidget);
 
-        providerScrollBarWidget = new ProviderScrollBarWidget(
-                offsetX + WIDTH_OFFSET,
-                offsetY + HEIGHT_OFFSET + 25,
-                250,
-                284 - 50,
-                this);
+        providerScrollBarWidget =
+                new ProviderScrollBarWidget(offsetX + WIDTH_OFFSET, offsetY + HEIGHT_OFFSET + 25, 250, 284 - 50, this);
         this.addRenderableWidget(providerScrollBarWidget);
 
         // provider info menu
 
         providerInfoScrollBarWidget = new ProviderInfoScrollBarWidget(
-                offsetX + WIDTH_OFFSET + 250 + 5,
-                offsetY + HEIGHT_OFFSET + 25 + 18,
-                291,
-                284 - 25 - 100 - 27,
-                this);
+                offsetX + WIDTH_OFFSET + 250 + 5, offsetY + HEIGHT_OFFSET + 25 + 18, 291, 284 - 25 - 100 - 27, this);
         this.addRenderableWidget(providerInfoScrollBarWidget);
 
         descriptionScrollBarWidget = new DescriptionScrollBarWidget(
-                offsetX + WIDTH_OFFSET + 250 + 5,
-                offsetY + HEIGHT_OFFSET + 207 - 27,
-                291,
-                79,
-                this);
+                offsetX + WIDTH_OFFSET + 250 + 5, offsetY + HEIGHT_OFFSET + 207 - 27, 291, 79, this);
         this.addRenderableWidget(descriptionScrollBarWidget);
 
         removeProviderButton = new RemoveProviderButton(
-                offsetX + WIDTH_OFFSET + 250 + 5 + 291 / 2 - 100 /2,
+                offsetX + WIDTH_OFFSET + 250 + 5 + 291 / 2 - 100 / 2,
                 offsetY + HEIGHT_OFFSET + 207 + 52 + 5,
                 100,
                 20,
@@ -158,36 +140,20 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
         // new provider menu
 
-        newProviderButton = new NewProviderButton(
-                offsetX + WIDTH_OFFSET,
-                offsetY + HEIGHT_OFFSET + 25 + 284 - 45,
-                100,
-                20,
-                this);
+        newProviderButton =
+                new NewProviderButton(offsetX + WIDTH_OFFSET, offsetY + HEIGHT_OFFSET + 25 + 284 - 45, 100, 20, this);
         this.addRenderableWidget(newProviderButton);
 
         refreshLocalProvidersButton = new RefreshLocalProvidersButton(
-                offsetX + WIDTH_OFFSET + 100 + 10,
-                offsetY + HEIGHT_OFFSET + 25 + 284 - 45,
-                140,
-                20,
-                this);
+                offsetX + WIDTH_OFFSET + 100 + 10, offsetY + HEIGHT_OFFSET + 25 + 284 - 45, 140, 20, this);
         this.addRenderableWidget(refreshLocalProvidersButton);
 
         openLocalProviderFolderButton = new OpenLocalProviderFolderButton(
-                offsetX + WIDTH_OFFSET + 250 + 5 + 5,
-                offsetY + HEIGHT_OFFSET + 55,
-                291 - 10,
-                20,
-                this);
+                offsetX + WIDTH_OFFSET + 250 + 5 + 5, offsetY + HEIGHT_OFFSET + 55, 291 - 10, 20, this);
         this.addRenderableWidget(openLocalProviderFolderButton);
 
         remoteProviderCreationWidget = new RemoteProviderCreationWidget(
-                offsetX + WIDTH_OFFSET + 250 + 5,
-                offsetY + HEIGHT_OFFSET + 25 + 100,
-                291,
-                284 - 50 - 100,
-                this);
+                offsetX + WIDTH_OFFSET + 250 + 5, offsetY + HEIGHT_OFFSET + 25 + 100, 291, 284 - 50 - 100, this);
         this.addRenderableWidget(remoteProviderCreationWidget);
 
         // end region
@@ -231,8 +197,8 @@ public final class ProviderManagementScreen extends WynntilsScreen {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,
-                            StyledText.fromComponent(
-                                    Component.translatable("screens.wynntils.map.managers.providerManager.localProviderText")),
+                            StyledText.fromComponent(Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.localProviderText")),
                             offsetX + WIDTH_OFFSET + 250 + 5 + 10 + 20,
                             offsetY + HEIGHT_OFFSET + 25 + 1,
                             CommonColors.WHITE,
@@ -267,8 +233,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
             List<Component> lines = tooltipProvider.getTooltipLines();
             if (lines.isEmpty()) continue;
 
-            guiGraphics.setTooltipForNextFrame(
-                    Lists.transform(lines, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(Lists.transform(lines, Component::getVisualOrderText), mouseX, mouseY);
             break;
         }
     }
@@ -341,10 +306,10 @@ public final class ProviderManagementScreen extends WynntilsScreen {
                 descriptionScrollBarWidget.setDescription(StyledText.fromComponent(builtInProvider.getDescription()));
 
             } else if (provider instanceof JsonProvider jsonProvider) {
-                descriptionScrollBarWidget.setDescription(
-                        jsonProvider.getDescription()
-                                .map(StyledText::fromComponent)
-                                .orElse(null));
+                descriptionScrollBarWidget.setDescription(jsonProvider
+                        .getDescription()
+                        .map(StyledText::fromComponent)
+                        .orElse(null));
 
             } else {
                 descriptionScrollBarWidget.setDescription(null);

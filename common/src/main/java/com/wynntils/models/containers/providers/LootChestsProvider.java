@@ -7,11 +7,10 @@ package com.wynntils.models.containers.providers;
 import com.wynntils.services.mapdata.features.builtin.FoundChestLocation;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public class LootChestsProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();

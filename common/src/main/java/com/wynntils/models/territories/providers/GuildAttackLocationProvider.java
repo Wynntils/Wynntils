@@ -20,14 +20,13 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
-import net.minecraft.network.chat.Component;
-
 import java.util.Comparator;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public class GuildAttackLocationProvider extends BuiltInProvider {
     @Override

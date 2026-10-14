@@ -19,8 +19,6 @@ import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
-import net.minecraft.network.chat.Component;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -30,6 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 /**
  * Provides the gathering nodes downloaded by {@link com.wynntils.models.profession.GatheringNodeRegistry}.

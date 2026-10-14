@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.screens.maps.managers.widgets.categorymanager.options.AbstractOptionWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
