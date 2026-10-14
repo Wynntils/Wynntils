@@ -4,14 +4,18 @@
  */
 package com.wynntils.screens.maps.managers.widgets.providermanager;
 
+import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.providers.type.MapDataProvider;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -19,13 +23,16 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.net.URI;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 
 public class DescriptionScrollBarWidget extends ScrollBarWidget {
     private static final int WIDGET_HEIGHT_PADDING = 5;
@@ -60,7 +67,6 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         getWidgets().forEach(widget -> widget.render(guiGraphics, mouseX, mouseY, partialTick));
     }
 
-    // Call once a provider is selected
     public void updateContentHeight() {
         propertiesWidget.refresh();
         scrollOffsetY = 0;
@@ -104,12 +110,24 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
     }
 
+    @Override
+    public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        for (AbstractWidget widget : getWidgets()) {
+            if (widget.mouseClicked(event, isDoubleClick)) {
+                return true;
+            }
+        }
+
+        return super.mouseClicked(event, isDoubleClick);
+    }
+
     private static final class PropertiesBoxWidget extends AbstractWidget {
         private final ProviderManagementScreen parent;
         private final StyledText title;
 
         private List<Component> stats = List.of();
-        private Component url = null; // Only remote JSON providers have a URL.
+        private Component url = null;
+        private String urlString = null;
 
         private PropertiesBoxWidget(ProviderManagementScreen parent) {
             super(0, 0, 0, 0, Component.literal("Properties Box Widget"));
@@ -134,12 +152,17 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
                             "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.icons",
                             provider.getIcons().count()));
 
-            url = Services.MapData.getJsonProviderInfo(provider)
-                    .map(JsonProviderInfo::providerUrl)
-                    .map(providerUrl -> Component.translatable(
-                            "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.url",
-                            providerUrl))
-                    .orElse(null);
+            JsonProviderInfo jsonProviderInfo =
+                    Services.MapData.getJsonProviderInfo(provider).orElse(null);
+            if (jsonProviderInfo != null) {
+                urlString = jsonProviderInfo.providerUrl();
+                url = Component.translatable(
+                        "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.url",
+                        urlString);
+            } else {
+                urlString = null;
+                url = null;
+            }
 
             int bodyHeight = LINE_HEIGHT + (url != null ? LINE_GAP + LINE_HEIGHT : 0);
             setHeight(PADDING * 2 + LINE_HEIGHT + LINE_GAP + bodyHeight);
@@ -186,16 +209,58 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
             }
 
             if (url != null) {
+                CustomColor urlColor = CommonColors.WHITE;
+
+                if (isMouseOverUrl(mouseX, mouseY)) {
+                    guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
+                    urlColor = CommonColors.AQUA;
+                }
+
                 fontRenderer.renderText(
                         guiGraphics,
                         StyledText.fromComponent(url),
                         bodyX + bodyWidth / 2f,
                         bodyY + LINE_HEIGHT + LINE_GAP,
-                        CommonColors.WHITE,
+                        urlColor,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
             }
+        }
+
+        @Override
+        public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
+                    && urlString != null
+                    && isMouseOverUrl(event.x(), event.y())) {
+                try {
+                    Util.getPlatform().openUri(URI.create(urlString));
+                } catch (IllegalArgumentException e) {
+                    return false;
+                }
+
+                playDownSound(McUtils.mc().getSoundManager());
+                return true;
+            }
+
+            return super.mouseClicked(event, isDoubleClick);
+        }
+
+        private boolean isMouseOverUrl(double mouseX, double mouseY) {
+            if (url == null) return false;
+
+            int bodyX = getX() + PADDING;
+            int bodyY = getY() + PADDING + LINE_HEIGHT + LINE_GAP;
+            int bodyWidth = this.width - PADDING * 2;
+
+            int urlWidth = FONT.width(url);
+            float centerX = bodyX + bodyWidth / 2f;
+            int urlLeft = (int) (centerX - urlWidth / 2f);
+            int urlRight = (int) (centerX + urlWidth / 2f);
+            int urlTop = bodyY + LINE_HEIGHT + LINE_GAP;
+            int urlBottom = urlTop + LINE_HEIGHT;
+
+            return MathUtils.isInside((int) mouseX, (int) mouseY, urlLeft, urlRight, urlTop, urlBottom);
         }
 
         @Override
