@@ -90,7 +90,7 @@ public class RemoteProviderCreationWidget extends AbstractWidget {
                 guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, getX(), getY(), getWidth(), getHeight());
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics, Texture.CATEGORY_MANAGER_OPTION_HEADER, getX() + 10, getY() - 7, 150, 16);
+                guiGraphics, Texture.MANAGER_SCROLL_BAR_HEADER, getX() + 10, getY() - 7, 150, 16);
 
         FontRenderer.getInstance()
                 .renderText(

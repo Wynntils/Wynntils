@@ -36,7 +36,6 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.sounds.SoundEvents;
 
 public class CategoryEntryWidget extends AbstractWidget implements TooltipProvider {
     private static final int PADDING = 4;

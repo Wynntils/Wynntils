@@ -10,7 +10,6 @@ import com.wynntils.screens.maps.managers.type.ProviderType;
 import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
 import com.wynntils.services.mapdata.providers.MapDataProviderInfo;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
-import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.utils.StringUtils;
 import java.util.ArrayList;
 import java.util.EnumMap;
@@ -41,7 +40,8 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
     public void populateWidgets() {
         registeredWidgets = new ArrayList<>();
 
-        for (Map.Entry<String, MapDataProviderInfo> entry : Services.MapData.getProviderInfos().entrySet()) {
+        for (Map.Entry<String, MapDataProviderInfo> entry :
+                Services.MapData.getProviderInfos().entrySet()) {
             if (entry.getValue().provider() instanceof BuiltInProvider builtInProvider) {
                 registeredWidgets.add(ProviderEntryWidget.createBuiltInProviderEntry(builtInProvider, parent));
             }

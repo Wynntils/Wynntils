@@ -49,12 +49,13 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
         super(Component.literal("Provider Entry Widget"), 28, providerType);
         this.builtInProvider = builtInProvider;
         this.jsonProviderInfo = jsonProviderInfo;
-        this.providerId = builtInProvider != null ? builtInProvider.getProviderId() : jsonProviderInfo.providerId();
-        this.completeProviderId = builtInProvider != null
-                ? "built-in:" + builtInProvider.getProviderId()
-                : jsonProviderInfo.completeId();
-        this.name = builtInProvider != null ? builtInProvider.getName() : Component.literal(this.providerId);
         this.parent = parent;
+
+        this.providerId = builtInProvider != null ? builtInProvider.getProviderId() : jsonProviderInfo.providerId();
+        this.completeProviderId =
+                builtInProvider != null ? "built-in:" + builtInProvider.getProviderId() : jsonProviderInfo.completeId();
+
+        this.name = builtInProvider != null ? builtInProvider.getName() : Component.literal(this.providerId);
         this.enabled = Services.MapData.isProviderEnabled(this.completeProviderId);
 
         MapDataProviderInfo info = Services.MapData.getProviderInfos().get(this.completeProviderId);

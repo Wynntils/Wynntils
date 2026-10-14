@@ -364,9 +364,8 @@ public enum Texture {
 
     // Category Management Screen
     CATEGORY_MANAGER_ICON("map/managers/category_manager/category_manager_icon.png", 16, 16),
-    CATEGORY_MANAGER_OPTION_HEADER("map/managers/category_manager/category_manager_header.png", 70, 16, 4, 9, 8, 8),
-    CATEGORY_MANAGER_OPTION_HEADER_LINE(
-            "map/managers/category_manager/category_manager_header_line.png", 40, 16, 1, 10, 8, 8),
+    CATEGORY_MANAGER_FOLDER_ICON("map/managers/category_manager/folder_icon.png", 12, 12),
+    CATEGORY_MANAGER_FILE_ICON("map/managers/category_manager/file_icon.png", 12, 12),
 
     // Provider Management Screen
     PROVIDER_MANAGER_ICON("map/managers/provider_manager/provider_manager_icon.png", 16, 16),
@@ -383,8 +382,8 @@ public enum Texture {
     MANAGER_SCROLL_BAR_VERTICAL("map/managers/scroll_bar_vertical.png", 9, 65, 5, 4, 13, 13),
     MANAGER_SCROLL_BAR_HORIZONTAL("map/managers/scroll_bar_horizontal.png", 65, 9, 13, 13, 4, 5),
     MANAGER_SCROLL_BAR_BUTTON("map/managers/scroll_bar_button.png", 9, 8, 4, 4, 4, 4),
-    MANAGER_FOLDER_ICON("map/managers/folder_icon.png", 12, 12),
-    MANAGER_FILE_ICON("map/managers/file_icon.png", 12, 12),
+    MANAGER_SCROLL_BAR_HEADER("map/managers/manager_header.png", 70, 16, 4, 9, 8, 8),
+    MANAGER_SCROLL_BAR_HEADER_LINE("map/managers/manager_header_line.png", 40, 16, 1, 10, 8, 8),
     MANAGER_TEXT_BOX_BACKGROUND("map/managers/textbox_background.png", 20, 16, 3, 3, 3, 3),
     MANAGER_SLIDER_FILLED("map/managers/filled_slider.png", 9, 6, 4, 1, 3, 3),
     MANAGER_SLIDER_EMPTY("map/managers/empty_slider.png", 9, 6, 1, 4, 3, 3),

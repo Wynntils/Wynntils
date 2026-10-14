@@ -29,7 +29,7 @@ public class ProviderHeaderWidget extends AbstractProviderWidget {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                Texture.CATEGORY_MANAGER_OPTION_HEADER,
+                Texture.MANAGER_SCROLL_BAR_HEADER,
                 getX(),
                 getY() + (this.height - PROVIDER_HEIGHT) / 2f,
                 150,
@@ -48,7 +48,7 @@ public class ProviderHeaderWidget extends AbstractProviderWidget {
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                Texture.CATEGORY_MANAGER_OPTION_HEADER_LINE,
+                Texture.MANAGER_SCROLL_BAR_HEADER_LINE,
                 getX() + 150 + 5,
                 getY() + (this.height - PROVIDER_HEIGHT) / 2f,
                 this.width - 150 - 5,

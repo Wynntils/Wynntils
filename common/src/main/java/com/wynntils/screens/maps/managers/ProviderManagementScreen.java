@@ -188,7 +188,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics,
-                    Texture.CATEGORY_MANAGER_OPTION_HEADER,
+                    Texture.MANAGER_SCROLL_BAR_HEADER,
                     offsetX + WIDTH_OFFSET + 250 + 5 + 10,
                     offsetY + HEIGHT_OFFSET + 25 - 8 + 1,
                     150,
