@@ -181,6 +181,7 @@ jobs:
         uses: tsickert/discord-webhook@v6.0.0
         with:
           webhook-url: ${{ secrets.DISCORD_RELEASE_WEBHOOK_URL }}
+          content: "<@&1406607918609993748>"
           embed-color: "9498256"
           embed-title: ${{ format('Wynntils v{0}', needs.set-version.outputs.tag) }}
           embed-url: https://github.com/Wynntils/Wynntils/releases/tag/v${{ needs.set-version.outputs.tag }}
