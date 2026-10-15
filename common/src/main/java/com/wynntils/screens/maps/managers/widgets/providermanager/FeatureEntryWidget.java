@@ -69,6 +69,8 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        handleCursor(guiGraphics);
+
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, getX(), getY(), this.width, this.height);
 
