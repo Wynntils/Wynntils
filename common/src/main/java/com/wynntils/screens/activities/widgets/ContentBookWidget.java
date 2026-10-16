@@ -12,7 +12,6 @@ import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
-import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.screens.activities.ContentBookHolder;
 import com.wynntils.screens.activities.WynntilsContentBookScreen;
 import com.wynntils.screens.base.TooltipProvider;
@@ -169,7 +168,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
             Models.Activity.openMapOnActivity(activityInfo);
         } else if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
             // Shift right clicking world events is used to fast travel to them
-            if (activityInfo.type() == ActivityType.WORLD_EVENT
+            if (activityInfo.type().supportsFastTravel()
                     && activityInfo.status() == ActivityStatus.AVAILABLE
                     && KeyboardUtils.isShiftDown()) {
                 holder.pressSlot(slot, button);

@@ -7,7 +7,7 @@ package com.wynntils.models.activities.type;
 import com.wynntils.core.text.StyledText;
 import java.util.regex.Pattern;
 
-public enum WorldEventFastTravelStatus {
+public enum ActivityFastTravelStatus {
     AVAILABLE(Pattern.compile(".+§f\uF004\uDB00\uDC02\uF014\uDB00\uDC02\uF001 §a§lShift Right-Click To Fast Travel")),
     UNAVAILABLE(Pattern.compile(".+§f\uF004\uDB00\uDC02\uF014\uDB00\uDC02\uF001 §c§lShift Right-Click To Fast Travel")),
     NOT_ALLOWED(Pattern.compile(".+§cFast Travel is not allowed right now")),
@@ -15,12 +15,12 @@ public enum WorldEventFastTravelStatus {
 
     private final Pattern pattern;
 
-    WorldEventFastTravelStatus(Pattern pattern) {
+    ActivityFastTravelStatus(Pattern pattern) {
         this.pattern = pattern;
     }
 
-    public static WorldEventFastTravelStatus fromLine(StyledText statusLine) {
-        for (WorldEventFastTravelStatus status : values()) {
+    public static ActivityFastTravelStatus fromLine(StyledText statusLine) {
+        for (ActivityFastTravelStatus status : values()) {
             if (statusLine.matches(status.pattern)) return status;
         }
 
