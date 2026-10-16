@@ -20,7 +20,8 @@ public enum ActivityBeaconMarkerKind implements BeaconMarkerKind {
     RAID("\uE008", ActivityType.RAID),
     BOSS_ALTAR("\uE001", ActivityType.BOSS_ALTAR),
     LOOTRUN_CAMP("\uE005", ActivityType.LOOTRUN_CAMP),
-    MOUNT_ENCLOSURE("\uE00B", ActivityType.MOUNT_ENCLOSURE);
+    MOUNT_ENCLOSURE("\uE00B", ActivityType.MOUNT_ENCLOSURE),
+    TIME_TRIAL("\uE00C", ActivityType.TIME_TRIAL);
 
     private static final String MARKER_PREFIX = "\uDAFF\uDFF8[\uE010-\uE014]\uDAFF\uDFDE";
     private static final String MARKER_SUFFIX = "\n(\\d+m (§[a-z0-9])?(\uE000|\uE001)?)?";

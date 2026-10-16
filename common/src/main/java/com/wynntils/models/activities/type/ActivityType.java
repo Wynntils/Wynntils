@@ -42,7 +42,8 @@ public enum ActivityType {
             "mount enclosures",
             CustomColor.fromInt(0x8f663d),
             Texture.MOUNT_ENCLOSURE,
-            "mount_enclosure");
+            "mount_enclosure"),
+    TIME_TRIAL("Time Trial", "time trials", CustomColor.fromInt(0x1ebf97), Texture.TIME_TRIAL, "time_trial");
 
     private final String displayName;
     private final String groupName;
@@ -75,6 +76,9 @@ public enum ActivityType {
         for (ActivityType type : values()) {
             if (type.getDisplayName().equals(displayName)) return type;
         }
+
+        // Time trials are displayed on the scoreboard with this, but just Time Trial in the content book
+        if (displayName.equals("Mount Time Trial")) return TIME_TRIAL;
 
         // FIXME: Workaround to stop crashes
         if (displayName.equals("Discovery")) return WORLD_DISCOVERY;
