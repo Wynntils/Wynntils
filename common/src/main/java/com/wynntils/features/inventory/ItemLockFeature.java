@@ -26,6 +26,7 @@ import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -117,7 +118,7 @@ public class ItemLockFeature extends Feature {
         // We want to allow opening emerald pouches and deleting potions even if locked
         // Right click is used to perform these actions, left click picks them up
         // So only allow right click actions
-        if (event.getMouseButton() == InputConstants.MOUSE_BUTTON_RIGHT) {
+        if (event.getMouseButton() == ContainerUtils.getContainerClickButton(InputConstants.MOUSE_BUTTON_RIGHT)) {
             if (allowClickOnEmeraldPouchInBlockingMode.get()
                     && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
                 return;
