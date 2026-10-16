@@ -13,11 +13,11 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.LootrunFeature;
-import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SubmitCustomGeometryEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
+import com.wynntils.models.containers.event.LootChestOpenedEvent;
 import com.wynntils.services.lootrunpaths.event.LootrunPathCacheRefreshEvent;
 import com.wynntils.services.lootrunpaths.type.LootrunNote;
 import com.wynntils.services.lootrunpaths.type.LootrunPath;
@@ -40,7 +40,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -301,14 +300,10 @@ public final class LootrunPathsService extends Service {
     }
 
     @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.InteractAt event) {
+    public void onLootChestOpened(LootChestOpenedEvent event) {
         if (state != LootrunState.RECORDING) return;
 
-        Entity entity = event.getEntityHitResult().getEntity();
-        if (entity != null && entity.getType() == EntityType.SLIME) {
-            // We don't actually know if this is a chest, but it's a good enough guess.
-            recordingInformation.setLastChest(entity.blockPosition());
-        }
+        recordingInformation.setLastChest(event.getBlockPos());
     }
 
     @SubscribeEvent

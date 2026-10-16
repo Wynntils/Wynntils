@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.config.AbilityCooldownRedirectToFeatureUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ChatRedirectHorseToMountUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CombatXpGainToXpGainUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ContentTrackerTextOverlayUpfixer;
@@ -54,6 +55,7 @@ import com.wynntils.core.persisted.upfixers.storage.BankPageNameToBankPageProper
 import com.wynntils.core.persisted.upfixers.storage.BankToAccountBankUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.DownloadSourceStringToEnumUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.LoadoutMigrationUpfixer;
+import com.wynntils.core.persisted.upfixers.storage.LootrunModelUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.RemoveSetGearTierUpfixer;
 import com.wynntils.core.persisted.upfixers.storage.UpdateChangelogToModelUpfixer;
 import java.util.ArrayList;
@@ -108,6 +110,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new TelemetryFeatureToWynntilsTelemetryFeatureUpfixer());
         registerConfigUpfixer(new CoordinateOverlayToCoordinatesOverlayUpfixer());
         registerConfigUpfixer(new SkillPointLoadoutsToBuildLoadoutsUpfixer());
+        registerConfigUpfixer(new AbilityCooldownRedirectToFeatureUpfixer());
         registerConfigUpfixer(new WorldMarkersRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersWaypointConfigsRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersFeatureRenamesUpfixer());
@@ -119,6 +122,7 @@ public class UpfixerManager extends Manager {
         registerStorageUpfixer(new DownloadSourceStringToEnumUpfixer());
         registerStorageUpfixer(new RemoveSetGearTierUpfixer());
         registerStorageUpfixer(new LoadoutMigrationUpfixer());
+        registerStorageUpfixer(new LootrunModelUpfixer());
     }
 
     private void registerConfigUpfixer(Upfixer upfixer) {

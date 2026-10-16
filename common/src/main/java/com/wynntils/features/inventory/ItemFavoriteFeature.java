@@ -150,9 +150,9 @@ public class ItemFavoriteFeature extends Feature {
         if (namedItemPropertyOpt.isPresent()) {
             itemName = namedItemPropertyOpt.get().getName();
         } else if (allowFavoritingAllItems.get()) {
-            itemName = WynnUtils.normalizeBadString(
+            itemName = WynnUtils.stripItemNameMarkers(WynnUtils.normalizeBadString(
                     StyledText.fromComponent((hoveredSlot.getItem().getHoverName()))
-                            .getStringWithoutFormatting());
+                            .getStringWithoutFormatting()));
         }
 
         if (itemName != null && !itemName.isBlank()) {

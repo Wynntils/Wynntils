@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.annotators.gui;
@@ -13,7 +13,8 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public class TradeMarketIdentificationFilterAnnotator implements GuiItemAnnotator {
-    private static final Pattern IDENTIFICATION_FILTER_NAME = Pattern.compile("§a(?<statName>.+) Identification Only");
+    private static final Pattern IDENTIFICATION_FILTER_NAME =
+            Pattern.compile("§a[^a-zA-Z0-9]*(?<statName>[a-zA-Z0-9 ]+) Identification Only");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

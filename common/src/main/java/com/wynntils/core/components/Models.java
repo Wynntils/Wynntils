@@ -45,7 +45,11 @@ import com.wynntils.models.inventory.IngredientPouchModel;
 import com.wynntils.models.inventory.InventoryModel;
 import com.wynntils.models.items.ItemEncodingModel;
 import com.wynntils.models.items.ItemModel;
+import com.wynntils.models.lootrun.LootrunBeaconModel;
 import com.wynntils.models.lootrun.LootrunModel;
+import com.wynntils.models.lootrun.LootrunRewardModel;
+import com.wynntils.models.lootrun.MissionModel;
+import com.wynntils.models.lootrun.TrialModel;
 import com.wynntils.models.mount.MountModel;
 import com.wynntils.models.npc.NpcModel;
 import com.wynntils.models.objectives.ObjectivesModel;
@@ -115,6 +119,8 @@ public final class Models {
     public static final ItemModel Item = new ItemModel();
     public static final LootChestModel LootChest = new LootChestModel();
     public static final LootrunModel Lootrun = new LootrunModel();
+    public static final LootrunRewardModel LootrunReward = new LootrunRewardModel();
+    public static final MissionModel Mission = new MissionModel();
     public static final MountModel Mount = new MountModel();
     public static final NpcModel Npc = new NpcModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
@@ -138,6 +144,7 @@ public final class Models {
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
     public static final StoreModel Store = new StoreModel();
     public static final StreamerModeModel StreamerMode = new StreamerModeModel();
+    public static final TrialModel Trial = new TrialModel();
     public static final TeleportScrollModel TeleportScroll = new TeleportScrollModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
@@ -150,4 +157,5 @@ public final class Models {
 
     // Models with constructor dependencies, ordered alphabetically as far as possible
     public static final ActivityModel Activity = new ActivityModel(Beacon);
+    public static final LootrunBeaconModel LootrunBeacon = new LootrunBeaconModel(Beacon);
 }

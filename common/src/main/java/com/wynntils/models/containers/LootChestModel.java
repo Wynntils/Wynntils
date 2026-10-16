@@ -24,6 +24,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.containers.reward.LootChestContainer;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
+import com.wynntils.models.containers.event.LootChestOpenedEvent;
 import com.wynntils.models.containers.event.ValuableFoundEvent;
 import com.wynntils.models.containers.providers.LootChestsProvider;
 import com.wynntils.models.containers.type.LootChestTier;
@@ -326,6 +327,8 @@ public final class LootChestModel extends Model {
         if (entity != null && entity.getType() == EntityType.INTERACTION) {
             // We don't actually know if this is a chest, but it's a good enough guess.
             lastChestPos = entity.blockPosition();
+
+            WynntilsMod.postEvent(new LootChestOpenedEvent(entity.blockPosition()));
         }
     }
 
@@ -389,6 +392,4 @@ public final class LootChestModel extends Model {
 
         return true;
     }
-
-    // endregion
 }

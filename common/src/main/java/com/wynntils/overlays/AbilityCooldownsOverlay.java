@@ -5,17 +5,14 @@
 package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.ContainerOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
-import com.wynntils.core.notifications.type.RedirectAction;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.abilities.event.AbilityCooldownRefreshedEvent;
 import com.wynntils.models.abilities.event.AbilityCooldownsUpdatedEvent;
 import com.wynntils.models.abilities.type.AbilityCooldown;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
@@ -27,11 +24,11 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.util.Mth;
-import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOverlay.AbilityCooldownOverlay> {
@@ -39,13 +36,13 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
     private final Config<Boolean> removeStatusEffect = new Config<>(true);
 
     @Persisted
-    private final Config<RedirectAction> redirectRefreshedMessages = new Config<>(RedirectAction.HIDE);
-
-    @Persisted
     private final Config<Boolean> interpolateTime = new Config<>(true);
 
     @Persisted
     private final Config<Boolean> showTimer = new Config<>(true);
+
+    @Persisted
+    private final Config<String> ignoredCooldowns = new Config<>("");
 
     @Persisted
     private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
@@ -75,7 +72,9 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
     public void onAbilityCooldownsUpdate(AbilityCooldownsUpdatedEvent event) {
         this.clearChildren();
         for (AbilityCooldown cooldown : event.getCooldowns()) {
-            this.addChild(new AbilityCooldownOverlay(cooldown));
+            if (!isIgnoredCooldown(cooldown.getName())) {
+                this.addChild(new AbilityCooldownOverlay(cooldown));
+            }
         }
     }
 
@@ -85,23 +84,20 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
 
         for (StatusEffect statusEffect : event.getOriginalStatusEffects()) {
             if (statusEffect.getPrefix().getString().equals(Models.Ability.COOLDOWN_PREFIX)) {
-                // Make sure the overlay will be displaying a cooldown before we remove it from the list
-                if (AbilityCooldown.fromStatusEffect(statusEffect) != null) {
+                AbilityCooldown cooldown = AbilityCooldown.fromStatusEffect(statusEffect);
+
+                if (cooldown != null && !isIgnoredCooldown(cooldown.getName())) {
                     event.removeStatusEffect(statusEffect);
                 }
             }
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onAbilityCooldownRefreshed(AbilityCooldownRefreshedEvent event) {
-        if (redirectRefreshedMessages.get() == RedirectAction.KEEP) return;
+    private boolean isIgnoredCooldown(String cooldownName) {
+        String ignored = ignoredCooldowns.get();
+        if (ignored.isEmpty()) return false;
 
-        event.setCancelMessage(true);
-
-        if (redirectRefreshedMessages.get() == RedirectAction.REDIRECT) {
-            Managers.Notification.queueMessage(event.getMessage());
-        }
+        return Arrays.stream(ignored.split(",")).map(String::trim).anyMatch(cooldownName::equalsIgnoreCase);
     }
 
     public final class AbilityCooldownOverlay extends Overlay {

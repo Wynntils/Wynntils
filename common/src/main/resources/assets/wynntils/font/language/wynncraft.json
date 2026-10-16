@@ -6,10 +6,6 @@
     },
     {
       "type": "reference",
-      "id": "minecraft:common"
-    },
-    {
-      "type": "reference",
       "id": "minecraft:default"
     }
   ]

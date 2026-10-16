@@ -19,8 +19,8 @@ import com.wynntils.screens.emotewheel.EmoteWheelScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.type.EmoteWheelButton;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.WheelButtonStyle;
 import net.minecraft.client.gui.screens.Screen;
 
 @ConfigCategory(Category.UI)
@@ -38,7 +38,7 @@ public class EmoteWheelFeature extends Feature implements ExternalConfigurationS
     public final Config<Double> scale = new Config<>(1.0);
 
     @Persisted
-    public final Config<EmoteWheelButton> buttonStyle = new Config<>(EmoteWheelButton.BUTTON);
+    public final Config<WheelButtonStyle> buttonStyle = new Config<>(WheelButtonStyle.BUTTON);
 
     @Persisted
     public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);

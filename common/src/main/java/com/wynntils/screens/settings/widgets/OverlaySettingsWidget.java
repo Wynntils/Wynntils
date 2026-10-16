@@ -26,6 +26,6 @@ public class OverlaySettingsWidget extends ScreenSettingsButton {
 
     @Override
     public Component getMessage() {
-        return Component.translatable("screens.wynntils.overlaySelection.edit");
+        return Component.translatable("screens.wynntils.overlaySettings.edit");
     }
 }

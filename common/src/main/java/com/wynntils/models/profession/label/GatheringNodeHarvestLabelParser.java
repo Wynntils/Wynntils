@@ -25,8 +25,8 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
             "(§(.+?)\\[§(.+?)x\\d§(.+?)\\] )?§(.+?)\\+(§d)?(?<gain>\\d+) §7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] (?<name>.+) XP §6\\[(?<current>[\\d.]+)%\\]");
 
     // Test in GatheringNodeHarvestLabelParser_HARVEST_PATTERN
-    private static final Pattern HARVEST_PATTERN = Pattern.compile(
-            "(§(.+?)\\[§(.+?)x\\d§(.+?)\\] )?§(.+?)\\+\\d+ §7(?<type>.+) (?<material>.+)§6 \\[§e✫((?:§8)?✫(?:§8)?)✫§6\\]");
+    private static final Pattern HARVEST_PATTERN =
+            Pattern.compile("(§(.+?)\\[§(.+?)x\\d+§(.+?)\\] )?§(.+?)\\+\\d+ §#3cb0e6ff(?<type>.+) (?<material>.+)");
 
     @Override
     public GatheringNodeHarvestLabelInfo getInfo(StyledText label, Location location, Entity entity) {
@@ -50,8 +50,7 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
                     String type = materialMatcher.group("type");
                     String material = materialMatcher.group("material");
 
-                    // Tier isn't shown in the label anymore
-                    gatheredMaterial = getHarvestMaterial(type, material, 1);
+                    gatheredMaterial = getHarvestMaterial(type, material);
                 }
             }
 
@@ -62,7 +61,7 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
         return null;
     }
 
-    private Optional<HarvestMaterial> getHarvestMaterial(String sourceMaterialName, String resourceTypeName, int tier) {
+    private Optional<HarvestMaterial> getHarvestMaterial(String sourceMaterialName, String resourceTypeName) {
         ResourceType resourceType = ResourceType.fromString(resourceTypeName);
         if (resourceType == null) return Optional.empty();
 
@@ -71,8 +70,7 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
         if (materialInfo.isPresent()) {
             return Optional.of(new HarvestMaterial(
                     resourceType,
-                    new SourceMaterial(sourceMaterialName, materialInfo.get().level()),
-                    tier));
+                    new SourceMaterial(sourceMaterialName, materialInfo.get().level())));
         }
 
         MiscGatheringType miscGatheringType = MiscGatheringType.fromResourceName(sourceMaterialName);
@@ -83,6 +81,6 @@ public class GatheringNodeHarvestLabelParser implements LabelParser<GatheringNod
         }
 
         return Optional.of(new HarvestMaterial(
-                resourceType, new SourceMaterial(sourceMaterialName, miscGatheringType.getLevel()), tier));
+                resourceType, new SourceMaterial(sourceMaterialName, miscGatheringType.getLevel())));
     }
 }

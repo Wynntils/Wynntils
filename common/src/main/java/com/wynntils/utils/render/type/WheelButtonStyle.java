@@ -6,7 +6,7 @@ package com.wynntils.utils.render.type;
 
 import com.wynntils.core.persisted.config.NullableConfig;
 
-public enum EmoteWheelButton implements NullableConfig {
+public enum WheelButtonStyle implements NullableConfig {
     BUTTON,
     TOOLTIP,
     SOLID,

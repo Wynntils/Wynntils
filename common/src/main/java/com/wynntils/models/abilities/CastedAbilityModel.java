@@ -122,7 +122,7 @@ public final class CastedAbilityModel extends Model {
     }
 
     @SubscribeEvent
-    public void onEntityRemoved(RemoveEntitiesEvent event) {
+    public void onEntityRemoved(RemoveEntitiesEvent.Post event) {
         event.getEntityIds().forEach(mainVehicleIds::remove);
         abilityTypes.forEach(t -> t.onEntityRemoved(event.getEntityIds()));
     }

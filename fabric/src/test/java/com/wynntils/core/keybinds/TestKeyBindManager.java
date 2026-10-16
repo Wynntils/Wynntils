@@ -38,15 +38,15 @@ public class TestKeyBindManager {
                 KeyBindDefinition.SHARE_ITEM.defaultKey(),
                 KeyBindDefinition.SHARE_ITEM.category());
         KeyMapping inactiveViewPlayerMapping = new KeyMapping(
-                KeyBindDefinition.VIEW_PLAYER.translationKey(),
-                KeyBindDefinition.VIEW_PLAYER.type(),
-                KeyBindDefinition.VIEW_PLAYER.defaultKey(),
-                KeyBindDefinition.VIEW_PLAYER.category());
+                KeyBindDefinition.HADES_INTERACTION_WHEEL.translationKey(),
+                KeyBindDefinition.HADES_INTERACTION_WHEEL.type(),
+                KeyBindDefinition.HADES_INTERACTION_WHEEL.defaultKey(),
+                KeyBindDefinition.HADES_INTERACTION_WHEEL.category());
 
         Map<String, KeyMapping> mappingsById = Map.of(
                 KeyBindDefinition.SHARE_ITEM.id(),
                 activeShareItemMapping,
-                KeyBindDefinition.VIEW_PLAYER.id(),
+                KeyBindDefinition.HADES_INTERACTION_WHEEL.id(),
                 inactiveViewPlayerMapping);
 
         Assertions.assertSame(
