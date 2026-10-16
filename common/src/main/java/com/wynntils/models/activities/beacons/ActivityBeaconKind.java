@@ -20,7 +20,8 @@ public enum ActivityBeaconKind implements BeaconKind {
     DUNGEON(CustomColor.fromInt(0xCC6677)),
     RAID(CustomColor.fromInt(0xD6401E)),
     BOSS_ALTAR(CustomColor.fromInt(0xF2D349)),
-    LOOTRUN_CAMP(CustomColor.fromInt(0x3399CC));
+    LOOTRUN_CAMP(CustomColor.fromInt(0x3399CC)),
+    TIME_TRIAL(CustomColor.fromInt(0x1EBF97));
 
     private final CustomColor customColor;
 
