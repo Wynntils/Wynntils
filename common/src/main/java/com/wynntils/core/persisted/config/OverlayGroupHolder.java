@@ -81,6 +81,15 @@ public class OverlayGroupHolder {
     }
 
     // Do not call this. Use OverlayManager instead.
+    public void setOverlays(List<Overlay> overlays) {
+        try {
+            FieldUtils.writeField(field, parent, overlays, true);
+        } catch (IllegalAccessException e) {
+            throw new IllegalStateException("Cannot update overlay group " + getConfigKey(), e);
+        }
+    }
+
+    // Do not call this. Use OverlayManager instead.
     public void initGroup(List<Integer> ids) {
         try {
             List<Overlay> overlays = new ArrayList<>();

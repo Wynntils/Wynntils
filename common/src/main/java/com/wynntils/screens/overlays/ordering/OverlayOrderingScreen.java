@@ -209,7 +209,10 @@ public class OverlayOrderingScreen extends WynntilsScreen {
     }
 
     public void reorderOverlay(Overlay overlay, int direction) {
+        Managers.Overlay.getPlacementHistory().finish();
+        Managers.Overlay.getOverlays().forEach(Managers.Overlay.getPlacementHistory()::include);
         Managers.Overlay.updateOverlayPosition(overlay, direction);
+        Managers.Overlay.getPlacementHistory().finish();
         populateOverlays();
     }
 

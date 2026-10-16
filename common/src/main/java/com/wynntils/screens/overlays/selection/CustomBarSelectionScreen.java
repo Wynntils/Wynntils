@@ -7,6 +7,8 @@ package com.wynntils.screens.overlays.selection;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.overlays.DynamicOverlay;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.config.OverlayGroupHolder;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
@@ -214,11 +216,10 @@ public final class CustomBarSelectionScreen extends WynntilsScreen {
         OverlayGroupHolder barGroup = groupHolders.get(barTypeIndex);
 
         // Add the new custom bar
-        int id = Managers.Overlay.extendOverlayGroup(barGroup);
-
-        Managers.Config.reloadConfiguration(false);
+        Overlay overlay = Managers.Overlay.addSingleOverlay(barGroup);
+        int id = ((DynamicOverlay) overlay).getId();
+        Managers.Overlay.getSettingsHistory().created(barGroup, overlay);
         Managers.Config.saveConfig();
-        Managers.Config.reloadConfiguration(true);
 
         // Repopulate the overlays on selection screen
         previousScreen.populateOverlays();
