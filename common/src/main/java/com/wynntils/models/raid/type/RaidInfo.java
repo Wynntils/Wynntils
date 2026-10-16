@@ -14,6 +14,9 @@ public class RaidInfo {
     private final Map<Integer, RaidRoomInfo> challenges = new TreeMap<>();
     private final long raidStartTime;
     private int currentChallengeNum = -1;
+    // Whether the current room was loaded from a backup and hasn't been confirmed by the scoreboard yet
+    // Whether or not the current room has been confirmed by the scoreboard
+    private boolean currentRoomUnconfirmed = false;
 
     public RaidInfo(RaidKind raidKind) {
         this.raidKind = raidKind;
@@ -28,13 +31,22 @@ public class RaidInfo {
 
         if (!challenges.isEmpty()) {
             currentChallengeNum = Collections.max(challenges.keySet());
+            currentRoomUnconfirmed = true;
         }
     }
 
-    public void startChallenge(int challengeNum, String roomName) {
+    public boolean startChallenge(int challengeNum, String roomName) {
+        long now = System.currentTimeMillis();
+        boolean endedPreviousRoom = false;
+
         for (int i = 1; i < challengeNum; i++) {
             RaidRoomInfo room = challenges.get(i);
-            if (room != null && room.getRoomEndTime() == -1L) {
+            if (room == null || room.getRoomEndTime() != -1L) continue;
+
+            if (i == currentChallengeNum && !currentRoomUnconfirmed) {
+                room.setRoomEndTime(now);
+                endedPreviousRoom = true;
+            } else {
                 room.markAbandoned();
             }
         }
@@ -44,6 +56,13 @@ public class RaidInfo {
         }
 
         currentChallengeNum = challengeNum;
+        currentRoomUnconfirmed = false;
+
+        return endedPreviousRoom;
+    }
+
+    public void confirmCurrentRoom() {
+        currentRoomUnconfirmed = false;
     }
 
     public void completeCurrentChallenge() {
