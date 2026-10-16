@@ -48,7 +48,7 @@ import net.minecraft.world.item.ItemStack;
 public final class GearModel extends Model {
     // Test in GearModel_GEAR_PATTERN
     public static final Pattern GEAR_PATTERN = Pattern.compile(
-            "^\uDAFC\uDC00(?<unidentified>§f\uE008\uDB00\uDC02)?(?<rarity>§[5bcdef])(?:Shiny )?(?<name>.+)\uDAFC\uDC00$");
+            "^\uDAFC\uDC00(?<unidentified>§f\uE008\uDB00\uDC02)?(?<rarity>§[5bcdef])(?<isShiny>Shiny )?(?<name>.+)\uDAFC\uDC00$");
 
     private final GearInfoRegistry gearInfoRegistry = new GearInfoRegistry();
 
@@ -97,7 +97,7 @@ public final class GearModel extends Model {
         // Temporary check for ascended items as they have no visible difference beside the stats at the moment
         if (result.level() != gearInfo.requirements().level() && gearInfo.tier() == GearTier.MYTHIC) {
             WynntilsMod.warn("Gear level for " + gearInfo.name() + " is reported as " + result.level());
-            GearInfo ascendedGearInfo = Models.Gear.getGearInfoFromDisplayName("Masterwork " + gearInfo.name());
+            GearInfo ascendedGearInfo = Models.Gear.getGearInfoFromDisplayName("Ascended " + gearInfo.name());
             if (ascendedGearInfo != null && ascendedGearInfo.requirements().level() == result.level()) {
                 WynntilsMod.info("Parsing " + gearInfo.name() + " as an ascended item");
                 return parseInstance(ascendedGearInfo, itemStack, isUnidentified);

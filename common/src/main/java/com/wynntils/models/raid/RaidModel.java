@@ -87,6 +87,7 @@ public final class RaidModel extends Model {
             "§#d6401eff(\\uE009\\uE002|\\uE001) §#fa7f63ff((§o)?(\\w+))§#d6401eff has chosen the §#fa7f63ff(\\w+ \\w+)§#d6401eff buff!");
 
     private static final int RAID_RESUME_TIMEOUT_TICKS = 200;
+    private static final long LATE_COMPLETION_GRACE_MS = 5000L;
 
     private static final ParasiteOvertakenBar PARASITE_OVERTAKEN_BAR = new ParasiteOvertakenBar();
     private static final Pattern PARASITE_OVERTAKEN_PATTERN = Pattern.compile(
@@ -141,6 +142,7 @@ public final class RaidModel extends Model {
     private boolean parasiteOvertaken = false;
     private CappedValue challenges = CappedValue.EMPTY;
     private int timeLeft = 0;
+    private long lateCompletionDeadline = 0L;
     private RaidInfo currentRaid;
 
     private boolean awaitingRaidResume = false;
@@ -486,6 +488,8 @@ public final class RaidModel extends Model {
     public void tryEnterChallengeIntermission() {
         if (currentRaid == null) return;
         if (inIntermissionRoom) return;
+        // The previous room's exit state may arrive late along with its completion
+        if (isInLateCompletionWindow()) return;
 
         inBuffRoom = false;
         inIntermissionRoom = true;
@@ -511,11 +515,20 @@ public final class RaidModel extends Model {
         }
 
         if (challengeNum == -1) return;
-        if (currentRaid.getCurrentChallengeNum() == challengeNum) return;
+        if (currentRaid.getCurrentChallengeNum() == challengeNum) {
+            // Confirm that this is the current room
+            currentRaid.confirmCurrentRoom();
+            return;
+        }
 
         inIntermissionRoom = false;
         completedCurrentChallenge = false;
-        currentRaid.startChallenge(challengeNum, roomName);
+        // If the previous room was ended by this room starting, its completion may still arrive late and
+        // would otherwise instantly complete this room. This mainly occurs in the Orphion -> Parasite transition in
+        // Nexus of Light
+        lateCompletionDeadline = currentRaid.startChallenge(challengeNum, roomName)
+                ? System.currentTimeMillis() + LATE_COMPLETION_GRACE_MS
+                : 0L;
 
         persistRaidState();
 
@@ -526,6 +539,8 @@ public final class RaidModel extends Model {
         // We need to check we are in a raid here as this uses both the scoreboard and chat message to trigger
         // and lootruns use the same chat message
         if (currentRaid == null) return;
+        // Both the scoreboard and chat message may arrive late so ignore every completion in the window
+        if (isInLateCompletionWindow()) return;
 
         if (!completedCurrentChallenge) {
             currentRaid.completeCurrentChallenge();
@@ -817,6 +832,7 @@ public final class RaidModel extends Model {
         inBuffRoom = false;
         inIntermissionRoom = false;
         timeLeft = 0;
+        lateCompletionDeadline = 0L;
         challenges = CappedValue.EMPTY;
         partyRaidBuffs.clear();
         parasiteOvertaken = false;
@@ -824,6 +840,10 @@ public final class RaidModel extends Model {
         cancelPendingResume();
 
         savedRaidInfo.store(SavableRaidInfo.EMPTY);
+    }
+
+    private boolean isInLateCompletionWindow() {
+        return System.currentTimeMillis() < lateCompletionDeadline;
     }
 
     private void cancelPendingResume() {

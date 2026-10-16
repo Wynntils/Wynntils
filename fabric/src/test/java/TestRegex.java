@@ -35,7 +35,7 @@ import com.wynntils.models.items.annotators.gui.GambitAnnotator;
 import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
-import com.wynntils.models.lootrun.LootrunModel;
+import com.wynntils.models.lootrun.LootrunBeaconModel;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.npc.label.BossAltarLabelParser;
 import com.wynntils.models.npc.label.FastTravelLabelParser;
@@ -607,8 +607,8 @@ public class TestRegex {
     }
 
     @Test
-    public void LootrunModel_BEACONS_PATTERN() {
-        PatternTester p = new PatternTester(LootrunModel.class, "BEACONS_PATTERN");
+    public void LootrunBeaconModel_BEACONS_PATTERN() {
+        PatternTester p = new PatternTester(LootrunBeaconModel.class, "BEACONS_PATTERN");
         p.shouldMatch("\uDB00\uDC0A§#ff00ffff§lVibrant Purple Beacon§r\uDB00\uDC1B§#5c5ce6ff§lVibrant Blue Beacon");
         p.shouldMatch("\uDB00\uDC0C§#ffff33ff§lVibrant Yellow Beacon§r\uDB00\uDC1F§#ff0000ff§lVibrant Red Beacon");
         p.shouldMatch(
@@ -622,8 +622,8 @@ public class TestRegex {
     }
 
     @Test
-    public void LootrunModel_ORANGE_AMOUNT_PATTERN() {
-        PatternTester p = new PatternTester(LootrunModel.class, "ORANGE_AMOUNT_PATTERN");
+    public void LootrunBeaconModel_ORANGE_AMOUNT_PATTERN() {
+        PatternTester p = new PatternTester(LootrunBeaconModel.class, "ORANGE_AMOUNT_PATTERN");
         p.shouldMatch("\uDB00\uDC20§7for §#00fff2ff15§7 Challenges§r\uDB00\uDC48§7this Lootrun");
         p.shouldMatch("\uDB00\uDC21§7+1 Beacon Choice§r\uDB00\uDC3B§7+§#00fff2ff20§7 Challenges to");
         p.shouldMatch("\uDB00\uDC28§7this Lootrun§r\uDB00\uDC48§7for 10 Challenges");
@@ -634,8 +634,8 @@ public class TestRegex {
     }
 
     @Test
-    public void LootrunModel_RAINBOW_AMOUNT_PATTERN() {
-        PatternTester p = new PatternTester(LootrunModel.class, "RAINBOW_AMOUNT_PATTERN");
+    public void LootrunBeaconModel_RAINBOW_AMOUNT_PATTERN() {
+        PatternTester p = new PatternTester(LootrunBeaconModel.class, "RAINBOW_AMOUNT_PATTERN");
         p.shouldMatch("\uDB00\uDC4D\uDB00\uDC6A§7next §#cf45ffff30§7 Challenges");
     }
 

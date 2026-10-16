@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.lootrun.markers;
@@ -30,7 +30,7 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
         List<MarkerInfo> newTaskMarkers = new ArrayList<>();
 
         for (Map.Entry<LootrunBeaconKind, TaskPrediction> entry :
-                Models.Lootrun.getBeacons().entrySet()) {
+                Models.LootrunBeacon.getBeacons().entrySet()) {
             newTaskMarkers.add(new MarkerInfo(
                     EnumUtils.toNiceString(entry.getKey()) + " Beacon",
                     new StaticLocationSupplier(entry.getValue().taskLocation().location()),

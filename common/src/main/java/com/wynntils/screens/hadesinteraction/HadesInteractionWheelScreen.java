@@ -28,9 +28,9 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.render.type.WheelButtonStyle;
 import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.wynn.RaycastUtils;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -43,6 +43,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.resources.Identifier;
+import net.minecraft.world.entity.player.Player;
 
 public class HadesInteractionWheelScreen extends WynntilsScreen {
     private static final int BUTTON_SIZE = 50;
@@ -57,6 +58,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
     private final HadesFeature hadesFeature;
     private final PlayerPingFeature playerPingFeature;
     private final PlayerViewerFeature playerViewerFeature;
+    private final Optional<Player> hoveredPlayer;
     private final List<WheelOption> options = new ArrayList<>();
     private final List<Pair<Integer, Integer>> buttonPositions = new ArrayList<>();
     private final List<String> pingTargets = new ArrayList<>();
@@ -69,16 +71,23 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
     private String pingTarget = "";
 
     private HadesInteractionWheelScreen(
-            HadesFeature hadesFeature, PlayerPingFeature playerPingFeature, PlayerViewerFeature playerViewerFeature) {
+            HadesFeature hadesFeature,
+            PlayerPingFeature playerPingFeature,
+            PlayerViewerFeature playerViewerFeature,
+            Optional<Player> hoveredPlayer) {
         super(Component.literal("Hades Interaction Wheel"));
         this.hadesFeature = hadesFeature;
         this.playerViewerFeature = playerViewerFeature;
         this.playerPingFeature = playerPingFeature;
+        this.hoveredPlayer = hoveredPlayer;
     }
 
     public static Screen create(
-            HadesFeature hadesFeature, PlayerPingFeature playerPingFeature, PlayerViewerFeature playerViewerFeature) {
-        return new HadesInteractionWheelScreen(hadesFeature, playerPingFeature, playerViewerFeature);
+            HadesFeature hadesFeature,
+            PlayerPingFeature playerPingFeature,
+            PlayerViewerFeature playerViewerFeature,
+            Optional<Player> hoveredPlayer) {
+        return new HadesInteractionWheelScreen(hadesFeature, playerPingFeature, playerViewerFeature, hoveredPlayer);
     }
 
     @Override
@@ -206,7 +215,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
 
     private void createOptions() {
         options.clear();
-        if (RaycastUtils.getHoveredPlayer().isPresent() && playerViewerFeature.isEnabled()) {
+        if (hoveredPlayer.isPresent() && playerViewerFeature.isEnabled()) {
             options.add(new WheelOption("View Player", null));
         }
 
@@ -407,7 +416,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
         if (option.pingType() != null) {
             Services.Hades.sendPlayerPing(option.pingType(), pingTarget);
         } else if (playerViewerFeature.isEnabled()) {
-            hadesFeature.tryOpenPlayerViewer();
+            hadesFeature.tryOpenPlayerViewer(hoveredPlayer);
         }
     }
 
