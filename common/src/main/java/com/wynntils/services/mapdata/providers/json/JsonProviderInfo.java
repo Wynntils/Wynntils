@@ -9,7 +9,8 @@ public record JsonProviderInfo(
         JsonProviderType providerType,
         String providerFilename,
         String providerFilePath,
-        String providerUrl) {
+        String providerUrl)
+        implements Comparable<JsonProviderInfo> {
     public static JsonProviderInfo createBuiltin(String providerId, String providerFilename) {
         return new JsonProviderInfo(providerId, JsonProviderType.BUNDLED, providerFilename, null, null);
     }
@@ -22,12 +23,28 @@ public record JsonProviderInfo(
         return new JsonProviderInfo(providerId, JsonProviderType.REMOTE, null, null, providerUrl);
     }
 
+    /**
+     * @return The id this provider is registered under in {@link com.wynntils.services.mapdata.MapDataService}
+     */
+    public String completeId() {
+        return switch (providerType) {
+            case BUNDLED -> "bundled:" + providerId;
+            case LOCAL -> "local:" + providerId;
+            case REMOTE -> "online:" + providerId;
+        };
+    }
+
     public String path() {
         return switch (providerType) {
-            case BUNDLED -> "bundled / " + providerFilename;
-            case LOCAL -> "local / " + providerFilePath;
-            case REMOTE -> "remote / " + providerUrl;
+            case BUNDLED -> providerFilename;
+            case LOCAL -> providerFilePath;
+            case REMOTE -> providerUrl;
         };
+    }
+
+    @Override
+    public int compareTo(JsonProviderInfo other) {
+        return providerId.compareTo(other.providerId);
     }
 
     public enum JsonProviderType {

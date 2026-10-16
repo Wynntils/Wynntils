@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem;
@@ -30,6 +30,9 @@ import java.util.Map;
 import java.util.Optional;
 
 public final class WynnItemModel extends Model {
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
+            .create();
     private Map<String, List<ItemObtainInfo>> itemObtainMap = Map.of();
     private List<MaterialConversionInfo> allMaterialConversions = List.of();
     private Map<Integer, MaterialConversionInfo> materialConversionLookup = Map.of();
@@ -61,10 +64,7 @@ public final class WynnItemModel extends Model {
 
     private void handleObtainData(Reader reader) {
         Type obtainType = new TypeToken<Map<String, List<ItemObtainInfo>>>() {}.getType();
-        Gson gson = new GsonBuilder()
-                .registerTypeHierarchyAdapter(ItemObtainInfo.class, new ItemObtainInfoDeserializer())
-                .create();
-        itemObtainMap = gson.fromJson(reader, obtainType);
+        itemObtainMap = GSON.fromJson(reader, obtainType);
     }
 
     private void handleMaterialConversionData(Reader reader) {

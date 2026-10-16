@@ -20,6 +20,10 @@ import com.wynntils.services.mapdata.attributes.impl.MapAreaAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapLocationAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
+import com.wynntils.services.mapdata.providers.json.serializer.JsonAttributeSerializer;
+import com.wynntils.services.mapdata.providers.json.serializer.JsonCategorySerializer;
+import com.wynntils.services.mapdata.providers.json.serializer.JsonIconSerializer;
+import com.wynntils.services.mapdata.providers.json.serializer.JsonProviderSerializer;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.EnumUtils;
@@ -47,12 +51,12 @@ public final class JsonManager extends Manager {
             .registerTypeAdapter(StyledText.class, new StyledText.StyledTextSerializer())
             .registerTypeAdapter(CrowdSourcedData.class, new CrowdSourcedData.CrowdSourceDataSerializer())
             .registerTypeAdapter(SavedItem.class, new SavedItem.SavedItemSerializer())
-            .registerTypeAdapter(JsonProvider.class, new JsonProvider.JsonProviderSerializer())
-            .registerTypeAdapter(MapLocationAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
-            .registerTypeAdapter(MapAreaAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
-            .registerTypeAdapter(MapPathAttributesImpl.class, new JsonProvider.JsonAttributeSerializer())
-            .registerTypeHierarchyAdapter(MapCategory.class, new JsonProvider.JsonCategorySerializer())
-            .registerTypeHierarchyAdapter(MapIcon.class, new JsonProvider.JsonIconSerializer())
+            .registerTypeAdapter(JsonProvider.class, new JsonProviderSerializer())
+            .registerTypeAdapter(MapLocationAttributesImpl.class, new JsonAttributeSerializer())
+            .registerTypeAdapter(MapAreaAttributesImpl.class, new JsonAttributeSerializer())
+            .registerTypeAdapter(MapPathAttributesImpl.class, new JsonAttributeSerializer())
+            .registerTypeHierarchyAdapter(MapCategory.class, new JsonCategorySerializer())
+            .registerTypeHierarchyAdapter(MapIcon.class, new JsonIconSerializer())
             .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
