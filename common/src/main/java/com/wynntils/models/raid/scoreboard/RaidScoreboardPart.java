@@ -52,7 +52,12 @@ public class RaidScoreboardPart extends ScoreboardPart {
         if (currentStateLine.matches(EXIT_PATTERN, StyleType.NONE)) {
             Models.Raid.tryEnterChallengeIntermission();
         } else if (currentStateLine.matches(CHALLENGE_COMPLETED_PATTERN, StyleType.NONE)) {
-            Models.Raid.completeChallenge();
+            // For bosses we only want the chat message to be used to complete the challenge as it may
+            // cause the completeChallenge method to be called twice
+            if (Models.Raid.getCurrentRaid().getCurrentChallengeNum()
+                    <= Models.Raid.getCurrentRaid().getRaidKind().getChallengeCount()) {
+                Models.Raid.completeChallenge();
+            }
         } else if (currentStateLine.matches(BUFF_PATTERN, StyleType.NONE)) {
             Models.Raid.enterBuffRoom();
         } else if (currentStateLine.matches(PLAYERS_DIED_PATTERN, StyleType.NONE)
