@@ -28,6 +28,7 @@ import com.wynntils.models.mount.type.MountChoice;
 import com.wynntils.models.mount.type.MountColorInfo;
 import com.wynntils.models.mount.type.MountColorType;
 import com.wynntils.models.mount.type.MountType;
+import com.wynntils.models.timetrials.event.TimeTrialEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.MouseUtils;
@@ -138,6 +139,30 @@ public final class MountModel extends Model {
             previousMountType = Optional.empty();
             WynntilsMod.postEvent(new MountEvent.Mount(currentMountType.get(), false));
         }
+    }
+
+    @SubscribeEvent
+    public void onTimeTrialReady(TimeTrialEvent.Ready event) {
+        currentMountType = Optional.of(Models.TimeTrial.getCurrentTrialMountType());
+        WynntilsMod.postEvent(new MountEvent.Mount(currentMountType.get(), true));
+    }
+
+    @SubscribeEvent
+    public void onTimeTrialResume(TimeTrialEvent.Resumed event) {
+        currentMountType = Optional.of(Models.TimeTrial.getCurrentTrialMountType());
+        WynntilsMod.postEvent(new MountEvent.Mount(currentMountType.get(), true));
+    }
+
+    @SubscribeEvent
+    public void onTimeTrialCleared(TimeTrialEvent.Cleared event) {
+        currentMountType = Optional.empty();
+        WynntilsMod.postEvent(new MountEvent.Dismount());
+    }
+
+    @SubscribeEvent
+    public void onTimeTrialFailed(TimeTrialEvent.Failed event) {
+        currentMountType = Optional.empty();
+        WynntilsMod.postEvent(new MountEvent.Dismount());
     }
 
     @SubscribeEvent

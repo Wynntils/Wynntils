@@ -19,6 +19,7 @@ import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.models.mount.event.MountEvent;
 import com.wynntils.models.mount.type.MountChoice;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.overlays.MountEnergyOverlay;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.RenderElementType;
@@ -79,6 +80,9 @@ public class MountKeybindFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
+        // Only reset when leaving a world
+        if (event.getOldState() != WorldState.WORLD) return;
+
         if (switchToThirdPersonOnMount.get() && prevCameraType != null) {
             restoreCamera();
         }
