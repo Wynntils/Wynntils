@@ -4249,6 +4249,8 @@
   "statistics.wynntils.theNamelessAnomalyFailed.name": "The Nameless Anomaly's failed",
   "statistics.wynntils.theNamelessAnomalySucceeded.name": "The Nameless Anomaly's succeeded",
   "statistics.wynntils.theNamelessAnomalyTimeElapsed.name": "Time spent in The Nameless Anomaly",
+  "statistics.wynntils.timeTrialsCompleted.name": "Number of time trials completed",
+  "statistics.wynntils.timeTrialsFailed.name": "Number of time trials failed",
   "statistics.wynntils.warsJoined.name": "Wars Joined",
   "utils.wynntils.component.clickToSetCompass": "Click here to set your compass to this location",
   "utils.wynntils.time.day": "%d day",
