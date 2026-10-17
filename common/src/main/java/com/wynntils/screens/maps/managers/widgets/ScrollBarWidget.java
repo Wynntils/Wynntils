@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -51,7 +50,7 @@ public abstract class ScrollBarWidget extends AbstractWidget {
     private float verticalButtonLength;
 
     public ScrollBarWidget(int x, int y, int width, int height) {
-        super(x, y, width, height, Component.literal("Category Tree Widget"));
+        super(x, y, width, height, Component.literal("Scroll Bar Widget"));
         this.x = x;
         this.y = y;
     }
@@ -60,10 +59,10 @@ public abstract class ScrollBarWidget extends AbstractWidget {
         return 0;
     }
 
-    protected abstract List<? extends AbstractOptionWidget<?>> getWidgets();
+    protected abstract List<? extends AbstractWidget> getWidgets();
 
     private int getCanvasHeight() {
-        List<? extends AbstractOptionWidget<?>> widgets = getWidgets();
+        List<? extends AbstractWidget> widgets = getWidgets();
         int total = 0;
 
         for (int i = 0; i < widgets.size(); i++) {

@@ -13,11 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public abstract class BuiltInProvider implements MapDataProvider {
     protected final List<Consumer<MapDataProvidedType>> callbacks = new ArrayList<>();
 
     public abstract String getProviderId();
+
+    public abstract Component getName();
+
+    public abstract Component getDescription();
 
     @Override
     public Stream<MapFeature> getFeatures() {

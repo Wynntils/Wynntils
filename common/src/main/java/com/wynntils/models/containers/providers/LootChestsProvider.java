@@ -10,6 +10,7 @@ import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public class LootChestsProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
@@ -17,6 +18,16 @@ public class LootChestsProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "loot-chests";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.lootChests.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.lootChests.description");
     }
 
     @Override

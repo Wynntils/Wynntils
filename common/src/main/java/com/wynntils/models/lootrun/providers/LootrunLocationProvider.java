@@ -24,11 +24,22 @@ import com.wynntils.utils.colors.CustomColor;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public class LootrunLocationProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "lootrun-locations";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.lootrunLocations.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.lootrunLocations.description");
     }
 
     @Override

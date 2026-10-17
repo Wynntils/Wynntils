@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public final class UserMarkerProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
@@ -18,6 +19,16 @@ public final class UserMarkerProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "user-markers";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.userMarkers.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.userMarkers.description");
     }
 
     @Override

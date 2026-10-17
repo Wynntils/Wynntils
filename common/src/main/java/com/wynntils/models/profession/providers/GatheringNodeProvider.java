@@ -28,6 +28,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 /**
  * Provides the gathering nodes downloaded by {@link com.wynntils.models.profession.GatheringNodeRegistry}.
@@ -51,6 +52,16 @@ public class GatheringNodeProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "gathering-nodes";
+    }
+
+    @Override
+    public Component getName() {
+        return Component.translatable("service.wynntils.mapdata.provider.gatheringNodes.name");
+    }
+
+    @Override
+    public Component getDescription() {
+        return Component.translatable("service.wynntils.mapdata.provider.gatheringNodes.description");
     }
 
     @Override

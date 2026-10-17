@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.managers.widgets;
+package com.wynntils.screens.maps.managers.widgets.categorymanager;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
@@ -10,11 +10,11 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OverrideType;
-import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.ColorOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.FloatSliderOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.ToggleOptionWidget;
-import com.wynntils.screens.maps.managers.widgets.options.VisiblityOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.AbstractOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.ColorOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.FloatSliderOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.ToggleOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.VisiblityOptionWidget;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
 import com.wynntils.services.mapdata.attributes.impl.MapMarkerOptionsImpl;
