@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.statproviders;
@@ -16,7 +16,7 @@ public class FavoriteStatProvider extends ItemStatProvider<Boolean> {
     @Override
     public Optional<Boolean> getValue(WynnItem wynnItem) {
         if (wynnItem instanceof NamedItemProperty namedItem) {
-            return Optional.of(Services.Favorites.isFavorite(namedItem.getName()));
+            return Optional.of(Services.Favorites.isFavorite(namedItem));
         }
 
         return Optional.of(false);

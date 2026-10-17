@@ -35,7 +35,7 @@ import com.wynntils.models.items.annotators.gui.GambitAnnotator;
 import com.wynntils.models.items.annotators.gui.LeaderboardSeasonAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
-import com.wynntils.models.lootrun.LootrunModel;
+import com.wynntils.models.lootrun.LootrunBeaconModel;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.npc.label.BossAltarLabelParser;
 import com.wynntils.models.npc.label.FastTravelLabelParser;
@@ -366,11 +366,15 @@ public class TestRegex {
     public void GatheringNodeHarvestLabelParser_HARVEST_PATTERN() {
         PatternTester p = new PatternTester(GatheringNodeHarvestLabelParser.class, "HARVEST_PATTERN");
 
-        p.shouldMatch("§f+1 §7Sky Wood§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§f+1 §7Starfish Oil§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§f+1 §7Hemp String§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§f+1 §7Diamond Ingot§6 [§e✫§8✫✫§6]");
-        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+2 §7Sky Wood§6 [§e✫§8✫✫§6]");
+        p.shouldMatch("§f+1 §#3cb0e6ffHemp String");
+        p.shouldMatch("§f+1 §#3cb0e6ffHemp Grains");
+        p.shouldMatch("§f+1 §#3cb0e6ffSky Plank");
+        p.shouldMatch("§f+1 §#3cb0e6ffSky Paper");
+        p.shouldMatch("§f+1 §#3cb0e6ffStarfish Oil");
+        p.shouldMatch("§f+1 §#3cb0e6ffStarfish Meat");
+        p.shouldMatch("§f+1 §#3cb0e6ffVoidstone Ingot");
+        p.shouldMatch("§f+1 §#3cb0e6ffVoidstone Gem");
+        p.shouldMatch("§#ffd750ff[§#a0c84bffx2§#ffd750ff] §#a0c84bff+2 §#3cb0e6ffOak Plank");
     }
 
     @Test
@@ -603,8 +607,8 @@ public class TestRegex {
     }
 
     @Test
-    public void LootrunModel_BEACONS_PATTERN() {
-        PatternTester p = new PatternTester(LootrunModel.class, "BEACONS_PATTERN");
+    public void LootrunBeaconModel_BEACONS_PATTERN() {
+        PatternTester p = new PatternTester(LootrunBeaconModel.class, "BEACONS_PATTERN");
         p.shouldMatch("\uDB00\uDC0A§#ff00ffff§lVibrant Purple Beacon§r\uDB00\uDC1B§#5c5ce6ff§lVibrant Blue Beacon");
         p.shouldMatch("\uDB00\uDC0C§#ffff33ff§lVibrant Yellow Beacon§r\uDB00\uDC1F§#ff0000ff§lVibrant Red Beacon");
         p.shouldMatch(
@@ -618,8 +622,8 @@ public class TestRegex {
     }
 
     @Test
-    public void LootrunModel_ORANGE_AMOUNT_PATTERN() {
-        PatternTester p = new PatternTester(LootrunModel.class, "ORANGE_AMOUNT_PATTERN");
+    public void LootrunBeaconModel_ORANGE_AMOUNT_PATTERN() {
+        PatternTester p = new PatternTester(LootrunBeaconModel.class, "ORANGE_AMOUNT_PATTERN");
         p.shouldMatch("\uDB00\uDC20§7for §#00fff2ff15§7 Challenges§r\uDB00\uDC48§7this Lootrun");
         p.shouldMatch("\uDB00\uDC21§7+1 Beacon Choice§r\uDB00\uDC3B§7+§#00fff2ff20§7 Challenges to");
         p.shouldMatch("\uDB00\uDC28§7this Lootrun§r\uDB00\uDC48§7for 10 Challenges");
@@ -630,8 +634,8 @@ public class TestRegex {
     }
 
     @Test
-    public void LootrunModel_RAINBOW_AMOUNT_PATTERN() {
-        PatternTester p = new PatternTester(LootrunModel.class, "RAINBOW_AMOUNT_PATTERN");
+    public void LootrunBeaconModel_RAINBOW_AMOUNT_PATTERN() {
+        PatternTester p = new PatternTester(LootrunBeaconModel.class, "RAINBOW_AMOUNT_PATTERN");
         p.shouldMatch("\uDB00\uDC4D\uDB00\uDC6A§7next §#cf45ffff30§7 Challenges");
     }
 

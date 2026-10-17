@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.overlays;
@@ -14,8 +14,8 @@ import java.util.regex.Pattern;
  */
 public class OverlaySize {
     private static final Pattern SIZE_REGEX = Pattern.compile("OverlaySize\\{width=(.+),height=(.+)}");
-    private static final float MINIMUM_HEIGHT = 3f;
-    private static final float MINIMUM_WIDTH = 3f;
+    public static final float MINIMUM_HEIGHT = 3f;
+    public static final float MINIMUM_WIDTH = 3f;
 
     private float width;
     private float height;

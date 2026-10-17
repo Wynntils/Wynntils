@@ -48,7 +48,11 @@ dependencies {
     }
 
     // Hades Protocol
-    shadowImplementation("com.github.wynntils:hades:v${hades_version}") { transitive false }
+    if (file("${rootDir}/../Hades/build/libs/HadesProtocol-${hades_version}.jar").exists()) {
+        shadowImplementation(files("${rootDir}/../Hades/build/libs/HadesProtocol-${hades_version}.jar"))
+    } else {
+        shadowImplementation("com.github.wynntils:hades:v${hades_version}") { transitive false }
+    }
     shadowImplementation("com.github.wynntils:antiope:v${antiope_version}") { transitive false }
 
     include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${mixinextras_version}")))

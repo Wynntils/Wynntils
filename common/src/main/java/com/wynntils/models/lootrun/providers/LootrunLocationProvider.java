@@ -54,7 +54,7 @@ public class LootrunLocationProvider extends BuiltInProvider {
                 || !Managers.Feature.getFeatureInstance(CustomLootrunBeaconsFeature.class)
                         .isEnabled()) return Stream.empty();
 
-        return Models.Lootrun.getBeacons().entrySet().stream()
+        return Models.LootrunBeacon.getBeacons().entrySet().stream()
                 .map(entry -> new LootrunLocation(entry.getValue().taskLocation(), entry.getKey()));
     }
 

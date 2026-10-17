@@ -169,7 +169,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "a3960e89a923b32998ee682aa7acd518",
+    "md5": "4af924c21e2402747eb72ea94022c12b",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -199,7 +199,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "20633374220ec4ef070d9621fbc9cad5",
+    "md5": "b349281d84e9d166e33bc5bdbda0d02b",
     "path": "Reference/ingredients.json",
     "url": "https://cdn.wynntils.com/static/Reference/ingredients.json"
   },
@@ -211,7 +211,7 @@
   },
   {
     "id": "dataStaticItemDisplayModelData",
-    "md5": "9f949f17e445b3c2ae5ce231359138be",
+    "md5": "5dcb7bd48696c8952d486e292848cdf6",
     "path": "Data-Storage/item_display_model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
@@ -271,7 +271,7 @@
   },
   {
     "id": "dataStaticModelData",
-    "md5": "710e884c8d79b151a7edfa2a800ff3c8",
+    "md5": "ce33ff5b7328c7773c880f95f814230c",
     "path": "Data-Storage/model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
@@ -331,7 +331,7 @@
   },
   {
     "id": "dataStaticSets",
-    "md5": "74c3a7896dbc3649eea626f76ce8cc0d",
+    "md5": "686198fe9182c6716cd13d35a054e7c1",
     "path": "Reference/sets.json",
     "url": "https://cdn.wynntils.com/static/Reference/sets.json"
   },

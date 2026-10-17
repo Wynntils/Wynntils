@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.labels;
@@ -117,7 +117,7 @@ public final class LabelHandler extends Handler {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onEntitiesRemoved(RemoveEntitiesEvent event) {
+    public void onEntitiesRemoved(RemoveEntitiesEvent.Post event) {
         List<LabelInfo> removedLabels = liveLabels.values().stream()
                 .filter(label -> event.getEntityIds().contains(label.getEntity().getId()))
                 .toList();

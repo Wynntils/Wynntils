@@ -42,6 +42,9 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     @Persisted(i18nKey = "overlay.wynntils.overlay.userEnabled")
     protected final Config<Boolean> userEnabled = new Config<>(true);
 
+    @Persisted(i18nKey = "overlay.wynntils.overlay.placementLocked")
+    private final Config<Boolean> placementLocked = new Config<>(false);
+
     @Persisted(i18nKey = "overlay.wynntils.overlay.renderElement")
     protected final HiddenConfig<RenderElementType> renderElement = new HiddenConfig<>(RenderElementType.CHAT);
 
@@ -278,6 +281,14 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
 
     public void setPosition(OverlayPosition position) {
         this.position.store(position);
+    }
+
+    public boolean isPlacementLocked() {
+        return Boolean.TRUE.equals(placementLocked.get());
+    }
+
+    public void setPlacementLocked(boolean locked) {
+        placementLocked.setValue(locked);
     }
 
     // Return the X where the overlay should be rendered

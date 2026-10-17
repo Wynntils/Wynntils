@@ -22,13 +22,23 @@ public abstract class MountEvent extends Event {
 
     public static class Mount extends MountEvent {
         private MountType mountType;
+        private boolean initialMount;
 
-        public Mount(MountType mountType) {
+        public Mount(MountType mountType, boolean initialMount) {
             this.mountType = mountType;
+            this.initialMount = initialMount;
         }
 
         public MountType getMountType() {
             return mountType;
+        }
+
+        /**
+         * This is true when a 2nd player begins riding your mount.
+         * @return Whether this is initial mount or not
+         */
+        public boolean isInitialMount() {
+            return initialMount;
         }
     }
 

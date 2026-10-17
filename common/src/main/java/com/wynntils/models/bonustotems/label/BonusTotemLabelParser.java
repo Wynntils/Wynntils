@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.bonustotems.label;
@@ -17,7 +17,7 @@ import net.minecraft.world.entity.Entity;
 public class BonusTotemLabelParser implements LabelParser<BonusTotemLabelInfo> {
     // Test in BonusTotemLabelParser_BONUS_TOTEM_PATTERN
     private static final Pattern BONUS_TOTEM_PATTERN = Pattern.compile(
-            "§#ffd750ff(§o)?(?<user>.*?)(§r§#ffd750ff)?'s?§#[a-z0-9]{8} (?<type>Mob|Gathering) Totem\n§d\uE01F §7(?<timer>([0-9]+m )?[0-9]+s)");
+            "§#ffd750ff(§o)?(?<user>.*?)(§r§#ffd750ff)?'s?§#[a-z0-9]{8} (?<type>Mob|Gathering) Totem\n§d\uE01F §7((?<minutes>[0-9]+)m )?(?<seconds>[0-9]+)s");
 
     @Override
     public BonusTotemLabelInfo getInfo(StyledText label, Location location, Entity entity) {
@@ -26,7 +26,9 @@ public class BonusTotemLabelParser implements LabelParser<BonusTotemLabelInfo> {
 
         String user = matcher.group("user");
         String typeStr = matcher.group("type");
-        String timerString = matcher.group("timer");
+        String minutesString = matcher.group("minutes");
+        int minutes = minutesString == null ? 0 : Integer.parseInt(minutesString);
+        int secondsLeft = minutes * 60 + Integer.parseInt(matcher.group("seconds"));
 
         BonusTotemType type;
         try {
@@ -36,6 +38,6 @@ public class BonusTotemLabelParser implements LabelParser<BonusTotemLabelInfo> {
             return null;
         }
 
-        return new BonusTotemLabelInfo(label, location, entity, type, user, timerString);
+        return new BonusTotemLabelInfo(label, location, entity, type, user, secondsLeft);
     }
 }
