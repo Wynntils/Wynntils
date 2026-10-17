@@ -1,0 +1,7 @@
+{
+  "fontId": "wynntils:time_trials",
+  "glyphs": {
+    "elapsed_time": "\uE000",
+    "checkpoints": "\uE001"
+  }
+}

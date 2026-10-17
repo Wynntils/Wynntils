@@ -21,6 +21,7 @@ import com.wynntils.models.mount.type.MountChoice;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.overlays.MountEnergyOverlay;
+import com.wynntils.overlays.TimeTrialOverlay;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.CameraType;
@@ -38,6 +39,9 @@ public class MountKeybindFeature extends Feature {
 
     @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final MountEnergyOverlay mountEnergyOverlay = new MountEnergyOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
+    private final TimeTrialOverlay timeTrialOverlay = new TimeTrialOverlay();
 
     @Persisted
     private final Config<Boolean> playWhistle = new Config<>(true);
