@@ -19,7 +19,7 @@ public class TerritoryOverlay extends TextOverlay {
     public TerritoryOverlay() {
         super(
                 new OverlayPosition(
-                        136,
+                        126,
                         6,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,

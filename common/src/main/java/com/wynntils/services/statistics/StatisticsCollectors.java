@@ -21,6 +21,7 @@ import com.wynntils.models.raid.raids.RaidKind;
 import com.wynntils.models.raid.raids.TheCanyonColossusRaid;
 import com.wynntils.models.raid.raids.TheNamelessAnomalyRaid;
 import com.wynntils.models.spells.event.SpellEvent;
+import com.wynntils.models.timetrials.event.TimeTrialEvent;
 import com.wynntils.models.war.event.GuildWarEvent;
 import com.wynntils.services.statistics.type.StatisticKind;
 import java.util.Optional;
@@ -130,6 +131,16 @@ public final class StatisticsCollectors {
                     StatisticKind.THE_NAMELESS_ANOMALY_TIME_ELAPSED,
                     event.getRaid().getTimeInRaid() / 1000);
         }
+    }
+
+    @SubscribeEvent
+    public void onTimeTrialCompleted(TimeTrialEvent.Cleared event) {
+        Services.Statistics.increaseStatistics(StatisticKind.TIME_TRIALS_COMPLETED);
+    }
+
+    @SubscribeEvent
+    public void onTimeTrialFailed(TimeTrialEvent.Failed event) {
+        Services.Statistics.increaseStatistics(StatisticKind.TIME_TRIALS_FAILED);
     }
 
     @SubscribeEvent

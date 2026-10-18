@@ -157,7 +157,7 @@ public class ContentBookDumpFeature extends Feature {
         for (DumpableActivityInfo info : currentDump) {
             switch (info.type()) {
                 // Boss altars currently cannot be tracked after completion, remove from this if necessary
-                case BOSS_ALTAR, LOOTRUN_CAMP, DUNGEON, RAID, MOUNT_ENCLOSURE -> trackingNeeded.add(info);
+                case BOSS_ALTAR, LOOTRUN_CAMP, DUNGEON, RAID, MOUNT_ENCLOSURE, TIME_TRIAL -> trackingNeeded.add(info);
             }
         }
 

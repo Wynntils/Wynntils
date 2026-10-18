@@ -25,6 +25,7 @@ import com.wynntils.models.activities.providers.ActivityProvider;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityDistance;
+import com.wynntils.models.activities.type.ActivityFastTravelStatus;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivityRequirements;
@@ -32,7 +33,6 @@ import com.wynntils.models.activities.type.ActivityRewardType;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
-import com.wynntils.models.activities.type.WorldEventFastTravelStatus;
 import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.event.BeaconMarkerEvent;
@@ -248,7 +248,7 @@ public final class ActivityModel extends Model {
         ActivityTrackingState trackingState = ActivityTrackingState.UNTRACKABLE;
         List<Pair<Pair<ProfessionType, Integer>, Boolean>> professionLevels = new ArrayList<>();
         List<Pair<String, Boolean>> quests = new ArrayList<>();
-        WorldEventFastTravelStatus worldEventFastTravelStatus = null;
+        ActivityFastTravelStatus activityFastTravelStatus = null;
         Map<ActivityRewardType, List<StyledText>> rewards = new TreeMap<>();
         List<StyledText> descriptionLines = new ArrayList<>();
 
@@ -340,15 +340,15 @@ public final class ActivityModel extends Model {
                 continue;
             }
 
-            if (type == ActivityType.WORLD_EVENT) {
-                if (worldEventFastTravelStatus == null) {
-                    worldEventFastTravelStatus = WorldEventFastTravelStatus.fromLine(line);
+            if (type.supportsFastTravel()) {
+                if (activityFastTravelStatus == null) {
+                    activityFastTravelStatus = ActivityFastTravelStatus.fromLine(line);
 
-                    if (worldEventFastTravelStatus != null) continue;
+                    if (activityFastTravelStatus != null) continue;
                 }
             }
 
-            if (worldEventFastTravelStatus == WorldEventFastTravelStatus.UNAVAILABLE
+            if (activityFastTravelStatus == ActivityFastTravelStatus.UNAVAILABLE
                     && line.matches(REQUIRES_HERO_PLUS_PATTERN)) {
                 continue;
             }
@@ -374,7 +374,7 @@ public final class ActivityModel extends Model {
                 Optional.ofNullable(distance),
                 Optional.ofNullable(distanceInfo),
                 Optional.ofNullable(difficulty),
-                Optional.ofNullable(worldEventFastTravelStatus),
+                Optional.ofNullable(activityFastTravelStatus),
                 requirements,
                 rewards,
                 trackingState);

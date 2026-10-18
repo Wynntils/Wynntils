@@ -97,7 +97,7 @@ public final class GearModel extends Model {
         // Temporary check for ascended items as they have no visible difference beside the stats at the moment
         if (result.level() != gearInfo.requirements().level() && gearInfo.tier() == GearTier.MYTHIC) {
             WynntilsMod.warn("Gear level for " + gearInfo.name() + " is reported as " + result.level());
-            GearInfo ascendedGearInfo = Models.Gear.getGearInfoFromDisplayName("Masterwork " + gearInfo.name());
+            GearInfo ascendedGearInfo = Models.Gear.getGearInfoFromDisplayName("Ascended " + gearInfo.name());
             if (ascendedGearInfo != null && ascendedGearInfo.requirements().level() == result.level()) {
                 WynntilsMod.info("Parsing " + gearInfo.name() + " as an ascended item");
                 return parseInstance(ascendedGearInfo, itemStack, isUnidentified);

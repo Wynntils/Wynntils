@@ -25,7 +25,9 @@ public enum MountType {
 
     public static MountType fromName(String name) {
         for (MountType type : values()) {
-            if (name.equals(type.mountItemName) || name.equals(type.summonItemName)) {
+            if (name.equalsIgnoreCase(type.mountItemName)
+                    || name.equalsIgnoreCase(type.summonItemName)
+                    || name.equalsIgnoreCase(type.name())) {
                 return type;
             }
         }

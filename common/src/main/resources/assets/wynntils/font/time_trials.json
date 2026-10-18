@@ -1,0 +1,26 @@
+{
+  "providers": [
+    {
+      "ascent": 8,
+      "chars": [
+        "\uE000\uE001"
+      ],
+      "file": "minecraft:font/hud/gameplay/default/center_left/time_trial.png",
+      "height": 10,
+      "type": "bitmap"
+    },
+    {
+      "ascent": 7,
+      "chars": [
+        "ABCDEFGHIJKLMNOP",
+        "QRSTUVWXYZ01234_",
+        "abcdefghijklmnop",
+        "qrstuvwxyz56789+",
+        ".,:/\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000\u0000"
+      ],
+      "file": "minecraft:font/hud/selector/default/top_right/wynncraft_condensed.png",
+      "height": 10,
+      "type": "bitmap"
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.statistics.type;
@@ -44,6 +44,11 @@ public enum StatisticKind {
     THE_NAMELESS_ANOMALY_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     THE_NAMELESS_ANOMALY_SUCCEEDED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     THE_NAMELESS_ANOMALY_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED),
+    // endregion
+
+    // region Time Trials
+    TIME_TRIALS_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    TIME_TRIALS_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
     // endregion
 
     // region Wars
