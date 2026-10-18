@@ -26,7 +26,11 @@ public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     AQUA(CustomColor.fromInt(0x55FFFF), CommonColors.AQUA),
     PINK(CustomColor.fromInt(0xFD72B1), CustomColor.fromInt(0xFD72B1)),
     CRIMSON(CustomColor.fromInt(0xF010), WynncraftShaderColor.GRADIENT_2.color),
-    RAINBOW(CustomColor.fromInt(0x00F000), WynncraftShaderColor.RAINBOW.color);
+    RAINBOW(CustomColor.fromInt(0x00F000), WynncraftShaderColor.RAINBOW.color),
+    // Used by the "Route Indigo" lootrun mission and the "+30 Pulls" trial, where Blue and Purple
+    // beacons are hidden behind a special "Obscured" beacon. Without this entry the beacon could not
+    // be identified at all (fromColor returned null), so none of the custom beacon handling applied.
+    OBSCURED(CustomColor.fromInt(0x00F018), WynncraftShaderColor.FADE_2.color);
 
     // These values are used to identify the beacon kind
     private final CustomColor customColor;
