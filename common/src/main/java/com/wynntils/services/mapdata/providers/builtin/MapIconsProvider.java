@@ -20,6 +20,7 @@ public class MapIconsProvider extends BuiltInProvider {
             new BuiltInIcon("wynntils:icon:content:dungeon", Texture.DUNGEON_ENTRANCE),
             new BuiltInIcon("wynntils:icon:content:grind-spot", Texture.GRIND_SPOT),
             new BuiltInIcon("wynntils:icon:content:lootrun-camp", Texture.LOOTRUN_CAMP),
+            new BuiltInIcon("wynntils:icon:content:time-trial", Texture.TIME_TRIAL),
             new BuiltInIcon("wynntils:icon:content:mini-quest", Texture.MINI_QUEST_ICON),
             new BuiltInIcon("wynntils:icon:content:quest", Texture.QUEST_ICON),
             new BuiltInIcon("wynntils:icon:content:raid", Texture.RAID_ENTRANCE),
