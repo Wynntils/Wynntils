@@ -493,11 +493,27 @@ public final class AbilityTreeModel extends Model {
 
     private List<AbilityTreeSkillNode> getIdealApplicationOrder(
             SavableAbilityTree savedTree, Consumer<String> onError) {
-        List<AbilityTreeSkillNode> nodes = savedTree.abilities().stream()
-                .map(abilityName -> getNodeFromNameAndClass(abilityName, savedTree.classType()))
-                .filter(Objects::nonNull)
-                .map(AbilityTreeSkillNode::withUnlockedType)
-                .collect(Collectors.toCollection(ArrayList::new));
+        List<AbilityTreeSkillNode> nodes = new ArrayList<>();
+        List<String> missing = new ArrayList<>();
+
+        for (String abilityName : savedTree.abilities()) {
+            AbilityTreeSkillNode node = getNodeFromNameAndClass(abilityName, savedTree.classType());
+            if (node == null) {
+                missing.add(abilityName);
+            } else {
+                nodes.add(node.withUnlockedType());
+            }
+        }
+
+        if (!missing.isEmpty()) {
+            WynntilsMod.warn("Saved ability tree loadout for " + savedTree.classType()
+                    + " contains unknown ability node(s): " + missing);
+            onError.accept("Unable to load ability tree loadout: unknown ability node(s) for "
+                    + savedTree.classType() + ": " + String.join(", ", missing)
+                    + ". Probably due to a wynncraft update.");
+            return null;
+        }
+
         if (nodes.isEmpty()) return List.of();
 
         // If a loadout somehow contains a duplicate (idk how this happens) remove it.
