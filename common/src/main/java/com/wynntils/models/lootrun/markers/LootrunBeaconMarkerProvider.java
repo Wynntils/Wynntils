@@ -13,11 +13,11 @@ import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
 import com.wynntils.models.marker.type.StaticLocationSupplier;
 import com.wynntils.services.map.pois.MarkerPoi;
-import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.type.PoiLocation;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.stream.Stream;
 
@@ -32,7 +32,7 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
         for (Map.Entry<LootrunBeaconKind, TaskPrediction> entry :
                 Models.LootrunBeacon.getBeacons().entrySet()) {
             newTaskMarkers.add(new MarkerInfo(
-                    EnumUtils.toNiceString(entry.getKey()) + " Beacon",
+                    entry.getKey().getDisplayName() + " Beacon",
                     new StaticLocationSupplier(entry.getValue().taskLocation().location()),
                     entry.getValue().lootrunMarker().getTaskType().getTexture(),
                     entry.getKey().getDisplayColor(),
@@ -43,7 +43,7 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
                                     .showAdditionalTextInWorld
                                     .get()
                             ? entry.getValue().taskLocation().name() + " - "
-                                    + entry.getKey().name()
+                                    + entry.getKey().getDisplayName().toUpperCase(Locale.ROOT)
                             : null));
         }
         taskMarkers = newTaskMarkers;

@@ -49,6 +49,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.PreciseLocation;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.io.Reader;
@@ -68,6 +69,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.joml.Vector2d;
 import org.joml.Vector3d;
@@ -114,6 +117,10 @@ public final class LootrunBeaconModel extends Model {
 
     private List<Pair<Beacon<LootrunBeaconKind>, EntityExtension>> activeBeacons = new ArrayList<>();
     private Map<LootrunBeaconKind, LootrunTaskType> activeTaskTypes = new HashMap<>();
+
+    // Obscured beacons all share the same color, so they cannot be told apart by kind. This maps
+    // beacon entity id -> which of the obscured slots that particular beacon is tracked as.
+    private Map<Integer, LootrunBeaconKind> obscuredBeaconSlots = new HashMap<>();
 
     private boolean hideBeacons = true;
     private boolean expectOrangeBeacon = false;
@@ -329,54 +336,117 @@ public final class LootrunBeaconModel extends Model {
             return;
         }
 
-        Pair<Beacon<LootrunBeaconKind>, EntityExtension> beaconPair = null;
+        int beaconIndex = findClosestActiveBeaconIndex(beaconMarker);
 
-        for (Pair<Beacon<LootrunBeaconKind>, EntityExtension> activeBeacon : activeBeacons) {
-            if (activeBeacon
-                    .a()
-                    .beaconKind()
-                    .getCustomColor()
-                    .equals(beaconMarker.color().get())) {
-                beaconPair = activeBeacon;
-                break;
-            }
-        }
-
-        if (beaconPair == null) {
+        if (beaconIndex < 0) {
             entity.setRendered(true);
             return;
         }
 
-        activeTaskTypes.putIfAbsent(beaconPair.a().beaconKind(), lootrunMarker.getTaskType());
+        Pair<Beacon<LootrunBeaconKind>, EntityExtension> beaconPair = activeBeacons.get(beaconIndex);
+        LootrunBeaconKind beaconKind = resolveObscuredSlot(beaconPair);
+
+        if (beaconKind != beaconPair.a().beaconKind()) {
+            // Re-label the beacon we are tracking, so that removal, selection and hiding all agree
+            // on which obscured slot this beacon belongs to.
+            beaconPair = Pair.of(new Beacon<>(beaconPair.a().position(), beaconKind), beaconPair.b());
+            activeBeacons.set(beaconIndex, beaconPair);
+        }
+
+        activeTaskTypes.putIfAbsent(beaconKind, lootrunMarker.getTaskType());
 
         boolean foundBeacon = updateTaskLocationPrediction(
                         beaconPair.a(), lootrunMarker, beaconMarker.distance().get())
-                || beacons.containsKey(beaconPair.a().beaconKind());
+                || beacons.containsKey(beaconKind);
 
         entity.setRendered(!foundBeacon || !hideBeacons);
         beaconPair.b().setRendered(!foundBeacon || !hideBeacons);
     }
 
-    @SubscribeEvent
-    public void onBeaconMoved(BeaconEvent.Moved event) {
-        Beacon beacon = event.getNewBeacon();
-        if (!(beacon.beaconKind() instanceof LootrunBeaconKind lootrunBeaconKind)) return;
+    /**
+     * Finds the active beacon a marker belongs to. Markers only carry a color, and several beacons can
+     * share one (the two obscured beacons of Route Indigo), so the closest matching beacon wins
+     * instead of whichever happened to be registered first.
+     */
+    private int findClosestActiveBeaconIndex(BeaconMarker beaconMarker) {
+        if (beaconMarker.color().isEmpty()) return -1;
 
-        Pair<Beacon<LootrunBeaconKind>, EntityExtension> oldPair = null;
+        CustomColor markerColor = beaconMarker.color().get();
+        int closestIndex = -1;
+        double closestDistance = Double.MAX_VALUE;
 
-        for (Pair<Beacon<LootrunBeaconKind>, EntityExtension> activeBeacon : activeBeacons) {
-            if (activeBeacon.a().beaconKind() == lootrunBeaconKind) {
-                oldPair = activeBeacon;
-                break;
+        for (int i = 0; i < activeBeacons.size(); i++) {
+            if (!activeBeacons.get(i).a().beaconKind().getCustomColor().equals(markerColor)) continue;
+
+            double distance = distanceSquared(activeBeacons.get(i).a().position(), beaconMarker.position());
+            if (distance < closestDistance) {
+                closestDistance = distance;
+                closestIndex = i;
             }
         }
 
-        if (oldPair == null) return;
+        return closestIndex;
+    }
 
-        Pair<Beacon<LootrunBeaconKind>, EntityExtension> newPair = Pair.of(beacon, oldPair.b());
+    /**
+     * Obscured beacons all share the same color and therefore the same kind, but two of them can be
+     * offered at once, so the second beacon we see is tracked in a second slot. The assignment is
+     * sticky per beacon entity so that repeated marker updates stay consistent.
+     */
+    private LootrunBeaconKind resolveObscuredSlot(Pair<Beacon<LootrunBeaconKind>, EntityExtension> beaconPair) {
+        LootrunBeaconKind beaconKind = beaconPair.a().beaconKind();
+        if (!beaconKind.isObscured()) return beaconKind;
 
-        activeBeacons.remove(oldPair);
-        activeBeacons.add(newPair);
+        int entityId = ((Entity) beaconPair.b()).getId();
+        LootrunBeaconKind assignedSlot = obscuredBeaconSlots.get(entityId);
+        if (assignedSlot != null) return assignedSlot;
+
+        boolean firstSlotTaken = obscuredBeaconSlots.containsValue(LootrunBeaconKind.OBSCURED);
+        assignedSlot = firstSlotTaken ? LootrunBeaconKind.OBSCURED_2 : LootrunBeaconKind.OBSCURED;
+        obscuredBeaconSlots.put(entityId, assignedSlot);
+
+        return assignedSlot;
+    }
+
+    private int findActiveBeaconIndex(Beacon<?> beacon) {
+        for (int i = 0; i < activeBeacons.size(); i++) {
+            if (hasSamePosition(activeBeacons.get(i).a(), beacon)) return i;
+        }
+
+        return -1;
+    }
+
+    private static boolean hasSamePosition(Beacon<?> first, Beacon<?> second) {
+        return first.position().x() == second.position().x()
+                && first.position().y() == second.position().y()
+                && first.position().z() == second.position().z();
+    }
+
+    private static double distanceSquared(PreciseLocation position, Vec3 other) {
+        double dx = position.x() - other.x;
+        double dy = position.y() - other.y;
+        double dz = position.z() - other.z;
+
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    @SubscribeEvent
+    public void onBeaconMoved(BeaconEvent.Moved event) {
+        Beacon beacon = event.getNewBeacon();
+        if (!(beacon.beaconKind() instanceof LootrunBeaconKind)) return;
+
+        int beaconIndex = findActiveBeaconIndex(event.getOldBeacon());
+
+        if (beaconIndex < 0) return;
+
+        Pair<Beacon<LootrunBeaconKind>, EntityExtension> oldPair = activeBeacons.get(beaconIndex);
+
+        // Keep the kind we are tracking this beacon as; the event only carries the color-derived
+        // kind, which loses the obscured slot assignment.
+        Pair<Beacon<LootrunBeaconKind>, EntityExtension> newPair =
+                Pair.of(new Beacon<>(beacon.position(), oldPair.a().beaconKind()), oldPair.b());
+
+        activeBeacons.set(beaconIndex, newPair);
     }
 
     // When we get close to a beacon, it gets removed.
@@ -385,7 +455,13 @@ public final class LootrunBeaconModel extends Model {
     @SubscribeEvent
     public void onBeaconRemove(BeaconEvent.Removed event) {
         Beacon beacon = event.getBeacon();
-        if (!(beacon.beaconKind() instanceof LootrunBeaconKind lootrunBeaconKind)) return;
+        if (!(beacon.beaconKind() instanceof LootrunBeaconKind color)) return;
+
+        // The event only carries the color-derived kind, so an obscured beacon tracked in the second
+        // obscured slot would be confused with the first one. Use the kind we actually track it as.
+        int beaconIndex = findActiveBeaconIndex(beacon);
+        LootrunBeaconKind trackedKind =
+                beaconIndex < 0 ? color : activeBeacons.get(beaconIndex).a().beaconKind();
 
         Beacon closestBeacon = getClosestBeacon();
 
@@ -397,14 +473,20 @@ public final class LootrunBeaconModel extends Model {
                         closestBeacon.position(), McUtils.mc().player.position());
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer <= oldBeaconDistanceToPlayer) {
-            setClosestBeacon(event.getBeacon());
+            setClosestBeacon(
+                    beaconIndex < 0 ? beacon : activeBeacons.get(beaconIndex).a());
         } else {
             // Note: If we get more accurate predictions, we don't need to remove if we are close.
-            beacons.remove(lootrunBeaconKind);
+            beacons.remove(trackedKind);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         }
 
-        activeBeacons.removeIf(beaconPair -> beaconPair.a().beaconKind() == lootrunBeaconKind);
+        if (beaconIndex < 0) {
+            activeBeacons.removeIf(beaconPair -> beaconPair.a().beaconKind() == trackedKind);
+        } else {
+            obscuredBeaconSlots.remove(((Entity) activeBeacons.get(beaconIndex).b()).getId());
+            activeBeacons.remove(beaconIndex);
+        }
     }
 
     @SubscribeEvent
@@ -417,6 +499,7 @@ public final class LootrunBeaconModel extends Model {
         beacons = new HashMap<>();
         activeBeacons = new ArrayList<>();
         activeTaskTypes = new HashMap<>();
+        obscuredBeaconSlots = new HashMap<>();
         LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
     }
 
@@ -468,6 +551,7 @@ public final class LootrunBeaconModel extends Model {
             vibrantBeacons.clear();
             activeBeacons.clear();
             activeTaskTypes.clear();
+            obscuredBeaconSlots.clear();
             setClosestBeacon(null);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         }
@@ -540,6 +624,11 @@ public final class LootrunBeaconModel extends Model {
     }
 
     public boolean isBeaconVibrant(LootrunBeaconKind lootrunBeaconKind) {
+        // Both obscured slots represent the same in-game beacon, so they share the vibrant flag.
+        if (lootrunBeaconKind.isObscured()) {
+            return vibrantBeacons.contains(LootrunBeaconKind.OBSCURED);
+        }
+
         return vibrantBeacons.contains(lootrunBeaconKind);
     }
 
