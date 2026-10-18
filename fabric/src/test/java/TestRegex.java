@@ -48,6 +48,7 @@ import com.wynntils.models.raid.RaidModel;
 import com.wynntils.models.raid.bossbar.ParasiteOvertakenBar;
 import com.wynntils.models.spells.actionbar.matchers.SpellCastSegmentMatcher;
 import com.wynntils.models.territories.GuildAttackTimerModel;
+import com.wynntils.models.timetrials.label.TimeTrialLabelParser;
 import com.wynntils.models.trademarket.TradeMarketModel;
 import com.wynntils.models.war.bossbar.WarTowerBar;
 import com.wynntils.models.worlds.BombModel;
@@ -1269,6 +1270,22 @@ public class TestRegex {
 
         p.shouldMatch("§fbol§7's real username is §fbolyai");
         p.shouldMatch("§fbol's§7 real username is §fbolyai");
+    }
+
+    @Test
+    public void TimeTrialLabelParser_TIME_TRIAL_LABEL_PATTERN() {
+        PatternTester p = new PatternTester(TimeTrialLabelParser.class, "TIME_TRIAL_LABEL_PATTERN");
+
+        p.shouldMatch(
+                "§#1ebf97ff\uE060\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFC8§f\uE013\uE008\uE00C\uE004 \uE013\uE011\uE008\uE000\uE00B\uDB00\uDC02§#1ebf97ff\nAutumnal Athletics\n\n§7Recommended Level: §f107\n§7Available Mounts: §fHorses\n§7Approx. Length: §f2-3 Minutes");
+        p.shouldMatch(
+                "§#1ebf97ff\uE060\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFC8§f\uE013\uE008\uE00C\uE004 \uE013\uE011\uE008\uE000\uE00B\uDB00\uDC02§#1ebf97ff\nAutumnal Athletics\n\n§7Recommended Level: §f107\n§7Available Mounts: §fHorses\n§7Approx. Length: §f2-3 Minutes");
+        p.shouldMatch(
+                "§#1ebf97ff\uE060\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFC8§f\uE013\uE008\uE00C\uE004 \uE013\uE011\uE008\uE000\uE00B\uDB00\uDC02§#1ebf97ff\nFast-Paced Pilgrimage\n\n§7Recommended Level: §f23\n§7Available Mounts: §fHorses\n§7Approx. Length: §f1-2 Minutes");
+        p.shouldMatch(
+                "§#1ebf97ff\uE060\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFC8§f\uE013\uE008\uE00C\uE004 \uE013\uE011\uE008\uE000\uE00B\uDB00\uDC02§#1ebf97ff\nBlack Road Runaround\n\n§7Recommended Level: §f17\n§7Available Mounts: §fHorses\n§7Approx. Length: §f1-2 Minutes");
+        p.shouldMatch(
+                "§#1ebf97ff\uE060\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFC8§f\uE013\uE008\uE00C\uE004 \uE013\uE011\uE008\uE000\uE00B\uDB00\uDC02§#1ebf97ff\nBremmyn Bustle\n\n§7Recommended Level: §f88\n§7Available Mounts: §fWyverns\n§7Approx. Length: §f1-2 Minutes");
     }
 
     @Test
