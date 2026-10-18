@@ -510,7 +510,7 @@ public final class AbilityTreeModel extends Model {
                     + " contains unknown ability node(s): " + missing);
             onError.accept("Unable to load ability tree loadout: unknown ability node(s) for "
                     + savedTree.classType() + ": " + String.join(", ", missing)
-                    + ". Probably due to a wynncraft update.");
+                    + ". Likely due to a Wynncraft update.");
             return null;
         }
 
