@@ -22,6 +22,7 @@ import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.character.event.CharacterDeathEvent;
+import com.wynntils.models.character.event.CharacterIdSetEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.CharacterGamemode;
 import com.wynntils.models.character.type.ClassType;
@@ -377,6 +378,7 @@ public final class CharacterModel extends Model {
 
         id = idLine.getString();
         WynntilsMod.info("Selected character: " + id);
+        WynntilsMod.postEvent(new CharacterIdSetEvent(id));
         return true;
     }
 

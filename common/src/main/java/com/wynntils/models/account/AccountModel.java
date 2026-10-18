@@ -22,6 +22,7 @@ import com.wynntils.models.containers.containers.CharacterInfoContainer;
 import com.wynntils.models.containers.containers.StoreContainer;
 import com.wynntils.models.players.type.PlayerRank;
 import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
+import com.wynntils.models.timetrials.type.TimeTrialState;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.TaskUtils;
@@ -179,7 +180,8 @@ public final class AccountModel extends Model {
                 .expectContainer(CharacterInfoContainer.class)
                 .processIncomingContainer(this::parseCharacterMenuContainer));
 
-        if (forceParseUnexpired
+        // Store cannot be opened whilst in a time trial
+        if (Models.TimeTrial.getState() == TimeTrialState.NOT_STARTED && forceParseUnexpired
                 || silverbullSubscriber.get() == OptionalBoolean.NULL
                 || (silverbullSubscriber.get() != OptionalBoolean.FALSE
                         && System.currentTimeMillis() > silverbullExpiresAt.get())) {

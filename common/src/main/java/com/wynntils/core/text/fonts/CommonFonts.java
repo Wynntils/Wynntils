@@ -32,6 +32,7 @@ public final class CommonFonts {
     public static final FontDescription WYNNTILS_LANGUAGE_WYNNCRAFT_FONT = wynntilsFont("language/wynncraft");
     public static final FontDescription WYNNTILS_TOOLTIP_ICONS = wynntilsFont("tooltip/icons");
     public static final FontDescription WYNNTILS_TOOLTIP_DIVIDER_FONT = wynntilsFont("tooltip/divider");
+    public static final FontDescription WYNNTILS_TIME_TRIALS = wynntilsFont("time_trials");
 
     private static FontDescription.Resource font(String path) {
         return new FontDescription.Resource(Identifier.withDefaultNamespace(path));

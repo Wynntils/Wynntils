@@ -34,6 +34,7 @@ import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
 import com.wynntils.functions.StatisticFunctions;
 import com.wynntils.functions.StatusEffectFunctions;
+import com.wynntils.functions.TimeTrialFunctions;
 import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldEventFunctions;
 import com.wynntils.functions.WorldFunctions;
@@ -794,6 +795,11 @@ public final class FunctionManager extends Manager {
         registerFunction(new StatusEffectFunctions.StatusEffectModifierFunction());
         registerFunction(new StatusEffectFunctions.StatusEffectPrefixFunction());
         registerFunction(new StatusEffectFunctions.StatusEffectsFunction());
+
+        registerFunction(new TimeTrialFunctions.CurrentTrialCheckpointsFunction());
+        registerFunction(new TimeTrialFunctions.CurrentTrialElapsedTimeFunction());
+        registerFunction(new TimeTrialFunctions.CurrentTrialMountTypeFunction());
+        registerFunction(new TimeTrialFunctions.CurrentTrialNameFunction());
 
         registerFunction(new WarFunctions.AuraTimerFunction());
         registerFunction(new WarFunctions.CurrentTowerAttackSpeedFunction());
