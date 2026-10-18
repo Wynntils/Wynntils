@@ -7,6 +7,8 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.mount.type.MountType;
+import com.wynntils.models.timetrials.type.TimeTrialInfo;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
@@ -14,7 +16,11 @@ public class TimeTrialFunctions {
     public static class CurrentTrialCheckpointsFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.TimeTrial.getCurrentTimeTrial().getCheckpoints();
+            TimeTrialInfo currentTimeTrial = Models.TimeTrial.getCurrentTimeTrial();
+
+            if (currentTimeTrial == null) return CappedValue.EMPTY;
+
+            return currentTimeTrial.getCheckpoints();
         }
 
         @Override
@@ -26,7 +32,11 @@ public class TimeTrialFunctions {
     public static class CurrentTrialElapsedTimeFunction extends Function<Long> {
         @Override
         public Long getValue(FunctionArguments arguments) {
-            return Models.TimeTrial.getCurrentTimeTrial().getElapsedTime();
+            TimeTrialInfo currentTimeTrial = Models.TimeTrial.getCurrentTimeTrial();
+
+            if (currentTimeTrial == null) return -1L;
+
+            return currentTimeTrial.getElapsedTime();
         }
 
         @Override
@@ -38,7 +48,11 @@ public class TimeTrialFunctions {
     public static class CurrentTrialMountTypeFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.TimeTrial.getCurrentTrialMountType().name();
+            MountType mountType = Models.TimeTrial.getCurrentTrialMountType();
+
+            if (mountType == null) return "";
+
+            return mountType.name();
         }
 
         @Override
