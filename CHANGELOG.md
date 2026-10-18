@@ -1,18 +1,19 @@
-Content Tracker & Custom Content Book
-- Added support for Time Trials
+Map & Minimap
+- Added Time Trial locations
 
-Hades
-- If you are looking at another player and sneaking whilst pressing the open interaction wheel keybind, then the player viewer will always open instead of the interaction wheel
+Time Trial Overlay
+- New overlay as part of the Mount feature displaying the current time trial elapsed time and checkpoints
 
-Item Statistics Info
-- Changed "Masterwork " prefix on ascended items to "Ascended "
+Statistics
+- Added statistics for total time trials completed and failed
 
-Raid Progress
-- Renamed Nameless Cave challenge to Dark Cave
+Functions
+- Time Trial Functions
+  - `current_trial_checkpoints` or `trial_checkpoints` returns the checkpoints progress of the current time trial
+  - `current_trial_elapsed_time` or `trial_time` returns the amount of time elapsed for the current time trial in milliseconds
+  - `current_trial_mount_type` or `trial_mount_type` returns the name of the mount type the current time trial uses
+  - `current_trial_name` or `trial_name` returns the name of the current time trial
 
 Fixes
-- Fixed the view player option on the interaction wheel failing if that player is no longer in line of sight
-- Fixed texture rendering issues that occurred whilst on an odd numbered GUI scale
-- Fixed Shiny Coin not being parsed
-- Fixed tracking of Dark Cave in The Nameless Anomaly
-- Hopefully fixed cases of Orphion boss time being reset upon starting The Parasite boss
+- Trying to apply an ability tree loadout that includes a removed node will now display an error rather than timing out
+- Auto 3rd person for mounts will now work when starting or resuming time trials
