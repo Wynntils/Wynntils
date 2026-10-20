@@ -299,20 +299,20 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
 
         renderVersion(guiGraphics);
 
-        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics);
 
-        renderPlayerInfo(guiGraphics, mouseX, mouseY);
+        renderPlayerInfo(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
 
-        renderPlayer(guiGraphics, mouseX, mouseY);
+        renderPlayer(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     @Override
@@ -436,16 +436,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         final int renderHeight = 70;
 
         EntityPortraitWidget.extractEntityInInventoryFollowsMouse(
-                guiGraphics,
-                posX,
-                posY,
-                posX + renderWidth,
-                posY + renderHeight,
-                25,
-                0.4f,
-                mouseX,
-                mouseY,
-                McUtils.player());
+                guiGraphics, posX, posY, posX + renderWidth, posY + renderHeight, 25, 0.4f, McUtils.player());
     }
 
     @Override
@@ -470,14 +461,13 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
-    private void extractWidgetRenderStates(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(GuiGraphicsExtractor guiGraphics) {
         this.hovered = null;
 
         for (WynntilsMenuButton button : buttons.stream().flatMap(List::stream).toList()) {
-            button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            button.extractRenderState(guiGraphics);
 
-            if (button.isMouseOver(mouseX, mouseY)) {
+            if (button.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 this.hovered = button;
             }
         }

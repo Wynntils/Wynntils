@@ -50,13 +50,13 @@ public class FilterOptionsButton extends BasicTexturedButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         // Only count as hovered if the mouse is outside of the background area as a slight bit
         // of the button is rendered underneath the background
         if (isHovered
                 && MathUtils.isInside(
-                        mouseX,
-                        mouseY,
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY(),
                         offsetX,
                         Texture.ITEM_FILTER_BACKGROUND.width(),
                         offsetY,

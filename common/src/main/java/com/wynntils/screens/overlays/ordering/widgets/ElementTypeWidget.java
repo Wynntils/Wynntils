@@ -45,8 +45,7 @@ public class ElementTypeWidget extends AbstractWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.WOOD_STRIP, getX(), getY());
 
         FontRenderer.getInstance()
@@ -66,8 +65,8 @@ public class ElementTypeWidget extends AbstractWidget {
         if (this.isHovered) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(ComponentUtils.wrapTooltips(TOOLTIP, 250), Component::getVisualOrderText),
-                    mouseX,
-                    mouseY);
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 

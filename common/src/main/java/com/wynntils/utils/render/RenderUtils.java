@@ -34,9 +34,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
+import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.gui.GuiItemRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
@@ -1291,7 +1291,12 @@ public final class RenderUtils {
     public static void renderTooltip(
             GuiGraphicsExtractor guiGraphics, List<Component> tooltipLines, int mouseX, int mouseY) {
         renderTooltip(
-                guiGraphics, FontRenderer.getInstance().getFont(), tooltipLines, Optional.empty(), mouseX, mouseY);
+                guiGraphics,
+                FontRenderer.getInstance().getFont(),
+                tooltipLines,
+                Optional.empty(),
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY());
     }
 
     public static void renderTooltip(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {

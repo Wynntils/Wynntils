@@ -9,7 +9,6 @@ import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.RenderElementType;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
@@ -31,14 +30,13 @@ public abstract class HudMixin {
 
     @Inject(
             method =
-                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
+                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IILnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("HEAD"),
             cancellable = true)
     private void extractSlotPre(
             GuiGraphicsExtractor guiGraphics,
             int x,
             int y,
-            DeltaTracker deltaTracker,
             Player player,
             ItemStack itemStack,
             int i,
@@ -53,7 +51,7 @@ public abstract class HudMixin {
 
     @Inject(
             method =
-                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
+                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IILnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -63,7 +61,6 @@ public abstract class HudMixin {
             GuiGraphicsExtractor guiGraphics,
             int x,
             int y,
-            DeltaTracker deltaTracker,
             Player player,
             ItemStack itemStack,
             int i,
@@ -73,13 +70,12 @@ public abstract class HudMixin {
 
     @Inject(
             method =
-                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IILnet/minecraft/client/DeltaTracker;Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
+                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IILnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/ItemStack;I)V",
             at = @At("RETURN"))
     private void extractSlotPost(
             GuiGraphicsExtractor guiGraphics,
             int x,
             int y,
-            DeltaTracker deltaTracker,
             Player player,
             ItemStack itemStack,
             int i,
@@ -87,47 +83,33 @@ public abstract class HudMixin {
         MixinHelper.post(new HotbarSlotRenderEvent.Post(guiGraphics, itemStack, x, y));
     }
 
-    @Inject(
-            method =
-                    "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onExtractRenderStatePre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"))
+    private void onExtractRenderStatePre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
         if (this.minecraft.gui.screen() instanceof LevelLoadingScreen) return;
         if (McUtils.mc().gui.hud.isHidden()) return;
+        MixinHelper.post(new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.GUI_PRE));
+    }
+
+    @Inject(method = "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("RETURN"))
+    private void onExtractRenderStatePost(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
+        if (this.minecraft.gui.screen() instanceof LevelLoadingScreen) return;
+        if (McUtils.mc().gui.hud.isHidden()) return;
+        MixinHelper.post(new RenderEvent.Post(guiGraphics, this.minecraft.getWindow(), RenderElementType.GUI_POST));
+    }
+
+    @Inject(method = "extractCameraOverlays(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"))
+    private void onExtractCameraOverlaysPre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
         MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI_PRE));
+                new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.CAMERA_OVERLAYS));
     }
 
     @Inject(
-            method =
-                    "extractRenderState(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("RETURN"))
-    private void onExtractRenderStatePost(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        if (this.minecraft.gui.screen() instanceof LevelLoadingScreen) return;
-        if (McUtils.mc().gui.hud.isHidden()) return;
-        MixinHelper.post(new RenderEvent.Post(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.GUI_POST));
-    }
-
-    @Inject(
-            method =
-                    "extractCameraOverlays(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onExtractCameraOverlaysPre(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(new RenderEvent.Pre(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CAMERA_OVERLAYS));
-    }
-
-    @Inject(
-            method =
-                    "extractCrosshair(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+            method = "extractCrosshair(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void onExtractCrosshairPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void onExtractCrosshairPre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
         RenderEvent.Pre event =
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CROSSHAIR);
+                new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.CROSSHAIR);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
@@ -141,8 +123,8 @@ public abstract class HudMixin {
     private void onExtractSelectedItemNamePre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
         if (!MixinHelper.onWynncraft()) return;
 
-        RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderElementType.SELECTED_ITEM);
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.SELECTED_ITEM);
         MixinHelper.post(event);
 
         if (event.isCanceled()) {
@@ -150,26 +132,20 @@ public abstract class HudMixin {
         }
     }
 
-    @Inject(
-            method =
-                    "extractBossOverlay(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onExtractBossOverlayPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(new RenderEvent.Pre(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.BOSS_BARS));
+    @Inject(method = "extractBossOverlay(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"))
+    private void onExtractBossOverlayPre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
+        MixinHelper.post(new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.BOSS_BARS));
     }
 
     @Inject(
-            method =
-                    "extractScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+            method = "extractScoreboardSidebar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void onExtractScoreboardSidebarPre(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void onExtractScoreboardSidebarPre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
         if (!MixinHelper.onWynncraft()) return;
 
-        RenderEvent.Pre event = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, this.minecraft.getWindow(), RenderElementType.SCOREBOARD);
+        RenderEvent.Pre event =
+                new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.SCOREBOARD);
         MixinHelper.post(event);
 
         if (event.isCanceled()) {
@@ -177,55 +153,23 @@ public abstract class HudMixin {
         }
     }
 
-    @Inject(
-            method =
-                    "extractOverlayMessage(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onExtractOverlayMessagePre(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(new RenderEvent.Pre(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.ACTION_BAR));
+    @Inject(method = "extractOverlayMessage(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"))
+    private void onExtractOverlayMessagePre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
+        MixinHelper.post(new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.ACTION_BAR));
     }
 
-    @Inject(
-            method =
-                    "extractOverlayMessage(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("TAIL"))
-    private void onExtractOverlayMessagePost(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(new RenderEvent.Post(
-                guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.ACTION_BAR));
+    @Inject(method = "extractOverlayMessage(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("TAIL"))
+    private void onExtractOverlayMessagePost(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
+        MixinHelper.post(new RenderEvent.Post(guiGraphics, this.minecraft.getWindow(), RenderElementType.ACTION_BAR));
     }
 
-    @Inject(
-            method =
-                    "extractTitle(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onExtractTitlePre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.TITLE));
+    @Inject(method = "extractTitle(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"))
+    private void onExtractTitlePre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
+        MixinHelper.post(new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.TITLE));
     }
 
-    @Inject(
-            method = "extractChat(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onExtractChatPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.CHAT));
-    }
-
-    @Inject(
-            method =
-                    "extractTabList(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void onExtractTabListPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        RenderEvent.Pre renderEvent = new RenderEvent.Pre(
-                guiGraphics, DeltaTracker.ZERO, McUtils.window(), RenderElementType.PLAYER_TAB_LIST);
-        MixinHelper.post(renderEvent);
-
-        if (renderEvent.isCanceled()) {
-            ci.cancel();
-        }
+    @Inject(method = "extractChat(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"))
+    private void onExtractChatPre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
+        MixinHelper.post(new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.CHAT));
     }
 }

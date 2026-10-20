@@ -379,8 +379,8 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
         renderScroll(guiGraphics);
 
         if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
@@ -443,18 +443,17 @@ public final class WaypointManagementScreen extends WynntilsScreen {
         } else {
             RenderUtils.enableScissor(
                     guiGraphics, (int) (getTranslationX() + 10), (int) (getTranslationY() + 16), 322, 181);
-            waypointManagerWidgets.forEach(
-                    widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+            waypointManagerWidgets.forEach(widget -> widget.extractRenderState(guiGraphics));
             RenderUtils.disableScissor(guiGraphics);
         }
 
-        iconButtons.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        iconButtons.forEach(widget -> widget.extractRenderState(guiGraphics));
 
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX,
-                mouseY,
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
                 (int) (getTranslationX() + SCROLL_RENDER_X),
                 (int) (getTranslationX() + SCROLL_RENDER_X + Texture.SCROLL_BUTTON.width()),
                 (int) scrollY,
@@ -464,8 +463,8 @@ public final class WaypointManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractBackground(GuiGraphicsExtractor guiGraphics) {
+        super.extractBackground(guiGraphics);
 
         RenderUtils.drawTexturedRect(
                 guiGraphics, Texture.WAYPOINT_MANAGER_BACKGROUND, getTranslationX(), getTranslationY());

@@ -159,17 +159,13 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         renderBackgroundTexture(guiGraphics);
 
-        contentBookWidgets
-                .get(currentPage)
-                .forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
-        contentBookActionWidgets
-                .values()
-                .forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        contentBookWidgets.get(currentPage).forEach(renderable -> renderable.extractRenderState(guiGraphics));
+        contentBookActionWidgets.values().forEach(renderable -> renderable.extractRenderState(guiGraphics));
 
-        renderables.forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(renderable -> renderable.extractRenderState(guiGraphics));
 
         if (!Models.CombatXp.getCombatLevel().isAtCap()) {
             FontRenderer.getInstance()
@@ -232,7 +228,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
                                 TextShadow.NORMAL,
                                 0.9f);
 
-                trackedRewards.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+                trackedRewards.forEach(widget -> widget.extractRenderState(guiGraphics));
             }
         } else {
             FontRenderer.getInstance()
@@ -251,7 +247,7 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
                             TextShadow.NORMAL);
         }
 
-        renderTooltips(guiGraphics, mouseX, mouseY);
+        renderTooltips(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     @Override
@@ -459,7 +455,8 @@ public class WynntilsContentBookScreen extends WynntilsScreen implements Wrapped
 
     private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : getWidgetsForIteration().toList()) {
-            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+            if (child instanceof TooltipProvider tooltipProvider
+                    && child.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
                         mouseX,

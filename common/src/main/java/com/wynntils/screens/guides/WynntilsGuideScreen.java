@@ -74,12 +74,12 @@ public class WynntilsGuideScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         for (WynntilsButton guideTypeButton : guideTypeButtons) {
-            guideTypeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            guideTypeButton.extractRenderState(guiGraphics);
         }
 
-        guideContainerWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        guideContainerWidget.extractRenderState(guiGraphics);
     }
 
     @Override

@@ -42,8 +42,7 @@ public class LoadoutSelectionButton extends AbstractWidget implements TooltipPro
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         handleCursor(guiGraphics);
         if (parent.getCurrentCategory() != menuCategory) {
             RenderUtils.drawNineSliceScalingTexturedRect(

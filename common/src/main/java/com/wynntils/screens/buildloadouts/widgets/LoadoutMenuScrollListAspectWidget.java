@@ -50,8 +50,7 @@ public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
@@ -77,7 +76,7 @@ public class LoadoutMenuScrollListAspectWidget extends AbstractWidget implements
 
     @Override
     public void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        RenderUtils.renderTooltip(guiGraphics, tooltipItem, mouseX, mouseY);
+        RenderUtils.renderTooltip(guiGraphics, tooltipItem, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     @Override

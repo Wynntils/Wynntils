@@ -35,8 +35,8 @@ public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.extractWidgetRenderState(guiGraphics);
 
         // name rendering
         FontRenderer.getInstance()
@@ -51,7 +51,7 @@ public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
                         TextShadow.NORMAL);
 
         if (Models.Party.getPartyMembers().contains(playerName)) return;
-        inviteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        inviteButton.extractRenderState(guiGraphics);
     }
 
     @Override

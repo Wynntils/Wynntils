@@ -15,7 +15,6 @@ public class ContainerRenderEvent extends Event {
     private final GuiGraphicsExtractor guiGraphics;
     private final int mouseX;
     private final int mouseY;
-    private final float partialTicks;
     private final Slot hoveredSlot;
 
     public ContainerRenderEvent(
@@ -23,13 +22,11 @@ public class ContainerRenderEvent extends Event {
             GuiGraphicsExtractor guiGraphics,
             int mouseX,
             int mouseY,
-            float partialTicks,
             Slot hoveredSlot) {
         this.screen = screen;
         this.guiGraphics = guiGraphics;
         this.mouseX = mouseX;
         this.mouseY = mouseY;
-        this.partialTicks = partialTicks;
         this.hoveredSlot = hoveredSlot;
     }
 
@@ -47,10 +44,6 @@ public class ContainerRenderEvent extends Event {
 
     public int getMouseY() {
         return mouseY;
-    }
-
-    public float getPartialTicks() {
-        return partialTicks;
     }
 
     public Slot getHoveredSlot() {

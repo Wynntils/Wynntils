@@ -163,14 +163,14 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         // When not rendering a preview of the selected overlay
         if (!renderPreview) {
             RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_SELECTION_GUI, offsetX, offsetY);
 
-            searchWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            searchWidget.extractRenderState(guiGraphics);
 
-            extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
+            extractWidgetRenderStates(guiGraphics);
 
             if (selectedOverlay != null) {
                 String textToRender = selectedOverlay.getTranslatedName();
@@ -223,16 +223,16 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
             if (draggingOverlayScroll || draggingConfigScroll) {
                 guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
             } else if (MathUtils.isInside(
-                    mouseX,
-                    mouseY,
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY(),
                     offsetX + 133,
                     offsetX + 133 + Texture.SCROLL_BUTTON.width(),
                     (int) overlayScrollY,
                     (int) (overlayScrollY + Texture.SCROLL_BUTTON.height()))) {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
             } else if (MathUtils.isInside(
-                    mouseX,
-                    mouseY,
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY(),
                     offsetX + 344,
                     offsetX + 344 + Texture.SCROLL_BUTTON.width(),
                     (int) configScrollY,
@@ -240,15 +240,15 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
             }
 
-            renderTooltips(guiGraphics, mouseX, mouseY);
+            renderTooltips(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
         } else {
             if (selectedOverlay == null) {
                 renderPreview = false;
                 return;
             }
 
-            renderOverlaysCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-            exitPreviewButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            renderOverlaysCheckbox.extractRenderState(guiGraphics);
+            exitPreviewButton.extractRenderState(guiGraphics);
 
             RenderUtils.drawRectBorders(
                     guiGraphics,
@@ -951,16 +951,15 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         // endregion
     }
 
-    private void extractWidgetRenderStates(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(GuiGraphicsExtractor guiGraphics) {
         for (HoverableTexturedButton optionsButton : optionButtons) {
-            optionsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            optionsButton.extractRenderState(guiGraphics);
         }
 
         RenderUtils.enableScissor(guiGraphics, 6 + offsetX, 28 + offsetY, 122, MAX_OVERLAYS_PER_PAGE * 21 + 2);
 
         for (AbstractWidget widget : overlays) {
-            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics);
         }
 
         RenderUtils.disableScissor(guiGraphics);
@@ -968,7 +967,7 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         RenderUtils.enableScissor(guiGraphics, 148 + offsetX, 28 + offsetY, 188, CONFIGS_PER_PAGE * 43 - 2);
 
         for (AbstractWidget widget : configs) {
-            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics);
         }
 
         RenderUtils.disableScissor(guiGraphics);
@@ -1014,7 +1013,8 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         }
 
         for (GuiEventListener child : optionButtons) {
-            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+            if (child instanceof TooltipProvider tooltipProvider
+                    && child.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
                         mouseX,

@@ -50,8 +50,7 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(guiGraphics, getRectColor().withAlpha(100), getX(), getY(), width - 18, height);
 
         RenderUtils.drawRectBorders(
@@ -70,7 +69,7 @@ public final class SelectionFilterWidget extends GeneralFilterWidget {
                         TextShadow.NORMAL,
                         1.0f);
 
-        usedCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        usedCheckbox.extractRenderState(guiGraphics);
     }
 
     @Override

@@ -239,7 +239,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .openMapKeybind
@@ -258,7 +258,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(guiGraphics, mouseX, mouseY);
+        renderPois(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
 
         if (Models.WorldState.onWorld()
                 && Managers.Feature.getFeatureInstance(MappingProgressFeature.class)
@@ -300,23 +300,23 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderMapBorder(guiGraphics);
 
-        renderCoordinates(guiGraphics, mouseX, mouseY);
+        renderCoordinates(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
 
         renderZoomText(guiGraphics);
 
-        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapButtons(guiGraphics);
 
-        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        renderZoomWidgets(guiGraphics);
 
         if (isPanning) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
         } else if (holdingZoomHandle) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
-        } else if (this.hovered != null || isMouseOverZoomHandle(mouseX, mouseY)) {
+        } else if (this.hovered != null || isMouseOverZoomHandle(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     public void changeToGuildMap() {

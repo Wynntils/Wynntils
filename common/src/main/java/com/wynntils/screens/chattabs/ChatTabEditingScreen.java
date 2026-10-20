@@ -258,10 +258,10 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
         // Chat Tabs List
-        chatTabsWidgets.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        chatTabsWidgets.forEach(widget -> widget.extractRenderState(guiGraphics));
 
         if (edited == null) {
             FontRenderer.getInstance()

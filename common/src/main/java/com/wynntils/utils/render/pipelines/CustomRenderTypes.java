@@ -11,16 +11,17 @@ import net.minecraft.client.renderer.rendertype.RenderType;
 public class CustomRenderTypes {
     public static final RenderType LOOTRUN_QUAD = RenderType.create(
             "wynntils_lootrun_quad",
-            RenderSetup.builder(CustomRenderPipelines.LOOTRUN_QUAD_PIPELINE)
+            RenderSetup.nonOitBuilder(CustomRenderPipelines.LOOTRUN_QUAD_PIPELINE)
                     .withTexture("Sampler0", Texture.LOOTRUN_LINE.identifier())
                     .createRenderSetup());
 
     public static final RenderType POSITION_COLOR_QUAD = RenderType.create(
             "wynntils_position_color_quad",
-            RenderSetup.builder(CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE)
+            RenderSetup.nonOitBuilder(CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE)
                     .createRenderSetup());
 
     public static final RenderType PLAYER_PING_QUAD = RenderType.create(
             "wynntils_player_ping_quad",
-            RenderSetup.builder(CustomRenderPipelines.PLAYER_PING_QUAD_PIPELINE).createRenderSetup());
+            RenderSetup.nonOitBuilder(CustomRenderPipelines.PLAYER_PING_QUAD_PIPELINE)
+                    .createRenderSetup());
 }

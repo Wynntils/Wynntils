@@ -462,18 +462,18 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         if (!this.mapMode) {
-            renderListScreen(guiGraphics, mouseX, mouseY, partialTick);
+            renderListScreen(guiGraphics);
         } else {
-            renderMapScreen(guiGraphics, mouseX, mouseY, partialTick);
+            renderMapScreen(guiGraphics);
         }
 
         // Render widget tooltip
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
-    private void renderListScreen(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderListScreen(GuiGraphicsExtractor guiGraphics) {
         // Screen background
         RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_MANAGEMENT_BACKGROUND, getRenderX(), getRenderY());
         RenderUtils.drawTexturedRect(guiGraphics, Texture.TERRITORY_SIDEBAR, getRenderX() - 22, getRenderY());
@@ -491,16 +491,16 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         TextShadow.NONE);
 
         // Render the widgets
-        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics);
 
         // Render scroll button
         renderScrollButton(guiGraphics);
 
         // Render quick filters
-        renderQuickFiltersAndSorts(guiGraphics, mouseX, mouseY, partialTick);
+        renderQuickFiltersAndSorts(guiGraphics);
     }
 
-    private void renderMapScreen(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderMapScreen(GuiGraphicsExtractor guiGraphics) {
         renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
@@ -510,7 +510,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(guiGraphics, mouseX, mouseY);
+        renderPois(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
 
         renderCursor(
                 guiGraphics,
@@ -526,11 +526,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
         renderMapBorder(guiGraphics);
 
-        renderCoordinates(guiGraphics, mouseX, mouseY);
+        renderCoordinates(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
 
-        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapButtons(guiGraphics);
 
-        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        renderZoomWidgets(guiGraphics);
 
         renderHoveredTerritoryInfo(guiGraphics);
 
@@ -539,13 +539,12 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         } else if (holdingZoomHandle) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if ((this.hovered != null && !(this.hovered instanceof TerritoryPoi))
-                || isMouseOverZoomHandle(mouseX, mouseY)) {
+                || isMouseOverZoomHandle(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
 
-    private void extractWidgetRenderStates(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(GuiGraphicsExtractor guiGraphics) {
         // Render territory widgets in the render area
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -556,13 +555,13 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
         // Render the render main area widgets
         for (AbstractWidget widget : renderAreaWidgets) {
-            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics);
         }
 
         RenderUtils.disableScissor(guiGraphics);
 
         // Render normal widgets
-        renderables.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(widget -> widget.extractRenderState(guiGraphics));
     }
 
     private void renderScrollButton(GuiGraphicsExtractor guiGraphics) {
@@ -583,8 +582,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                 renderY - Texture.SCROLLBAR_BUTTON.height() / 2f);
     }
 
-    private void renderQuickFiltersAndSorts(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderQuickFiltersAndSorts(GuiGraphicsExtractor guiGraphics) {
         int xOffset = getRenderX() + Texture.TERRITORY_MANAGEMENT_BACKGROUND.width() + 5;
 
         RenderUtils.drawRect(
@@ -622,11 +620,11 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                         TextShadow.OUTLINE);
 
         for (TerritoryQuickFilterWidget quickFilter : quickFilters) {
-            quickFilter.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            quickFilter.extractRenderState(guiGraphics);
         }
 
         for (TerritoryQuickSortWidget quickSort : quickSorts) {
-            quickSort.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            quickSort.extractRenderState(guiGraphics);
         }
 
         if (draggingScroll) {
@@ -643,10 +641,10 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
                     getMaxScrollOffset(),
                     getRenderY() + RENDER_AREA_POSITION.b(),
                     getRenderY() + RENDER_AREA_POSITION.b() + RENDER_AREA_SIZE.b());
-            if (mouseX >= scrollX
-                    && mouseX <= scrollX + Texture.SCROLL_BUTTON.width()
-                    && mouseY >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
-                    && mouseY <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
+            if (guiGraphics.mouseX() >= scrollX
+                    && guiGraphics.mouseX() <= scrollX + Texture.SCROLL_BUTTON.width()
+                    && guiGraphics.mouseY() >= scrollY - Texture.SCROLL_BUTTON.height() / 2f
+                    && guiGraphics.mouseY() <= scrollY + Texture.SCROLL_BUTTON.height() / 2f) {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
             }
         }
@@ -654,7 +652,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
 
     @Override
     protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        AbstractWidget hoveredWidget = getHoveredWidget(mouseX, mouseY);
+        AbstractWidget hoveredWidget = getHoveredWidget(guiGraphics.mouseX(), guiGraphics.mouseY());
         if (hoveredWidget == null) return;
         if (!(hoveredWidget instanceof TooltipProvider tooltipProvider)) return;
 
@@ -662,7 +660,9 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
         if (tooltipLines.isEmpty()) return;
 
         guiGraphics.setTooltipForNextFrame(
-                Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
+                Lists.transform(tooltipLines, Component::getVisualOrderText),
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY());
     }
 
     @Override
@@ -675,7 +675,8 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
             int mouseY) {
         hovered = null;
 
-        List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
+        List<Poi> filteredPois =
+                getRenderedPois(pois, textureBoundingBox, poiScale, guiGraphics.mouseX(), guiGraphics.mouseY());
 
         // Render trading routes
         // We render them in both directions because optimizing it is not cheap either

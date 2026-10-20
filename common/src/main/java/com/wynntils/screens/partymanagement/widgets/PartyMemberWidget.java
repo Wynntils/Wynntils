@@ -68,8 +68,8 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.extractWidgetRenderState(guiGraphics);
 
         // name rendering
         CustomColor color = CommonColors.WHITE;
@@ -98,17 +98,17 @@ public class PartyMemberWidget extends AbstractPlayerListEntryWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        moveUpButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        moveDownButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        moveUpButton.extractRenderState(guiGraphics);
+        moveDownButton.extractRenderState(guiGraphics);
 
         // only leader can promote/kick
         if (!Models.Party.isPartyLeader(McUtils.playerName())) return;
 
         if (Models.Party.isPartyLeader(playerName)) {
-            disbandButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            disbandButton.extractRenderState(guiGraphics);
         } else {
-            promoteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-            kickButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            promoteButton.extractRenderState(guiGraphics);
+            kickButton.extractRenderState(guiGraphics);
         }
     }
 

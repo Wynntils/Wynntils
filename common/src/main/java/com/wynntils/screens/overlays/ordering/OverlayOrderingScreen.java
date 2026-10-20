@@ -88,14 +88,14 @@ public class OverlayOrderingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
         RenderUtils.drawTexturedRect(guiGraphics, Texture.OVERLAY_ORDERING_BACKGROUND, offsetX, offsetY);
 
         renderScroll(guiGraphics);
 
         RenderUtils.enableScissor(guiGraphics, offsetX + 9, offsetY + 15, 200, 181);
-        widgets.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        widgets.forEach(widget -> widget.extractRenderState(guiGraphics));
         RenderUtils.disableScissor(guiGraphics);
 
         int helpWidth = this.width / 2 - Texture.OVERLAY_ORDERING_BACKGROUND.width() / 2 - 10;
@@ -127,8 +127,12 @@ public class OverlayOrderingScreen extends WynntilsScreen {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (!draggingScroll && widgets.size() > WIDGETS_PER_PAGE) {
             if (MathUtils.isInside(
-                    mouseX, mouseY, offsetX + 217, offsetX + 217 + Texture.SCROLL_BUTTON.width(), (int) scrollY, (int)
-                            (scrollY + Texture.SCROLL_BUTTON.height()))) {
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY(),
+                    offsetX + 217,
+                    offsetX + 217 + Texture.SCROLL_BUTTON.width(),
+                    (int) scrollY,
+                    (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
             }
         }

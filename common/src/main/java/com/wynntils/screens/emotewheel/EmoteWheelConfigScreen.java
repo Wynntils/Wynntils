@@ -98,15 +98,15 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.EMOTE_CONFIG_GUI, offsetX, offsetY);
 
-        searchWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        searchWidget.extractRenderState(guiGraphics);
 
         checkForRecentRefresh();
-        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics);
 
         // Add one because of the extra space at the top and bottom
         if (emoteList.size() + 1 > MAX_EMOTES_PER_PAGE) {
@@ -116,12 +116,16 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         if (draggingScrollWheel) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX, mouseY, offsetX + 136, offsetX + 136 + Texture.SCROLL_BUTTON.width(), (int) scrollWheelY, (int)
-                        (scrollWheelY + Texture.SCROLL_BUTTON.height()))) {
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
+                offsetX + 136,
+                offsetX + 136 + Texture.SCROLL_BUTTON.width(),
+                (int) scrollWheelY,
+                (int) (scrollWheelY + Texture.SCROLL_BUTTON.height()))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
-        renderTooltips(guiGraphics, mouseX, mouseY);
+        renderTooltips(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     private void checkForRecentRefresh() {
@@ -132,10 +136,9 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         }
     }
 
-    private void extractWidgetRenderStates(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(GuiGraphicsExtractor guiGraphics) {
         for (HoverableTexturedButton optionsButton : optionButtons) {
-            optionsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            optionsButton.extractRenderState(guiGraphics);
         }
 
         scissorTopY = 37 + offsetY;
@@ -144,7 +147,7 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         RenderUtils.enableScissor(guiGraphics, 9 + offsetX, scissorTopY, 122, scissorHeight);
 
         for (AbstractWidget widget : emoteButtons) {
-            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics);
         }
 
         RenderUtils.disableScissor(guiGraphics);
@@ -386,7 +389,9 @@ public final class EmoteWheelConfigScreen extends EmoteWheelScreen {
         for (GuiEventListener button : optionButtons) {
             if (button instanceof HoverableTexturedButton hoverable && hoverable.isHovered()) {
                 guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(hoverable.getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
+                        Lists.transform(hoverable.getTooltipLines(), Component::getVisualOrderText),
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
                 break;
             }
         }

@@ -22,7 +22,7 @@ public class AugmentGuideButton extends GuideButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         CustomColor color = getColor();
         renderBaseItem(guiGraphics, color);
 
@@ -38,7 +38,7 @@ public class AugmentGuideButton extends GuideButton {
         }
 
         renderFavoriteIcon(guiGraphics);
-        renderTooltipIfHovered(guiGraphics, mouseX, mouseY);
+        renderTooltipIfHovered(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     @Override

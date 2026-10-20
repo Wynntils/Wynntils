@@ -75,7 +75,7 @@ public class ProviderButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(guiGraphics, getRectColor().withAlpha(100), getX(), getY(), width, height);
 
         RenderUtils.drawRectBorders(guiGraphics, getBorderColor(), getX(), getY(), getX() + width, getY() + height, 2);
@@ -95,12 +95,16 @@ public class ProviderButton extends WynntilsButton {
 
         // Don't want to display tooltip when the tile is outside the mask from the screen
         if (isHovered
-                && (mouseY <= filterScreen.getProviderMaskTopY() || mouseY >= filterScreen.getProviderMaskBottomY())) {
+                && (guiGraphics.mouseY() <= filterScreen.getProviderMaskTopY()
+                        || guiGraphics.mouseY() >= filterScreen.getProviderMaskBottomY())) {
             isHovered = false;
         }
 
         if (this.isHovered) {
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltip, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 

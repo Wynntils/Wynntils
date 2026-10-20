@@ -57,7 +57,7 @@ public class GatheringProfessionFilterButton extends AbstractWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(
                 guiGraphics, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), width, height);
 
@@ -77,7 +77,9 @@ public class GatheringProfessionFilterButton extends AbstractWidget {
 
         if (this.isHovered) {
             guiGraphics.setTooltipForNextFrame(
-                    Component.literal(materialType.getProfessionType().getDisplayName()), mouseX, mouseY);
+                    Component.literal(materialType.getProfessionType().getDisplayName()),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }

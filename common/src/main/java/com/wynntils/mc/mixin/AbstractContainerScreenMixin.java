@@ -35,20 +35,18 @@ public abstract class AbstractContainerScreenMixin {
     @Shadow
     public Slot hoveredSlot;
 
-    @Inject(method = "extractContents(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V", at = @At("RETURN"))
-    private void extractContentsPost(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
+    @Inject(method = "extractContents(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("RETURN"))
+    private void extractContentsPost(GuiGraphicsExtractor guiGraphics, CallbackInfo info) {
         MixinHelper.post(new ContainerRenderEvent(
                 (AbstractContainerScreen<?>) (Object) this,
                 guiGraphics,
-                mouseX,
-                mouseY,
-                partialTicks,
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
                 this.hoveredSlot));
     }
 
     @WrapOperation(
-            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
+            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -74,7 +72,7 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @WrapOperation(
-            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
+            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -101,11 +99,10 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(
             method =
-                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
+                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;)V",
             at = @At("HEAD"),
             cancellable = true)
-    private void extractSlotPre(
-            GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
+    private void extractSlotPre(GuiGraphicsExtractor guiGraphics, Slot slot, CallbackInfo info) {
         SlotRenderEvent.Pre event = new SlotRenderEvent.Pre(guiGraphics, (Screen) (Object) this, slot);
         MixinHelper.post(event);
 
@@ -116,10 +113,9 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(
             method =
-                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
+                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;)V",
             at = @At("RETURN"))
-    private void extractSlotPost(
-            GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
+    private void extractSlotPost(GuiGraphicsExtractor guiGraphics, Slot slot, CallbackInfo info) {
         MixinHelper.post(new SlotRenderEvent.Post(guiGraphics, (Screen) (Object) this, slot));
     }
 

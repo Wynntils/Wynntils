@@ -46,8 +46,7 @@ public class LevelFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -60,8 +59,8 @@ public class LevelFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        minLevelSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        maxLevelSlider.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        minLevelSlider.extractRenderState(guiGraphics);
+        maxLevelSlider.extractRenderState(guiGraphics);
     }
 
     @Override

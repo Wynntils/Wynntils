@@ -381,7 +381,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         renderMap(guiGraphics);
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -424,7 +424,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         RenderUtils.disableScissor(guiGraphics);
 
         renderMapBorder(guiGraphics);
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        super.doExtractRenderState(guiGraphics);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -468,7 +468,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        renderIcons(guiGraphics, mouseX, mouseY, partialTick);
+        renderIcons(guiGraphics);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -509,7 +509,7 @@ public final class PoiCreationScreen extends AbstractMapScreen {
             guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
         }
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     public void setSelectedIcon(Texture selectedIcon) {
@@ -519,9 +519,9 @@ public final class PoiCreationScreen extends AbstractMapScreen {
         updateSaveStatus();
     }
 
-    private void renderIcons(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderIcons(GuiGraphicsExtractor guiGraphics) {
         for (IconButton iconButton : iconButtons) {
-            iconButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            iconButton.extractRenderState(guiGraphics);
         }
     }
 

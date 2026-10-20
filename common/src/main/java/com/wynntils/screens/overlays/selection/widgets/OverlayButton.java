@@ -107,7 +107,7 @@ public class OverlayButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         boolean enabled = Managers.Overlay.isEnabled(overlay);
 
         RenderUtils.drawRect(guiGraphics, getRectColor(enabled).withAlpha(100), getX(), getY(), width, height);
@@ -129,12 +129,13 @@ public class OverlayButton extends WynntilsButton {
                         1.0f);
 
         if (editInput != null) {
-            editInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            editInput.extractRenderState(guiGraphics);
         }
 
         // Don't want to display tooltip when the tile is outside the mask from the screen
         if (isHovered
-                && (mouseY <= settingsScreen.getConfigMaskTopY() || mouseY >= settingsScreen.getConfigMaskBottomY())) {
+                && (guiGraphics.mouseY() <= settingsScreen.getConfigMaskTopY()
+                        || guiGraphics.mouseY() >= settingsScreen.getConfigMaskBottomY())) {
             isHovered = false;
         }
 
@@ -151,15 +152,15 @@ public class OverlayButton extends WynntilsButton {
                                                 overlay.getParentTranslatedName())),
                                         200),
                                 Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             } else {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(
                                 (editInput != null && editInput.isVisible()) ? SAVE_NAME_TOOLTIP : descriptionTooltip,
                                 Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             }
         }
     }

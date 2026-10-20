@@ -35,8 +35,7 @@ public class LoadoutMenuSkillPointWidget extends AbstractWidget implements IconR
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 

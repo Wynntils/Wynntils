@@ -23,7 +23,7 @@ public class ComponentTypeButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         guiGraphics,

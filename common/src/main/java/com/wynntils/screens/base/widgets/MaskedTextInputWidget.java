@@ -49,10 +49,10 @@ public class MaskedTextInputWidget extends AbstractWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        maskedTextInputBoxWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        maskedTextInputBoxWidget.extractRenderState(guiGraphics);
 
-        toggleMaskButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        toggleMaskButton.extractRenderState(guiGraphics);
     }
 
     @Override
@@ -120,9 +120,7 @@ public class MaskedTextInputWidget extends AbstractWidget {
                 Font font,
                 int firstWidth,
                 int highlightedWidth,
-                int lastWidth,
-                int mouseX,
-                int mouseY) {
+                int lastWidth) {
             super.doExtractWidgetRenderState(
                     guiGraphics,
                     masked ? "*".repeat(renderedText.length()) : renderedText,
@@ -133,9 +131,7 @@ public class MaskedTextInputWidget extends AbstractWidget {
                     font,
                     firstWidth,
                     highlightedWidth,
-                    lastWidth,
-                    mouseX,
-                    mouseY);
+                    lastWidth);
         }
     }
 }

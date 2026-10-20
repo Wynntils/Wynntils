@@ -31,8 +31,7 @@ public class TitleWidget extends AbstractWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_FLAG,

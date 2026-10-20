@@ -89,8 +89,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
@@ -99,11 +98,11 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
                 this.width + 10,
                 this.height + 10 + 1 + 15);
 
-        abilityTreeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        aspectsButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        tomesButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        abilityTreeButton.extractRenderState(guiGraphics);
+        aspectsButton.extractRenderState(guiGraphics);
+        tomesButton.extractRenderState(guiGraphics);
 
-        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(guiGraphics);
     }
 
     @Override
@@ -130,8 +129,9 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
     @Override
     public void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         for (AbstractWidget widget : getWidgets()) {
-            if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isMouseOver(mouseX, mouseY)) {
-                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
+            if (widget instanceof ItemTooltipProvider itemTooltipProvider
+                    && widget.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
+                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
                 return;
             }
         }

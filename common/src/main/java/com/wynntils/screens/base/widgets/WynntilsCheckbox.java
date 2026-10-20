@@ -95,7 +95,7 @@ public class WynntilsCheckbox extends AbstractButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         Identifier identifier;
         if (this.selected) {
             identifier = this.isFocused() || this.isHovered()
@@ -122,7 +122,10 @@ public class WynntilsCheckbox extends AbstractButton {
                         1f);
 
         if (isHovered && tooltip != null) {
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltip, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 

@@ -61,8 +61,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
@@ -134,7 +133,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
     public void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         List<ItemStack> boxItemStacks = getBoxItemStacks();
 
-        int hoveredIndex = getHoveredBoxIndex(mouseX, mouseY);
+        int hoveredIndex = getHoveredBoxIndex(guiGraphics.mouseX(), guiGraphics.mouseY());
         if (hoveredIndex == -1 || hoveredIndex >= boxItemStacks.size()) return;
 
         ItemStack hoveredStack = boxItemStacks.get(hoveredIndex);
@@ -142,7 +141,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
 
         handleCursor(guiGraphics);
 
-        RenderUtils.renderTooltip(guiGraphics, hoveredStack, mouseX, mouseY);
+        RenderUtils.renderTooltip(guiGraphics, hoveredStack, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     private int getHoveredBoxIndex(int mouseX, int mouseY) {

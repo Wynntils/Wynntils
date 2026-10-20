@@ -98,7 +98,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
     public void onClose() {}
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
         FontRenderer.getInstance()
@@ -133,7 +133,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
                         TextShadow.NORMAL);
 
         for (Renderable renderable : this.renderables) {
-            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics);
         }
     }
 

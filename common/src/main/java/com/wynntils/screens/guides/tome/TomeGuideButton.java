@@ -28,7 +28,7 @@ public class TomeGuideButton extends GuideButton {
             builtTooltip = true;
         }
 
-        itemStack.queueGuideTooltip(guiGraphics, mouseX, mouseY);
+        itemStack.queueGuideTooltip(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     @Override

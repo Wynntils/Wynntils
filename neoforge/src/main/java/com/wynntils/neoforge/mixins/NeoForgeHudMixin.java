@@ -26,11 +26,11 @@ public abstract class NeoForgeHudMixin {
 
     @Inject(
             method =
-                    "extractHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
+                    "extractHotbar(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
             at = @At("HEAD"))
-    private void onExtractHotbarPre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
+    private void onExtractHotbarPre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
         MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.HOTBAR));
+                new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.HOTBAR));
     }
 
     @Inject(

@@ -59,7 +59,7 @@ public abstract class ItemTooltipRenderEvent extends Event {
                 List<Component> tooltips,
                 int mouseX,
                 int mouseY) {
-            super(guiGraphics, itemStack, mouseX, mouseY);
+            super(guiGraphics, itemStack, guiGraphics.mouseX(), guiGraphics.mouseY());
             setTooltips(tooltips);
         }
 
@@ -86,7 +86,7 @@ public abstract class ItemTooltipRenderEvent extends Event {
 
     public static class Post extends ItemTooltipRenderEvent {
         public Post(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {
-            super(guiGraphics, itemStack, mouseX, mouseY);
+            super(guiGraphics, itemStack, guiGraphics.mouseX(), guiGraphics.mouseY());
         }
     }
 }

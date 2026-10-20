@@ -32,7 +32,7 @@ public class GuideActionButton extends BasicTexturedButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 isHovered ? Texture.GUIDE_WIDGET_BACKGROUND_HOVERED : Texture.GUIDE_WIDGET_BACKGROUND,

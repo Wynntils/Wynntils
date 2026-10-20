@@ -46,8 +46,7 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -60,7 +59,7 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        qualityTierButtons.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        qualityTierButtons.forEach(widget -> widget.extractRenderState(guiGraphics));
     }
 
     @Override
@@ -149,8 +148,7 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
         }
 
         @Override
-        protected void extractWidgetRenderState(
-                GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
             RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
 
             FontRenderer.getInstance()
@@ -199,8 +197,8 @@ public class QualityTierFilterWidget extends GuideFilterWidget {
                         Lists.transform(
                                 ComponentUtils.wrapTooltips(List.of(toggleComponent, removeComponent), 250),
                                 Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             }
         }
 

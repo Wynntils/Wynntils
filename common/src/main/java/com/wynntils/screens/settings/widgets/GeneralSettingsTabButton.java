@@ -47,16 +47,16 @@ public abstract class GeneralSettingsTabButton extends BasicTexturedButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         // Don't count as hovered if mouse is hovering the book as the tags render
         // slightly underneath the book
         if (isHovered
-                && ((offsetDirection == OffsetDirection.UP && mouseY >= offsetY)
+                && ((offsetDirection == OffsetDirection.UP && guiGraphics.mouseY() >= offsetY)
                         || (offsetDirection == OffsetDirection.RIGHT
-                                && mouseX <= offsetX + Texture.CONFIG_BOOK_BACKGROUND.width())
+                                && guiGraphics.mouseX() <= offsetX + Texture.CONFIG_BOOK_BACKGROUND.width())
                         || (offsetDirection == OffsetDirection.DOWN
-                                && mouseY <= offsetY + Texture.CONFIG_BOOK_BACKGROUND.height())
-                        || (offsetDirection == OffsetDirection.LEFT && mouseX >= offsetX))) {
+                                && guiGraphics.mouseY() <= offsetY + Texture.CONFIG_BOOK_BACKGROUND.height())
+                        || (offsetDirection == OffsetDirection.LEFT && guiGraphics.mouseX() >= offsetX))) {
             isHovered = false;
         }
 

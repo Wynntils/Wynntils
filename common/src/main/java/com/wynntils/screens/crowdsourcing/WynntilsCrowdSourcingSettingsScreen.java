@@ -58,20 +58,20 @@ public class WynntilsCrowdSourcingSettingsScreen
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsCrowdSourcing.name"));
 
         renderVersion(guiGraphics);
 
-        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics);
 
         renderDescription(guiGraphics, I18n.get("screens.wynntils.wynntilsCrowdSourcing.screenDescription"), "");
 
         renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     @Override

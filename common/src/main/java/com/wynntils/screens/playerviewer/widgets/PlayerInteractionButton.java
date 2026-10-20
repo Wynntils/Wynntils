@@ -36,15 +36,17 @@ public abstract class PlayerInteractionButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractContents(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
+        super.extractContents(guiGraphics);
 
         // +3 to center icon with 1px border in 16x16 button
         RenderUtils.drawTexturedRect(guiGraphics, icon, this.getX() + 3, this.getY() + 3);
 
         if (isHovered) {
             guiGraphics.setTooltipForNextFrame(
-                    Lists.transform(tooltipText, Component::getVisualOrderText), mouseX, mouseY);
+                    Lists.transform(tooltipText, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 }

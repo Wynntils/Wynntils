@@ -61,10 +61,9 @@ public class BooleanFilterWidget extends GeneralFilterWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        trueCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        falseCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        trueCheckbox.extractRenderState(guiGraphics);
+        falseCheckbox.extractRenderState(guiGraphics);
     }
 
     @Override

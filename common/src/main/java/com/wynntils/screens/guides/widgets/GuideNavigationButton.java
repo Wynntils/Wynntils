@@ -20,7 +20,7 @@ public abstract class GuideNavigationButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
                 isHovered ? Texture.GUIDE_WIDGET_BACKGROUND_HOVERED : Texture.GUIDE_WIDGET_BACKGROUND,
@@ -32,7 +32,7 @@ public abstract class GuideNavigationButton extends WynntilsButton {
         RenderUtils.renderItem(guiGraphics, itemToRender, getX() + 2, getY() + 2);
 
         if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(getTooltip(), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(getTooltip(), guiGraphics.mouseX(), guiGraphics.mouseY());
         }
     }
 

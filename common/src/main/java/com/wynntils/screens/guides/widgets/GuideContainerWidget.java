@@ -203,8 +203,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.GUIDE_BACKGROUND, getX(), getY() + 28, getBackgroundWidth(), getHeight() - 28);
 
@@ -242,28 +241,28 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                         TextShadow.OUTLINE);
 
         RenderUtils.enableScissor(guiGraphics, getX(), getY() + 42, getWidth(), getHeight());
-        guideButtons.forEach(guideButton -> guideButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        guideButtons.forEach(guideButton -> guideButton.extractRenderState(guiGraphics));
         RenderUtils.disableScissor(guiGraphics);
 
-        renderScroll(guiGraphics, mouseX, mouseY);
+        renderScroll(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
 
         if (searchWidget != null) {
-            searchWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            searchWidget.extractRenderState(guiGraphics);
         }
 
         if (favoriteFilterButton != null) {
-            favoriteFilterButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            favoriteFilterButton.extractRenderState(guiGraphics);
         }
 
         if (toggleFiltersButton != null) {
-            toggleFiltersButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            toggleFiltersButton.extractRenderState(guiGraphics);
         }
 
         if (filterPanel != null) {
-            filterPanel.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            filterPanel.extractRenderState(guiGraphics);
         }
 
-        favoriteActionButtons.forEach(button -> button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        favoriteActionButtons.forEach(button -> button.extractRenderState(guiGraphics));
     }
 
     public void updateSearchFromQuickFilters() {
@@ -316,7 +315,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
 
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
-        } else if (isOverScrollBar(mouseX, mouseY)) {
+        } else if (isOverScrollBar(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }

@@ -150,8 +150,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        updateHelpHover(mouseX, mouseY);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        updateHelpHover(guiGraphics.mouseX(), guiGraphics.mouseY());
         renderScreenGuides(guiGraphics);
         if (selectionMode != SelectionMode.NONE) {
             renderAlignmentLines(guiGraphics);
@@ -162,13 +162,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .collect(Collectors.toSet());
 
         // We want to render the tooltip for what will actually be interacted with
-        boolean hoveringPanel = (positionPanel != null && positionPanel.contains(mouseX, mouseY))
-                || (helpPanel != null && helpPanel.contains(mouseX, mouseY));
+        boolean hoveringPanel =
+                (positionPanel != null && positionPanel.contains(guiGraphics.mouseX(), guiGraphics.mouseY()))
+                        || (helpPanel != null && helpPanel.contains(guiGraphics.mouseX(), guiGraphics.mouseY()));
         boolean renderedTooltip = positionPanel != null || helpPanel != null || pendingPanelClick;
 
         // Buttons have the highest priority so check those first
         for (GuiEventListener listener : this.children) {
-            if (listener.isMouseOver(mouseX, mouseY)) {
+            if (listener.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 renderedTooltip = true;
                 break;
             }
@@ -250,7 +251,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                 TextShadow.OUTLINE);
             }
 
-            boolean hovering = isMouseHoveringOverlay(overlay, mouseX, mouseY);
+            boolean hovering = isMouseHoveringOverlay(overlay, guiGraphics.mouseX(), guiGraphics.mouseY());
 
             if (hovering && !hoveringPanel && selectionMode == SelectionMode.NONE) {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
@@ -262,7 +263,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     && hovering
                     && (!fixedSelection || overlay == selectedOverlay)
                     && selectionMode == SelectionMode.NONE) {
-                guiGraphics.setTooltipForNextFrame(Component.literal(overlayName), mouseX, mouseY);
+                guiGraphics.setTooltipForNextFrame(
+                        Component.literal(overlayName), guiGraphics.mouseX(), guiGraphics.mouseY());
                 renderedTooltip = true;
             }
         }
@@ -270,14 +272,11 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         // Render widgets
         for (Renderable renderable : this.renderables) {
             if (positionPanel != null && positionPanel.getWidgets().contains(renderable)) continue;
-            renderable.extractRenderState(
-                    guiGraphics, hoveringPanel ? -1 : mouseX, hoveringPanel ? -1 : mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics);
         }
         if (positionPanel != null) {
             positionPanel.render(guiGraphics);
-            positionPanel
-                    .getWidgets()
-                    .forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+            positionPanel.getWidgets().forEach(widget -> widget.extractRenderState(guiGraphics));
         }
 
         if (helpPanel != null) {

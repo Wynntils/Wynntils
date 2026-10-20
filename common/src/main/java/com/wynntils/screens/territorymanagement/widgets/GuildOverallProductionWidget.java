@@ -29,8 +29,7 @@ public class GuildOverallProductionWidget extends AbstractWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         if (!Managers.Feature.getFeatureInstance(CustomTerritoryManagementScreenFeature.class)
                 .screenTerritoryProductionTooltip
                 .get()) {

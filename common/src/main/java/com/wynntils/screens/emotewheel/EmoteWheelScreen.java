@@ -105,13 +105,13 @@ public class EmoteWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         if (!emoteWheelFeature.openEmoteWheelKeybind.getKeyMapping().isDown() && canInteract) {
             onClose();
             return;
         }
 
-        hoveredEmoji = (getHoveredEmoji(mouseX, mouseY));
+        hoveredEmoji = (getHoveredEmoji(guiGraphics.mouseX(), guiGraphics.mouseY()));
 
         for (int i = 0; i < BUTTON_POSITIONS.size(); i++) {
             Pair<Integer, Integer> centerPos = BUTTON_POSITIONS.get(i);

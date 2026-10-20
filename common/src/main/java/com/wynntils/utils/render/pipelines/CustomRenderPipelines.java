@@ -12,7 +12,7 @@ import com.mojang.renderpearl.api.pipeline.CompareOp;
 import com.mojang.renderpearl.api.pipeline.DepthStencilState;
 import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
 import net.minecraft.client.renderer.BindGroupLayouts;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.pipeline.RenderPipelines;
 
 public class CustomRenderPipelines extends RenderPipelines {
     private static final RenderPipeline.Snippet POSITION_COLOR_QUAD_SNIPPET = RenderPipeline.builder(
@@ -27,7 +27,7 @@ public class CustomRenderPipelines extends RenderPipelines {
             .buildSnippet();
 
     public static final RenderPipeline LOOTRUN_QUAD_PIPELINE =
-            register(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
+            precompiled(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
                     .withBindGroupLayout(BindGroupLayouts.PROJECTION)
                     .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
                     .withLocation("pipeline/wynntils_lootrun_quad")
@@ -42,20 +42,20 @@ public class CustomRenderPipelines extends RenderPipelines {
                     .build());
 
     public static final RenderPipeline POSITION_COLOR_QUAD_PIPELINE =
-            register(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
+            precompiled(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
                     .withLocation("pipeline/wynntils_position_color_quad")
                     .withCull(false)
                     .build());
 
     public static final RenderPipeline PLAYER_PING_QUAD_PIPELINE =
-            register(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
+            precompiled(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
                     .withLocation("pipeline/wynntils_player_ping_quad")
                     .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
                     .withCull(false)
                     .build());
 
     public static final RenderPipeline PROGRESS_BAR_PIPELINE =
-            register(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
+            precompiled(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
                     .withBindGroupLayout(BindGroupLayouts.PROJECTION)
                     .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
                     .withLocation("pipeline/wynntils_progress_bar")

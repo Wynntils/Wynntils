@@ -143,12 +143,12 @@ public final class ColorPickerScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.COLOR_PICKER_BACKGROUND, offsetX, offsetY);
 
         renderSelectedColor(guiGraphics, offsetX + 11, offsetY + 15);
 
-        this.renderables.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        this.renderables.forEach(widget -> widget.extractRenderState(guiGraphics));
     }
 
     public void setSaturation(float saturation) {

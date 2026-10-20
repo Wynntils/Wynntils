@@ -7,7 +7,6 @@ package com.wynntils.fabric.mixins;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.type.RenderElementType;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.Hud;
@@ -24,13 +23,8 @@ public abstract class FabricHudMixin {
     @Final
     private Minecraft minecraft;
 
-    @Inject(
-            method =
-                    "extractHotbarAndDecorations(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/client/DeltaTracker;)V",
-            at = @At("HEAD"))
-    private void onExtractHotbarAndDecorationsPre(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, CallbackInfo ci) {
-        MixinHelper.post(
-                new RenderEvent.Pre(guiGraphics, deltaTracker, this.minecraft.getWindow(), RenderElementType.HOTBAR));
+    @Inject(method = "extractHotbarAndDecorations(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("HEAD"))
+    private void onExtractHotbarAndDecorationsPre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
+        MixinHelper.post(new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.HOTBAR));
     }
 }

@@ -165,12 +165,12 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_RECORD, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics) {
         // We don't want a label
     }
 
@@ -203,8 +203,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
 
         if (!addingCategory && !editingCategory) {
             FontRenderer.getInstance()
@@ -235,7 +235,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
         renderScrollButton(guiGraphics);
 
-        this.extractTooltip(guiGraphics, mouseX, mouseY);
+        this.extractTooltip(guiGraphics);
     }
 
     @Override

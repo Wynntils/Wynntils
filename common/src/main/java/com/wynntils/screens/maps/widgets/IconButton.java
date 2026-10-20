@@ -47,7 +47,7 @@ public class IconButton extends AbstractWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(
                 guiGraphics, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), width, height);
 
@@ -77,8 +77,8 @@ public class IconButton extends AbstractWidget {
                                                         "screens.wynntils.waypointManagementGui.iconFilterTooltip2")),
                                         250),
                                 Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             }
 
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);

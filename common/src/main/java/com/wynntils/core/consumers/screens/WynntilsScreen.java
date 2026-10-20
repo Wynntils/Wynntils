@@ -57,16 +57,16 @@ public abstract class WynntilsScreen extends Screen implements TextboxScreen {
     }
 
     @Override
-    public final void extractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public final void extractRenderState(GuiGraphicsExtractor guiGraphics) {
         try {
-            doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            doExtractRenderState(guiGraphics);
         } catch (Throwable t) {
             failure("extractRenderState", t);
         }
     }
 
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.extractRenderState(guiGraphics);
     }
 
     @Override

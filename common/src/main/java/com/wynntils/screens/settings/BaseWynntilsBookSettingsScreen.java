@@ -356,13 +356,13 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         if (displayWarning) {
-            unsavedChangesWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            unsavedChangesWidget.extractRenderState(guiGraphics);
             return;
         }
 
-        renderTags(guiGraphics, mouseX, mouseY, partialTick);
+        renderTags(guiGraphics);
 
         renderBg(guiGraphics);
 
@@ -464,20 +464,20 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                             TextShadow.NORMAL,
                             1.25f);
         } else {
-            renderConfigurables(guiGraphics, mouseX, mouseY, partialTick);
+            renderConfigurables(guiGraphics);
         }
 
         if (hoveredConfigurable == null) {
-            renderSelectedConfigs(guiGraphics, mouseX, mouseY, partialTick);
+            renderSelectedConfigs(guiGraphics);
         } else {
-            renderHoveredConfigs(guiGraphics, mouseX, mouseY, partialTick);
+            renderHoveredConfigs(guiGraphics);
         }
 
         if (draggingConfigScroll || draggingConfigurableScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX,
-                mouseY,
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
                 CONFIGURABLE_SCROLL_X + offsetX,
                 CONFIGURABLE_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
                 (int) configurableScrollRenderY,
@@ -485,8 +485,8 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         } else if ((configs.size() > CONFIGS_PER_PAGE)
                 && MathUtils.isInside(
-                        mouseX,
-                        mouseY,
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY(),
                         CONFIG_SCROLL_X + offsetX,
                         CONFIG_SCROLL_X + Texture.CONFIG_BOOK_SCROLL_BUTTON.width() + offsetX,
                         (int) configScrollRenderY,
@@ -494,13 +494,13 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
-        renderTooltips(guiGraphics, mouseX, mouseY);
+        renderTooltips(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics) {
         if (McUtils.mc().level == null) {
-            extractPanorama(guiGraphics, partialTick);
+            extractPanorama(guiGraphics);
         }
 
         // Don't render the blurred background
@@ -1068,19 +1068,19 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.CONFIG_BOOK_BACKGROUND, offsetX, offsetY);
     }
 
-    private void renderTags(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderTags(GuiGraphicsExtractor guiGraphics) {
         for (Renderable renderable : renderables) {
-            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics);
         }
     }
 
-    private void renderConfigurables(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderConfigurables(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.enableScissor(guiGraphics, 12 + offsetX, 21 + offsetY, 170, CONFIGURABLES_PER_PAGE * 12 - 3);
 
         hoveredConfigurable = null;
 
         for (WynntilsButton configurable : configurables) {
-            configurable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            configurable.extractRenderState(guiGraphics);
 
             if (configurable.isHovered() && configurable instanceof ConfigurableButton configurableButton) {
                 if (selectedConfigurable != null) continue;
@@ -1119,7 +1119,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                 RenderDirection.VERTICAL);
     }
 
-    private void renderSelectedConfigs(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderSelectedConfigs(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.enableScissor(
                 guiGraphics,
                 (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10 + offsetX),
@@ -1128,13 +1128,13 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                 CONFIGS_PER_PAGE * 46);
 
         for (WynntilsButton config : configs) {
-            config.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            config.extractRenderState(guiGraphics);
         }
 
         RenderUtils.disableScissor(guiGraphics);
     }
 
-    private void renderHoveredConfigs(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderHoveredConfigs(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.enableScissor(
                 guiGraphics,
                 (int) (Texture.CONFIG_BOOK_BACKGROUND.width() / 2f + 10 + offsetX),
@@ -1143,7 +1143,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                 CONFIGS_PER_PAGE * 46);
 
         for (WynntilsButton config : configurableMap.get(hoveredConfigurable)) {
-            config.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            config.extractRenderState(guiGraphics);
         }
 
         RenderUtils.disableScissor(guiGraphics);
@@ -1204,7 +1204,8 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
         if (mouseX >= offsetX && mouseY >= offsetY) return;
 
         for (GuiEventListener child : children()) {
-            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+            if (child instanceof TooltipProvider tooltipProvider
+                    && child.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
                         mouseX,

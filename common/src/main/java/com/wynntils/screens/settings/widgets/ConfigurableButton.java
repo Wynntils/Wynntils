@@ -112,9 +112,9 @@ public class ConfigurableButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         // Don't want to display tooltip when the tile is outside the mask from the screen
-        if (isHovered && (mouseY <= maskTopY || mouseY >= maskBottomY)) {
+        if (isHovered && (guiGraphics.mouseY() <= maskTopY || guiGraphics.mouseY() >= maskBottomY)) {
             isHovered = false;
         }
 
@@ -165,21 +165,26 @@ public class ConfigurableButton extends WynntilsButton {
                         TextShadow.NORMAL,
                         1f);
         if (showToggleCheckbox) {
-            enabledCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            enabledCheckbox.extractRenderState(guiGraphics);
         }
-        ecsButton.ifPresent(basicHoverableButton ->
-                basicHoverableButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        ecsButton.ifPresent(basicHoverableButton -> basicHoverableButton.extractRenderState(guiGraphics));
 
         if (isHovered) {
             if (showToggleCheckbox && enabledCheckbox.isHovered()) {
                 guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(toggleTooltip, Component::getVisualOrderText), mouseX, mouseY);
+                        Lists.transform(toggleTooltip, Component::getVisualOrderText),
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             } else if (ecsButton.isPresent() && ecsButton.get().isHovered()) {
                 guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(ecsTooltip, Component::getVisualOrderText), mouseX, mouseY);
+                        Lists.transform(ecsTooltip, Component::getVisualOrderText),
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             } else if (configurable instanceof Feature) {
                 guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(descriptionTooltip, Component::getVisualOrderText), mouseX, mouseY);
+                        Lists.transform(descriptionTooltip, Component::getVisualOrderText),
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             }
         }
     }

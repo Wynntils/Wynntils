@@ -17,7 +17,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Hud;
-import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 

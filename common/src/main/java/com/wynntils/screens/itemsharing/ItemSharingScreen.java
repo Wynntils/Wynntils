@@ -91,8 +91,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -109,8 +109,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractBackground(GuiGraphicsExtractor guiGraphics) {
+        super.extractBackground(guiGraphics);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_SHARING_BACKGROUND, backgroundX, backgroundY);
     }

@@ -102,14 +102,14 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.statistics.name"));
 
         renderVersion(guiGraphics);
 
-        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics);
 
         if (elements.isEmpty()) {
             renderNoElementsHelper(guiGraphics, I18n.get("screens.wynntils.statistics.noStatistics"));
@@ -119,7 +119,7 @@ public final class WynntilsStatisticsScreen extends WynntilsListScreen<Statistic
 
         renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     private void renderDescription(GuiGraphicsExtractor guiGraphics) {

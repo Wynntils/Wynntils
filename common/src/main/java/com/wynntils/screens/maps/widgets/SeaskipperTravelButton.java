@@ -30,7 +30,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawScalingHoverableTexturedRect(
                 guiGraphics,
                 Texture.TRAVEL_BUTTON,
@@ -47,7 +47,10 @@ public class SeaskipperTravelButton extends WynntilsButton {
                             seaskipperScreen.getSelectedDestination().getName())
                     .withStyle(ChatFormatting.GRAY));
 
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltip, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 }

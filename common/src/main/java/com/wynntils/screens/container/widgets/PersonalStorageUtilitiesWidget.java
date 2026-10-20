@@ -76,7 +76,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.BANK_PANEL, getX(), getY());
 
         if (!Models.Bank.isEditingMode()) {
@@ -94,10 +94,10 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
                             1f);
         }
 
-        editButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        editInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        editButton.extractRenderState(guiGraphics);
+        editInput.extractRenderState(guiGraphics);
 
-        quickJumpButtons.forEach(button -> button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        quickJumpButtons.forEach(button -> button.extractRenderState(guiGraphics));
     }
 
     @Override

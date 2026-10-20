@@ -69,14 +69,13 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 this);
     }
 
-    protected void extractWidgetRenderStates(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderStates(GuiGraphicsExtractor guiGraphics) {
         this.hovered = null;
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
-            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics);
 
             if (renderable instanceof WynntilsButton button) {
-                if (button.isMouseOver(mouseX, mouseY)) {
+                if (button.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                     this.hovered = button;
                 }
             }
@@ -123,7 +122,9 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         if (tooltipLines.isEmpty()) return;
 
         guiGraphics.setTooltipForNextFrame(
-                Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
+                Lists.transform(tooltipLines, Component::getVisualOrderText),
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY());
     }
 
     @Override

@@ -158,31 +158,32 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         updateItems();
 
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        super.doExtractRenderState(guiGraphics);
         renderScrollButton(guiGraphics);
 
-        renderables.forEach(c -> c.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(c -> c.extractRenderState(guiGraphics));
 
         // Render item tooltip
-        super.extractTooltip(guiGraphics, mouseX, mouseY);
+        super.extractTooltip(guiGraphics);
 
         // Render tooltip for hovered widget
         for (GuiEventListener child : children()) {
-            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+            if (child instanceof TooltipProvider tooltipProvider
+                    && child.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
                 break;
             }
         }
     }
 
     @Override
-    protected void extractLabels(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    protected void extractLabels(GuiGraphicsExtractor guiGraphics) {
         guiGraphics.text(
                 FontRenderer.getInstance().getFont(),
                 this.currentState,
@@ -193,7 +194,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractBackground(GuiGraphicsExtractor guiGraphics) {
         int x = (this.width - this.imageWidth) / 2;
         int y = (this.height - this.imageHeight) / 2;
 

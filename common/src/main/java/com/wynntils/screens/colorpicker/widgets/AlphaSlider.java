@@ -24,7 +24,7 @@ public class AlphaSlider extends AbstractSliderButton {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.fillGradient(
                 guiGraphics,
                 getX(),

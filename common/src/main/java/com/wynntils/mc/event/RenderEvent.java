@@ -13,14 +13,11 @@ import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class RenderEvent extends Event {
     private final GuiGraphicsExtractor guiGraphics;
-    private final DeltaTracker deltaTracker;
     private final Window window;
     private final RenderElementType type;
 
-    protected RenderEvent(
-            GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window, RenderElementType type) {
+    protected RenderEvent(GuiGraphicsExtractor guiGraphics, Window window, RenderElementType type) {
         this.guiGraphics = guiGraphics;
-        this.deltaTracker = deltaTracker;
         this.window = window;
         this.type = type;
     }
@@ -34,7 +31,7 @@ public abstract class RenderEvent extends Event {
     }
 
     public DeltaTracker getDeltaTracker() {
-        return deltaTracker;
+        return guiGraphics.deltaTracker();
     }
 
     public Window getWindow() {
@@ -42,15 +39,14 @@ public abstract class RenderEvent extends Event {
     }
 
     public static class Pre extends RenderEvent implements ICancellableEvent {
-        public Pre(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window, RenderElementType type) {
-            super(guiGraphics, deltaTracker, window, type);
+        public Pre(GuiGraphicsExtractor guiGraphics, Window window, RenderElementType type) {
+            super(guiGraphics, window, type);
         }
     }
 
     public static class Post extends RenderEvent {
-        public Post(
-                GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window, RenderElementType type) {
-            super(guiGraphics, deltaTracker, window, type);
+        public Post(GuiGraphicsExtractor guiGraphics, Window window, RenderElementType type) {
+            super(guiGraphics, window, type);
         }
     }
 }

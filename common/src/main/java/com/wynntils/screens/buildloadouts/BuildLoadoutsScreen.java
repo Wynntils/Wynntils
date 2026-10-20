@@ -319,7 +319,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         renderBackgroundTexture(guiGraphics);
         // region Backgrounds
         // background for widgets 1
@@ -342,20 +342,20 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
         // end region
 
         if (getCurrentCategory() == MenuCategory.NEW_LOADOUT) {
-            renderNewLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
+            renderNewLoadoutMenu(guiGraphics);
         } else if (getCurrentCategory() != MenuCategory.NEW_LOADOUT && getSelectedLoadout() != null) {
-            renderLoadoutMenu(guiGraphics, mouseX, mouseY, partialTick);
+            renderLoadoutMenu(guiGraphics);
         }
 
-        renderables.forEach(renderable -> renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
-        renderTooltips(guiGraphics, mouseX, mouseY);
+        renderables.forEach(renderable -> renderable.extractRenderState(guiGraphics));
+        renderTooltips(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
     }
 
     private void renderBackgroundTexture(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.BUILD_LOADOUTS_BACKGROUND, offsetX, offsetY);
     }
 
-    private void renderNewLoadoutMenu(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderNewLoadoutMenu(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -397,7 +397,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
                         TextShadow.NONE);
     }
 
-    private void renderLoadoutMenu(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderLoadoutMenu(GuiGraphicsExtractor guiGraphics) {
         // background for skillpoint, overview, and item widgets
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
@@ -410,15 +410,17 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
     private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children()) {
-            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+            if (child instanceof TooltipProvider tooltipProvider
+                    && child.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
                         mouseX,
                         mouseY);
                 break;
             }
-            if (child instanceof ItemTooltipProvider itemTooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
+            if (child instanceof ItemTooltipProvider itemTooltipProvider
+                    && child.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
+                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
                 break;
             }
         }

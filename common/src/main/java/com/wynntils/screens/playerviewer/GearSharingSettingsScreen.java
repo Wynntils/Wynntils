@@ -52,8 +52,8 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void extractBackground(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractBackground(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractBackground(GuiGraphicsExtractor guiGraphics) {
+        super.extractBackground(guiGraphics);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.PLAYER_VIEWER_BACKGROUND, offsetX, offsetY);
 
@@ -65,8 +65,6 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
                 offsetY - 4 + Texture.PLAYER_VIEWER_BACKGROUND.height(),
                 30,
                 0.2f,
-                mouseX,
-                mouseY,
                 McUtils.player());
     }
 

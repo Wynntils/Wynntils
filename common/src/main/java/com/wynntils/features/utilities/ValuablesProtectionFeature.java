@@ -383,8 +383,7 @@ public class ValuablesProtectionFeature extends Feature {
         }
 
         @Override
-        protected void extractWidgetRenderState(
-                GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
             FontRenderer.getInstance()
                     .renderText(
                             guiGraphics,

@@ -46,7 +46,7 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.INFO,
@@ -58,7 +58,9 @@ public class ItemSearchHelperWidget extends BasicTexturedButton {
 
         if (isHovered) {
             guiGraphics.setTooltipForNextFrame(
-                    Lists.transform(getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
+                    Lists.transform(getTooltipLines(), Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 
