@@ -8,14 +8,18 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.type.LabelParser;
 import com.wynntils.models.mount.type.MountEnclosure;
 import com.wynntils.utils.mc.type.Location;
+import java.util.Arrays;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.world.entity.Entity;
 
 public class MountEnclosureLabelParser implements LabelParser<MountEnclosureLabelInfo> {
     private static final Pattern MOUNT_ENCLOSURE_PATTERN =
-            Pattern.compile("§#bc8f62ff(?<mountEnclosure>Ternaves Ranch|Bantisu Quarters|Aldwell Sanctuary)");
+            Pattern.compile("§#bc8f62ff(?<mountEnclosure>" + Arrays.stream(MountEnclosure.values())
+                    .map(mountEnclosure -> Pattern.quote(mountEnclosure.getName()))
+                    .collect(Collectors.joining("|")) + ")");
 
     @Override
     public MountEnclosureLabelInfo getInfo(StyledText label, Location location, Entity entity) {

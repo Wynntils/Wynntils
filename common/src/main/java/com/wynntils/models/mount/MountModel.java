@@ -5,6 +5,9 @@
 package com.wynntils.models.mount;
 
 import com.google.common.reflect.TypeToken;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
@@ -28,6 +31,7 @@ import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.containers.containers.MountFeederContainer;
+import com.wynntils.models.items.encoding.type.EncodingSettings;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.mount.actionbar.matchers.MountEnergySegmentMatcher;
@@ -36,20 +40,35 @@ import com.wynntils.models.mount.event.MountEvent;
 import com.wynntils.models.mount.label.MountEnclosureLabelInfo;
 import com.wynntils.models.mount.label.MountEnclosureLabelParser;
 import com.wynntils.models.mount.type.ColorType;
-import com.wynntils.models.mount.type.Mount;
 import com.wynntils.models.mount.type.MountChoice;
 import com.wynntils.models.mount.type.MountColorInfo;
 import com.wynntils.models.mount.type.MountColorType;
 import com.wynntils.models.mount.type.MountEnclosure;
 import com.wynntils.models.mount.type.MountEnclosureInfo;
 import com.wynntils.models.mount.type.MountFood;
+import com.wynntils.models.mount.type.MountInfo;
 import com.wynntils.models.mount.type.MountStat;
 import com.wynntils.models.mount.type.MountType;
+import com.wynntils.models.players.type.PlayerRank;
+import com.wynntils.models.profession.type.MaterialInfo;
+import com.wynntils.models.profession.type.ResourceType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.EncodedByteBuffer;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.MouseUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.type.Time;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.item.ItemStack;
+import net.neoforged.bus.api.SubscribeEvent;
+import org.apache.commons.lang3.ArrayUtils;
 import java.io.Reader;
 import java.lang.reflect.Type;
 import java.time.Duration;
@@ -63,15 +82,6 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import com.wynntils.utils.type.Time;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.bus.api.SubscribeEvent;
-import org.apache.commons.lang3.ArrayUtils;
 
 public final class MountModel extends Model {
     // How long we wait before assuming mount failure
@@ -91,13 +101,12 @@ public final class MountModel extends Model {
     @Persisted
     private final Config<Integer> secondsToAddIfUnknown = new Config<>(60);
     private MountEnclosure currentMountEnclosure = null;
-    private static final int[] mountEnclosureMainSlots = {9, 18, 27, 36, 45};
-    private static final int[] mountEnclosureSlots = {
-        11, 12, 13, 14, 15, 20, 21, 22, 23, 24, 29, 30, 31, 32, 33, 38, 39, 40, 41, 42, 47, 48, 49, 50, 51
-    };
-    private final int[] mountEnclosureSBSSlots = {16, 17, 25, 26, 34, 35, 43, 44, 52, 53};
     private static final Pattern MOUNT_TIME_PATTERN = Pattern.compile(
             ".*?(?:Feeding|Breeding) in(?: (?<hour>\\d+)h)?(?: (?<minute>\\d+)m)?(?: (?<second>\\d+)s)?");
+    private static final String empty = "Drag a mount into this slot to";
+    private static final String emptyUnicode = "\uDB3F\uDFFF";
+    private static final EncodingSettings MOUNT_ENCODING_SETTINGS = new EncodingSettings(true, true);
+    private Map<ResourceType, Map<Integer, MountFood>> mountFoods = Map.of();
 
     public MountModel() {
         super(List.of());
@@ -108,6 +117,7 @@ public final class MountModel extends Model {
     @Override
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_MOUNT_COLORS).handleReader(this::handleMountColors);
+        registry.registerDownload(UrlId.DATA_STATIC_MOUNT_FOOD).handleJsonArray(this::handleMountFoods);
     }
 
     @SubscribeEvent
@@ -202,15 +212,15 @@ public final class MountModel extends Model {
 
     @SubscribeEvent
     public void onMountFeederSetSlot(ContainerSetSlotEvent.Post e) {
-        if (Models.Container.getCurrentContainer() instanceof MountFeederContainer
+        if (Models.Container.getCurrentContainer() instanceof MountFeederContainer mountFeederContainer
                 && currentMountEnclosure != null
                 && e.getSlot() <= 53 && mountEnclosures.get().get(currentMountEnclosure) != null) {
-            int index = ArrayUtils.indexOf(mountEnclosureMainSlots, e.getSlot());
+            int index = ArrayUtils.indexOf(mountFeederContainer.getMountEnclosureMainSlots(), e.getSlot());
             boolean isMainSlot = index != -1;
-            boolean isSlotValid = isMainSlot && hasRank(e.getItemStack())
-                    || ArrayUtils.contains(mountEnclosureSlots, e.getSlot())
+            boolean isSlotValid = isMainSlot && hasRankForSlot(e.getSlot())
+                    || ArrayUtils.contains(mountFeederContainer.getMountEnclosureSlots(), e.getSlot())
                     || Models.Account.isSilverbullSubscriber()
-                    && ArrayUtils.contains(mountEnclosureSBSSlots, e.getSlot());
+                    && ArrayUtils.contains(mountFeederContainer.getMountEnclosureSBSSlots(), e.getSlot());
             if (isSlotValid)
             {
                 if (isMainSlot)
@@ -222,7 +232,7 @@ public final class MountModel extends Model {
                 {
                     index = (e.getSlot() > 46) ? 4 : (e.getSlot() - 9) / 9;
                     int mountItemsIndex = e.getSlot() - (((index + 1) * 9) + 2);
-                    if (index < mountEnclosures.get().get(currentMountEnclosure).size() && (!isEmpty(e.getItemStack()) && mountItemsIndex == mountEnclosures.get().get(currentMountEnclosure).get(index).mountItems().size() || isEmpty(e.getItemStack()) && mountItemsIndex < mountEnclosures.get().get(currentMountEnclosure).get(index).mountItems().size()))
+                    if (index < mountEnclosures.get().get(currentMountEnclosure).size() && (!isEmpty(e.getItemStack()) && mountItemsIndex == mountEnclosures.get().get(currentMountEnclosure).get(index).encodedMountItems().size() || isEmpty(e.getItemStack()) && mountItemsIndex < mountEnclosures.get().get(currentMountEnclosure).get(index).encodedMountItems().size()))
                         updateMountEnclosure();
                 }
             }
@@ -319,6 +329,32 @@ public final class MountModel extends Model {
         return mountColorInfo;
     }
 
+    public Map<ResourceType, Map<Integer, MountFood>> getMountFoods()
+    {
+        return Collections.unmodifiableMap(this.mountFoods);
+    }
+
+    public Optional<MountFood> getMountFoodFromResourceTypeAndLevel(ResourceType resourceType, int level)
+    {
+        Map<Integer, MountFood> mountFood = getMountFoods().get(resourceType);
+        if (mountFood == null)
+            return Optional.empty();
+        return Optional.ofNullable(mountFood.get(level));
+    }
+
+    public Optional<MountFood> getMountFoodFromMaterialInfo(MaterialInfo materialInfo)
+    {
+        Optional<ResourceType> resourceTypeOpt = Models.Profession.getResourceTypeFromMaterialInfo(materialInfo);
+        if (resourceTypeOpt.isPresent())
+            return getMountFoodFromResourceTypeAndLevel(resourceTypeOpt.get(), materialInfo.level());
+        return Optional.empty();
+    }
+
+    public Optional<MountFood> getMountFoodFromMaterialItem(MaterialItem materialItem)
+    {
+        return getMountFoodFromMaterialInfo(materialItem.getMaterialInfo());
+    }
+
     public boolean isValidColor(MountColorInfo mountColorInfo, MountType mountType, ColorType colorType) {
         boolean validColor = false;
         for (MountColorType mountColorType : mountColorInfo.mounts()) {
@@ -366,6 +402,21 @@ public final class MountModel extends Model {
                 .collect(Collectors.toMap(MountColorInfo::displayName, mountColorInfo -> mountColorInfo));
     }
 
+    private void handleMountFoods(JsonArray jsonArray)
+    {
+        Type type = new TypeToken<List<Pair<MountStat, Integer>>>() {}.getType();
+        Map<ResourceType, Map<Integer, MountFood>> mountFoods = new EnumMap<>(ResourceType.class);
+        for (JsonElement jsonElement : jsonArray)
+        {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
+            ResourceType resourceType = ResourceType.fromString(jsonObject.get("resourceType").getAsString());
+            int level = jsonObject.get("level").getAsInt();
+            MountFood mountFood = new MountFood(Managers.Json.GSON.fromJson(jsonObject.get("mountStats"), type));
+            mountFoods.put(resourceType, Map.of(level, mountFood));
+        }
+        this.mountFoods = mountFoods;
+    }
+
     private void updateMountEnergy(MountEnergySegment segment) {
         currentMountEnergy = segment.getCappedEnergy();
     }
@@ -387,112 +438,122 @@ public final class MountModel extends Model {
     private void updateMountEnclosure(List<ItemStack> mountEnclosureItems)
     {
         List<MountEnclosureInfo> mountEnclosureInfos = new ArrayList<>(5);
-        for (int index = 0; index < mountEnclosureMainSlots.length; index++)
+        if (Models.Container.getCurrentContainer() instanceof MountFeederContainer mountFeederContainer)
         {
-            int slot = mountEnclosureMainSlots[index];
-            ItemStack mountItemItemStack = mountEnclosureItems.get(slot);
-            if (isEmpty(mountItemItemStack) || index > 1 && !hasRank(mountItemItemStack))
-                break;
-            Matcher mountTimeMatcher = LoreUtils.getLore(mountItemItemStack).stream().map(StyledText::getStringWithoutFormatting).map(MOUNT_TIME_PATTERN::matcher).filter(Matcher::matches).findFirst().orElse(null);
-            // Wait for the mount time to be updated after adding/removing the first/last mount food
-            if (mountTimeMatcher == null && !isEmpty(mountEnclosureItems.get(slot + 2)) || mountTimeMatcher != null && isEmpty(mountEnclosureItems.get(slot + 2)))
-                return;
-            // Even tho isEmpty should cover this, just in case check if the optinal is empty
-            Optional<MountItem> mountItemOpt = Models.Item.asWynnItem(mountItemItemStack, MountItem.class);
-            if (mountItemOpt.isEmpty())
-                break;
-            Mount mount = new Mount(mountItemOpt.get().getName(), mountItemOpt.get().getMountInfo().potential(), mountItemOpt.get().getMountInfo().primaryColorInfo().displayName(), mountItemOpt.get().getMountInfo().secondaryColorInfo().displayName(), mountItemOpt.get().getMountInfo().currentEnergy(), mountItemOpt.get().getMountInfo().stats(), mountItemOpt.get().getMountInfo().maxStats(), mountItemOpt.get().getMountType());
-            List<Object> mountItems = new ArrayList<>(7);
-            Time time = Time.NONE;
-            if (mountTimeMatcher != null)
+            for (int index = 0; index < mountFeederContainer.getMountEnclosureMainSlots().length; index++)
             {
-                for (int i = slot + 2; i <= (Models.Account.isSilverbullSubscriber() ? slot + 8 : slot + 6); i++)
+                int slot = mountFeederContainer.getMountEnclosureMainSlots()[index];
+                ItemStack mountItemItemStack = mountEnclosureItems.get(slot);
+                if (isEmpty(mountItemItemStack) || index > 1 && !hasRankForSlot(slot))
+                    break;
+                Matcher mountTimeMatcher = LoreUtils.getLore(mountItemItemStack).stream().map(StyledText::getStringWithoutFormatting).map(MOUNT_TIME_PATTERN::matcher).filter(Matcher::matches).findFirst().orElse(null);
+                // Wait for the mount time to be updated after adding/removing the first/last mount food
+                if (mountTimeMatcher == null && !isEmpty(mountEnclosureItems.get(slot + 2)) || mountTimeMatcher != null && isEmpty(mountEnclosureItems.get(slot + 2)))
+                    return;
+                // Even tho isEmpty should cover this, just in case check if the optinal is empty
+                Optional<MountItem> mountItemOpt = Models.Item.asWynnItem(mountItemItemStack, MountItem.class);
+                if (mountItemOpt.isEmpty())
+                    break;
+                MountItem mountItem = mountItemOpt.get();
+                List<Object> mountItems = new ArrayList<>(7);
+                Time time = Time.NONE;
+                if (mountTimeMatcher != null)
                 {
-                    ItemStack mountItemsItemStack = mountEnclosureItems.get(i);
-                    if (isEmpty(mountItemsItemStack))
-                        break;
-                    Optional<MaterialItem> materialItemOpt = Models.Item.asWynnItem(mountItemsItemStack, MaterialItem.class);
-                    if (materialItemOpt.isPresent())
-                        MountFood.fromMaterialItem(materialItemOpt.get()).ifPresent(mountItems::add);
-                    else
-                        Models.Item.asWynnItem(mountItemsItemStack, MountItem.class).ifPresent(mountItem -> mountItems.add(new Mount(mountItem.getName(), mountItem.getMountInfo().potential(), mountItem.getMountInfo().primaryColorInfo().displayName(), mountItem.getMountInfo().secondaryColorInfo().displayName(), mountItem.getMountInfo().currentEnergy(), mountItem.getMountInfo().stats(), mountItem.getMountInfo().maxStats(), mountItem.getMountType())));
-                }
-                // Calculate the timestamp taking into account the limit changes caused by mount foods.
-                // It's basically impossible to calculate the stat and color changes caused by breeding so a warning will be shown
-                long timestamp = 0;
-                Mount mount1 = new Mount(
-                        mount.name(),
-                        mount.potential(),
-                        mount.primaryColor(),
-                        mount.secondaryColor(),
-                        mount.currentEnergy(),
-                        mount.stats(),
-                        mount.maxStats(),
-                        mount.mountType());
-                for (int i = 1; i < mountItems.size(); i++) {
-                    Object mountItemsItem = mountItems.get(i);
-                    boolean instanceofMount = mountItemsItem instanceof Mount;
-                    int averageLimit = 20;
-                    if (!instanceofMount)
-                        averageLimit = (int) Math.ceil(mount1.stats().values().stream()
-                                .mapToInt(CappedValue::max)
-                                .average()
-                                .orElse(0.0));
-                    timestamp += switch (averageLimit) {
-                        case 10 -> Duration.ofMinutes(1).toMillis();
-                        case 12 -> Duration.ofMinutes(5).toMillis();
-                        case 13 -> Duration.ofMinutes(15).toMillis();
-                        case 14 -> Duration.ofMinutes(30).toMillis();
-                        case 15 -> Duration.ofHours(1).toMillis();
-                        case 16 -> Duration.ofHours(2).toMillis();
-                        case 17 -> Duration.ofHours(3).toMillis();
-                        case 18 -> Duration.ofHours(4).toMillis();
-                        case 19 -> Duration.ofHours(5).toMillis();
-                        default ->
+                    for (int i = slot + 2; i <= (Models.Account.isSilverbullSubscriber() ? slot + 8 : slot + 6); i++)
+                    {
+                        ItemStack mountItemsItemStack = mountEnclosureItems.get(i);
+                        if (isEmpty(mountItemsItemStack))
+                            break;
+                        Optional<MaterialItem> materialItemOpt = Models.Item.asWynnItem(mountItemsItemStack, MaterialItem.class);
+                        if (materialItemOpt.isPresent())
+                            getMountFoodFromMaterialItem(materialItemOpt.get()).ifPresent(mountItems::add);
+                        else
+                            Models.Item.asWynnItem(mountItemsItemStack, MountItem.class).ifPresent(mountItems::add);
+                    }
+                    // Calculate the timestamp taking into account the limit changes caused by mount foods.
+                    // It's basically impossible to calculate the stat and color changes caused by breeding so a warning will be shown
+                    long timestamp = 0;
+                    MountItem mountItem1 = new MountItem(mountItem.getName(), mountItem.getMountType(), new MountInfo(mountItem.getMountInfo().potential(), mountItem.getMountInfo().primaryColorInfo(), mountItem.getMountInfo().secondaryColorInfo(), mountItem.getMountInfo().currentEnergy(), new EnumMap<>(mountItem.getMountInfo().stats()), mountItem.getMountInfo().estimatedMaxStats(), mountItem.getMountInfo().maxStats()), mountItem.isSummonItem());
+                    for (int i = 1; i < mountItems.size(); i++)
+                    {
+                        Object mountItemsItem = mountItems.get(i);
+                        boolean instanceofMountItem = mountItemsItem instanceof MountItem;
+                        int averageLimit = 20;
+                        if (!instanceofMountItem)
+                            averageLimit = (int) Math.ceil(mountItem1.getMountInfo().stats().values().stream().mapToInt(CappedValue::max).average().orElse(0.0));
+                        timestamp += switch (averageLimit)
                         {
-                            if (averageLimit >= 20)
-                                yield Duration.ofHours(6).toMillis();
-                            else
-                                yield 0;
-                        }
-                    };
-                    if (!instanceofMount) {
-                        MountFood mountFood = (MountFood) mountItemsItem;
-                        for (Map.Entry<MountStat, CappedValue> statsEntry :
-                                mount1.stats().entrySet()) {
-                            if (statsEntry.getValue().max() == mount1.maxStats().get(statsEntry.getKey())) continue;
-                            int increaseAmount = 0;
-                            if (statsEntry.getKey() == mountFood.getFirstMountStat().key())
-                                increaseAmount = statsEntry.getValue().max()
-                                        + mountFood.getFirstMountStat().value();
-                            else if (statsEntry.getKey() == mountFood.getSecondMountStat().key())
-                                increaseAmount = statsEntry.getValue().max()
-                                        + mountFood.getSecondMountStat().value();
-                            else if (mountFood.getThirdMountStat() != null
-                                    && statsEntry.getKey() == mountFood.getThirdMountStat().key())
-                                increaseAmount = statsEntry.getValue().max()
-                                        + mountFood.getThirdMountStat().value();
-                            if (increaseAmount == 0) continue;
-                            if (increaseAmount > mount1.maxStats().get(statsEntry.getKey()))
-                                increaseAmount = mount1.maxStats().get(statsEntry.getKey());
-                            statsEntry.setValue(new CappedValue(statsEntry.getValue().current(), increaseAmount));
+                            case 10 -> Duration.ofMinutes(1).toMillis();
+                            case 12 -> Duration.ofMinutes(5).toMillis();
+                            case 13 -> Duration.ofMinutes(15).toMillis();
+                            case 14 -> Duration.ofMinutes(30).toMillis();
+                            case 15 -> Duration.ofHours(1).toMillis();
+                            case 16 -> Duration.ofHours(2).toMillis();
+                            case 17 -> Duration.ofHours(3).toMillis();
+                            case 18 -> Duration.ofHours(4).toMillis();
+                            case 19 -> Duration.ofHours(5).toMillis();
+                            default ->
+                            {
+                                if (averageLimit >= 20)
+                                    yield Duration.ofHours(6).toMillis();
+                                else
+                                    yield 0;
+                            }
+                        };
+                        if (!instanceofMountItem)
+                        {
+                            MountFood mountFood = (MountFood) mountItemsItem;
+                            for (Map.Entry<MountStat, CappedValue> statsEntry : mountItem1.getMountInfo().stats().entrySet())
+                            {
+                                if (statsEntry.getValue().max() == mountItem1.getMountInfo().maxStats().get(statsEntry.getKey()))
+                                    continue;
+                                int increaseAmount = 0;
+                                for (Pair<MountStat, Integer> pair : mountFood.mountStats())
+                                {
+                                    if (statsEntry.getKey() == pair.key())
+                                    {
+                                        increaseAmount = statsEntry.getValue().max() + pair.value();
+                                        break;
+                                    }
+                                }
+                                if (increaseAmount == 0)
+                                    continue;
+                                if (increaseAmount > mountItem1.getMountInfo().maxStats().get(statsEntry.getKey()))
+                                    increaseAmount = mountItem1.getMountInfo().maxStats().get(statsEntry.getKey());
+                                statsEntry.setValue(new CappedValue(statsEntry.getValue().current(), increaseAmount));
+                            }
                         }
                     }
+                    String hour = mountTimeMatcher.group("hour");
+                    String minute = mountTimeMatcher.group("minute");
+                    String second = mountTimeMatcher.group("second");
+                    int seconds = secondsToAddIfUnknown.get() * 1000;
+                    if (seconds < 0)
+                        seconds = 0;
+                    timestamp += Duration.ofHours(hour == null ? 0 : Long.parseLong(hour)).plusMinutes(minute == null ? 0 : Long.parseLong(minute)).plusSeconds(second == null ? seconds : Long.parseLong(second)).toMillis();
+                    if (timestamp != 0)
+                        time = Time.of(timestamp + System.currentTimeMillis());
+                    // Encode MountItem's
+                    if (!mountItems.stream().allMatch(obj -> obj instanceof MountFood))
+                    {
+                        mountItems.replaceAll(obj -> {
+                            if (obj instanceof MountItem mountItem2)
+                            {
+                                ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
+                                        Models.ItemEncoding.encodeItem(mountItem2, MOUNT_ENCODING_SETTINGS);
+                                if (errorOrEncodedByteBuffer.hasError())
+                                    return obj;
+                                return errorOrEncodedByteBuffer.getValue().toBase64String();
+                            }
+                            return obj;
+                        });
+                    }
                 }
-                String hour = mountTimeMatcher.group("hour");
-                String minute = mountTimeMatcher.group("minute");
-                String second = mountTimeMatcher.group("second");
-                int seconds = secondsToAddIfUnknown.get() * 1000;
-                if (seconds < 0)
-                    seconds = 0;
-                timestamp += Duration.ofHours(hour == null ? 0 : Long.parseLong(hour))
-                        .plusMinutes(minute == null ? 0 : Long.parseLong(minute))
-                        .plusSeconds(second == null ? seconds : Long.parseLong(second))
-                        .toMillis();
-                if (timestamp != 0)
-                    time = Time.of(timestamp + System.currentTimeMillis());
+                ErrorOr<EncodedByteBuffer> errorOrEncodedByteBuffer =
+                        Models.ItemEncoding.encodeItem(mountItem, MOUNT_ENCODING_SETTINGS);
+                if (!errorOrEncodedByteBuffer.hasError())
+                    mountEnclosureInfos.add(new MountEnclosureInfo(errorOrEncodedByteBuffer.getValue().toBase64String(), mountItems, time));
             }
-            mountEnclosureInfos.add(new MountEnclosureInfo(mount, mountItems, time));
         }
         if (mountEnclosures.get().get(currentMountEnclosure) == null || !mountEnclosures.get().get(currentMountEnclosure).equals(mountEnclosureInfos))
         {
@@ -503,15 +564,19 @@ public final class MountModel extends Model {
 
     private boolean isEmpty(ItemStack mountEnclosureItemStack) {
         StyledText styledText = StyledText.fromComponent(mountEnclosureItemStack.getHoverName());
-        return styledText.equalsString("Drag a mount into this slot to", StyleType.NONE)
-                || styledText.equalsString("\uDB3F\uDFFF", StyleType.NONE)
+        return styledText.equalsString(empty, StyleType.NONE)
+                || styledText.equalsString(emptyUnicode, StyleType.NONE)
                 || mountEnclosureItemStack.isEmpty();
     }
 
-    //TODO: replace with a non-API method of getting the player's rank when it is made
-    private boolean hasRank(ItemStack mountItemItemStack) {
-        return !StyledText.fromComponent(mountItemItemStack.getHoverName())
-                .endsWith(" Rank or higher is", StyleType.NONE);
+    private boolean hasRankForSlot(int slot) {
+        PlayerRank rank = Models.Account.getSupporterRank();
+        return switch (slot) {
+            case 27 -> rank == PlayerRank.VIP_PLUS || rank == PlayerRank.HERO_PLUS || rank == PlayerRank.CHAMPION;
+            case 36 -> rank == PlayerRank.HERO_PLUS || rank == PlayerRank.CHAMPION;
+            case 45 -> rank == PlayerRank.CHAMPION;
+            default -> true;
+        };
     }
 
     private enum RideMountStatus {
