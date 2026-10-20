@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid.raids;
@@ -26,7 +26,7 @@ public class TheNamelessAnomalyRaid extends RaidKind {
                 "One player must take", "Flooding Canyon",
                 "Hold the stump for", "Sunken Grotto");
         Map<String, String> challenge2Map = Map.of(
-                "Find and kill", "Nameless Cave",
+                "Find and slay all the", "Dark Cave",
                 "Offer souls to the", "Weeping Soulroot");
         Map<String, String> challenge3Map = Map.of(
                 "Protect the Bulb", "Blueshift Wilds",

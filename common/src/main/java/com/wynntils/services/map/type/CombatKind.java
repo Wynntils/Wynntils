@@ -14,7 +14,8 @@ public enum CombatKind {
     GRIND_SPOTS("Grind Spots", Texture.GRIND_SPOT, "grind-spot"),
     RAIDS("Raids", Texture.RAID_ENTRANCE, "raid"),
     RUNE_SHRINES("Rune Shrines", Texture.SHRINE, "shrine"),
-    LOOTRUN_CAMP("Lootrun Camps", Texture.LOOTRUN_CAMP, "lootrun-camp");
+    LOOTRUN_CAMP("Lootrun Camps", Texture.LOOTRUN_CAMP, "lootrun-camp"),
+    TIME_TRIAL("Time Trials", Texture.TIME_TRIAL, "time-trial");
 
     private final String name;
     private final Texture texture;

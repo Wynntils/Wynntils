@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.type;
@@ -20,7 +20,7 @@ public record ActivityInfo(
         Optional<ActivityDistance> distance,
         Optional<String> distanceInfo,
         Optional<ActivityDifficulty> difficulty,
-        Optional<WorldEventFastTravelStatus> worldEventFastTravelStatus,
+        Optional<ActivityFastTravelStatus> worldEventFastTravelStatus,
         ActivityRequirements requirements,
         Map<ActivityRewardType, List<StyledText>> rewards,
         ActivityTrackingState trackingState) {}
