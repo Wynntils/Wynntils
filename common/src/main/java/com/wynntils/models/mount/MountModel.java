@@ -411,8 +411,16 @@ public final class MountModel extends Model {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
             ResourceType resourceType = ResourceType.fromString(jsonObject.get("resourceType").getAsString());
             int level = jsonObject.get("level").getAsInt();
-            MountFood mountFood = new MountFood(Managers.Json.GSON.fromJson(jsonObject.get("mountStats"), type));
-            mountFoods.put(resourceType, Map.of(level, mountFood));
+            List<Pair<MountStat, Integer>> pairs = new ArrayList<>();
+            for (JsonElement mountStats : jsonObject.get("mountStats").getAsJsonArray())
+            {
+                JsonObject jsonObject1 = mountStats.getAsJsonObject();
+                MountStat mountStat = MountStat.valueOf(jsonObject1.get("mountStat").getAsString());
+                int mountStatIncreaseAmount = jsonObject1.get("mountStatIncreaseAmount").getAsInt();
+                pairs.add(new Pair<>(mountStat, mountStatIncreaseAmount));
+            }
+            MountFood mountFood = new MountFood(List.copyOf(pairs));
+            mountFoods.computeIfAbsent(resourceType, resourceType1 -> new HashMap<>()).put(level, mountFood);
         }
         this.mountFoods = mountFoods;
     }
