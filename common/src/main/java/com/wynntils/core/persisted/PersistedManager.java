@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted;
@@ -18,6 +18,7 @@ import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.EnumMap;
 import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -27,6 +28,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public final class PersistedManager extends Manager {
     private final Map<PersistedValue<?>, PersistedMetadata<?>> metadatas = new HashMap<>();
     private final Set<PersistedValue<?>> persisteds = new TreeSet<>();
+    private final Map<PersistedOwner, List<PersistedValue<?>>> valuesByOwner = new IdentityHashMap<>();
 
     public PersistedManager() {
         super(List.of());
@@ -58,6 +60,19 @@ public final class PersistedManager extends Manager {
 
         metadatas.putAll(newMetadatas);
         persisteds.addAll(newMetadatas.keySet());
+        valuesByOwner.put(owner, List.copyOf(newMetadatas.keySet()));
+    }
+
+    public void unregisterOwner(PersistedOwner owner) {
+        // Remove from the sorted set while metadata needed by compareTo is still available.
+        List<PersistedValue<?>> values = valuesByOwner.remove(owner);
+
+        if (values == null) {
+            return;
+        }
+
+        values.forEach(persisteds::remove);
+        values.forEach(metadatas::remove);
     }
 
     public List<Pair<Field, Persisted>> getPersisted(PersistedOwner owner, Class<? extends PersistedValue> clazzType) {

@@ -66,13 +66,13 @@ public class HoverableTexturedButton extends BasicTexturedButton {
             isHovered = false;
         }
 
-        // When selected or hovered it should use the alternate texture
+        // Use the alternate texture when selected, or when active and hovered.
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics,
                 buttonTexture,
                 getX(),
                 getY(),
-                this.isHovered || this.isSelected,
+                (this.active && this.isHovered) || this.isSelected,
                 RenderDirection.VERTICAL);
 
         FontRenderer.getInstance()
