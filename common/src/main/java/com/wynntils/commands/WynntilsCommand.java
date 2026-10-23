@@ -4,6 +4,7 @@
  */
 package com.wynntils.commands;
 
+import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
@@ -14,6 +15,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.handlers.item.ItemLoreProfiler;
 import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.maps.GuildMapScreen;
@@ -31,6 +33,7 @@ import java.io.InputStreamReader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
@@ -84,7 +87,8 @@ public class WynntilsCommand extends Command {
                         .then(Commands.literal("profile")
                                 .then(Commands.literal("reset").executes(this::profileReset))
                                 .then(Commands.literal("showAnnotations").executes(this::profileShowAnnotations))
-                                .then(Commands.literal("showOverlays").executes(this::profileShowOverlays)))
+                                .then(Commands.literal("showOverlays").executes(this::profileShowOverlays))
+                                .then(itemLoreProfileCommands()))
                         .then(Commands.literal("encodeModelData")
                                 .executes(Services.CustomModelDataEncoder::encodeCustomModelData)))
                 .then(Commands.literal("discord").executes(this::discordLink))
@@ -105,6 +109,60 @@ public class WynntilsCommand extends Command {
                 .then(Commands.literal("update").executes(this::update))
                 .then(Commands.literal("version").executes(this::version))
                 .executes(this::help);
+    }
+
+    private LiteralArgumentBuilder<CommandSourceStack> itemLoreProfileCommands() {
+        LiteralArgumentBuilder<CommandSourceStack> builder = Commands.literal("itemLore")
+                .executes(context -> profileStartItemLore(context, ItemLoreProfiler.Mode.COMPARE, 60))
+                .then(Commands.literal("stop").executes(this::profileStopItemLore))
+                .then(Commands.literal("status").executes(this::profileShowItemLore));
+        for (ItemLoreProfiler.Mode mode : ItemLoreProfiler.Mode.values()) {
+            builder.then(Commands.literal(mode.name().toLowerCase(Locale.ROOT))
+                    .executes(context -> profileStartItemLore(context, mode, 60))
+                    .then(Commands.argument("seconds", IntegerArgumentType.integer(1, 600))
+                            .executes(context -> profileStartItemLore(
+                                    context, mode, IntegerArgumentType.getInteger(context, "seconds")))));
+        }
+        return builder;
+    }
+
+    private int profileStartItemLore(
+            CommandContext<CommandSourceStack> context, ItemLoreProfiler.Mode mode, int seconds) {
+        if (Handlers.Item.getLoreProfiler() != null) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.debug.profile.itemLore.alreadyRunning"));
+            return 0;
+        }
+        Handlers.Item.startLoreProfiling(mode, seconds);
+        context.getSource()
+                .sendSuccess(
+                        () -> Component.translatable(
+                                        "command.wynntils.debug.profile.itemLore.started", mode.name(), seconds)
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+        return 1;
+    }
+
+    private int profileStopItemLore(CommandContext<CommandSourceStack> context) {
+        if (Handlers.Item.getLoreProfiler() == null) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.debug.profile.itemLore.notRunning"));
+            return 0;
+        }
+        ItemLoreProfiler.publish(Handlers.Item.stopLoreProfiling());
+        return 1;
+    }
+
+    private int profileShowItemLore(CommandContext<CommandSourceStack> context) {
+        ItemLoreProfiler profile = Handlers.Item.getLoreProfiler();
+        context.getSource()
+                .sendSuccess(
+                        () -> (profile == null
+                                        ? Component.translatable("command.wynntils.debug.profile.itemLore.notRunning")
+                                        : profile.status())
+                                .withStyle(ChatFormatting.AQUA),
+                        false);
+        return 1;
     }
 
     private int profileReset(CommandContext<CommandSourceStack> context) {
