@@ -5,7 +5,6 @@
 package com.wynntils.models.mount;
 
 import com.google.common.reflect.TypeToken;
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
@@ -117,7 +116,7 @@ public final class MountModel extends Model {
     @Override
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_MOUNT_COLORS).handleReader(this::handleMountColors);
-        registry.registerDownload(UrlId.DATA_STATIC_MOUNT_FOOD).handleJsonArray(this::handleMountFoods);
+        registry.registerDownload(UrlId.DATA_STATIC_MOUNT_FOOD).handleJsonObject(this::handleMountFoods);
     }
 
     @SubscribeEvent
@@ -331,7 +330,7 @@ public final class MountModel extends Model {
 
     public Map<ResourceType, Map<Integer, MountFood>> getMountFoods()
     {
-        return Collections.unmodifiableMap(this.mountFoods);
+        return Collections.unmodifiableMap(mountFoods);
     }
 
     public Optional<MountFood> getMountFoodFromResourceTypeAndLevel(ResourceType resourceType, int level)
@@ -402,27 +401,29 @@ public final class MountModel extends Model {
                 .collect(Collectors.toMap(MountColorInfo::displayName, mountColorInfo -> mountColorInfo));
     }
 
-    private void handleMountFoods(JsonArray jsonArray)
+    private void handleMountFoods(JsonObject jsonObject)
     {
-        Type type = new TypeToken<List<Pair<MountStat, Integer>>>() {}.getType();
-        Map<ResourceType, Map<Integer, MountFood>> mountFoods = new EnumMap<>(ResourceType.class);
-        for (JsonElement jsonElement : jsonArray)
+        Map<ResourceType, Map<Integer, MountFood>> outerMap = new EnumMap<>(ResourceType.class);
+        for (Map.Entry<String, JsonElement> outerMapEntry : jsonObject.entrySet())
         {
-            JsonObject jsonObject = jsonElement.getAsJsonObject();
-            ResourceType resourceType = ResourceType.fromString(jsonObject.get("resourceType").getAsString());
-            int level = jsonObject.get("level").getAsInt();
-            List<Pair<MountStat, Integer>> pairs = new ArrayList<>();
-            for (JsonElement mountStats : jsonObject.get("mountStats").getAsJsonArray())
+            ResourceType resourceType = ResourceType.valueOf(outerMapEntry.getKey());
+            Map<Integer, MountFood> innerMap = new HashMap<>();
+            for (Map.Entry<String, JsonElement> innerMapEntry : outerMapEntry.getValue().getAsJsonObject().entrySet())
             {
-                JsonObject jsonObject1 = mountStats.getAsJsonObject();
-                MountStat mountStat = MountStat.valueOf(jsonObject1.get("mountStat").getAsString());
-                int mountStatIncreaseAmount = jsonObject1.get("mountStatIncreaseAmount").getAsInt();
-                pairs.add(new Pair<>(mountStat, mountStatIncreaseAmount));
+                int i = Integer.parseInt(innerMapEntry.getKey());
+                List<Pair<MountStat, Integer>> mountStats = new ArrayList<>();
+                for(JsonElement pairJsonElement : innerMapEntry.getValue().getAsJsonObject().getAsJsonArray("mountStats"))
+                {
+                    JsonObject pairJsonObject = pairJsonElement.getAsJsonObject();
+                    MountStat mountStat = MountStat.valueOf(pairJsonObject.get("mountStat").getAsString());
+                    int mountStatIncreaseAmount = pairJsonObject.get("mountStatIncreaseAmount").getAsInt();
+                    mountStats.add(Pair.of(mountStat, mountStatIncreaseAmount));
+                }
+                innerMap.put(i, new MountFood(List.copyOf(mountStats)));
             }
-            MountFood mountFood = new MountFood(List.copyOf(pairs));
-            mountFoods.computeIfAbsent(resourceType, resourceType1 -> new HashMap<>()).put(level, mountFood);
+            outerMap.put(resourceType, Map.copyOf(innerMap));
         }
-        this.mountFoods = mountFoods;
+        mountFoods = Map.copyOf(outerMap);
     }
 
     private void updateMountEnergy(MountEnergySegment segment) {
