@@ -154,7 +154,7 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
 
             JsonProviderInfo jsonProviderInfo =
                     Services.MapData.getJsonProviderInfo(provider).orElse(null);
-            if (jsonProviderInfo != null) {
+            if (jsonProviderInfo != null && jsonProviderInfo.providerUrl() != null) {
                 urlString = jsonProviderInfo.providerUrl();
                 url = Component.translatable(
                         "screens.wynntils.map.managers.providerManager.descriptionScrollBarWidget.properties.url",
@@ -243,7 +243,7 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
                 return true;
             }
 
-            return super.mouseClicked(event, isDoubleClick);
+            return false;
         }
 
         private boolean isMouseOverUrl(double mouseX, double mouseY) {
@@ -332,6 +332,11 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
             }
+        }
+
+        @Override
+        public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+            return false;
         }
 
         @Override
