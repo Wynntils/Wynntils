@@ -18,15 +18,10 @@ import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 
-public class CategorySearchWidget extends SearchWidget {
-    public CategorySearchWidget(int x, int y, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
-        super(
-                x + 5 + Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
-                y,
-                200 - 5 - Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
-                20,
-                onUpdateConsumer,
-                textboxScreen);
+public class ManagerSearchWidget extends SearchWidget {
+    public ManagerSearchWidget(
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
+        super(x + 5 + Texture.BUILD_LOADOUTS_SEARCH_ICON.width(), y, width, height, onUpdateConsumer, textboxScreen);
     }
 
     @Override

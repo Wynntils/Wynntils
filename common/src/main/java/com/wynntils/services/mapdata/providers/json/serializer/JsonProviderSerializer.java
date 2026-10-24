@@ -20,6 +20,7 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.JsonUtils;
 import java.lang.reflect.Type;
 import java.util.List;
+import net.minecraft.network.chat.Component;
 
 public final class JsonProviderSerializer implements JsonDeserializer<JsonProvider> {
     @Override
@@ -59,6 +60,11 @@ public final class JsonProviderSerializer implements JsonDeserializer<JsonProvid
         List<MapIcon> icons = context.deserialize(
                 JsonUtils.getNullableJsonArray(jsonProvider, "icons"), new TypeToken<List<MapIcon>>() {}.getType());
 
-        return new JsonProvider(version, features, categories, icons);
+        String descriptionString = jsonProvider.has("description")
+                ? jsonProvider.get("description").getAsString()
+                : null;
+        Component description = descriptionString != null ? Component.literal(descriptionString) : null;
+
+        return new JsonProvider(version, features, categories, icons, description);
     }
 }

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.managers.widgets.options;
+package com.wynntils.screens.maps.managers.widgets.categorymanager.options;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
@@ -29,7 +29,7 @@ public class CategoryHeaderWidget extends AbstractOptionWidget<Void> {
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                Texture.CATEGORY_MANAGER_OPTION_HEADER,
+                Texture.MANAGER_SCROLL_BAR_HEADER,
                 getX(),
                 getY() + (this.height - CATEGORY_HEIGHT) / 2f,
                 150,
@@ -48,7 +48,7 @@ public class CategoryHeaderWidget extends AbstractOptionWidget<Void> {
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                Texture.CATEGORY_MANAGER_OPTION_HEADER_LINE,
+                Texture.MANAGER_SCROLL_BAR_HEADER_LINE,
                 getX() + 150 + 5,
                 getY() + (this.height - CATEGORY_HEIGHT) / 2f,
                 this.width - 150 - 5,
