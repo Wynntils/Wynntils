@@ -20,7 +20,6 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Stream;
-import net.minecraft.network.chat.Component;
 
 public class ActivityProvider extends BuiltInProvider {
     private ActivityLocation spawnLocation;
@@ -46,16 +45,6 @@ public class ActivityProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "activities";
-    }
-
-    @Override
-    public Component getName() {
-        return Component.translatable("service.wynntils.mapdata.provider.activities.name");
-    }
-
-    @Override
-    public Component getDescription() {
-        return Component.translatable("service.wynntils.mapdata.provider.activities.description");
     }
 
     @Override

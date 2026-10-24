@@ -12,7 +12,6 @@ import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class TerritoryProvider extends BuiltInProvider {
@@ -48,16 +47,6 @@ public class TerritoryProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "territory";
-    }
-
-    @Override
-    public Component getName() {
-        return Component.translatable("service.wynntils.mapdata.provider.territory.name");
-    }
-
-    @Override
-    public Component getDescription() {
-        return Component.translatable("service.wynntils.mapdata.provider.territory.description");
     }
 
     @Override

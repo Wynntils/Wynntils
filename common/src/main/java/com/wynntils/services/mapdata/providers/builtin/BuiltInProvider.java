@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
+import com.google.common.base.CaseFormat;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
@@ -20,9 +21,18 @@ public abstract class BuiltInProvider implements MapDataProvider {
 
     public abstract String getProviderId();
 
-    public abstract Component getName();
+    public Component getName() {
+        return Component.translatable(getTranslationKey("name"));
+    }
 
-    public abstract Component getDescription();
+    public Component getDescription() {
+        return Component.translatable(getTranslationKey("description"));
+    }
+
+    private String getTranslationKey(String suffix) {
+        String keyName = CaseFormat.LOWER_HYPHEN.to(CaseFormat.LOWER_CAMEL, getProviderId());
+        return "service.wynntils.mapdata.provider." + keyName + "." + suffix;
+    }
 
     @Override
     public Stream<MapFeature> getFeatures() {

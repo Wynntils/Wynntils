@@ -13,7 +13,6 @@ import com.wynntils.services.mapdata.features.type.MapFeature;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import net.minecraft.network.chat.Component;
 
 public class PlaceListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
@@ -26,16 +25,6 @@ public class PlaceListProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "place-list";
-    }
-
-    @Override
-    public Component getName() {
-        return Component.translatable("service.wynntils.mapdata.provider.placeList.name");
-    }
-
-    @Override
-    public Component getDescription() {
-        return Component.translatable("service.wynntils.mapdata.provider.placeList.description");
     }
 
     @Override

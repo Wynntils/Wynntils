@@ -31,7 +31,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
-import net.minecraft.network.chat.Component;
 
 public class CategoriesProvider extends BuiltInProvider {
     private static final List<MapCategory> PROVIDED_CATEGORIES = new ArrayList<>();
@@ -72,16 +71,6 @@ public class CategoriesProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "categories";
-    }
-
-    @Override
-    public Component getName() {
-        return Component.translatable("service.wynntils.mapdata.provider.categories.name");
-    }
-
-    @Override
-    public Component getDescription() {
-        return Component.translatable("service.wynntils.mapdata.provider.categories.description");
     }
 
     @Override

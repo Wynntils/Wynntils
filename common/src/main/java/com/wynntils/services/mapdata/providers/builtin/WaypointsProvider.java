@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Stream;
-import net.minecraft.network.chat.Component;
 
 public class WaypointsProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
@@ -27,16 +26,6 @@ public class WaypointsProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "waypoints";
-    }
-
-    @Override
-    public Component getName() {
-        return Component.translatable("service.wynntils.mapdata.provider.waypoints.name");
-    }
-
-    @Override
-    public Component getDescription() {
-        return Component.translatable("service.wynntils.mapdata.provider.waypoints.description");
     }
 
     @Override

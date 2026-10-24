@@ -11,7 +11,6 @@ import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
-import net.minecraft.network.chat.Component;
 
 public class SeaskipperDestinationAreaProvider extends BuiltInProvider {
     private static final List<SeaskipperDestinationArea> PROVIDED_FEATURES = new ArrayList<>();
@@ -19,16 +18,6 @@ public class SeaskipperDestinationAreaProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "seaskipper-destination";
-    }
-
-    @Override
-    public Component getName() {
-        return Component.translatable("service.wynntils.mapdata.provider.seaskipperDestination.name");
-    }
-
-    @Override
-    public Component getDescription() {
-        return Component.translatable("service.wynntils.mapdata.provider.seaskipperDestination.description");
     }
 
     @Override

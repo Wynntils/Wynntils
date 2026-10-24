@@ -26,7 +26,6 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.minecraft.network.chat.Component;
 
 public class GuildAttackLocationProvider extends BuiltInProvider {
     @Override
@@ -46,16 +45,6 @@ public class GuildAttackLocationProvider extends BuiltInProvider {
     @Override
     public String getProviderId() {
         return "guild-attacks";
-    }
-
-    @Override
-    public Component getName() {
-        return Component.translatable("service.wynntils.mapdata.provider.guildAttacks.name");
-    }
-
-    @Override
-    public Component getDescription() {
-        return Component.translatable("service.wynntils.mapdata.provider.guildAttacks.description");
     }
 
     @Override
