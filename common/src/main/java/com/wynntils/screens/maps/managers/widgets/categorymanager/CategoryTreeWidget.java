@@ -4,7 +4,6 @@
  */
 package com.wynntils.screens.maps.managers.widgets.categorymanager;
 
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.CategoryTree;
 import com.wynntils.screens.maps.managers.type.CategoryTreeNode;
 import com.wynntils.screens.maps.managers.widgets.DoubleScrollBarWidget;
@@ -15,6 +14,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Consumer;
+import java.util.function.Predicate;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.MouseButtonEvent;
 
@@ -23,7 +24,8 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
 
     private final int x;
     private final int y;
-    private final CategoryManagementScreen parent;
+    private final Consumer<String> onSelect;
+    private final Predicate<String> isHighlighted;
 
     private CategoryTree fullTree;
     private CategoryTreeNode filteredRoot;
@@ -35,11 +37,13 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
 
     private static final CustomColor LINE_COLOR = CustomColor.fromInt(0x654f3c);
 
-    public CategoryTreeWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
-        super(x, y, width, height, parent);
+    public CategoryTreeWidget(
+            int x, int y, int width, int height, Consumer<String> onSelect, Predicate<String> isHighlighted) {
+        super(x, y, width, height);
         this.x = x;
         this.y = y;
-        this.parent = parent;
+        this.onSelect = onSelect;
+        this.isHighlighted = isHighlighted;
     }
 
     public void setCategories(List<String> categories) {
@@ -75,6 +79,13 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
 
         recalculateCanvasSize();
         updateRowPositions();
+    }
+
+    public void expandCategory(String categoryId) {
+        if (fullTree == null || categoryId == null) return;
+
+        expandedFullIds.add(categoryId);
+        rebuildVisibleRows();
     }
 
     public void filter(String searchText) {
@@ -120,7 +131,7 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
                 selected,
                 () -> toggleExpanded(node),
                 () -> selectNode(node),
-                parent);
+                isHighlighted);
 
         rowWidgets.add(widget);
 
@@ -148,7 +159,7 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
 
     private void selectNode(CategoryTreeNode node) {
         selectedFullId = node.getFullId();
-        parent.setSelectedCategory(node.getFullId());
+        onSelect.accept(node.getFullId());
         rebuildVisibleRows();
     }
 

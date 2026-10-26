@@ -146,8 +146,13 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 this);
         this.addRenderableWidget(categorySearchWidget);
 
-        categoryTreeWidget =
-                new CategoryTreeWidget(offsetX + WIDTH_OFFSET, offsetY + HEIGHT_OFFSET + 25, 200, 284 - 25, this);
+        categoryTreeWidget = new CategoryTreeWidget(
+                offsetX + WIDTH_OFFSET,
+                offsetY + HEIGHT_OFFSET + 25,
+                200,
+                284 - 25,
+                this::setSelectedCategory,
+                this::hasOverride);
 
         categoryTreeWidget.setCategories(
                 Services.MapData.allPossibleCategories().toList());
@@ -564,6 +569,17 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
     public OverrideType getSelectedOverrideType() {
         return selectedOverrideType;
+    }
+
+    private boolean hasOverride(String categoryId) {
+        for (OverrideType overrideType : OverrideType.values()) {
+            String overrideName = getOverrideName(overrideType, categoryId, true);
+            if (Services.MapData.getOverrideProvider(overrideName) != null) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public String getOverrideName(boolean includeJsonOverridePrefix) {

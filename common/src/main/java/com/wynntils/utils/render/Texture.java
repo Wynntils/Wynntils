@@ -383,6 +383,8 @@ public enum Texture {
     MANAGER_SCROLL_BAR_HORIZONTAL("map/managers/scroll_bar_horizontal.png", 65, 9, 13, 13, 4, 5),
     MANAGER_SCROLL_BAR_BUTTON("map/managers/scroll_bar_button.png", 9, 8, 4, 4, 4, 4),
     MANAGER_SCROLL_BAR_HEADER("map/managers/manager_header.png", 70, 16, 4, 9, 8, 8),
+    MANAGER_TEXT_BACKGROUND_RED("map/managers/manager_text_background_red.png", 50, 14, 5, 5, 5, 5),
+    MANAGER_TEXT_BORDER_BROWN("map/managers/manager_text_border_brown.png", 50, 14, 5, 5, 5, 5),
     MANAGER_SCROLL_BAR_HEADER_LINE("map/managers/manager_header_line.png", 40, 16, 1, 10, 8, 8),
     MANAGER_TEXT_BOX_BACKGROUND("map/managers/textbox_background.png", 20, 16, 3, 3, 3, 3),
     MANAGER_SLIDER_FILLED("map/managers/filled_slider.png", 9, 6, 4, 1, 3, 3),
