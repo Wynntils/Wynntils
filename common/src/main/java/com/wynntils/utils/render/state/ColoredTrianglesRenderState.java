@@ -4,10 +4,10 @@
  */
 package com.wynntils.utils.render.state;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
@@ -15,7 +15,7 @@ import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 
 public record ColoredTrianglesRenderState(
-        RenderPipeline pipeline,
+        GuiPipeline pipeline,
         TextureSetup textureSetup,
         Matrix3x2f pose,
         List<Vector2f> vertices,
@@ -24,7 +24,7 @@ public record ColoredTrianglesRenderState(
         ScreenRectangle bounds)
         implements GuiElementRenderState {
     public ColoredTrianglesRenderState(
-            RenderPipeline pipeline,
+            GuiPipeline pipeline,
             TextureSetup textureSetup,
             Matrix3x2f pose,
             List<Vector2f> vertices,

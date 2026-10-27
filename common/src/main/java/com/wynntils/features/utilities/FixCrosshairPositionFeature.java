@@ -16,8 +16,8 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.RenderElementType;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.Hud;
-import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -48,7 +48,7 @@ public class FixCrosshairPositionFeature extends Feature {
         SectionCoordinates section = Managers.Overlay.getSection(OverlayPosition.AnchorSection.MIDDLE);
         int x = (section.x1() + section.x2() - 15) / 2;
         int y = (section.y1() + section.y2() - 15) / 2;
-        event.getGuiGraphics().blitSprite(RenderPipelines.CROSSHAIR, Hud.CROSSHAIR_SPRITE, x, y, 15, 15);
+        event.getGuiGraphics().blitSprite(GuiPipeline.CROSSHAIR, Hud.CROSSHAIR_SPRITE, x, y, 15, 15);
         // Don't need to render the attack indicator, since Wynncraft doesn't ever use it
     }
 }

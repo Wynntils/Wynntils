@@ -27,8 +27,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
-import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
@@ -92,8 +92,7 @@ public class EnhancedStreamerModeFeature extends Feature {
             Identifier noItemIcon = event.getSlot().getNoItemIcon();
             if (noItemIcon != null) {
                 event.getGuiGraphics()
-                        .blitSprite(
-                                RenderPipelines.GUI_TEXTURED, noItemIcon, event.getSlot().x, event.getSlot().y, 16, 16);
+                        .blitSprite(GuiPipeline.TEXTURED, noItemIcon, event.getSlot().x, event.getSlot().y, 16, 16);
             }
         }
     }

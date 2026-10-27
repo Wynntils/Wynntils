@@ -14,7 +14,7 @@ import com.mojang.renderpearl.api.pipeline.PrimitiveTopology;
 import net.minecraft.client.renderer.BindGroupLayouts;
 import net.minecraft.client.renderer.pipeline.RenderPipelines;
 
-public class CustomRenderPipelines extends RenderPipelines {
+public class CustomRenderPipelines {
     private static final RenderPipeline.Snippet POSITION_COLOR_QUAD_SNIPPET = RenderPipeline.builder(
                     RenderPipelines.GLOBALS_SNIPPET)
             .withBindGroupLayout(BindGroupLayouts.PROJECTION)
@@ -26,8 +26,10 @@ public class CustomRenderPipelines extends RenderPipelines {
             .withPrimitiveTopology(PrimitiveTopology.QUADS)
             .buildSnippet();
 
-    public static final RenderPipeline LOOTRUN_QUAD_PIPELINE =
-            precompiled(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
+    public static final RenderPipeline LOOTRUN_QUAD_PIPELINE = RenderPipelines.dynamicPipeline(
+            null,
+            "wynntils_lootrun_quad",
+            _ -> RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
                     .withBindGroupLayout(BindGroupLayouts.PROJECTION)
                     .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
                     .withLocation("pipeline/wynntils_lootrun_quad")
@@ -41,30 +43,19 @@ public class CustomRenderPipelines extends RenderPipelines {
                     .withCull(false)
                     .build());
 
-    public static final RenderPipeline POSITION_COLOR_QUAD_PIPELINE =
-            precompiled(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
+    public static final RenderPipeline POSITION_COLOR_QUAD_PIPELINE = RenderPipelines.dynamicPipeline(
+            null,
+            "wynntils_position_color_quad",
+            _ -> RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
                     .withLocation("pipeline/wynntils_position_color_quad")
                     .withCull(false)
                     .build());
 
-    public static final RenderPipeline PLAYER_PING_QUAD_PIPELINE =
-            precompiled(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
+    public static final RenderPipeline PLAYER_PING_QUAD_PIPELINE = RenderPipelines.dynamicPipeline(
+            null,
+            "wynntils_player_ping_quad",
+            _ -> RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
                     .withLocation("pipeline/wynntils_player_ping_quad")
-                    .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
-                    .withCull(false)
-                    .build());
-
-    public static final RenderPipeline PROGRESS_BAR_PIPELINE =
-            precompiled(RenderPipeline.builder(RenderPipelines.GLOBALS_SNIPPET)
-                    .withBindGroupLayout(BindGroupLayouts.PROJECTION)
-                    .withBindGroupLayout(BindGroupLayouts.DYNAMIC_TRANSFORMS)
-                    .withLocation("pipeline/wynntils_progress_bar")
-                    .withVertexShader("core/position_tex_color")
-                    .withFragmentShader("core/position_tex_color")
-                    .withBindGroupLayout(BindGroupLayouts.SAMPLER0)
-                    .withColorTargetState(new ColorTargetState(BlendFunction.TRANSLUCENT))
-                    .withVertexBinding(0, DefaultVertexFormat.POSITION_TEX_COLOR)
-                    .withPrimitiveTopology(PrimitiveTopology.QUADS)
                     .withDepthStencilState(new DepthStencilState(CompareOp.ALWAYS_PASS, false))
                     .withCull(false)
                     .build());

@@ -4,9 +4,9 @@
  */
 package com.wynntils.utils.render.state;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.utils.colors.CustomColor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.renderer.state.gui.GuiElementRenderState;
@@ -14,7 +14,7 @@ import org.joml.Matrix3x2f;
 
 // The same as ColoredRectangleRenderState but using floats instead of ints to keep precision
 public record FloatColoredRectangleRenderState(
-        RenderPipeline pipeline,
+        GuiPipeline pipeline,
         TextureSetup textureSetup,
         Matrix3x2f pose,
         float x1,
@@ -27,7 +27,7 @@ public record FloatColoredRectangleRenderState(
         ScreenRectangle bounds)
         implements GuiElementRenderState {
     public FloatColoredRectangleRenderState(
-            RenderPipeline pipeline,
+            GuiPipeline pipeline,
             TextureSetup textureSetup,
             Matrix3x2f pose,
             float x1,

@@ -128,7 +128,7 @@ public class BulkBuyFeature extends Feature {
         // Using addRenderableWidget causes the widget's click box to cover the item slots
         // And we cannot change the Z level for widgets added like this
         // And since we don't need to handle clicks on the widget ever, this is fine
-        containerScreen.addRenderableOnly(bulkBuyWidget);
+        containerScreen.addWidget(bulkBuyWidget);
     }
 
     @SubscribeEvent

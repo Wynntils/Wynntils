@@ -149,7 +149,7 @@ public class TerritoryManagementScreen extends AbstractMapScreen implements Wrap
             initMapScreen();
         }
 
-        this.addRenderableOnly(new GuildOverallProductionWidget(
+        this.addWidget(new GuildOverallProductionWidget(
                 mapMode ? (int) SCREEN_SIDE_OFFSET + 10 : getRenderX() - 190,
                 mapMode ? (int) SCREEN_SIDE_OFFSET + 35 : getRenderY() + 10,
                 200,

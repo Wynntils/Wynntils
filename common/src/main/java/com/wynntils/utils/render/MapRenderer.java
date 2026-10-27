@@ -12,7 +12,7 @@ import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
+import com.wynntils.utils.render.pipelines.CustomGuiPipelines;
 import com.wynntils.utils.render.state.ColoredTrianglesRenderState;
 import com.wynntils.utils.render.state.TexturedPolygonRenderState;
 import com.wynntils.utils.render.type.PointerType;
@@ -22,9 +22,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
-import net.minecraft.client.renderer.pipeline.RenderPipelines;
 import net.minecraft.client.renderer.texture.TextureHandle;
 import net.minecraft.core.BlockPos;
 import net.minecraft.resources.Identifier;
@@ -140,7 +140,7 @@ public final class MapRenderer {
         }
 
         guiGraphics.guiRenderState.addGuiElement(new ColoredTrianglesRenderState(
-                CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                CustomGuiPipelines.POSITION_COLOR_QUAD_PIPELINE,
                 TextureSetup.noTexture(),
                 pose,
                 vertices,
@@ -359,7 +359,7 @@ public final class MapRenderer {
 
         if (!outlineVertices.isEmpty()) {
             guiGraphics.guiRenderState.addGuiElement(new ColoredTrianglesRenderState(
-                    CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                    CustomGuiPipelines.POSITION_COLOR_QUAD_PIPELINE,
                     TextureSetup.noTexture(),
                     pose,
                     outlineVertices,
@@ -369,7 +369,7 @@ public final class MapRenderer {
 
         if (!lootrunVertices.isEmpty()) {
             guiGraphics.guiRenderState.addGuiElement(new ColoredTrianglesRenderState(
-                    CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                    CustomGuiPipelines.POSITION_COLOR_QUAD_PIPELINE,
                     TextureSetup.noTexture(),
                     pose,
                     lootrunVertices,
@@ -566,7 +566,7 @@ public final class MapRenderer {
         if (vertices.isEmpty()) return;
 
         guiGraphics.guiRenderState.addGuiElement(new TexturedPolygonRenderState(
-                RenderPipelines.GUI_TEXTURED,
+                GuiPipeline.TEXTURED,
                 TextureSetup.singleTexture(texture.textureView(), texture.sampler()),
                 pose,
                 vertices,

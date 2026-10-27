@@ -91,7 +91,7 @@ public final class ComponentUtils {
 
     public static Component formattedTextToComponent(FormattedText formattedText) {
         MutableComponent component = Component.literal("");
-        formattedText.visit(
+        formattedText.visitUnbounded(
                 (style, string) -> {
                     component.append(Component.literal(string).withStyle(style));
                     return Optional.empty();
