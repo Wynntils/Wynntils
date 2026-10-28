@@ -129,8 +129,11 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
     @Override
     public void renderHoveredItemTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (AbstractWidget widget : getWidgets()) {
-            if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isMouseOver(mouseX, mouseY)) {
-                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
+            if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isHovered()) {
+                parent.renderInRealSpace(
+                        guiGraphics,
+                        () -> itemTooltipProvider.renderHoveredItemTooltip(
+                                guiGraphics, parent.getRealMouseX(), parent.getRealMouseY()));
                 return;
             }
         }

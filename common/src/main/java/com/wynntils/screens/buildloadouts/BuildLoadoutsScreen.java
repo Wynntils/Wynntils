@@ -6,7 +6,7 @@ package com.wynntils.screens.buildloadouts;
 
 import com.google.common.collect.Lists;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.consumers.screens.WynntilsScreen;
+import com.wynntils.core.consumers.screens.BoundWynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -51,7 +51,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
-public class BuildLoadoutsScreen extends WynntilsScreen {
+public class BuildLoadoutsScreen extends BoundWynntilsScreen {
     public static final CustomColor COMPLETED_COLOR = CustomColor.fromInt(0x4e9850);
     public static final CustomColor BUSY_COLOR = CustomColor.fromInt(0xffdf00);
     public static final CustomColor ERROR_COLOR = CustomColor.fromInt(0xbf3b46);
@@ -100,6 +100,16 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
     public static Screen create() {
         return new BuildLoadoutsScreen();
+    }
+
+    @Override
+    protected int getDesignWidth() {
+        return Texture.BUILD_LOADOUTS_BACKGROUND.width();
+    }
+
+    @Override
+    protected int getDesignHeight() {
+        return Texture.BUILD_LOADOUTS_BACKGROUND.height();
     }
 
     @Override
@@ -319,7 +329,7 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doBoundedRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBackgroundTexture(guiGraphics);
         // region Backgrounds
         // background for widgets 1
@@ -410,24 +420,28 @@ public class BuildLoadoutsScreen extends WynntilsScreen {
 
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children()) {
-            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
-                break;
-            }
-            if (child instanceof ItemTooltipProvider itemTooltipProvider && child.isMouseOver(mouseX, mouseY)) {
-                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
-                break;
+            if (child instanceof AbstractWidget widget) {
+                if (!widget.isHovered()) continue;
+
+                if (widget instanceof TooltipProvider tooltipProvider) {
+                    guiGraphics.setTooltipForNextFrame(
+                            Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
+                            getRealMouseX(),
+                            getRealMouseY());
+                    return;
+                }
+                if (widget instanceof ItemTooltipProvider itemTooltipProvider) {
+                    itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
+                    return;
+                }
             }
         }
     }
 
     @Override
-    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+    public boolean doBoundedMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         TextInputBoxWidget focused = getFocusedTextInput();
-        boolean handled = super.doMouseClicked(event, isDoubleClick);
+        boolean handled = super.doBoundedMouseClicked(event, isDoubleClick);
 
         if (focused != null && !focused.isMouseOver(event.x(), event.y())) {
             setFocusedTextInput(null);

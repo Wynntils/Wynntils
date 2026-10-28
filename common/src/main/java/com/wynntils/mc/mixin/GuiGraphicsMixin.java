@@ -9,6 +9,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.llamalad7.mixinextras.sugar.Share;
 import com.llamalad7.mixinextras.sugar.ref.LocalIntRef;
+import com.wynntils.core.consumers.screens.BoundWynntilsScreen;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ItemCooldownRenderEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
@@ -16,6 +17,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -135,5 +137,24 @@ public abstract class GuiGraphicsMixin {
             Operation<Void> original,
             @Share("wynntilsCountOverlayColor") LocalIntRef wynntilsCountOverlayColor) {
         original.call(guiGraphics, font, text, x, y, wynntilsCountOverlayColor.get(), dropShadow);
+    }
+
+    @WrapOperation(
+            method = "containsPointInScissor",
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target = "Lnet/minecraft/client/gui/GuiGraphics$ScissorStack;containsPoint(II)Z"))
+    private boolean scaleContentScissorHover(
+            GuiGraphics.ScissorStack stack, int x, int y, Operation<Boolean> original) {
+        if (Minecraft.getInstance().screen instanceof BoundWynntilsScreen screen) {
+            double scale = screen.getContentScale();
+
+            if (scale != 1.0) {
+                return original.call(stack, (int) (x * scale), (int) (y * scale));
+            }
+        }
+
+        return original.call(stack, x, y);
     }
 }

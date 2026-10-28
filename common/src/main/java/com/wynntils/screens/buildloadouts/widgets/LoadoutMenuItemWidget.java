@@ -140,7 +140,10 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
 
         handleCursor(guiGraphics);
 
-        RenderUtils.renderTooltip(guiGraphics, hoveredStack, mouseX, mouseY);
+        parent.renderInRealSpace(
+                guiGraphics,
+                () -> RenderUtils.renderTooltip(
+                        guiGraphics, hoveredStack, parent.getRealMouseX(), parent.getRealMouseY()));
     }
 
     private int getHoveredBoxIndex(int mouseX, int mouseY) {
