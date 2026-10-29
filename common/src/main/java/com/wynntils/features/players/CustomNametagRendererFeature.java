@@ -44,6 +44,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
@@ -58,6 +59,8 @@ public class CustomNametagRendererFeature extends Feature {
     // how much larger account tags should be relative to gear lines
     private static final float ACCOUNT_TYPE_MULTIPLIER = 1.5f;
     private static final float NAMETAG_HEIGHT = 0.25875f;
+    // RenderUtils.renderCustomNametag draws 0.2 below the vanilla position; the lifted vanilla name matches that
+    private static final float VANILLA_NAMETAG_OFFSET = 0.2f;
     private static final float BADGE_MARGIN = 2;
     private static final int BADGE_SCROLL_SPEED = 40;
     private static final Identifier WYNNTILS_NAMETAG_LOGO_FONT = Identifier.fromNamespaceAndPath("wynntils", "nametag");
@@ -130,13 +133,15 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         addAccountTypeNametag(event, nametags);
+        applyWynntilsMarker(event, player);
 
-        // need to handle the rendering ourselves
-        if (!nametags.isEmpty()) {
-            event.setCanceled(true);
-            drawNametags(event, nametags);
-        } else {
-            drawBadges(event, 0);
+        // The base name is left to vanilla so mods hooking the vanilla nametag (voice chat icons) keep working;
+        // extra lines are drawn below it and the vanilla name is lifted above them.
+        float height = drawNametags(event, nametags);
+        if (height > 0) {
+            EntityRenderState state = event.getEntityRenderState();
+            state.nameTagAttachment =
+                    state.nameTagAttachment.add(0, height + NAMETAG_HEIGHT - VANILLA_NAMETAG_OFFSET, 0);
         }
     }
 
@@ -249,46 +254,32 @@ public class CustomNametagRendererFeature extends Feature {
         if (!(entity instanceof AbstractClientPlayer player)) return;
 
         WynntilsUser user = Models.Player.getWynntilsUser(player);
-        if (user == null) {
-            if (!nametags.isEmpty()) {
-                // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
-                Component realName = event.getEntityRenderState().nameTag;
-                nametags.add(new CustomNametag(realName, 1f));
-            }
-            return;
-        }
+        if (user == null) return;
 
         AccountType accountType = user.accountType();
         if (accountType != null && accountType.getComponent() != null) {
             nametags.add(
                     new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
         }
+    }
 
-        if (!showWynntilsMarker.get()) {
-            // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
-            Component realName = event.getEntityRenderState().nameTag;
-            nametags.add(new CustomNametag(realName, 1f));
-            return;
-        }
+    private void applyWynntilsMarker(PlayerNametagRenderEvent event, AbstractClientPlayer player) {
+        if (!showWynntilsMarker.get()) return;
+        if (Models.Player.getWynntilsUser(player) == null) return;
 
-        // Add an appropriate Wynntils marker
-        ChatFormatting logoColor;
-        if (Models.Player.isLocalPlayer(player)) {
-            logoColor = ChatFormatting.WHITE;
-        } else {
-            logoColor = ChatFormatting.GRAY;
-        }
-        Component prefixedName = Component.empty()
+        ChatFormatting logoColor = Models.Player.isLocalPlayer(player) ? ChatFormatting.WHITE : ChatFormatting.GRAY;
+        EntityRenderState state = event.getEntityRenderState();
+        state.nameTag = Component.empty()
                 .append(Component.literal(WYNNTILS_NAMETAG_LOGO)
                         .withStyle(Style.EMPTY
                                 .withFont(new FontDescription.Resource(WYNNTILS_NAMETAG_LOGO_FONT))
                                 .withColor(logoColor)))
                 .append(" ")
-                .append(event.getEntityRenderState().nameTag);
-        nametags.add(new CustomNametag(prefixedName, 1f));
+                .append(state.nameTag);
     }
 
-    private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
+    /** Draws the extra lines bottom-up and returns the height they occupy above the attachment point. */
+    private float drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
         float yOffset = 0f;
         for (CustomNametag nametag : nametags) {
             // move rendering up to fit the next line, plus a small gap
@@ -306,6 +297,7 @@ public class CustomNametagRendererFeature extends Feature {
         }
 
         drawBadges(event, yOffset);
+        return yOffset;
     }
 
     private void drawBadges(PlayerNametagRenderEvent event, float height) {
