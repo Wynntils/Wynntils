@@ -9,6 +9,8 @@ public enum ItemTransformingVersion {
     VERSION_2(1), // Added support for shiny rerolls
     VERSION_3(2), // Changed perfect internal roll and fix crafted support for Fruma-styled tooltips
     VERSION_4(3); // Numeric identification meters, actual powder tiers and powder specials
+    // Be sure to update common/src/main/java/com/wynntils/models/items/ENCODING_STANDARD.md with changes when adding a
+    // new version
 
     private final byte id;
 
