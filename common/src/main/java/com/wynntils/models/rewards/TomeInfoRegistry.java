@@ -17,14 +17,15 @@ import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearMetaInfo;
+import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.type.TomeInfo;
-import com.wynntils.models.rewards.type.TomeRequirements;
 import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
+import com.wynntils.models.wynnitem.type.ItemEmblem;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.utils.JsonUtils;
@@ -112,14 +113,20 @@ public class TomeInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: tome has no tier");
             }
 
-            GearMetaInfo metaInfo = parseMetaInfo(json, internalName);
-            TomeRequirements requirements = parseTomeRequirements(json);
+            String emblemStr = JsonUtils.getNullableJsonString(json, "emblem");
 
-            JsonObject identifications = JsonUtils.getNullableJsonObject(json, "identifications");
+            ItemEmblem emblem = emblemStr == null
+                    ? new ItemEmblem(ItemEmblem.ItemEmblemShape.SQUARE, 5)
+                    : ItemEmblem.fromString(emblemStr);
+
+            GearMetaInfo metaInfo = parseMetaInfo(json, internalName);
+            int levelRequirement = parseTomeLevelRequirement(json);
+            GearRequirements requirements =
+                    new GearRequirements(levelRequirement, Optional.empty(), List.of(), Optional.empty());
 
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
 
-            return new TomeInfo(displayName, type, tier, metaInfo, requirements, variableStats);
+            return new TomeInfo(displayName, type, tier, emblem, metaInfo, requirements, variableStats);
         }
 
         private GearMetaInfo parseMetaInfo(JsonObject json, String apiName) {
@@ -143,16 +150,13 @@ public class TomeInfoRegistry {
             return material;
         }
 
-        private TomeRequirements parseTomeRequirements(JsonObject json) {
+        private int parseTomeLevelRequirement(JsonObject json) {
             JsonObject requirementsJson = json.getAsJsonObject("requirements");
             if (requirementsJson == null) {
                 throw new RuntimeException("Invalid Wynncraft data: tome has no requirements");
             }
 
-            int level = JsonUtils.getNullableJsonInt(requirementsJson, "level");
-            boolean tomeSeeking = JsonUtils.getNullableJsonBoolean(requirementsJson, "tomeSeeking");
-
-            return new TomeRequirements(level, tomeSeeking);
+            return JsonUtils.getNullableJsonInt(requirementsJson, "level");
         }
 
         private TomeType parseTomeType(JsonObject json) {

@@ -181,6 +181,12 @@ public enum GearType {
     }
 
     public static GearType fromFrameSprite(String frameSpriteCode) {
+        // Headers with an extra tag use the vertically offset copy of the same sprite.
+        if (frameSpriteCode.length() == 1
+                && frameSpriteCode.charAt(0) >= '\uF000'
+                && frameSpriteCode.charAt(0) <= '\uF0FF') {
+            frameSpriteCode = String.valueOf((char) (frameSpriteCode.charAt(0) - 0x1000));
+        }
         for (GearType gearType : values()) {
             if (frameSpriteCode.equals(gearType.frameSpriteCode)) return gearType;
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.wynnitem.type;
@@ -13,7 +13,7 @@ public enum ItemObtainType {
     DUNGEON("dungeon", "Dungeon Rain"),
     DUNGEON_MERCHANT("dungeonMerchant", "Dungeon Merchant"),
     EVENT("event", "Event"),
-    GUILD("guild", "Guild"),
+    GUILD("guild", "Guild Rewards"),
     LOOTRUN("lootrun", "Lootrun"),
     MERCHANT("merchant", "Merchant"),
     MINIBOSS("miniboss", "Miniboss"),
@@ -22,7 +22,7 @@ public enum ItemObtainType {
 
     // Crowd sourced or determined via drop restriction
     CAVE_COMPLETION("caveCompletion", "Cave Completion"),
-    CAVE_LOOT_CHEST("caveLootChest", "Tier 3/4 Loot Chest"),
+    CAVE_LOOT_CHEST("caveLootChest", "Tier 3/4 Loot Chests"),
     DISCOVERY("discovery", "Discovery"),
     ENVIRONMENT("environment", "Environment"),
     FORGERY_CHEST("forgeryChest", "Forgery Chest"),
@@ -30,9 +30,10 @@ public enum ItemObtainType {
     INTERACTION("interaction", "World Interaction"),
     LOOT_CHEST("lootChest", "Any Loot Chest"),
     MOB_REGION("mobDropRegion", "Mobs in"),
-    NORMAL_MOB_DROP("normalMobDrop", "Normal Mob Drop"),
+    NORMAL_MOB_DROP("normalMobDrop", "Normal Mob Drops"),
     RARE_MOB_REGION("rareMobDropRegion", "Rare Mobs in"),
     SPECIFIC_MOB_DROP("specificMobDrop", "Specific Mob Drop"),
+    TIME_TRIAL("timeTrial", "Time Trial"),
     TINKERING("tinkering", "Tinkering"),
     WORLD_EVENT("worldEvent", "World Event"),
 

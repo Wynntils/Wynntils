@@ -4,9 +4,11 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.stats.type.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.type.ItemEmblem;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Map;
@@ -17,19 +19,27 @@ public record GearInfo(
         String name,
         GearType type,
         GearTier tier,
-        GearEmblem emblem,
+        ItemEmblem emblem,
         int powderSlots,
         GearMetaInfo metaInfo,
         GearRequirements requirements,
         FixedStats fixedStats,
+        List<Element> elements,
         List<Pair<StatType, StatPossibleValues>> variableStats,
         Optional<SetInfo> setInfo) {
-    public String getEmblemFrameCode() {
-        return emblem.getFrameCode();
-    }
-
-    public String getEmblemSpriteCode() {
-        return type.getFrameSpriteCode();
+    public GearInfo withRequirements(GearRequirements requirements) {
+        return new GearInfo(
+                name,
+                type,
+                tier,
+                emblem,
+                powderSlots,
+                metaInfo,
+                requirements,
+                fixedStats,
+                elements,
+                variableStats,
+                setInfo);
     }
 
     public StatPossibleValues getPossibleValues(StatType statType) {
