@@ -6,19 +6,21 @@ package com.wynntils.models.items;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
+import com.wynntils.models.items.items.game.CraftedConsumableItem;
+import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.items.game.TomeItem;
-import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
-import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -31,21 +33,20 @@ import net.minecraft.world.item.TooltipFlag;
 public class FakeItemStack extends ItemStack {
     private final WynnItem wynnItem;
     private final ItemStack itemStack;
+    private final ItemSourceType sourceType;
     private final String source;
-    private final boolean useBackingTooltip;
 
-    public FakeItemStack(WynnItem wynnItem, ItemStack itemStack, String source) {
-        this(wynnItem, itemStack, source, false);
-    }
+    private int tooltipPage;
+    private TooltipBuilder tooltipBuilder;
 
-    public FakeItemStack(WynnItem wynnItem, ItemStack itemStack, String source, boolean useBackingTooltip) {
+    public FakeItemStack(WynnItem wynnItem, ItemStack itemStack, ItemSourceType sourceType, String source) {
         super(itemStack.getItem(), 1);
         this.applyComponents(itemStack.getComponentsPatch());
 
         if (wynnItem instanceof NamedItemProperty namedItemProperty) {
             Handlers.Item.updateItem(this, wynnItem, StyledText.fromString(namedItemProperty.getName()));
         }
-        if (!useBackingTooltip && wynnItem instanceof GearTierItemProperty tierItem) {
+        if (wynnItem instanceof GearTierItemProperty tierItem) {
             boolean shiny = wynnItem instanceof ShinyItemProperty shinyItem
                     && shinyItem.getShinyStat().isPresent();
             this.set(DataComponents.TOOLTIP_STYLE, tierItem.getGearTier().getTooltipStyle(shiny));
@@ -53,75 +54,59 @@ public class FakeItemStack extends ItemStack {
 
         this.wynnItem = wynnItem;
         this.itemStack = itemStack;
+        this.sourceType = sourceType;
         this.source = source;
-        this.useBackingTooltip = useBackingTooltip;
     }
 
-    public FakeItemStack(GearItem gearItem, String source) {
-        this(gearItem, gearItem.getItemInfo().metaInfo().material().itemStack(), source);
+    public FakeItemStack(GearItem gearItem, ItemSourceType sourceType, String source) {
+        this(gearItem, gearItem.getItemInfo().metaInfo().material().itemStack(), sourceType, source);
     }
 
-    public FakeItemStack(TomeItem tomeItem, String source) {
-        this(tomeItem, tomeItem.getItemInfo().metaInfo().material().itemStack(), source);
+    public FakeItemStack(TomeItem tomeItem, ItemSourceType sourceType, String source) {
+        this(tomeItem, tomeItem.getItemInfo().metaInfo().material().itemStack(), sourceType, source);
     }
 
     // This should be only used by chat items, so the item does not matter
-    public FakeItemStack(WynnItem wynnItem, String source) {
-        this(wynnItem, new ItemStack(Items.STONE), source);
+    public FakeItemStack(WynnItem wynnItem, ItemSourceType sourceType, String source) {
+        this(wynnItem, new ItemStack(Items.STONE), sourceType, source);
     }
 
     public String getSource() {
         return source;
     }
 
-    public ItemStack getBackingItemStack() {
-        return itemStack;
-    }
-
-    public boolean shouldUseBackingTooltip() {
-        return useBackingTooltip;
+    public ItemSourceType getSourceType() {
+        return sourceType;
     }
 
     @Override
     public ItemStack copy() {
-        return new FakeItemStack(wynnItem, itemStack, source, useBackingTooltip);
+        FakeItemStack copy = new FakeItemStack(wynnItem, itemStack, sourceType, source);
+        copy.tooltipPage = tooltipPage;
+        return copy;
+    }
+
+    public boolean hasTooltipPages() {
+        return wynnItem instanceof PagedItemProperty;
+    }
+
+    public int getTooltipPage() {
+        return tooltipPage;
+    }
+
+    public boolean cyclePage() {
+        if (!hasTooltipPages()) return false;
+
+        tooltipPage = (tooltipPage + 1) % 3;
+        tooltipBuilder = null;
+
+        return true;
     }
 
     @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
         try {
-            // Firstly, cache a tooltip builder with the item's data.
-            // This will be used by TooltipUtils to generate the tooltip.
-            TooltipBuilder tooltipBuilder = null;
-
-            if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
-                if (useBackingTooltip && identifiableItem.getIdentifications().isEmpty()) {
-                    return LoreUtils.getTooltipLines(itemStack);
-                }
-
-                tooltipBuilder = wynnItem.getData()
-                        .getOrCalculate(
-                                WynnItemData.TOOLTIP_KEY,
-                                () -> useBackingTooltip
-                                        ? Handlers.Tooltip.buildFromItemStack(itemStack, identifiableItem, source)
-                                        : Handlers.Tooltip.buildNew(identifiableItem, source));
-
-            } else if (wynnItem instanceof CraftedItemProperty craftedItemProperty) {
-                tooltipBuilder = wynnItem.getData()
-                        .getOrCalculate(
-                                WynnItemData.TOOLTIP_KEY,
-                                () -> useBackingTooltip
-                                        ? Handlers.Tooltip.fromParsedItemStack(itemStack, craftedItemProperty)
-                                        : Handlers.Tooltip.buildNew(craftedItemProperty, source));
-            } else if (wynnItem instanceof MountItem mountItem) {
-                tooltipBuilder = wynnItem.getData()
-                        .getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(mountItem, source));
-            }
-
-            if (tooltipBuilder == null) return List.of();
-
-            // Now that the tooltip builder is cached, generate the tooltip.
-            return TooltipUtils.getWynnItemTooltip(this, wynnItem);
+            return getWynnTooltip();
         } catch (Throwable t) {
             WynntilsMod.reportCrash(
                     CrashType.TOOLTIP,
@@ -134,5 +119,21 @@ public class FakeItemStack extends ItemStack {
 
             return super.getTooltipLines(context, player, isAdvanced);
         }
+    }
+
+    public List<Component> getWynnTooltip() {
+        if (tooltipBuilder == null) {
+            if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
+                tooltipBuilder = Handlers.Tooltip.buildNew(identifiableItem, sourceType, source, tooltipPage);
+            } else if (wynnItem instanceof CraftedGearItem craftedGearItem) {
+                tooltipBuilder = Handlers.Tooltip.buildNew(craftedGearItem, sourceType, source, tooltipPage);
+            } else if (wynnItem instanceof CraftedConsumableItem craftedConsumableItem) {
+                tooltipBuilder = Handlers.Tooltip.buildNew(craftedConsumableItem, sourceType, source);
+            } else if (wynnItem instanceof MountItem mountItem) {
+                tooltipBuilder = Handlers.Tooltip.buildNew(mountItem, sourceType, source);
+            }
+        }
+
+        return tooltipBuilder == null ? List.of() : tooltipBuilder.getTooltipLines(Models.Character.getClassType());
     }
 }

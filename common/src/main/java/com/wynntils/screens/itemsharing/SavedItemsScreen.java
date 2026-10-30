@@ -5,11 +5,10 @@
 package com.wynntils.screens.itemsharing;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.items.FakeItemStack;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsContainerScreen;
@@ -31,7 +30,6 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
@@ -53,6 +51,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     private boolean editingCategory = false;
 
     private int itemScrollOffset = 0;
+    private int dragSelectionStartIndex = -1;
     private List<Integer> selectedSlots = new ArrayList<>();
     private Map<Integer, SavedItem> encodedItems = new TreeMap<>();
 
@@ -60,7 +59,6 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     private TextInputBoxWidget categoryInput;
 
     private List<Pair<String, String>> selectedItems = new ArrayList<>();
-    private int dragSelectionStartIndex = -1;
 
     private SavedItemsScreen(SavedItemsMenu abstractContainerMenu) {
         super(abstractContainerMenu, McUtils.inventory(), Component.literal("Saved Items Screen"));
@@ -176,30 +174,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     @Override
     protected void slotClicked(Slot slot, int slotId, int mouseButton, ClickType type) {
-        if (slot == null) return;
-        if (slot.getItem() == ItemStack.EMPTY) return;
-
-        // Right click goes to sharing menu
-        // Right+Shift deletes the item from storage
-        // Left click toggles the selection of the item
-        if (mouseButton == InputConstants.MOUSE_BUTTON_RIGHT) {
-            if (KeyboardUtils.isShiftDown()) {
-                deleteItem(encodedItems.get(slot.index).base64());
-            } else {
-                Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(slot.getItem());
-
-                if (wynnItemOpt.isPresent()) {
-                    McUtils.setScreen(ItemSharingScreen.create(wynnItemOpt.get(), slot.getItem(), true));
-                } else {
-                    McUtils.sendWynntilsPrefixMessage(
-                            Component.translatable("screens.wynntils.savedItems.unableToShare"));
-                }
-            }
-        } else if (mouseButton == InputConstants.MOUSE_BUTTON_LEFT) {
-            int rowOffset = ITEMS_PER_ROW * itemScrollOffset;
-            int index = slot.index + rowOffset;
-            dragSelectionStartIndex = index;
-        }
+        // Saved items are handled directly by mouseClicked; ignore inventory keyboard actions.
     }
 
     @Override
@@ -240,6 +215,24 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        Slot slot = getHoveredSlot(event.x(), event.y());
+        if (slot != null && slot.getItem() instanceof FakeItemStack fakeItemStack) {
+            if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
+                fakeItemStack.cyclePage();
+                return true;
+            } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
+                int index = slot.index + ITEMS_PER_ROW * itemScrollOffset;
+                if (KeyboardUtils.isShiftDown()) {
+                    String base64 = encodedItems.get(index).base64();
+                    selectedItems.removeIf(selectedItem -> selectedItem.b().equals(base64));
+                    deleteItem(base64);
+                } else {
+                    dragSelectionStartIndex = index;
+                }
+                return true;
+            }
+        }
+
         float scrollButtonRenderX = this.leftPos + 155;
         float scrollButtonRenderY =
                 this.topPos + 18 + MathUtils.map(itemScrollOffset, 0, getMaxScrollOffset(), 0, SCROLL_AREA_HEIGHT);
@@ -295,30 +288,23 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
-        Slot dragSelectionEndSlot = getHoveredSlot(event.x(), event.y());
+        if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && dragSelectionStartIndex != -1) {
+            Slot endSlot = getHoveredSlot(event.x(), event.y());
+            int endIndex = endSlot == null ? dragSelectionStartIndex : endSlot.index + ITEMS_PER_ROW * itemScrollOffset;
 
-        if (dragSelectionStartIndex != -1) {
-            int dragSelectionEndIndex =
-                    dragSelectionEndSlot == null ? dragSelectionStartIndex : dragSelectionEndSlot.index;
-
-            int index = Math.min(dragSelectionStartIndex, dragSelectionEndIndex);
-            int endIndex = Math.max(dragSelectionStartIndex, dragSelectionEndIndex);
-
-            for (int i = index; i <= endIndex; i++) {
-                if (i >= encodedItems.size()) break;
-
-                SavedItem savedItem = encodedItems.get(i);
-
-                if (selectedItems.contains(new Pair<>(currentCategory, savedItem.base64()))) {
-                    selectedItems.remove(new Pair<>(currentCategory, savedItem.base64()));
-                    selectedSlots.remove((Integer) (i));
-                } else {
-                    selectedItems.add(new Pair<>(currentCategory, savedItem.base64()));
-                    selectedSlots.add(i);
+            for (int i = Math.min(dragSelectionStartIndex, endIndex);
+                    i <= Math.max(dragSelectionStartIndex, endIndex) && i < encodedItems.size();
+                    i++) {
+                Pair<String, String> selectedItem =
+                        new Pair<>(currentCategory, encodedItems.get(i).base64());
+                if (!selectedItems.remove(selectedItem)) {
+                    selectedItems.add(selectedItem);
                 }
             }
 
             dragSelectionStartIndex = -1;
+            populateItems();
+            return true;
         }
 
         return super.mouseReleased(event);
@@ -355,6 +341,7 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     public void scrollCategories(int scrollDirection) {
+        dragSelectionStartIndex = -1;
         List<String> categories = new ArrayList<>(Services.ItemRecord.categories.get());
 
         addingCategory = false;
@@ -500,7 +487,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
             }
 
             itemStack = new FakeItemStack(
-                    savedItem.wynnItem(), itemStack, "From " + McUtils.playerName() + "'s Item Record");
+                    savedItem.wynnItem(),
+                    itemStack,
+                    ItemSourceType.ENCODED,
+                    "From " + McUtils.playerName() + "'s Item Record");
 
             for (Pair<String, String> selectedItem : selectedItems) {
                 if (selectedItem.a().equals(currentCategory) && selectedItem.b().equals(savedItem.base64())) {
