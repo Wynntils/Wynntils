@@ -12,13 +12,11 @@ public final class CommonFonts {
     public static final FontDescription CHAT_TILE_FONT = font("chat/tile");
     public static final FontDescription COMMON_FONT = font("common");
     public static final FontDescription LANGUAGE_FIVE_FONT = font("language/five");
-    public static final FontDescription LANGUAGE_WYNNCRAFT_FONT = font("language/wynncraft");
     public static final FontDescription MERCHANT_FONT = font("merchant");
     public static final FontDescription OFFSET_QUAD_12 = font("offset/wynncraft_quad/12");
     public static final FontDescription PROFESSION_FONT = font("profession");
     public static final FontDescription SPACE_FONT = font("space");
     public static final FontDescription TOOLTIP_ATTRIBUTE_SPRITE_FONT = font("tooltip/attribute/sprite");
-    public static final FontDescription TOOLTIP_BANNER_FONT = font("tooltip/banner");
     public static final FontDescription TOOLTIP_DIVIDER_FONT = font("tooltip/divider");
     public static final FontDescription TOOLTIP_EMBLEM_FRAME_FONT = font("tooltip/emblem/frame");
     public static final FontDescription TOOLTIP_EMBLEM_SPRITE_FONT = font("tooltip/emblem/sprite");
@@ -26,6 +24,7 @@ public final class CommonFonts {
     public static final FontDescription TOOLTIP_PAGE_FONT = font("tooltip/page");
     public static final FontDescription TOOLTIP_REQUIREMENT_FRAME_FONT = font("tooltip/requirement/frame");
     public static final FontDescription TOOLTIP_REQUIREMENT_SPRITE_FONT = font("tooltip/requirement/sprite");
+    public static final FontDescription TOOLTIP_SOCKET_FONT = font("tooltip/socket");
 
     // This should be used in place of LANGUAGE_WYNNCRAFT_FONT where possible as this provides a fallback of the default
     // font
