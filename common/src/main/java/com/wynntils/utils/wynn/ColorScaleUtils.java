@@ -32,39 +32,60 @@ public final class ColorScaleUtils {
      * @return the styled percentage text component
      */
     public static MutableComponent getPercentageTextComponent(
-            NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp, int decimalPlaces) {
-        return getPercentageTextComponent(colorMap, percentage, colorLerp, decimalPlaces, false);
+            NavigableMap<Float, TextColor> colorMap,
+            float percentage,
+            boolean colorLerp,
+            boolean rainbow,
+            int decimalPlaces) {
+        return getPercentageTextComponent(colorMap, percentage, colorLerp, rainbow, decimalPlaces, false);
     }
 
     public static MutableComponent getPercentageTextComponent(
             NavigableMap<Float, TextColor> colorMap,
             float percentage,
             boolean colorLerp,
+            boolean rainbow,
             int decimalPlaces,
             boolean estimated) {
-        Style color = Style.EMPTY
-                .withColor(
-                        colorLerp
+        Style color = Style.EMPTY.withColor(
+                rainbow
+                        ? TextColor.fromRgb(WynncraftShaderColor.RAINBOW.color.asInt())
+                        : colorLerp
                                 ? getPercentageColor(colorMap, percentage)
-                                : getFlatPercentageColor(colorMap, percentage))
-                .withItalic(false);
+                                : getFlatPercentageColor(colorMap, percentage));
         String percentString = new BigDecimal(percentage)
                 .setScale(decimalPlaces, RoundingMode.DOWN)
                 .toPlainString();
-        return Component.literal(" [" + (estimated ? "~" : "") + percentString + "%]")
+        return Component.literal(
+                        " [" + (estimated && percentage != 0 && percentage != 100 ? "~" : "") + percentString + "%]")
                 .withStyle(color);
     }
 
     public static MutableComponent getWheelTextComponent(
-            NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp, boolean rainbowPerfect) {
-        CustomColor fillColor = CustomColor.fromTextColor(
-                colorLerp ? getPercentageColor(colorMap, percentage) : getFlatPercentageColor(colorMap, percentage));
-        CappedValue value = CappedValue.fromProgress(percentage / 100, 100);
+            NavigableMap<Float, TextColor> colorMap, float percentage, boolean colorLerp, boolean rainbow) {
+        return getWheelTextComponent(
+                colorMap, percentage, CappedValue.fromProgress(percentage / 100, 100), colorLerp, rainbow);
+    }
+
+    public static MutableComponent getWheelTextComponent(
+            NavigableMap<Float, TextColor> colorMap, CappedValue meter, boolean colorLerp, boolean rainbow) {
+        return getWheelTextComponent(colorMap, (float) meter.getPercentage(), meter, colorLerp, rainbow);
+    }
+
+    private static MutableComponent getWheelTextComponent(
+            NavigableMap<Float, TextColor> colorMap,
+            float percentage,
+            CappedValue meter,
+            boolean colorLerp,
+            boolean rainbow) {
+        CustomColor fillColor = rainbow
+                ? WynncraftShaderColor.RAINBOW.color
+                : CustomColor.fromTextColor(
+                        colorLerp
+                                ? getPercentageColor(colorMap, percentage)
+                                : getFlatPercentageColor(colorMap, percentage));
         return TooltipIdentificationMeterFont.buildCounterSingleLayerMeter(
-                        value,
-                        rainbowPerfect && value.isAtCap() ? WynncraftShaderColor.RAINBOW.color : fillColor,
-                        CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY),
-                        "")
+                        meter, fillColor, CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY), "")
                 .copy();
     }
 
