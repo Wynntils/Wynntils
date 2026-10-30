@@ -764,7 +764,8 @@ public final class PlayerPingRenderer {
         poseStack.scale(0.025f, -0.025f, 0.025f);
 
         List<FormattedCharSequence> lines = font.split(
-                Component.literal(targetName).withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)),
+                Component.literal(targetName)
+                        .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)),
                 200);
 
         int offsetY = -(font.lineHeight * lines.size()) / 2;
