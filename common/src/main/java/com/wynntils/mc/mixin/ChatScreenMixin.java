@@ -5,10 +5,12 @@
 package com.wynntils.mc.mixin;
 
 import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.ChatComponentClickedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatScreenSendEvent;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.input.KeyEvent;
+import net.minecraft.network.chat.Style;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -24,6 +26,19 @@ public abstract class ChatScreenMixin {
         if (event.isCanceled()) {
             cir.setReturnValue(true);
             cir.cancel();
+        }
+    }
+
+    @Inject(
+            method = "handleComponentClicked(Lnet/minecraft/network/chat/Style;Z)Z",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void onComponentClicked(Style clicked, boolean allowInsertions, CallbackInfoReturnable<Boolean> cir) {
+        ChatComponentClickedEvent event = new ChatComponentClickedEvent(clicked, allowInsertions);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            cir.setReturnValue(true);
         }
     }
 

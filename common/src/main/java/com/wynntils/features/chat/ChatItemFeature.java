@@ -6,6 +6,7 @@ package com.wynntils.features.chat;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
@@ -13,6 +14,7 @@ import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.keybinds.KeyBindDefinition;
+import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
@@ -21,7 +23,12 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.handlers.chat.event.ChatMessageEvent;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
+import com.wynntils.mc.event.ChatComponentClickedEvent;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.KeyInputEvent;
+import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
@@ -33,6 +40,7 @@ import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.items.properties.ShinyItemProperty;
 import com.wynntils.screens.itemsharing.ItemSharingScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
@@ -42,6 +50,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.type.ErrorOr;
+import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -52,11 +61,15 @@ import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
@@ -64,6 +77,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatItemFeature extends Feature {
+    private static final Identifier CHANGE_ITEM_PAGE =
+            Identifier.fromNamespaceAndPath(WynntilsMod.MOD_ID, "change_item_page");
+
     @RegisterKeyBind
     private final KeyBind shareItemKeybind = KeyBindDefinition.SHARE_ITEM.create(slot -> shareItem(slot, true));
 
@@ -82,6 +98,8 @@ public class ChatItemFeature extends Feature {
     private final Config<Boolean> showPerfectOrDefective = new Config<>(true);
 
     private final Map<String, String> chatItems = new HashMap<>();
+
+    private PageParser pageParser;
 
     public ChatItemFeature() {
         super(ProfileDefault.ENABLED);
@@ -166,13 +184,17 @@ public class ChatItemFeature extends Feature {
     }
 
     private void shareItem(Slot hoveredSlot, boolean share) {
-        if (hoveredSlot == null) return;
+        if (hoveredSlot == null || pageParser != null) return;
 
-        // Special case for unidentified gear
+        // Special case for unidentified items
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
-        if (gearItemOpt.isPresent() && gearItemOpt.get().isUnidentified()) {
-            // We can only send chat encoded gear of identified gear
-            WynntilsMod.warn("Cannot make chat link of unidentified gear");
+        Optional<TomeItem> tomeItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), TomeItem.class);
+        Optional<CharmItem> charmItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), CharmItem.class);
+        if ((gearItemOpt.isPresent() && gearItemOpt.get().isUnidentified())
+                || (tomeItemOpt.isPresent() && tomeItemOpt.get().isUnidentified())
+                || (charmItemOpt.isPresent() && charmItemOpt.get().isUnidentified())) {
+            // We can only send chat encoded items of identified items
+            WynntilsMod.warn("Cannot make chat link of unidentified items");
             McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.chatItemUnidentifiedError"));
             return;
         }
@@ -180,28 +202,146 @@ public class ChatItemFeature extends Feature {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(hoveredSlot.getItem());
         if (wynnItemOpt.isEmpty()) return;
 
+        WynnItem item = wynnItemOpt.get();
+
         // Don't try to encode unsupported items
-        if (!Models.ItemEncoding.canEncodeItem(wynnItemOpt.get())) return;
+        if (!Models.ItemEncoding.canEncodeItem(item)) return;
 
-        if (share) {
-            if (showSharingScreen.get()) {
-                McUtils.setScreen(ItemSharingScreen.create(wynnItemOpt.get(), hoveredSlot.getItem()));
+        if (item instanceof PagedItemProperty pagedItem
+                && !(hoveredSlot.getItem() instanceof FakeItemStack)
+                && McUtils.screen() instanceof AbstractContainerScreen<?> screen
+                && screen.getMenu() == McUtils.containerMenu()) {
+            ItemSharingScreen sharingScreen = share && showSharingScreen.get()
+                    ? ItemSharingScreen.createParsing(item, hoveredSlot.getItem(), (pagedItem.currentPage() + 1) % 3)
+                    : null;
+            pageParser = new PageParser(screen, screen.getMenu(), hoveredSlot, pagedItem, share, sharingScreen);
+
+            if (sharingScreen != null) {
+                McUtils.setScreen(sharingScreen);
+            }
+
+            requestNextPage();
+            return;
+        }
+
+        finishSharing(hoveredSlot, item, share);
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (pageParser == null) return;
+
+        PageParser pendingParser = pageParser;
+        if (!Models.WorldState.onWorld()
+                || McUtils.containerMenu() != pendingParser.menu()
+                || Models.Item.getWynnItem(pendingParser.slot().getItem()).orElse(null) != pendingParser.item()) {
+            pendingParser.state().cancel();
+
+            if (pendingParser.sharingScreen() != null) {
+                pendingParser.sharingScreen().parsingFailed();
+            }
+
+            pageParser = null;
+            return;
+        }
+
+        if (pendingParser.state().isWaitingToSend()) {
+            if (pendingParser.state().canSend()) {
+                requestNextPage();
+            }
+            return;
+        }
+
+        if (pendingParser.item().currentPage() != pendingParser.expectedPage()) {
+            if (!pendingParser.timedOut() && pendingParser.state().shouldRetry()) {
+                requestNextPage();
+                return;
+            }
+
+            pendingParser.setWaitTicks(pendingParser.waitTicks() + 1);
+            if (pendingParser.waitTicks() == 100) {
+                pendingParser.setTimedOut(true);
+                pendingParser.state().cancel();
+
+                if (pendingParser.sharingScreen() != null) {
+                    pendingParser.sharingScreen().parsingFailed();
+                }
+
+                McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatItem.pageCollectionTimeout"));
+            }
+
+            return;
+        }
+
+        pendingParser.setRemainingSwaps(pendingParser.remainingSwaps() - 1);
+        if (pendingParser.remainingSwaps() > 0) {
+            pendingParser.state().acknowledged();
+            return;
+        }
+
+        pendingParser.state().cancel();
+        pageParser = null;
+
+        // We know all 3 swaps have been acknowledged, don't reopen a screen that the user has left
+        if (!pendingParser.timedOut() && pendingParser.isScreenCurrent()) {
+            if (pendingParser.sharingScreen() != null) {
+                pendingParser
+                        .sharingScreen()
+                        .completeParsing(pendingParser.slot().getItem());
             } else {
-                makeChatPrompt(wynnItemOpt.get());
+                finishSharing(pendingParser.slot(), (WynnItem) pendingParser.item(), pendingParser.share());
             }
-        } else {
-            ItemStack itemStackToSave = hoveredSlot.getItem();
+        }
+    }
 
-            // Gear items can have their item changed by cosmetics so we need to get their original item
-            // FIXME: Does not work for crafted gear
-            if (wynnItemOpt.get() instanceof GearItem gearItem) {
-                itemStackToSave = new FakeItemStack(gearItem, "From " + McUtils.playerName() + "'s Item Record");
+    @SubscribeEvent
+    public void onContainerClick(ContainerClickEvent event) {
+        // Don't allow the item to be clicked until parsing has finished
+        if (pageParser != null
+                && event.getContainerMenu() == pageParser.menu()
+                && event.getSlotNum() == pageParser.slot().index) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPageCycleSlot(SetSlotEvent.Post event) {
+        if (pageParser == null
+                || event.getContainer() != pageParser.slot().container
+                || event.getSlot() != pageParser.slot().getContainerSlot()) return;
+
+        Optional<PagedItemProperty> pagedItem =
+                Models.Item.asWynnItemProperty(event.getItemStack(), PagedItemProperty.class);
+        if (pagedItem.isEmpty()) {
+            WynntilsMod.error("Expecting page change but item is not a paged item");
+
+            if (pageParser.sharingScreen() != null) {
+                pageParser.sharingScreen().parsingFailed();
             }
 
-            // Item name is passed in since it is lost in the instanceof check above and looks nicer
-            // saying "Saved Gale's Force to your Item Record" than "Saved Bow to your Item Record"
-            Services.ItemRecord.saveItem(
-                    wynnItemOpt.get(), itemStackToSave, hoveredSlot.getItem().getHoverName());
+            pageParser.state().cancel();
+            pageParser = null;
+            return;
+        }
+
+        if (Models.Item.getWynnItem(event.getItemStack()).orElse(null) == pageParser.item()
+                && pagedItem.get().currentPage() == (pageParser.expectedPage() + 2) % 3) {
+            pageParser.state().unchangedResponse();
+        }
+    }
+
+    @SubscribeEvent
+    public void onChatItemClicked(ChatComponentClickedEvent event) {
+        if (event.allowsInsertions()) return;
+
+        Style clicked = event.getClicked();
+        if (!(clicked.getClickEvent() instanceof ClickEvent.Custom click)
+                || !click.id().equals(CHANGE_ITEM_PAGE)) return;
+
+        if (clicked.getHoverEvent() instanceof HoverEvent.ShowItem(ItemStack item)
+                && item instanceof FakeItemStack itemStack) {
+            itemStack.cyclePage();
+            event.setCanceled(true);
         }
     }
 
@@ -267,7 +407,7 @@ public class ChatItemFeature extends Feature {
                                 ComponentUtils.makeRainbowStyle("Perfect " + nameText.getString(), true));
                     } else if (identifiableItemProperty.isDefective()) {
                         nameText = StyledText.fromComponent(
-                                ComponentUtils.makeObfuscated("Defective " + nameText.getString(), 0, 0));
+                                ComponentUtils.makeCrimsonStyle("Defective " + nameText.getString(), true));
                     }
                 }
             }
@@ -286,8 +426,11 @@ public class ChatItemFeature extends Feature {
             style = style.withColor(tierItemProperty.getGearTier().getChatFormatting());
         }
 
-        ItemStack itemStack = buildChatHoverItemStack(wynnItem);
+        FakeItemStack itemStack = new FakeItemStack(wynnItem, ItemSourceType.ENCODED, "From chat");
         style = style.withHoverEvent(new HoverEvent.ShowItem(itemStack));
+        if (itemStack.hasTooltipPages()) {
+            style = style.withClickEvent(new ClickEvent.Custom(CHANGE_ITEM_PAGE, Optional.empty()));
+        }
 
         // Add the item name
         StyledText appendedNameText =
@@ -298,24 +441,6 @@ public class ChatItemFeature extends Feature {
                 .toList());
 
         return parts;
-    }
-
-    private static ItemStack buildChatHoverItemStack(WynnItem wynnItem) {
-        if (wynnItem instanceof GearItem gearItem) {
-            return new FakeItemStack(gearItem, "From chat");
-        }
-
-        if (wynnItem instanceof CharmItem charmItem) {
-            return new FakeItemStack(
-                    charmItem, charmItem.getItemInfo().metaInfo().material().itemStack(), "From chat");
-        }
-
-        if (wynnItem instanceof TomeItem tomeItem) {
-            return new FakeItemStack(
-                    tomeItem, tomeItem.getItemInfo().metaInfo().material().itemStack(), "From chat");
-        }
-
-        return new FakeItemStack(wynnItem, "From chat");
     }
 
     private void makeChatPrompt(WynnItem wynnItem) {
@@ -345,5 +470,201 @@ public class ChatItemFeature extends Feature {
                 .withStyle(s -> s.withHoverEvent(
                         new HoverEvent.ShowText(Component.translatable("feature.wynntils.chatItem.chatItemTooltip")
                                 .withStyle(ChatFormatting.DARK_AQUA)))));
+    }
+
+    private void requestNextPage() {
+        pageParser.setExpectedPage((pageParser.item().currentPage() + 1) % 3);
+        pageParser.setWaitTicks(0);
+        pageParser.state().sent();
+
+        if (pageParser.sharingScreen() != null && !pageParser.timedOut()) {
+            pageParser.sharingScreen().setParsingPage(pageParser.expectedPage());
+        }
+
+        ContainerUtils.pressSwapHandsOnSlot(
+                pageParser.menu().containerId,
+                pageParser.menu().getStateId(),
+                pageParser.slot().index,
+                pageParser.menu().getCarried());
+    }
+
+    private void finishSharing(Slot hoveredSlot, WynnItem item, boolean share) {
+        if (share) {
+            if (showSharingScreen.get()) {
+                McUtils.setScreen(ItemSharingScreen.create(item, hoveredSlot.getItem()));
+            } else {
+                makeChatPrompt(item);
+            }
+        } else {
+            ItemStack itemStackToSave = hoveredSlot.getItem();
+
+            // Gear items can have their item changed by cosmetics so we need to get their original item
+            // FIXME: Does not work for crafted gear
+            if (item instanceof GearItem gearItem) {
+                itemStackToSave = new FakeItemStack(
+                        gearItem, ItemSourceType.ENCODED, "From " + McUtils.playerName() + "'s Item Record");
+            }
+
+            // Item name is passed in since it is lost in the instanceof check above and looks nicer
+            // saying "Saved Gale's Force to your Item Record" than "Saved Bow to your Item Record"
+            Services.ItemRecord.saveItem(
+                    item, itemStackToSave, hoveredSlot.getItem().getHoverName());
+        }
+    }
+
+    private static final class PageParser {
+        private final Screen screen;
+        private final ItemSharingScreen sharingScreen;
+        private final AbstractContainerMenu menu;
+        private final Slot slot;
+        private final PagedItemProperty item;
+        private final boolean share;
+        private final PageParserState state = new PageParserState();
+
+        private int remainingSwaps = 3;
+        private int expectedPage;
+        private int waitTicks;
+        private boolean timedOut;
+
+        private PageParser(
+                Screen screen,
+                AbstractContainerMenu menu,
+                Slot slot,
+                PagedItemProperty item,
+                boolean share,
+                ItemSharingScreen sharingScreen) {
+            this.screen = screen;
+            this.sharingScreen = sharingScreen;
+            this.menu = menu;
+            this.slot = slot;
+            this.item = item;
+            this.share = share;
+        }
+
+        private ItemSharingScreen sharingScreen() {
+            return sharingScreen;
+        }
+
+        private AbstractContainerMenu menu() {
+            return menu;
+        }
+
+        private Slot slot() {
+            return slot;
+        }
+
+        private PagedItemProperty item() {
+            return item;
+        }
+
+        private boolean share() {
+            return share;
+        }
+
+        private PageParserState state() {
+            return state;
+        }
+
+        private int remainingSwaps() {
+            return remainingSwaps;
+        }
+
+        private void setRemainingSwaps(int remainingSwaps) {
+            this.remainingSwaps = remainingSwaps;
+        }
+
+        private int expectedPage() {
+            return expectedPage;
+        }
+
+        private void setExpectedPage(int expectedPage) {
+            this.expectedPage = expectedPage;
+        }
+
+        private int waitTicks() {
+            return waitTicks;
+        }
+
+        private void setWaitTicks(int waitTicks) {
+            this.waitTicks = waitTicks;
+        }
+
+        private boolean timedOut() {
+            return timedOut;
+        }
+
+        private void setTimedOut(boolean timedOut) {
+            this.timedOut = timedOut;
+        }
+
+        private boolean isScreenCurrent() {
+            return McUtils.screen() == (sharingScreen != null ? sharingScreen : screen);
+        }
+    }
+
+    private static final class PageParserState {
+        private static final int PAGE_DELAY_TICKS = 6;
+        private static final int RETRY_DELAY_TICKS = 10;
+        private static final int MAX_ATTEMPTS = 3;
+
+        private boolean waitingToSend = true;
+        private boolean readyToSend = true;
+        private boolean readyToRetry;
+        private TickSchedulerManager.ScheduledTask scheduledTask;
+        private int attempts;
+
+        public boolean isWaitingToSend() {
+            return waitingToSend;
+        }
+
+        public boolean canSend() {
+            return waitingToSend && readyToSend;
+        }
+
+        public void sent() {
+            cancel();
+
+            waitingToSend = false;
+            attempts++;
+        }
+
+        public void acknowledged() {
+            cancel();
+
+            waitingToSend = true;
+            attempts = 0;
+            scheduledTask = Managers.TickScheduler.scheduleLater(
+                    () -> {
+                        scheduledTask = null;
+                        readyToSend = true;
+                    },
+                    PAGE_DELAY_TICKS);
+        }
+
+        public void unchangedResponse() {
+            if (waitingToSend || attempts >= MAX_ATTEMPTS) return;
+
+            cancel();
+            scheduledTask = Managers.TickScheduler.scheduleLater(
+                    () -> {
+                        scheduledTask = null;
+                        readyToRetry = true;
+                    },
+                    RETRY_DELAY_TICKS);
+        }
+
+        public boolean shouldRetry() {
+            return !waitingToSend && attempts < MAX_ATTEMPTS && readyToRetry;
+        }
+
+        public void cancel() {
+            if (scheduledTask != null) {
+                Managers.TickScheduler.cancel(scheduledTask);
+                scheduledTask = null;
+            }
+
+            readyToSend = false;
+            readyToRetry = false;
+        }
     }
 }
