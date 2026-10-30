@@ -7,7 +7,8 @@ package com.wynntils.models.items.encoding.type;
 public enum ItemTransformingVersion {
     VERSION_1(0),
     VERSION_2(1), // Added support for shiny rerolls
-    VERSION_3(2); // Changed perfect internal roll and fix crafted support for Fruma-styled tooltips
+    VERSION_3(2), // Changed perfect internal roll and fix crafted support for Fruma-styled tooltips
+    VERSION_4(3); // Numeric identification meters, actual powder tiers and powder specials
 
     private final byte id;
 
@@ -20,6 +21,7 @@ public enum ItemTransformingVersion {
             case 0 -> VERSION_1;
             case 1 -> VERSION_2;
             case 2 -> VERSION_3;
+            case 3 -> VERSION_4;
             default -> null;
         };
     }

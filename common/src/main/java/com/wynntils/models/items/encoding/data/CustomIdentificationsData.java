@@ -11,7 +11,7 @@ import java.util.List;
 
 public record CustomIdentificationsData(List<StatPossibleValues> possibleValues, List<StatActualValue> identifications)
         implements ItemData {
-    public CustomIdentificationsData(List<StatPossibleValues> possibleValues) {
-        this(possibleValues, List.of());
+    public CustomIdentificationsData(List<StatActualValue> identifications) {
+        this(List.of(), identifications);
     }
 }

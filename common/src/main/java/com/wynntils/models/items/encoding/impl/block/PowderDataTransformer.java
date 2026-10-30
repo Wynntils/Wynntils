@@ -5,8 +5,10 @@
 package com.wynntils.models.items.encoding.impl.block;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.elements.type.PowderSpecialTierInfo;
 import com.wynntils.models.items.encoding.data.PowderData;
 import com.wynntils.models.items.encoding.type.DataTransformer;
 import com.wynntils.models.items.encoding.type.DataTransformerType;
@@ -18,6 +20,7 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.UnsignedByte;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Stream;
 
 public class PowderDataTransformer extends DataTransformer<PowderData> {
@@ -25,6 +28,7 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, PowderData data) {
         return switch (version) {
             case VERSION_1, VERSION_2, VERSION_3 -> encodePowderData(data);
+            case VERSION_4 -> encodePowderDataV4(data);
         };
     }
 
@@ -37,6 +41,7 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
     public ErrorOr<PowderData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1, VERSION_2, VERSION_3 -> decodePowderData(byteReader);
+            case VERSION_4 -> decodePowderDataV4(byteReader);
         };
     }
 
@@ -166,6 +171,149 @@ public class PowderDataTransformer extends DataTransformer<PowderData> {
             data.add(new Pair<>(powder, tier));
         }
 
-        return ErrorOr.of(new PowderData(powderSlots, data));
+        // V1-3 encoding does not support powder specials so set as empty optional
+        return ErrorOr.of(new PowderData(powderSlots, data, Optional.empty()));
+    }
+
+    private ErrorOr<UnsignedByte[]> encodePowderDataV4(PowderData data) {
+        // Powders are encoded as bits, a powder needs 6 bits to encode
+        // That means the total size is 6 * powderCount,
+        // which is padded to the nearest byte
+        int bitsNeeded = data.powders().size() * 6;
+        // Pad to nearest byte
+        int totalBits = (bitsNeeded + 7) / 8 * 8;
+
+        boolean[] powderData = new boolean[totalBits];
+
+        // A powder is encoded in 6 bits, with the following math: `element * 7 + tier`.
+        // The elements follow an `ETWFA` order.
+        // 6 `0` bits are used to represent that no powder is present at the slot.
+        for (int i = 0; i < data.powders().size(); i++) {
+            Pair<Powder, Integer> powder = data.powders().get(i);
+            int element = powder.key().getElement().getEncodingId();
+            int tier = powder.value();
+            int powderDataIndex = i * 6;
+
+            // Set the 6 bits for the powder
+            for (int j = 0; j < 6; j++) {
+                // The index is reversed because the bits are stored in reverse order
+                int index = powderDataIndex + (5 - j);
+                boolean value = ((element * 7 + tier) >> j) % 2 != 0;
+                powderData[index] = value;
+            }
+        }
+
+        // Pad the data to the nearest byte with '0' bits
+        // (the array is initialized with '0' bits, but we do this for clarity)
+        for (int i = bitsNeeded; i < totalBits; i++) {
+            powderData[i] = false;
+        }
+
+        UnsignedByte[] dataBytes = UnsignedByteUtils.fromBitArray(powderData);
+        if (data.powders().size() > 255) {
+            return ErrorOr.error("Too many powders on item.");
+        }
+        if (data.powderSlots() > 255) {
+            return ErrorOr.error("Too many powder slots on item.");
+        }
+
+        // ID zero means no special, and has no tier byte.
+        List<UnsignedByte> specialData = new ArrayList<>();
+        specialData.add(UnsignedByte.of((byte) data.powderSpecial()
+                .map(PowderSpecialTierInfo::encodingId)
+                .orElse(0)
+                .intValue()));
+        data.powderSpecial().ifPresent(info -> specialData.add(UnsignedByte.of((byte) info.tier())));
+
+        // The first byte is the powder slots on the item
+        // The second byte is the number of powders
+        return ErrorOr.of(Stream.concat(
+                        Stream.of(UnsignedByte.of((byte) data.powderSlots()), UnsignedByte.of((byte)
+                                data.powders().size())),
+                        Stream.concat(Stream.of(dataBytes), specialData.stream()))
+                .toArray(UnsignedByte[]::new));
+    }
+
+    private ErrorOr<PowderData> decodePowderDataV4(ArrayReader<UnsignedByte> byteReader) {
+        // The first byte is the powder slots on the item
+        int powderSlots = byteReader.read().value();
+
+        // The second byte is the number of powders
+        int powderCount = byteReader.read().value();
+
+        if (powderCount > powderSlots) {
+            WynntilsMod.warn("Powder count is greater than powder slots. This should not happen.");
+        }
+
+        // The powder data is encoded as bits, a powder needs 6 bits to encode
+        // That means the total size is 6 * powderCount,
+        // which is padded to the nearest byte
+        int bitsNeeded = powderCount * 6;
+
+        // Pad to nearest byte
+        int totalBits = (bitsNeeded + 7) / 8 * 8;
+
+        // The remaining bytes are the powder data
+        UnsignedByte[] powderData = byteReader.read(totalBits / 8);
+
+        // Convert the powder data to a bit array
+        boolean[] powderBits = UnsignedByteUtils.toBitArray(powderData);
+
+        // Remove the padding
+        boolean[] powderDataBits = new boolean[bitsNeeded];
+        System.arraycopy(powderBits, 0, powderDataBits, 0, bitsNeeded);
+
+        // Decode the powder data
+        List<Pair<Powder, Integer>> data = new ArrayList<>();
+        for (int i = 0; i < Math.min(powderCount, powderSlots); i++) {
+            int powderDataIndex = i * 6;
+
+            // Read the 6 bits for the powder
+            int powderValue = 0;
+            for (int j = 0; j < 6; j++) {
+                // The index is reversed because the bits are stored in reverse order
+                int index = powderDataIndex + (5 - j);
+                boolean value = powderDataBits[index];
+                if (value) {
+                    powderValue |= 1 << j;
+                }
+            }
+
+            if (powderValue == 0) {
+                // No powder is present at the slot
+                // Currently, you can't create an item that has an empty powder slot and a filled one after it
+                // If this becomes possible, we need to add an "empty" powder to the data list
+                continue;
+            }
+
+            // Decode the powder value
+            int element = powderValue / 7;
+            int tier = powderValue % 7;
+
+            // If the current powder is a tier 7 powder, it's encoded as the "tier 0" of the next element
+            if (tier == 0) {
+                element -= 1;
+                tier = 7;
+            }
+
+            // Add the powder to the data
+            Powder powder = Powder.fromElement(Element.fromEncodingId(element));
+            if (powder == null) { // Sometimes null when users mess with custom encoding
+                return ErrorOr.error("Invalid powder element encoding: " + element);
+            }
+            data.add(new Pair<>(powder, tier));
+        }
+
+        int specialId = byteReader.read().value();
+        Optional<PowderSpecialTierInfo> special = Optional.empty();
+        if (specialId != 0) {
+            int tier = byteReader.read().value();
+            PowderSpecialTierInfo powderSpecial = Models.Element.getPowderSpecialTierInfo(specialId, tier);
+            if (powderSpecial == null) {
+                return ErrorOr.error("Invalid powder special encoding: " + specialId + ", tier " + tier);
+            }
+            special = Optional.of(powderSpecial);
+        }
+        return ErrorOr.of(new PowderData(powderSlots, data, special));
     }
 }

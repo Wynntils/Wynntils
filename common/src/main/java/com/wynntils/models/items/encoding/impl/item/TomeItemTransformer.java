@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.encoding.impl.item;
@@ -52,7 +52,7 @@ public class TomeItemTransformer extends ItemTransformer<TomeItem> {
         }
 
         List<StatActualValue> idList = identifications.values().stream().toList();
-        return ErrorOr.of(new TomeItem(tomeInfo, TomeInstance.create(rerolls, tomeInfo, idList)));
+        return ErrorOr.of(new TomeItem(tomeInfo, TomeInstance.create(rerolls, tomeInfo, idList, null)));
     }
 
     @Override

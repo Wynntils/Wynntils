@@ -142,7 +142,7 @@ public final class ItemTransformerRegistry {
     // FIXME: This could be much more sophisticated in the future,
     //        e.g. by requesting the minimum versions required from each transformer instead.
     private static ItemTransformingVersion getEncodingVersionAccordingToItem(WynnItem wynnItem) {
-        return ItemTransformingVersion.VERSION_3;
+        return ItemTransformingVersion.VERSION_4;
     }
 
     private ErrorOr<WynnItem> decodeItem(List<ItemData> itemData, ItemTransformer<WynnItem> transformer) {

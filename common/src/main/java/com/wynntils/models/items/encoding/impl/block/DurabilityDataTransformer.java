@@ -21,7 +21,7 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, DurabilityData data) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> encodeDurabilityData(data);
-            case VERSION_3 -> encodeDurabilityDataV3(data);
+            case VERSION_3, VERSION_4 -> encodeDurabilityDataV3(data);
         };
     }
 
@@ -29,7 +29,7 @@ public class DurabilityDataTransformer extends DataTransformer<DurabilityData> {
     public ErrorOr<DurabilityData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> decodeDurabilityData(byteReader);
-            case VERSION_3 -> decodeDurabilityDataV3(byteReader);
+            case VERSION_3, VERSION_4 -> decodeDurabilityDataV3(byteReader);
         };
     }
 
