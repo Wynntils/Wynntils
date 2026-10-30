@@ -9,14 +9,20 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.ItemStackSplitEvent;
+import com.wynntils.mc.event.SetCarriedItemEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.items.annotators.ItemPageAnnotator;
+import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.properties.PagedItemProperty;
+import com.wynntils.models.items.properties.PowderedItemProperty;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -28,11 +34,13 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -42,7 +50,9 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ItemHandler extends Handler {
     private static final List<Item> WILDCARD_ITEMS = List.of(Items.DIAMOND_SHOVEL, Items.DIAMOND_PICKAXE);
 
-    private static final Pattern TOOLTIP_PAGE_PATTERN = Pattern.compile("(§#ffea80ff)?\uE000");
+    // A powder click temporarily swaps the target with the cursor on the client. Keep its
+    // parsed pages until the server sends the updated target back to this menu slot.
+    private PendingPowderTarget pendingPowderTarget;
 
     private final List<ItemAnnotator> annotators = new ArrayList<>();
     private final Map<Class<?>, Integer> profilingTimes = new HashMap<>();
@@ -73,41 +83,86 @@ public final class ItemHandler extends Handler {
         annotation.onUpdate(itemStack);
     }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onPowderClick(ContainerClickEvent event) {
+        if (event.isCanceled()) return;
+        pendingPowderTarget = null;
+        ItemStack carried = event.getContainerMenu().getCarried();
+        if (!(((ItemStackExtension) carried).getAnnotation() instanceof PowderItem)) return;
+
+        ItemAnnotation targetAnnotation = ((ItemStackExtension) event.getItemStack()).getAnnotation();
+        if (event.getMouseButton() == 1
+                && event.getClickType() == ClickType.PICKUP
+                && targetAnnotation instanceof PagedItemProperty
+                && targetAnnotation instanceof PowderedItemProperty) {
+            pendingPowderTarget = new PendingPowderTarget(
+                    event.getContainerMenu(),
+                    event.getSlotNum(),
+                    event.getItemStack(),
+                    System.nanoTime() + 5_000_000_000L);
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetSlot(SetSlotEvent.Pre event) {
         onItemStackUpdate(event.getContainer().getItem(event.getSlot()), event.getItemStack());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSetCarried(SetCarriedItemEvent event) {
+        onCarriedItemUpdate(event.getPrevious(), event.getCarried());
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onItemStackSplit(ItemStackSplitEvent event) {
+        ItemStack source = event.getSource();
+        ItemStack result = event.getResult();
+        if (result.isEmpty()) return;
+
+        ItemStackExtension sourceExtension = (ItemStackExtension) source;
+        ItemAnnotation annotation = sourceExtension.getAnnotation();
+        if (annotation == null) return;
+
+        if (source.isEmpty()) {
+            updateItem(result, annotation, sourceExtension.getOriginalName());
+            sourceExtension.setAnnotation(null);
+        } else {
+            sourceExtension.setAnnotation(null);
+            annotate(source);
+            annotate(result);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
-        NonNullList<ItemStack> existingItems;
+        AbstractContainerMenu menu;
 
         if (event.getContainerId() == 0) {
             // Set all for inventory
-            existingItems = McUtils.inventoryMenu().getItems();
+            menu = McUtils.inventoryMenu();
         } else if (event.getContainerId() == McUtils.containerMenu().containerId) {
             // Set all for the currently open container. Vanilla has copied inventory in the last
             // slots
-            existingItems = McUtils.containerMenu().getItems();
+            menu = McUtils.containerMenu();
         } else {
             // No matching container found. Annotate anyways.
             annotate(event.getItemStack());
             return;
         }
 
-        onItemStackUpdate(existingItems.get(event.getSlot()), event.getItemStack());
+        onItemStackUpdate(getPreviousPowderTarget(menu, event.getSlot(), event.getItemStack()), event.getItemStack());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        NonNullList<ItemStack> existingItems;
+        AbstractContainerMenu menu;
         if (event.getContainerId() == 0) {
             // Set all for inventory
-            existingItems = McUtils.inventoryMenu().getItems();
+            menu = McUtils.inventoryMenu();
         } else if (event.getContainerId() == McUtils.containerMenu().containerId) {
             // Set all for the currently open container. Vanilla has copied inventory in the last
             // slots
-            existingItems = McUtils.containerMenu().getItems();
+            menu = McUtils.containerMenu();
         } else {
             // No matching container found. This can be due to a ContainerQuery, so
             // annotate all items
@@ -120,11 +175,7 @@ public final class ItemHandler extends Handler {
             return;
         }
 
-        List<ItemStack> newItems = event.getItems();
-
-        for (int i = 0; i < newItems.size(); i++) {
-            onItemStackUpdate(existingItems.get(i), newItems.get(i));
-        }
+        updateContainerContents(menu, event.getItems(), event.getCarriedItem());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -152,6 +203,68 @@ public final class ItemHandler extends Handler {
         }
     }
 
+    private void updateContainerContents(AbstractContainerMenu menu, List<ItemStack> newItems, ItemStack carried) {
+        // initializeContents assigns the cursor directly rather than calling setCarried.
+        onCarriedItemUpdate(menu.getCarried(), carried);
+
+        for (int i = 0; i < newItems.size(); i++) {
+            onItemStackUpdate(getPreviousPowderTarget(menu, i, newItems.get(i)), newItems.get(i));
+        }
+    }
+
+    private ItemStack getPreviousPowderTarget(AbstractContainerMenu menu, int slot, ItemStack incoming) {
+        PendingPowderTarget pending = pendingPowderTarget;
+        if (pending != null && (System.nanoTime() > pending.expiresAt() || pending.menu() != McUtils.containerMenu())) {
+            pendingPowderTarget = null;
+            pending = null;
+        }
+        if (pending != null
+                && pending.menu() == menu
+                && pending.slot() == slot
+                && similarStack(pending.stack(), incoming)
+                && StyledText.fromComponent(pending.stack().getHoverName())
+                        .getNormalized()
+                        .equals(StyledText.fromComponent(incoming.getHoverName())
+                                .getNormalized())) {
+            pendingPowderTarget = null;
+            return pending.stack();
+        }
+        return menu.getItems().get(slot);
+    }
+
+    private void onCarriedItemUpdate(ItemStack previous, ItemStack carried) {
+        if (carried.isEmpty()) return;
+        if (((ItemStackExtension) carried).getAnnotation() != null) return;
+
+        ItemStackExtension previousExtension = (ItemStackExtension) previous;
+        if (previousExtension.getAnnotation() instanceof PagedItemProperty pagedItem
+                && similarStack(previous, carried)) {
+            StyledText originalName = previousExtension.getOriginalName();
+            if (isTooltipPlaceholder(carried)) {
+                // Wynncraft can send the bare item before sending its name and tooltip.
+                // Keep the cached pages, but do not parse the missing tooltip as page zero.
+                updateItem(carried, previousExtension.getAnnotation(), originalName);
+                return;
+            }
+            if (isTooltipPlaceholder(previous)
+                    && StyledText.fromComponent(carried.getHoverName())
+                            .getNormalized()
+                            .equals(originalName)) {
+                ItemPageAnnotator.update(pagedItem, carried);
+                updateItem(carried, previousExtension.getAnnotation(), originalName);
+                return;
+            }
+        }
+
+        onItemStackUpdate(previous, carried);
+    }
+
+    private boolean isTooltipPlaceholder(ItemStack itemStack) {
+        return !itemStack.has(DataComponents.CUSTOM_NAME)
+                && itemStack.getComponentsPatch().get(DataComponents.ITEM_NAME) == null
+                && LoreUtils.getLore(itemStack).isEmpty();
+    }
+
     private void onItemStackUpdate(ItemStack existingItem, ItemStack newItem) {
         // For e.g. FakeItemStacks we will already have an annotation
         if (((ItemStackExtension) newItem).getAnnotation() != null) return;
@@ -175,9 +288,12 @@ public final class ItemHandler extends Handler {
                 StyledText.fromComponent(existingItem.getHoverName()).getNormalized();
         StyledText newName = StyledText.fromComponent(newItem.getHoverName()).getNormalized();
 
-        if (newName.equals(existingName)) {
+        if (newName.equals(existingName) && annotation instanceof PagedItemProperty pagedItem) {
+            ItemPageAnnotator.update(pagedItem, newItem);
+            updateItem(newItem, annotation, originalName);
+        } else if (newName.equals(existingName)) {
             // The name is identical to the existing stack; now check the lore
-            if (isLoreSoftMatching(existingItem, newItem, annotation)) {
+            if (isLoreSoftMatching(existingItem, newItem)) {
                 // This is exactly the same item, so copy existing annotation
                 updateItem(newItem, annotation, originalName);
             } else {
@@ -217,19 +333,9 @@ public final class ItemHandler extends Handler {
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem, ItemAnnotation firstItemAnnotation) {
+    private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem) {
         List<StyledText> firstLoreLines = LoreUtils.getLore(firstItem);
         List<StyledText> secondLoreLines = LoreUtils.getLore(secondItem);
-
-        if (firstItemAnnotation instanceof PagedItemProperty pagedItemProperty && secondLoreLines.size() > 2) {
-            int secondLinesLen = secondLoreLines.size();
-            int secondItemPage = parseTooltipPage(secondLoreLines.get(secondLinesLen - 2));
-
-            if (pagedItemProperty.currentPage() != secondItemPage) {
-                pagedItemProperty.updatePage(secondItemPage);
-                return true;
-            }
-        }
 
         // Tags implement equals, so we can use this to check if the lore is identical
         // This is the most common short-circuit case
@@ -268,6 +374,9 @@ public final class ItemHandler extends Handler {
             try {
                 annotation = annotator.getAnnotation(itemStack, simplified);
                 if (annotation != null) {
+                    if (annotation instanceof PagedItemProperty pagedItem) {
+                        ItemPageAnnotator.update(pagedItem, itemStack);
+                    }
                     break;
                 }
             } catch (Throwable t) {
@@ -322,21 +431,6 @@ public final class ItemHandler extends Handler {
         return name;
     }
 
-    private static int parseTooltipPage(StyledText styledText) {
-        Matcher matcher = styledText.getMatcher(TOOLTIP_PAGE_PATTERN);
-        int index = 0;
-
-        while (matcher.find()) {
-            if (matcher.group(1) != null) {
-                return index;
-            }
-
-            index++;
-        }
-
-        return 0;
-    }
-
     private void annotate(ItemStack itemStack) {
         StyledText name = StyledText.fromComponent(itemStack.getHoverName()).getNormalized();
         ItemAnnotation annotation = calculateAnnotation(itemStack, name);
@@ -371,4 +465,6 @@ public final class ItemHandler extends Handler {
     public List<ItemAnnotator> getAnnotators() {
         return Collections.unmodifiableList(annotators);
     }
+
+    private record PendingPowderTarget(AbstractContainerMenu menu, int slot, ItemStack stack, long expiresAt) {}
 }
