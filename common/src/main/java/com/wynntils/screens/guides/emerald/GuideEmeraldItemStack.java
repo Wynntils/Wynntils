@@ -6,7 +6,6 @@ package com.wynntils.screens.guides.emerald;
 
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.screens.guides.GuideItemStack;
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -24,15 +23,13 @@ public abstract class GuideEmeraldItemStack extends GuideItemStack {
     @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
         if (generatedTooltip == null) {
-            List<Component> tooltip = new ArrayList<>(generateLore());
-
-            generatedTooltip = tooltip;
+            generatedTooltip = buildTooltip();
         }
 
         return generatedTooltip;
     }
 
-    public abstract List<Component> generateLore();
+    public abstract List<Component> buildTooltip();
 
     public abstract int getTier();
 }

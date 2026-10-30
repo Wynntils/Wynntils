@@ -49,17 +49,10 @@ public class AspectGuideButton extends GuideButton {
                 HorizontalAlignment.CENTER);
 
         renderFavoriteIcon(guiGraphics);
-        renderTooltipIfHovered(guiGraphics, mouseX, mouseY);
-    }
 
-    @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (!builtTooltip) {
-            aspectItemStack.buildTooltip();
-            builtTooltip = true;
+        if (isHovered) {
+            renderTooltip(guiGraphics, mouseX, mouseY);
         }
-
-        itemStack.queueGuideTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override

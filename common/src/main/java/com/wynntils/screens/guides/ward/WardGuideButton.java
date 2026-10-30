@@ -5,12 +5,12 @@
 package com.wynntils.screens.guides.ward;
 
 import com.wynntils.screens.guides.widgets.GuideButton;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.resources.Identifier;
 
 public class WardGuideButton extends GuideButton {
-    private static final CustomColor COLOR = CustomColor.fromInt(0xdf1b64);
     private static final Identifier TOOLTIP_STYLE = Identifier.withDefaultNamespace("resource");
 
     public WardGuideButton(int x, int y, GuideWardItemStack itemStack) {
@@ -21,6 +21,6 @@ public class WardGuideButton extends GuideButton {
 
     @Override
     protected CustomColor getColor() {
-        return COLOR;
+        return CommonColors.RESOURCE_PRIMARY;
     }
 }
