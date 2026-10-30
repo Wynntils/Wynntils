@@ -5,15 +5,16 @@
 package com.wynntils.screens.guides.augment;
 
 import com.wynntils.core.components.Services;
+import com.wynntils.handlers.tooltip.TooltipBuilder;
+import com.wynntils.handlers.tooltip.builders.AmplifierTooltipBuilder;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.AmplifierItem;
 import com.wynntils.models.rewards.type.AmplifierInfo;
 import com.wynntils.utils.MathUtils;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
@@ -38,17 +39,8 @@ public class GuideAmplifierItemStack extends GuideAugmentItemStack {
     }
 
     @Override
-    public List<Component> generateLore() {
-        MutableComponent component = Component.translatable("screens.wynntils.wynntilsGuides.augments.amplifier1")
-                .withStyle(ChatFormatting.GRAY)
-                .append(Component.literal(amplifierInfo.effect() + "%").withStyle(ChatFormatting.WHITE))
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.augments.amplifier2")
-                        .withStyle(ChatFormatting.GRAY));
-        MutableComponent obtainComponent = Component.translatable("screens.wynntils.wynntilsGuides.augments.obtain")
-                .withStyle(ChatFormatting.DARK_GRAY)
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.augments.obtainRaids")
-                        .withStyle(ChatFormatting.AQUA));
-        return List.of(component, Component.empty(), obtainComponent);
+    protected TooltipBuilder createTooltipBuilder() {
+        return AmplifierTooltipBuilder.buildNewItem(amplifierInfo, ItemSourceType.GUIDE, "");
     }
 
     private static ItemStack getItemStack() {
