@@ -5,39 +5,104 @@
 package com.wynntils.models.gear.type;
 
 import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.elements.type.PowderSpecialTierInfo;
 import com.wynntils.models.stats.StatCalculator;
-import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Optional;
 
-// FIXME: GearInstance is missing Powder Specials...
-public record GearInstance(
-        List<StatActualValue> identifications,
-        List<Powder> powders,
-        int rerolls,
-        Optional<Float> overallQuality,
-        Optional<ShinyStat> shinyStat,
-        GearInstanceRequirements gearInstanceRequirements,
-        Optional<SetInstance> setInstance) {
+public final class GearInstance {
+    private List<StatActualValue> identifications;
+    private List<Pair<Powder, Integer>> powders;
+    private Optional<PowderSpecialTierInfo> powderSpecial = Optional.empty();
+    private int rerolls;
+    private Optional<Float> overallQuality;
+    private Optional<SetInstance> setInstance = Optional.empty();
+    private GearInstanceRequirements gearInstanceRequirements;
+
+    public GearInstance() {
+        this(List.of(), List.of(), 0, Optional.empty(), null);
+    }
+
+    public GearInstance(
+            List<StatActualValue> identifications,
+            List<Pair<Powder, Integer>> powders,
+            int rerolls,
+            Optional<Float> overallQuality,
+            GearInstanceRequirements gearInstanceRequirements) {
+        this.identifications = List.copyOf(identifications);
+        this.powders = List.copyOf(powders);
+        this.rerolls = rerolls;
+        this.overallQuality = overallQuality;
+        this.gearInstanceRequirements = gearInstanceRequirements;
+    }
+
+    public List<StatActualValue> identifications() {
+        return identifications;
+    }
+
+    public List<Pair<Powder, Integer>> powders() {
+        return powders;
+    }
+
+    public int rerolls() {
+        return rerolls;
+    }
+
+    public Optional<Float> overallQuality() {
+        return overallQuality;
+    }
+
+    public Optional<SetInstance> getSetInstance() {
+        return setInstance;
+    }
+
+    public void setSetInstance(Optional<SetInstance> setInstance) {
+        this.setInstance = setInstance;
+    }
+
+    public GearInstanceRequirements gearInstanceRequirements() {
+        return gearInstanceRequirements;
+    }
+
+    public Optional<PowderSpecialTierInfo> getPowderSpecial() {
+        return powderSpecial;
+    }
+
+    public void setPowders(List<Pair<Powder, Integer>> powders) {
+        this.powders = List.copyOf(powders);
+    }
+
+    public void setPowderSpecial(Optional<PowderSpecialTierInfo> powderSpecial) {
+        this.powderSpecial = powderSpecial;
+    }
+
+    public void updateStats(
+            GearInfo gearInfo,
+            List<StatActualValue> identifications,
+            int rerolls,
+            GearInstanceRequirements gearInstanceRequirements) {
+        this.identifications = List.copyOf(identifications);
+        this.rerolls = rerolls;
+        this.gearInstanceRequirements = gearInstanceRequirements;
+        this.overallQuality = StatCalculator.calculateOverallQuality(
+                gearInfo.name(), gearInfo.getPossibleValueList(), identifications);
+    }
+
     public static GearInstance create(
             GearInfo gearInfo,
             List<StatActualValue> identifications,
-            List<Powder> powders,
             int rerolls,
-            Optional<ShinyStat> shinyStat,
-            GearInstanceRequirements gearInstanceRequirements,
-            Optional<SetInstance> setInstance) {
+            GearInstanceRequirements gearInstanceRequirements) {
         return new GearInstance(
                 identifications,
-                powders,
+                List.of(),
                 rerolls,
                 StatCalculator.calculateOverallQuality(
                         gearInfo.name(), gearInfo.getPossibleValueList(), identifications),
-                shinyStat,
-                gearInstanceRequirements,
-                setInstance);
+                gearInstanceRequirements);
     }
 
     public boolean hasOverallValue() {

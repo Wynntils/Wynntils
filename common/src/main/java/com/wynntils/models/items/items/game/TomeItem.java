@@ -1,16 +1,18 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.items.properties.RerollableItemProperty;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
@@ -27,6 +29,7 @@ public class TomeItem extends GameItem
                 GearTypeItemProperty,
                 RerollableItemProperty,
                 LeveledItemProperty,
+                RequirementItemProperty,
                 IdentifiableItemProperty<TomeInfo, TomeInstance> {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
@@ -49,6 +52,11 @@ public class TomeItem extends GameItem
     @Override
     public Optional<TomeInstance> getItemInstance() {
         return Optional.ofNullable(tomeInstance);
+    }
+
+    @Override
+    public boolean isUnidentified() {
+        return tomeInstance == null;
     }
 
     @Override
@@ -80,6 +88,18 @@ public class TomeItem extends GameItem
     @Override
     public int getLevel() {
         return tomeInfo.requirements().level();
+    }
+
+    @Override
+    public GearInstanceRequirements getGearInstanceRequirements() {
+        return tomeInstance == null ? null : tomeInstance.gearInstanceRequirements();
+    }
+
+    @Override
+    public boolean meetsActualRequirements() {
+        return tomeInstance != null
+                && tomeInstance.gearInstanceRequirements() != null
+                && tomeInstance.gearInstanceRequirements().meetsAllRequirements();
     }
 
     @Override

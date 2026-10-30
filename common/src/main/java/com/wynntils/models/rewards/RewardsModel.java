@@ -6,20 +6,23 @@ package com.wynntils.models.rewards;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
+import com.wynntils.models.items.annotators.ItemPageAnnotator;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.AmplifierInfo;
 import com.wynntils.models.rewards.type.CharmInfo;
-import com.wynntils.models.rewards.type.CharmInstance;
 import com.wynntils.models.rewards.type.RuneType;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
 import com.wynntils.models.rewards.type.WardType;
-import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.models.wynnitem.parsing.WynnItemStatsParseResult;
+import com.wynntils.models.wynnitem.type.ItemObtainInfo;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -74,6 +77,30 @@ public final class RewardsModel extends Model {
         return allWardInfo;
     }
 
+    public List<ItemObtainInfo> getTomeObtainInfo(TomeInfo tomeInfo) {
+        List<ItemObtainInfo> obtainInfo = new ArrayList<>(tomeInfo.metaInfo().obtainInfo());
+
+        // If the API gave no info, then use the crowd sourced info
+        if (obtainInfo.size() == 1 && obtainInfo.getFirst().equals(ItemObtainInfo.UNKNOWN)) {
+            obtainInfo.clear();
+        }
+
+        obtainInfo.addAll(Models.WynnItem.getObtainInfo(tomeInfo.name()));
+        return obtainInfo;
+    }
+
+    public List<ItemObtainInfo> getCharmObtainInfo(CharmInfo charmInfo) {
+        List<ItemObtainInfo> obtainInfo = new ArrayList<>(charmInfo.metaInfo().obtainInfo());
+
+        // If the API gave no info, then use the crowd sourced info
+        if (obtainInfo.size() == 1 && obtainInfo.getFirst().equals(ItemObtainInfo.UNKNOWN)) {
+            obtainInfo.clear();
+        }
+
+        obtainInfo.addAll(Models.WynnItem.getObtainInfo(charmInfo.name()));
+        return obtainInfo;
+    }
+
     public ItemAnnotation fromCharmItemStack(
             ItemStack itemStack, StyledText name, String displayName, String type, boolean isUnidentified) {
         CharmInfo charmInfo = charmInfoRegistry.getFromDisplayName(displayName);
@@ -82,19 +109,9 @@ public final class RewardsModel extends Model {
             return null;
         }
 
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, charmInfo.getVariableStatsMap());
-        if (isUnidentified) {
-            return new CharmItem(charmInfo, null, result.currentPage());
-        }
-
-        if (result.tier() != charmInfo.tier()) {
-            WynntilsMod.warn("Tier for " + charmInfo.name() + " is reported as " + result.tier());
-        }
-
-        return new CharmItem(
-                charmInfo,
-                CharmInstance.create(result.rerolls(), charmInfo, result.identifications()),
-                result.currentPage());
+        CharmItem item = new CharmItem(charmInfo, isUnidentified);
+        ItemPageAnnotator.update(item, itemStack);
+        return item;
     }
 
     public TomeItem fromTomeItemStack(ItemStack itemStack, StyledText name, String tomeName, boolean isUnidentified) {
@@ -109,12 +126,16 @@ public final class RewardsModel extends Model {
             return new TomeItem(tomeInfo, null);
         }
 
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, tomeInfo.getVariableStatsMap());
+        WynnItemStatsParseResult result =
+                WynnItemParser.parseItemStackStatsPage(itemStack, tomeInfo.getVariableStatsMap());
         if (result.tier() != tomeInfo.tier()) {
             WynntilsMod.warn("Tier for " + tomeInfo.name() + " is reported as " + result.tier());
         }
 
-        return new TomeItem(tomeInfo, TomeInstance.create(result.rerolls(), tomeInfo, result.identifications()));
+        return new TomeItem(
+                tomeInfo,
+                TomeInstance.create(
+                        result.rerolls(), tomeInfo, result.identifications(), result.gearInstanceRequirements()));
     }
 
     private List<AmplifierInfo> buildAmplifierInfo() {

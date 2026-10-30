@@ -4,7 +4,9 @@
  */
 package com.wynntils.models.items.items.game;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
@@ -12,6 +14,7 @@ import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.PagedItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.items.properties.RerollableItemProperty;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.models.rewards.type.CharmInstance;
@@ -20,28 +23,69 @@ import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class CharmItem extends GameItem
         implements GearTierItemProperty,
                 GearTypeItemProperty,
                 RerollableItemProperty,
                 LeveledItemProperty,
+                RequirementItemProperty,
                 IdentifiableItemProperty<CharmInfo, CharmInstance>,
                 PagedItemProperty {
+    private int currentPage;
+    private final Set<Integer> parsedPages = new HashSet<>();
+
     private final CharmInfo charmInfo;
     private final CharmInstance charmInstance;
-    private int currentPage;
+
+    public CharmItem(CharmInfo charmInfo, boolean isUnidentified) {
+        this.charmInfo = charmInfo;
+        this.charmInstance = isUnidentified ? null : new CharmInstance();
+    }
 
     public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance, int currentPage) {
+        this.currentPage = currentPage;
+        parsedPages.add(currentPage);
         this.charmInfo = charmInfo;
         this.charmInstance = charmInstance;
-        this.currentPage = currentPage;
     }
 
     public CharmItem(CharmInfo charmInfo, CharmInstance charmInstance) {
         this(charmInfo, charmInstance, 0);
+    }
+
+    @Override
+    public int currentPage() {
+        return currentPage;
+    }
+
+    @Override
+    public void setCurrentPage(int page) {
+        currentPage = page;
+    }
+
+    @Override
+    public boolean hasParsedPage(int page) {
+        return parsedPages.contains(page);
+    }
+
+    @Override
+    public void markParsedPage(int page) {
+        parsedPages.add(page);
+    }
+
+    @Override
+    public StyledText getLore() {
+        return charmInfo.metaInfo().lore().orElse(StyledText.EMPTY);
+    }
+
+    @Override
+    public void setLore(StyledText lore) {
+        // Unused, we get the lore from the CharmInfo
     }
 
     @Override
@@ -57,6 +101,11 @@ public class CharmItem extends GameItem
     @Override
     public Optional<CharmInstance> getItemInstance() {
         return Optional.ofNullable(charmInstance);
+    }
+
+    @Override
+    public boolean isUnidentified() {
+        return charmInstance == null;
     }
 
     @Override
@@ -91,6 +140,18 @@ public class CharmItem extends GameItem
     }
 
     @Override
+    public GearInstanceRequirements getGearInstanceRequirements() {
+        return charmInstance == null ? null : charmInstance.gearInstanceRequirements();
+    }
+
+    @Override
+    public boolean meetsActualRequirements() {
+        return charmInstance != null
+                && charmInstance.gearInstanceRequirements() != null
+                && charmInstance.gearInstanceRequirements().meetsAllRequirements();
+    }
+
+    @Override
     public List<StatActualValue> getIdentifications() {
         if (charmInstance == null) return List.of();
 
@@ -104,7 +165,7 @@ public class CharmItem extends GameItem
 
     @Override
     public RangedValue getIdentificationLevelRange() {
-        return charmInfo.requirements().workingLevelRange();
+        return RangedValue.of(getLevel(), getLevel() + 20);
     }
 
     @Override
@@ -127,14 +188,11 @@ public class CharmItem extends GameItem
         return charmInstance != null ? charmInstance.getOverallPercentage() : 0.0f;
     }
 
-    @Override
-    public int currentPage() {
-        return currentPage;
-    }
-
-    @Override
-    public void updatePage(int newPage) {
-        this.currentPage = newPage;
+    public void updateStats(
+            GearInstanceRequirements gearInstanceRequirements, int rerolls, List<StatActualValue> identifications) {
+        if (charmInstance != null) {
+            charmInstance.updateStats(rerolls, charmInfo, identifications, gearInstanceRequirements);
+        }
     }
 
     @Override
