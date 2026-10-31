@@ -25,7 +25,7 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, DamageData data) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> encodeDamageData(data);
-            case VERSION_3 -> encodeDamageDataV3(data);
+            case VERSION_3, VERSION_4 -> encodeDamageDataV3(data);
         };
     }
 
@@ -33,7 +33,7 @@ public class DamageDataTransformer extends DataTransformer<DamageData> {
     public ErrorOr<DamageData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1, VERSION_2 -> decodeDamageData(byteReader);
-            case VERSION_3 -> decodeDamageDataV3(byteReader);
+            case VERSION_3, VERSION_4 -> decodeDamageDataV3(byteReader);
         };
     }
 

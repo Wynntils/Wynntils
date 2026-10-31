@@ -4,15 +4,12 @@
  */
 package com.wynntils.screens.guides.gear;
 
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.builders.IdentifiableTooltipBuilder;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.items.WynnItemData;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.guides.GuideItemStack;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.TooltipUtils;
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -38,9 +35,8 @@ public final class GuideGearItemStack extends GuideItemStack {
     @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
         if (generatedTooltip == null) {
-            List<Component> tooltip = new ArrayList<>(buildTooltip());
-
-            generatedTooltip = tooltip;
+            generatedTooltip = IdentifiableTooltipBuilder.buildNewItem(gearItem, ItemSourceType.GUIDE, "", currentPage)
+                    .getTooltipLines(Models.Character.getClassType());
         }
 
         return generatedTooltip;
@@ -51,27 +47,8 @@ public final class GuideGearItemStack extends GuideItemStack {
     }
 
     public void changePage() {
-        if (currentPage == 0) {
-            currentPage = 2;
-        } else if (currentPage == 2) {
-            currentPage = 0;
-        }
+        currentPage = (currentPage + 1) % 3;
 
         generatedTooltip = null;
-    }
-
-    public List<Component> buildTooltip() {
-        if (currentPage == 0) {
-            gearItem.getData().getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(gearItem));
-            return TooltipUtils.getWynnItemTooltip(this, gearItem);
-        } else {
-            List<Component> tooltipLines = buildObtainInfoPage(Models.Gear.getObtainInfo(gearInfo));
-            int widestLine = tooltipLines.stream()
-                    .mapToInt(McUtils.mc().font::width)
-                    .max()
-                    .orElse(0);
-            tooltipLines.addAll(buildPaginationLines(currentPage, 3, widestLine));
-            return tooltipLines;
-        }
     }
 }

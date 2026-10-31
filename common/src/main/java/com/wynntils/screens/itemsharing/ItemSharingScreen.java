@@ -10,6 +10,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -24,6 +26,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -39,11 +42,15 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Vector2i;
 
 public final class ItemSharingScreen extends WynntilsScreen {
-    private final ItemStack itemStack;
+    private ItemStack itemStack;
     private final WynnItem wynnItem;
     private final Screen previousScreen;
 
@@ -53,6 +60,9 @@ public final class ItemSharingScreen extends WynntilsScreen {
     private int backgroundX;
     private int backgroundY;
     private int tooltipX;
+    private int tooltipWidth;
+    private boolean previewWidthMeasured;
+    private Component parsingMessage;
     private ItemStack previewItemStack;
     private List<AbstractWidget> options = new ArrayList<>();
 
@@ -81,6 +91,31 @@ public final class ItemSharingScreen extends WynntilsScreen {
     // Creating screen from item record
     public static Screen create(WynnItem wynnItem, ItemStack itemStack, boolean savedItem) {
         return new ItemSharingScreen(wynnItem, itemStack, savedItem);
+    }
+
+    // Creating screen from an item that needs to have its pages parsed
+    public static ItemSharingScreen createParsing(WynnItem wynnItem, ItemStack itemStack, int page) {
+        ItemSharingScreen screen = new ItemSharingScreen(wynnItem, itemStack);
+        screen.setParsingPage(page);
+        return screen;
+    }
+
+    public void setParsingPage(int page) {
+        parsingMessage = Component.translatable("screens.wynntils.itemSharing.parsingPage", page + 1, 3)
+                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT));
+    }
+
+    public void parsingFailed() {
+        parsingMessage = Component.translatable("screens.wynntils.itemSharing.parsingFailed")
+                .withStyle(Style.EMPTY
+                        .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
+                        .withColor(ChatFormatting.RED));
+    }
+
+    public void completeParsing(ItemStack itemStack) {
+        this.itemStack = itemStack;
+        parsingMessage = null;
+        refreshPreview();
     }
 
     @Override
@@ -120,17 +155,60 @@ public final class ItemSharingScreen extends WynntilsScreen {
         McUtils.setScreen(previousScreen);
     }
 
+    @Override
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() == 0
+                && !isInsideOptionsPanel(event.x(), event.y())
+                && previewItemStack instanceof FakeItemStack fakeItemStack
+                && fakeItemStack.cyclePage()) {
+            return true;
+        }
+        return super.doMouseClicked(event, isDoubleClick);
+    }
+
+    private boolean isInsideOptionsPanel(double x, double y) {
+        return x >= backgroundX
+                && x < backgroundX + Texture.ITEM_SHARING_BACKGROUND.width()
+                && y >= backgroundY
+                && y < backgroundY + Texture.ITEM_SHARING_BACKGROUND.height();
+    }
+
     private void renderPreview(GuiGraphics guiGraphics) {
+        int centerY = backgroundY + Texture.ITEM_SHARING_BACKGROUND.height() / 2;
+        if (parsingMessage != null) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromComponent(parsingMessage),
+                            tooltipX + tooltipWidth / 2f,
+                            centerY,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL,
+                            2f);
+            return;
+        }
         if (previewItemStack == null) return;
 
-        RenderUtils.renderTooltip(
-                guiGraphics,
-                previewItemStack,
+        guiGraphics.renderTooltip(
+                McUtils.mc().font,
+                TooltipUtils.getClientTooltipComponent(LoreUtils.getTooltipLines(previewItemStack)),
                 tooltipX,
-                backgroundY + (FontRenderer.getInstance().getFont().lineHeight * 2));
+                centerY,
+                (screenWidth, screenHeight, x, y, actualWidth, actualHeight) -> new Vector2i(
+                        Math.max(4, Math.min(x, screenWidth - actualWidth - 4)),
+                        Math.max(4, Math.min(y - actualHeight / 2, screenHeight - actualHeight - 4))),
+                previewItemStack.get(DataComponents.TOOLTIP_STYLE));
     }
 
     private void refreshPreview() {
+        if (parsingMessage != null) {
+            previewItemStack = null;
+            tooltipWidth = 200;
+            updateLayout();
+            return;
+        }
         // Encode the item with the selected settings
         EncodingSettings encodingSettings = new EncodingSettings(
                 Models.ItemEncoding.extendedIdentificationEncoding.get(), Models.ItemEncoding.shareItemName.get());
@@ -161,22 +239,33 @@ public final class ItemSharingScreen extends WynntilsScreen {
 
         WynnItem renderedItem = errorOrDecodedByteBuffer.getValue();
 
-        previewItemStack = new FakeItemStack(renderedItem, itemStack, "From chat", true);
+        previewItemStack = new FakeItemStack(renderedItem, itemStack, ItemSourceType.ENCODED, "From chat");
 
-        // Find the width of the tooltip
-        int tooltipWidth = LoreUtils.getTooltipLines(previewItemStack).stream()
-                .map(component -> McUtils.mc().font.width(component))
-                .max(Integer::compareTo)
-                .orElse(0);
+        updatePreviewLayout();
+    }
 
+    private void updatePreviewLayout() {
+        // The preview starts on page zero. Keep its width for the lifetime of this screen
+        // so narrower pages don't move the options panel.
+        if (!previewWidthMeasured) {
+            List<Component> tooltipLines = LoreUtils.getTooltipLines(previewItemStack);
+            tooltipWidth = tooltipLines.stream()
+                    .map(component -> McUtils.mc().font.width(component))
+                    .max(Integer::compareTo)
+                    .orElse(0);
+            previewWidthMeasured = true;
+        }
+
+        updateLayout();
+    }
+
+    private void updateLayout() {
         // Total area the tooltip + sharing options panel + gap should cover
-        int totalRenderWidth = tooltipWidth + Texture.ITEM_SHARING_BACKGROUND.width() + 10;
+        int totalRenderWidth = tooltipWidth + Texture.ITEM_SHARING_BACKGROUND.width() + 20;
 
         // Blank space to the side of each element
-        int sideGap = Math.abs((this.width - totalRenderWidth) / 2);
-
-        tooltipX = this.width - sideGap - tooltipWidth - 20;
-        backgroundX = Math.max(0, sideGap - 10);
+        backgroundX = Math.max(0, (this.width - totalRenderWidth) / 2);
+        tooltipX = backgroundX + Texture.ITEM_SHARING_BACKGROUND.width() + 20;
 
         // Widgets need to be remade in case backgroundX has changed and the options will be misaligned
         for (AbstractWidget widget : options) {
@@ -186,9 +275,13 @@ public final class ItemSharingScreen extends WynntilsScreen {
         options = new ArrayList<>();
 
         addSharingOptions();
+        for (AbstractWidget option : options) {
+            option.active = parsingMessage == null;
+        }
     }
 
     private void shareItem(String target) {
+        if (parsingMessage != null || encodedItem == null) return;
         switch (target) {
             case "guild" ->
                 Handlers.Chat.queueChatCommand("g " + Models.ItemEncoding.makeItemString(wynnItem, encodedItem));
@@ -200,7 +293,8 @@ public final class ItemSharingScreen extends WynntilsScreen {
                 // Gear items can have their item changed by cosmetics so we need to get their original item
                 // FIXME: Does not work for crafted gear
                 if (wynnItem instanceof GearItem gearItem) {
-                    itemStackToSave = new FakeItemStack(gearItem, "From " + McUtils.playerName() + "'s Item Record");
+                    itemStackToSave = new FakeItemStack(
+                            gearItem, ItemSourceType.ENCODED, "From " + McUtils.playerName() + "'s Item Record");
                 }
 
                 // Item name is passed in since it is lost in the instanceof check above and looks nicer

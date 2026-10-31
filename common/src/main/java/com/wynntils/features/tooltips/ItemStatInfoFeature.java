@@ -4,8 +4,8 @@
  */
 package com.wynntils.features.tooltips;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -19,8 +19,8 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
 import com.wynntils.handlers.tooltip.type.TooltipOptions.IdentificationDisplay;
+import com.wynntils.handlers.tooltip.type.TooltipOptions.RollStyle;
 import com.wynntils.handlers.tooltip.type.TooltipOptions.WeightDisplay;
-import com.wynntils.handlers.tooltip.type.TooltipStyle;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.items.WynnItem;
@@ -28,6 +28,7 @@ import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.TooltipUtils;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -46,40 +47,40 @@ public class ItemStatInfoFeature extends Feature {
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
     @Persisted
-    public final Config<Boolean> perfect = new Config<>(true);
+    private final Config<Boolean> perfect = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> defective = new Config<>(true);
+    private final Config<Boolean> defective = new Config<>(true);
 
     @Persisted
-    public final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
+    private final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
 
     @Persisted
-    public final Config<Boolean> groupIdentifications = new Config<>(true);
+    private final Config<Boolean> groupIdentifications = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> identificationDecorations = new Config<>(true);
+    private final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.ALL);
 
     @Persisted
-    public final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.ALL);
+    private final Config<RollStyle> identifiedOverallRollStyle = new Config<>(RollStyle.PERCENTAGE);
 
     @Persisted
-    public final Config<Boolean> overallPercentageInName = new Config<>(true);
+    private final Config<Boolean> overallRollInSpecialName = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> overallPercentageInPerfectDefectiveName = new Config<>(true);
+    private final Config<RollStyle> craftedOverallRollStyle = new Config<>(RollStyle.PERCENTAGE);
 
     @Persisted
-    public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
+    private final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> rainbowInternalRoll = new Config<>(true);
+    private final Config<Boolean> rainbowInternalRoll = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> craftedPercentages = new Config<>(true);
+    private final Config<RollStyle> identifiedRollStyle = new Config<>(RollStyle.PERCENTAGE);
 
     @Persisted
-    public final Config<Boolean> showRollWheel = new Config<>(true);
+    private final Config<RollStyle> craftedRollStyle = new Config<>(RollStyle.PERCENTAGE);
 
     @Persisted
     public final Config<Boolean> colorLerp = new Config<>(true);
@@ -105,7 +106,7 @@ public class ItemStatInfoFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind weightContributionKeyBind = KeyBindDefinition.SHOW_WEIGHT_CONTRIBUTION.create(null, null);
 
-    private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
+    public static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
             40f,
@@ -131,31 +132,28 @@ public class ItemStatInfoFeature extends Feature {
         }
     }
 
-    public NavigableMap<Float, TextColor> getColorMap() {
-        return colorLerp.get() ? LERP_MAP : flatMap;
-    }
-
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        if (event.getTooltips().isEmpty()) return;
+        if (KeyboardUtils.isKeyDown(InputConstants.KEY_RSHIFT)) return;
 
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
+        ItemStack itemStack = event.getItemStack();
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) return;
 
-        event.setTooltips(getUpdatedTooltip(event.getItemStack(), wynnItemOpt.get(), event.getTooltips()));
-    }
-
-    public List<Component> getUpdatedTooltip(ItemStack itemStack, WynnItem wynnItem, List<Component> tooltips) {
-        if (brokenItems.contains(wynnItem)) return tooltips;
+        WynnItem wynnItem = wynnItemOpt.get();
+        if (brokenItems.contains(wynnItem)) return;
 
         try {
-            return Handlers.Tooltip.updateWynnItemTooltip(tooltips, wynnItem, getTooltipOptions());
+            List<Component> tooltips = TooltipUtils.getWynnItemTooltip(itemStack, wynnItem);
+
+            if (tooltips.isEmpty()) return;
+            event.setTooltips(tooltips);
         } catch (Exception e) {
             brokenItems.add(wynnItem);
 
             String itemName = wynnItem.getClass().getSimpleName();
             Optional<NamedItemProperty> namedItemPropertyOpt =
-                    Models.Item.asWynnItemProperty(itemStack, NamedItemProperty.class);
+                    Models.Item.asWynnItemProperty(event.getItemStack(), NamedItemProperty.class);
             if (namedItemPropertyOpt.isPresent()) {
                 itemName = namedItemPropertyOpt.get().getName();
             }
@@ -168,54 +166,57 @@ public class ItemStatInfoFeature extends Feature {
                 // Give up and disable feature
                 throw new RuntimeException(e);
             }
-
-            return tooltips;
         }
+    }
+
+    public NavigableMap<Float, TextColor> getColorMap() {
+        return colorLerp.get() ? LERP_MAP : flatMap;
     }
 
     public TooltipOptions getTooltipOptions() {
         return new TooltipOptions(
-                new TooltipStyle(
-                        identificationsOrdering.get(),
-                        groupIdentifications.get(),
-                        showBestValueLastAlways.get(),
-                        rainbowInternalRoll.get(),
-                        craftedPercentages.get(),
-                        showRollWheel.get()),
+                identifiedOverallRollStyle.get(),
+                craftedOverallRollStyle.get(),
                 perfect.get(),
                 defective.get(),
-                identificationDecorations.get(),
-                getIdentificationDisplay(),
+                overallRollInSpecialName.get(),
                 itemWeights.get(),
                 getWeightDisplay(),
-                overallPercentageInName.get(),
-                overallPercentageInPerfectDefectiveName.get(),
+                identificationsOrdering.get(),
+                groupIdentifications.get(),
+                getIdentificationDisplay(),
+                showBestValueLastAlways.get(),
+                rainbowInternalRoll.get(),
+                identifiedRollStyle.get(),
+                craftedRollStyle.get(),
+                decimalPlaces.get(),
                 getColorMap(),
-                colorLerp.get(),
-                decimalPlaces.get());
+                colorLerp.get());
     }
 
     private IdentificationDisplay getIdentificationDisplay() {
-        if (!identificationDecorations.get()) return IdentificationDisplay.PERCENTAGE;
+        boolean rangeDown = KeyboardUtils.isKeybindDown(identificationRangeKeyBind);
+        boolean rerollDown = KeyboardUtils.isKeybindDown(identificationRerollKeyBind);
 
-        boolean rangeDown = isKeyDown(identificationRangeKeyBind);
-        boolean rerollDown = isKeyDown(identificationRerollKeyBind);
+        if (rangeDown && rerollDown) {
+            return IdentificationDisplay.INTERNAL_ROLL;
+        } else if (rerollDown) {
+            return IdentificationDisplay.REROLL_CHANCE;
+        } else if (rangeDown) {
+            return IdentificationDisplay.STAT_RANGES;
+        }
 
-        if (rangeDown && rerollDown) return IdentificationDisplay.INTERNAL_ROLL;
-        if (rerollDown) return IdentificationDisplay.REROLL;
-        if (rangeDown) return IdentificationDisplay.RANGE;
         return IdentificationDisplay.PERCENTAGE;
     }
 
     private WeightDisplay getWeightDisplay() {
-        if (!isKeyDown(weightDistributionKeyBind)) return WeightDisplay.OVERALL;
+        if (!KeyboardUtils.isKeybindDown(weightDistributionKeyBind)) {
+            return WeightDisplay.OVERALL;
+        }
 
-        return isKeyDown(weightContributionKeyBind) ? WeightDisplay.CONTRIBUTION : WeightDisplay.DISTRIBUTION;
-    }
-
-    private static boolean isKeyDown(KeyBind keyBind) {
-        return !keyBind.getKeyMapping().isUnbound()
-                && KeyboardUtils.isKeyDown(keyBind.getKeyMapping().key.getValue());
+        return KeyboardUtils.isKeybindDown(weightContributionKeyBind)
+                ? WeightDisplay.CONTRIBUTION
+                : WeightDisplay.DISTRIBUTION;
     }
 
     private NavigableMap<Float, TextColor> createFlatMap() {

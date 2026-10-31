@@ -26,7 +26,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(AbstractContainerScreen.class)
+@Mixin(value = AbstractContainerScreen.class, priority = Integer.MIN_VALUE)
 public abstract class FabricAbstractContainerScreenMixin {
     // Note: Call site 2 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
     //       See NeoForgeGuiGraphicsMixin#renderTooltipPre for the Forge mixin.

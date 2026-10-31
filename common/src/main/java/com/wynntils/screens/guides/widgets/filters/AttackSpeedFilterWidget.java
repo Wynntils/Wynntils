@@ -45,7 +45,7 @@ public class AttackSpeedFilterWidget extends GuideFilterWidget {
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal("Attack Speed")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         getX(),
                         getY(),
                         CommonColors.WHITE,

@@ -63,7 +63,8 @@ public class TowerStatsFeature extends Feature {
         message = message.append(Component.literal("\uD83D\uDD51 Time in War: ")
                         .withStyle(ChatFormatting.GOLD)
                         .append(Component.literal("%s"
-                                        .formatted(StringUtils.formatDuration(warBattleInfo.getTotalLengthSeconds())))
+                                        .formatted(StringUtils.formatDuration(
+                                                warBattleInfo.getTotalLengthSeconds(), true)))
                                 .withStyle(ChatFormatting.WHITE)))
                 .append(Component.literal("\n"))
                 .append(Component.literal("⚔ DPS: ")

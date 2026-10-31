@@ -15,6 +15,7 @@ import com.wynntils.services.itemrecord.type.SavedItem;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -62,7 +63,9 @@ public class ItemRecordService extends Service {
 
         McUtils.sendWynntilsPrefixMessage(Component.translatable(
                         "screens.wynntils.itemSharing.savedToRecord",
-                        StyledText.fromComponent(itemName).getString() + ChatFormatting.GREEN)
+                        WynnUtils.stripItemNameMarkers(
+                                        StyledText.fromComponent(itemName).getString())
+                                + ChatFormatting.GREEN)
                 .withStyle(ChatFormatting.GREEN));
 
         return true;

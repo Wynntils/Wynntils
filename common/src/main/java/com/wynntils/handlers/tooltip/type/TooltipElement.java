@@ -4,4 +4,4 @@
  */
 package com.wynntils.handlers.tooltip.type;
 
-public interface TooltipWeightDecorator {}
+public sealed interface TooltipElement permits TooltipLine, TooltipGrid, TooltipWrappedText {}

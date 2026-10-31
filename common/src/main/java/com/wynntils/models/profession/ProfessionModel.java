@@ -357,6 +357,15 @@ public final class ProfessionModel extends Model {
         return Collections.unmodifiableSet(nodesSet);
     }
 
+    public ChatFormatting getColorForTier(Integer tier) {
+        return switch (tier) {
+            case 3 -> ChatFormatting.AQUA;
+            case 2 -> ChatFormatting.LIGHT_PURPLE;
+            case 1 -> ChatFormatting.YELLOW;
+            default -> ChatFormatting.DARK_GRAY;
+        };
+    }
+
     public List<ProfessionType> getIngredientProfessionOrder() {
         return List.of(
                 ProfessionType.WEAPONSMITHING,

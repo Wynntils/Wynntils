@@ -51,7 +51,10 @@ public abstract class GuideButton extends WynntilsButton {
     public void renderContents(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         renderBaseItem(guiGraphics, getColor());
         renderFavoriteIcon(guiGraphics);
-        renderTooltipIfHovered(guiGraphics, mouseX, mouseY);
+
+        if (isHovered) {
+            renderTooltip(guiGraphics, mouseX, mouseY);
+        }
     }
 
     protected void renderBaseItem(GuiGraphics guiGraphics, CustomColor color) {
@@ -94,17 +97,11 @@ public abstract class GuideButton extends WynntilsButton {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderTooltipIfHovered(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (isHovered) {
-            renderTooltip(guiGraphics, mouseX, mouseY);
-        }
+    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        itemStack.renderTooltip(guiGraphics, mouseX, mouseY);
     }
 
     protected abstract CustomColor getColor();
-
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        itemStack.queueGuideTooltip(guiGraphics, mouseX, mouseY);
-    }
 
     @Override
     public void onPress(InputWithModifiers input) {

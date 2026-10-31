@@ -63,7 +63,7 @@ public class StringFunctions {
     public static class FormatDurationFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return StringUtils.formatDuration(arguments.getArgument("seconds").getLongValue());
+            return StringUtils.formatDuration(arguments.getArgument("seconds").getLongValue(), true);
         }
 
         @Override

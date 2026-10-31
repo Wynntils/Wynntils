@@ -1,17 +1,20 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.gear.type;
 
 import com.wynntils.models.stats.type.StatType;
+import java.util.List;
 import java.util.Map;
+import net.minecraft.network.chat.Component;
 
 /**
  * Represents an "instance" of a unique set worn.
- * <p>
- * wynnCount may be inaccurate when the user has two of the same ring equipped (wynncraft bug).
- * Use SetModel to determine the true count if necessary.
  */
 public record SetInstance(
-        SetInfo setInfo, Map<String, Boolean> activeItems, int wynnCount, Map<StatType, Integer> wynnBonuses) {}
+        int equippedCount, int totalCount, Map<StatType, Integer> bonuses, String name, List<Component> majorIdLines) {
+    public SetInstance(int equippedCount, int totalCount, Map<StatType, Integer> bonuses, String name) {
+        this(equippedCount, totalCount, bonuses, name, List.of());
+    }
+}
