@@ -20,23 +20,20 @@ public final class GearInstance {
     private int rerolls;
     private Optional<Float> overallQuality;
     private Optional<SetInstance> setInstance = Optional.empty();
-    private GearInstanceRequirements gearInstanceRequirements;
 
     public GearInstance() {
-        this(List.of(), List.of(), 0, Optional.empty(), null);
+        this(List.of(), List.of(), 0, Optional.empty());
     }
 
     public GearInstance(
             List<StatActualValue> identifications,
             List<Pair<Powder, Integer>> powders,
             int rerolls,
-            Optional<Float> overallQuality,
-            GearInstanceRequirements gearInstanceRequirements) {
+            Optional<Float> overallQuality) {
         this.identifications = List.copyOf(identifications);
         this.powders = List.copyOf(powders);
         this.rerolls = rerolls;
         this.overallQuality = overallQuality;
-        this.gearInstanceRequirements = gearInstanceRequirements;
     }
 
     public List<StatActualValue> identifications() {
@@ -63,10 +60,6 @@ public final class GearInstance {
         this.setInstance = setInstance;
     }
 
-    public GearInstanceRequirements gearInstanceRequirements() {
-        return gearInstanceRequirements;
-    }
-
     public Optional<PowderSpecialTierInfo> getPowderSpecial() {
         return powderSpecial;
     }
@@ -79,30 +72,20 @@ public final class GearInstance {
         this.powderSpecial = powderSpecial;
     }
 
-    public void updateStats(
-            GearInfo gearInfo,
-            List<StatActualValue> identifications,
-            int rerolls,
-            GearInstanceRequirements gearInstanceRequirements) {
+    public void updateStats(GearInfo gearInfo, List<StatActualValue> identifications, int rerolls) {
         this.identifications = List.copyOf(identifications);
         this.rerolls = rerolls;
-        this.gearInstanceRequirements = gearInstanceRequirements;
         this.overallQuality = StatCalculator.calculateOverallQuality(
                 gearInfo.name(), gearInfo.getPossibleValueList(), identifications);
     }
 
-    public static GearInstance create(
-            GearInfo gearInfo,
-            List<StatActualValue> identifications,
-            int rerolls,
-            GearInstanceRequirements gearInstanceRequirements) {
+    public static GearInstance create(GearInfo gearInfo, List<StatActualValue> identifications, int rerolls) {
         return new GearInstance(
                 identifications,
                 List.of(),
                 rerolls,
                 StatCalculator.calculateOverallQuality(
-                        gearInfo.name(), gearInfo.getPossibleValueList(), identifications),
-                gearInstanceRequirements);
+                        gearInfo.name(), gearInfo.getPossibleValueList(), identifications));
     }
 
     public boolean hasOverallValue() {

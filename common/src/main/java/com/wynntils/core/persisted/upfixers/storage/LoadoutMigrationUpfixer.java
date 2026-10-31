@@ -274,7 +274,7 @@ public class LoadoutMigrationUpfixer implements Upfixer {
             stats.add(new StatActualValue(statType, val.baseValue(), internalRoll, false, CappedValue.EMPTY));
         }
 
-        GearInstance gearInstance = new GearInstance(stats, List.of(), 0, Optional.empty(), null);
+        GearInstance gearInstance = new GearInstance(stats, List.of(), 0, Optional.empty());
         GearItem defaultGearItem = new GearItem(gearInfo, gearInstance);
 
         EncodingSettings encodingSettings = new EncodingSettings(true, true);

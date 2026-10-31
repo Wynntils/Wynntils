@@ -51,6 +51,7 @@ public class GearItem extends GameItem
                 PagedItemProperty {
     private GearInfo gearInfo;
     private final GearInstance gearInstance;
+    private GearInstanceRequirements gearInstanceRequirements;
     private Optional<ShinyStat> shinyStat = Optional.empty();
 
     private int currentPage;
@@ -104,14 +105,13 @@ public class GearItem extends GameItem
 
     @Override
     public GearInstanceRequirements getGearInstanceRequirements() {
-        return gearInstance == null ? null : gearInstance.gearInstanceRequirements();
+        return gearInstanceRequirements;
     }
 
     @Override
     public boolean meetsActualRequirements() {
-        return gearInstance != null
-                && gearInstance.gearInstanceRequirements() != null
-                && gearInstance.gearInstanceRequirements().meetsAllRequirements();
+        GearInstanceRequirements requirements = getGearInstanceRequirements();
+        return requirements != null && requirements.meetsAllRequirements();
     }
 
     @Override
@@ -217,9 +217,10 @@ public class GearItem extends GameItem
             Optional<ShinyStat> shinyStat,
             int rerolls,
             List<StatActualValue> identifications) {
+        this.gearInstanceRequirements = gearInstanceRequirements;
         this.shinyStat = shinyStat;
         if (gearInstance != null) {
-            gearInstance.updateStats(gearInfo, identifications, rerolls, gearInstanceRequirements);
+            gearInstance.updateStats(gearInfo, identifications, rerolls);
         }
     }
 

@@ -41,6 +41,7 @@ public class CharmItem extends GameItem
 
     private final CharmInfo charmInfo;
     private final CharmInstance charmInstance;
+    private GearInstanceRequirements gearInstanceRequirements;
 
     public CharmItem(CharmInfo charmInfo, boolean isUnidentified) {
         this.charmInfo = charmInfo;
@@ -141,14 +142,12 @@ public class CharmItem extends GameItem
 
     @Override
     public GearInstanceRequirements getGearInstanceRequirements() {
-        return charmInstance == null ? null : charmInstance.gearInstanceRequirements();
+        return gearInstanceRequirements;
     }
 
     @Override
     public boolean meetsActualRequirements() {
-        return charmInstance != null
-                && charmInstance.gearInstanceRequirements() != null
-                && charmInstance.gearInstanceRequirements().meetsAllRequirements();
+        return gearInstanceRequirements != null && gearInstanceRequirements.meetsAllRequirements();
     }
 
     @Override
@@ -190,8 +189,9 @@ public class CharmItem extends GameItem
 
     public void updateStats(
             GearInstanceRequirements gearInstanceRequirements, int rerolls, List<StatActualValue> identifications) {
+        this.gearInstanceRequirements = gearInstanceRequirements;
         if (charmInstance != null) {
-            charmInstance.updateStats(rerolls, charmInfo, identifications, gearInstanceRequirements);
+            charmInstance.updateStats(rerolls, charmInfo, identifications);
         }
     }
 

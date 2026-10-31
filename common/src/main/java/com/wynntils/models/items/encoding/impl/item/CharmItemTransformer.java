@@ -52,7 +52,7 @@ public class CharmItemTransformer extends ItemTransformer<CharmItem> {
         }
 
         List<StatActualValue> idList = identifications.values().stream().toList();
-        return ErrorOr.of(new CharmItem(charmInfo, CharmInstance.create(rerolls, charmInfo, idList, null)));
+        return ErrorOr.of(new CharmItem(charmInfo, CharmInstance.create(rerolls, charmInfo, idList)));
     }
 
     @Override

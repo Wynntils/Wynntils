@@ -52,7 +52,7 @@ public class TomeItemTransformer extends ItemTransformer<TomeItem> {
         }
 
         List<StatActualValue> idList = identifications.values().stream().toList();
-        return ErrorOr.of(new TomeItem(tomeInfo, TomeInstance.create(rerolls, tomeInfo, idList, null)));
+        return ErrorOr.of(new TomeItem(tomeInfo, TomeInstance.create(rerolls, tomeInfo, idList)));
     }
 
     @Override

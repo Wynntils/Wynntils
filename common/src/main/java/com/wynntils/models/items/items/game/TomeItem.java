@@ -33,10 +33,16 @@ public class TomeItem extends GameItem
                 IdentifiableItemProperty<TomeInfo, TomeInstance> {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
+    private final GearInstanceRequirements gearInstanceRequirements;
 
-    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance) {
+    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance, GearInstanceRequirements gearInstanceRequirements) {
         this.tomeInfo = tomeInfo;
         this.tomeInstance = tomeInstance;
+        this.gearInstanceRequirements = gearInstanceRequirements;
+    }
+
+    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance) {
+        this(tomeInfo, tomeInstance, null);
     }
 
     @Override
@@ -92,14 +98,12 @@ public class TomeItem extends GameItem
 
     @Override
     public GearInstanceRequirements getGearInstanceRequirements() {
-        return tomeInstance == null ? null : tomeInstance.gearInstanceRequirements();
+        return gearInstanceRequirements;
     }
 
     @Override
     public boolean meetsActualRequirements() {
-        return tomeInstance != null
-                && tomeInstance.gearInstanceRequirements() != null
-                && tomeInstance.gearInstanceRequirements().meetsAllRequirements();
+        return gearInstanceRequirements != null && gearInstanceRequirements.meetsAllRequirements();
     }
 
     @Override

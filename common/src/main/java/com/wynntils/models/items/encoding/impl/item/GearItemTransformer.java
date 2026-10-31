@@ -65,7 +65,7 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
 
         List<StatActualValue> idList = identifications.values().stream().toList();
 
-        GearInstance instance = GearInstance.create(gearInfo, idList, rerolls, null);
+        GearInstance instance = GearInstance.create(gearInfo, idList, rerolls);
         GearItem item = new GearItem(gearInfo, instance, shinyStat, 0);
         if (powderData != null) {
             item.setPowders(powderData.powders());

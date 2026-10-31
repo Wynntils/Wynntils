@@ -122,10 +122,6 @@ public final class RewardsModel extends Model {
             return null;
         }
 
-        if (isUnidentified) {
-            return new TomeItem(tomeInfo, null);
-        }
-
         WynnItemStatsParseResult result =
                 WynnItemParser.parseItemStackStatsPage(itemStack, tomeInfo.getVariableStatsMap());
         if (result.tier() != tomeInfo.tier()) {
@@ -134,8 +130,8 @@ public final class RewardsModel extends Model {
 
         return new TomeItem(
                 tomeInfo,
-                TomeInstance.create(
-                        result.rerolls(), tomeInfo, result.identifications(), result.gearInstanceRequirements()));
+                isUnidentified ? null : TomeInstance.create(result.rerolls(), tomeInfo, result.identifications()),
+                result.gearInstanceRequirements());
     }
 
     private List<AmplifierInfo> buildAmplifierInfo() {

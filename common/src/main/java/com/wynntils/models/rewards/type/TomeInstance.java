@@ -4,28 +4,18 @@
  */
 package com.wynntils.models.rewards.type;
 
-import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import java.util.List;
 import java.util.Optional;
 
-public record TomeInstance(
-        int rerolls,
-        List<StatActualValue> identifications,
-        Optional<Float> overallQuality,
-        GearInstanceRequirements gearInstanceRequirements) {
-    public static TomeInstance create(
-            int rerolls,
-            TomeInfo tomeInfo,
-            List<StatActualValue> identifications,
-            GearInstanceRequirements gearInstanceRequirements) {
+public record TomeInstance(int rerolls, List<StatActualValue> identifications, Optional<Float> overallQuality) {
+    public static TomeInstance create(int rerolls, TomeInfo tomeInfo, List<StatActualValue> identifications) {
         return new TomeInstance(
                 rerolls,
                 identifications,
                 StatCalculator.calculateOverallQuality(
-                        tomeInfo.name(), tomeInfo.getPossibleValueList(), identifications),
-                gearInstanceRequirements);
+                        tomeInfo.name(), tomeInfo.getPossibleValueList(), identifications));
     }
 
     public boolean hasOverallValue() {
