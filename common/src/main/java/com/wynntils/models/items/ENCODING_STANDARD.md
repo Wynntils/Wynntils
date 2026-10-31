@@ -373,10 +373,10 @@ Wynntils shares items in normal mode unless the sender ticks **Extended Encoding
 | stat id | `u8` | Which stat ([Stat Ids](#stat-ids)). |
 | base | `varint` | The stat's base value, as of sharing. |
 | value | `varint` | The number shown on the tooltip, except for spell costs (below). |
-| meter | `u8` | Numeric meter stage: `0` (empty) through `36` (`0x24`, full), with an implicit maximum of 36. |
+| meter | `u8` | Numeric meter stage: `0` (zero progress) through `36` (`0x24`, full), with an implicit maximum of 36. `0xFF` means no meter. |
 | perfect | `u8` | `0x01` for a perfect internal roll, `0x00` otherwise. Wynntils reads any nonzero value as true. |
 
-Both meter and perfect are always present for rolled entries. Wynntils writes the meter's current value directly, without rescaling it, and reads it with a maximum of 36. The decoder does not reject meter bytes above 36, but encoders should use the documented range. A missing meter (`CappedValue.EMPTY`) is written as zero, so it cannot be distinguished from an empty meter after decoding.
+Both meter and perfect bytes are always present for rolled entries. A missing meter (`CappedValue.EMPTY`) is written as `0xFF` and decoded back to `CappedValue.EMPTY`. For a present meter, Wynntils writes its current value directly, without rescaling it, and reads it with a maximum of 36. A zero-stage meter (`0x00`) is distinct from a missing meter. Values `0x25`–`0xFE` are outside the documented range; the decoder does not reject them, but encoders should not write them.
 
 **Spell costs.** For the eight spell cost stats, `1stSpellCost`–`4thSpellCost` (`0x00`–`0x03`) and `raw1stSpellCost`–`raw4thSpellCost` (`0x25`–`0x28`), both the base and the value are written with the opposite sign to the item data and the tooltip. Readers flip the item data's base the same way before using it.
 

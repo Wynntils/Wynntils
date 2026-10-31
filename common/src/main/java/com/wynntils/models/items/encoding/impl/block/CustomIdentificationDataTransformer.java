@@ -29,6 +29,7 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
     private static final int PERFECT_INTERNAL_ROLL_FLAG = 1;
     private static final int ICON_PREFIX_FLAG = 1 << 1;
     private static final int VANILLA_METER_FLAG = 1 << 2;
+    private static final int ABSENT_VANILLA_METER = 0xFF;
 
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, CustomIdentificationsData data) {
@@ -212,7 +213,10 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
             bytes.add(UnsignedByte.of((byte) idOpt.get().intValue()));
             bytes.addAll(List.of(UnsignedByteUtils.encodeVariableSizedInteger(identification.value())));
 
-            bytes.add(UnsignedByte.of((byte) (identification.vanillaMeter().current())));
+            int meterStage = identification.vanillaMeter().equals(CappedValue.EMPTY)
+                    ? ABSENT_VANILLA_METER
+                    : identification.vanillaMeter().current();
+            bytes.add(UnsignedByte.of((byte) meterStage));
             bytes.add(UnsignedByte.of((byte) (identification.perfectInternalRoll() ? 1 : 0)));
         }
 
@@ -234,7 +238,9 @@ public class CustomIdentificationDataTransformer extends DataTransformer<CustomI
             int value = (int) UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
             int wheelCurrent = byteReader.read().value();
-            CappedValue vanillaMeter = new CappedValue(wheelCurrent, TooltipIdentificationMeterFont.STAGES);
+            CappedValue vanillaMeter = wheelCurrent == ABSENT_VANILLA_METER
+                    ? CappedValue.EMPTY
+                    : new CappedValue(wheelCurrent, TooltipIdentificationMeterFont.STAGES);
             boolean perfectInternalRoll = byteReader.read().value() != 0;
 
             identifications.add(
