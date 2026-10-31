@@ -228,7 +228,7 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                             item, displayName, lastPart.getPartStyle().getStyle());
 
                     styledText = styledText
-                            .replaceFirst(matcher.group("fullName"), "")
+                            .replaceFirst(Pattern.quote(matcher.group("fullName")), "")
                             .append(StyledText.fromComponent(nameComponent));
 
                     updatedName = true;
