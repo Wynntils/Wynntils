@@ -72,6 +72,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ColorScaleUtils;
+import com.wynntils.utils.wynn.WynnUtils;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
@@ -211,7 +212,7 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                 Matcher matcher = styledText.getMatcher(ITEM_NAME_PATTERN);
                 if (!updatedName && matcher.matches()) {
                     boolean isShiny = matcher.group("isShiny") != null;
-                    String matchedName = matcher.group("itemName");
+                    String matchedName = WynnUtils.normalizeBadString(matcher.group("itemName"));
                     String itemName = item.getName();
                     String displayName = isShiny ? "Shiny " : "";
 
