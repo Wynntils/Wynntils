@@ -4,9 +4,9 @@
  */
 package com.wynntils.handlers.tooltip.type;
 
+import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.stats.type.StatListOrdering;
-import java.util.Collections;
 import java.util.NavigableMap;
 import net.minecraft.network.chat.TextColor;
 
@@ -44,8 +44,8 @@ public record TooltipOptions(
             RollStyle.WHEEL,
             RollStyle.WHEEL,
             0,
-            Collections.emptyNavigableMap(),
-            false);
+            ItemStatInfoFeature.LERP_MAP,
+            true);
 
     public enum IdentificationDisplay {
         PERCENTAGE,

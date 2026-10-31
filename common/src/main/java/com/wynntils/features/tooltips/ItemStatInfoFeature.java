@@ -106,7 +106,7 @@ public class ItemStatInfoFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind weightContributionKeyBind = KeyBindDefinition.SHOW_WEIGHT_CONTRIBUTION.create(null, null);
 
-    private static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
+    public static final NavigableMap<Float, TextColor> LERP_MAP = new TreeMap<>(Map.of(
             0f,
             TextColor.fromLegacyFormat(ChatFormatting.RED),
             40f,
