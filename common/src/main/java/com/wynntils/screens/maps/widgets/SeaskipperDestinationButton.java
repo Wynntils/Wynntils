@@ -7,9 +7,9 @@ package com.wynntils.screens.maps.widgets;
 import com.google.common.collect.Lists;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.CustomSeaskipperScreen;
-import com.wynntils.services.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -26,7 +26,7 @@ import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
 
 public class SeaskipperDestinationButton extends WynntilsButton {
-    private final SeaskipperDestinationPoi destination;
+    private final SeaskipperDestination destination;
     private final CustomSeaskipperScreen seaskipperScreen;
 
     public SeaskipperDestinationButton(
@@ -34,7 +34,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
             int y,
             int width,
             int height,
-            SeaskipperDestinationPoi destination,
+            SeaskipperDestination destination,
             CustomSeaskipperScreen seaskipperScreen) {
         super(x, y, width, height, Component.literal("Destination Button"));
         this.destination = destination;
@@ -61,8 +61,8 @@ public class SeaskipperDestinationButton extends WynntilsButton {
                         guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.customSeaskipperScreen.destination",
-                                destination.getName(),
-                                destination.getLevel())),
+                                destination.profile().destination(),
+                                destination.profile().combatLevel())),
                         x,
                         y + 1,
                         CommonColors.BLACK,
@@ -73,8 +73,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
 
         CustomColor priceColor;
 
-        if (Models.Emerald.getAmountInInventory()
-                >= destination.getDestination().item().getPrice()) {
+        if (Models.Emerald.getAmountInInventory() >= destination.item().getPrice()) {
             priceColor = CommonColors.GREEN;
         } else {
             priceColor = CommonColors.RED;
@@ -85,9 +84,9 @@ public class SeaskipperDestinationButton extends WynntilsButton {
                         guiGraphics,
                         StyledText.fromComponent(Component.translatable(
                                 "screens.wynntils.customSeaskipperScreen.cost",
-                                destination.getDestination().item().getPrice())),
+                                destination.item().getPrice())),
                         x,
-                        y + 10,
+                        y + 13,
                         priceColor,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -99,12 +98,14 @@ public class SeaskipperDestinationButton extends WynntilsButton {
 
             if (seaskipperScreen.getSelectedDestination() == destination) {
                 tooltip = List.of(Component.translatable(
-                                "screens.wynntils.customSeaskipperScreen.travelToDestination", destination.getName())
+                                "screens.wynntils.customSeaskipperScreen.travelToDestination",
+                                destination.profile().destination())
                         .withStyle(ChatFormatting.GRAY));
             } else {
-                tooltip = List.of(
-                        Component.translatable("screens.wynntils.customSeaskipperScreen.select", destination.getName())
-                                .withStyle(ChatFormatting.GRAY));
+                tooltip = List.of(Component.translatable(
+                                "screens.wynntils.customSeaskipperScreen.select",
+                                destination.profile().destination())
+                        .withStyle(ChatFormatting.GRAY));
             }
 
             guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
@@ -114,7 +115,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
     @Override
     public void onPress(InputWithModifiers input) {}
 
-    public SeaskipperDestinationPoi getDestination() {
+    public SeaskipperDestination getDestination() {
         return destination;
     }
 }

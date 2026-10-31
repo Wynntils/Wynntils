@@ -9,6 +9,7 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.services.mapdata.attributes.merge.MapAttributesMerger;
 import com.wynntils.services.mapdata.attributes.resolving.MapAttributesResolver;
 import com.wynntils.services.mapdata.attributes.resolving.OverrideMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
@@ -16,12 +17,14 @@ import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.type.MapFeature;
+import com.wynntils.services.mapdata.providers.MapDataProviderInfo;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.services.mapdata.providers.builtin.CategoriesProvider;
 import com.wynntils.services.mapdata.providers.builtin.CombatListProvider;
 import com.wynntils.services.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.services.mapdata.providers.builtin.PlaceListProvider;
 import com.wynntils.services.mapdata.providers.builtin.ServiceListProvider;
+import com.wynntils.services.mapdata.providers.json.JsonOverrideProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.providers.type.MapDataOverrideProvider;
@@ -29,19 +32,25 @@ import com.wynntils.services.mapdata.providers.type.MapDataProvider;
 import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapDataProvidedType;
 import com.wynntils.services.mapdata.type.MapIcon;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 public class MapDataService extends Service {
+    public static final File LOCAL_PROVIDERS = WynntilsMod.getModStorageDir("localProviders");
+
     private static final CategoriesProvider CATEGORIES_PROVIDER = new CategoriesProvider();
     private static final MapIconsProvider MAP_ICONS_PROVIDER = new MapIconsProvider();
     private static final ServiceListProvider SERVICE_LIST_PROVIDER = new ServiceListProvider();
@@ -49,37 +58,74 @@ public class MapDataService extends Service {
     private static final PlaceListProvider PLACE_LIST_PROVIDER = new PlaceListProvider();
 
     private static final MapDataProvider ONLINE_PLACEHOLDER_PROVIDER = new PlaceholderProvider();
+    private static final MapDataProvider UNLOADED_PLACEHOLDER_PROVIDER = new PlaceholderProvider();
+
+    private static final String JSON_PROVIDER_OWNER = "user";
     // FIXME: i18n
     private static final String NAMELESS_CATEGORY = "Category '%s'";
 
-    private final LinkedHashMap<String, MapDataProvider> allProviders = new LinkedHashMap<>();
+    // Every known provider (built-in and JSON), enabled or not, keyed by its complete id (e.g. "built-in:waypoints")
+    private final LinkedHashMap<String, MapDataProviderInfo> registeredProviders = new LinkedHashMap<>();
     private final LinkedHashMap<String, MapDataOverrideProvider> overrideProviders = new LinkedHashMap();
 
     // Cache for resolved attributes and icons
-    private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new HashMap<>();
-    private final Map<String, Optional<MapIcon>> iconCache = new HashMap<>();
+    private final Map<MapFeature, ResolvedMapAttributes> resolvedAttributesCache = new ConcurrentHashMap<>();
+    private final Map<String, Optional<MapIcon>> iconCache = new ConcurrentHashMap<>();
 
-    // Storage for json providers
+    // Storage for json providers, keyed by provider id
     @Persisted
-    private final Storage<Map<JsonProviderInfo, Boolean>> jsonProviderInfos = new Storage<>(new LinkedHashMap<>());
+    private final Storage<Map<String, JsonProviderInfo>> jsonProviders = new Storage<>(new LinkedHashMap<>());
+
+    // User overrides of each provider's default enabled state, keyed by complete provider id
+    // Note: Storages are loaded in alphabetical order, so this must remain the last json provider related storage
+    @Persisted
+    private final Storage<Map<String, Boolean>> providerEnabledOverrides = new Storage<>(new LinkedHashMap<>());
+
+    // Storage for json override providers
+    @Persisted
+    private final Storage<Map<JsonOverrideProvider, Boolean>> jsonOverrideProviders =
+            new Storage<>(new LinkedHashMap<>());
 
     public MapDataService() {
         super(List.of());
+
+        FileUtils.mkdir(LOCAL_PROVIDERS);
 
         createBuiltInProviders();
     }
 
     @Override
     public void onStorageLoad(Storage<?> storage) {
-        if (storage == jsonProviderInfos) {
+        if (storage == providerEnabledOverrides) {
+            // jsonProviders has been loaded before this
+            refreshLocalJsonProviders();
             reloadJsonProviders();
+        }
+        if (storage == jsonOverrideProviders) {
+            reloadJsonOverrideProviders();
         }
     }
 
     @Override
     public void reloadData() {
-        getProviders().forEach(MapDataProvider::reloadData);
+        // Reload disabled providers as well, so they are up to date when enabled
+        registeredProviders.values().forEach(info -> info.provider().reloadData());
+        refreshLocalJsonProviders();
         reloadJsonProviders();
+        reloadJsonOverrideProviders();
+    }
+
+    public Stream<MapCategory> getDefinedCategories() {
+        return getProviders().flatMap(MapDataProvider::getCategories);
+    }
+
+    public Stream<String> getFeatureCategoryIds() {
+        return getFeatures().distinct().map(MapFeature::getCategoryId);
+    }
+
+    public Stream<String> allPossibleCategories() {
+        return Stream.concat(getFeatureCategoryIds(), getDefinedCategories().map(MapCategory::getCategoryId))
+                .distinct();
     }
 
     public Stream<MapFeature> getFeatures() {
@@ -92,6 +138,56 @@ public class MapDataService extends Service {
 
     public Stream<MapFeature> getFeaturesForCategory(String categoryId) {
         return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
+    }
+
+    public Optional<MapAttributes> getBaseAttributesForCategory(String categoryId) {
+        List<MapAttributes> attributesList = getCategoryDefinitions(categoryId)
+                .map(MapCategory::getAttributes)
+                .filter(Optional::isPresent)
+                .map(Optional::get)
+                .collect(Collectors.toList());
+
+        if (attributesList.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(MapAttributesMerger.mergeAttributes(attributesList));
+    }
+
+    public Optional<MapAttributes> getOwnAttributesForCategory(String categoryId) {
+        List<MapAttributes> ownAttributes = new ArrayList<>();
+
+        overrideProviders.values().stream()
+                .filter(provider -> provider.getOverridenCategoryIds().anyMatch(categoryId::equals))
+                .map(provider -> provider.getOverrideAttributes(null))
+                .filter(Objects::nonNull)
+                .forEach(ownAttributes::add);
+
+        getBaseAttributesForCategory(categoryId).ifPresent(ownAttributes::add);
+
+        if (ownAttributes.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(MapAttributesMerger.mergeAttributes(ownAttributes));
+    }
+
+    public Optional<MapAttributes> getInheritedAttributesForCategory(String categoryId) {
+        List<MapAttributes> resolvedAttributes = new ArrayList<>();
+
+        overrideProviders.values().stream()
+                .filter(provider -> provider.getOverridenCategoryIds()
+                        .anyMatch(id -> categoryId.startsWith(id) && !id.equals(categoryId)))
+                .map(provider -> provider.getOverrideAttributes(null))
+                .filter(Objects::nonNull)
+                .forEach(resolvedAttributes::add);
+
+        for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
+            getBaseAttributesForCategory(id).ifPresent(resolvedAttributes::add);
+        }
+
+        if (resolvedAttributes.isEmpty()) {
+            return Optional.empty();
+        }
+        return Optional.of(MapAttributesMerger.mergeAttributes(resolvedAttributes));
     }
 
     // region Lookup features and attribute resolution
@@ -160,64 +256,124 @@ public class MapDataService extends Service {
     // In the future, per-account, per-character or shared
     // can be added just from disk, or downloaded from an url
     public void addJsonProvider(JsonProviderInfo providerInfo) {
-        jsonProviderInfos.get().keySet().removeIf(i -> i.providerId().equals(providerInfo.providerId()));
-        jsonProviderInfos.get().put(providerInfo, true);
-        jsonProviderInfos.touched();
+        JsonProviderInfo oldInfo = jsonProviders.get().put(providerInfo.providerId(), providerInfo);
+        if (oldInfo != null && !oldInfo.completeId().equals(providerInfo.completeId())) {
+            unregisterProvider(oldInfo.completeId());
+        }
+        jsonProviders.touched();
+
+        // Newly added providers are always enabled
+        if (providerEnabledOverrides.get().remove(providerInfo.completeId()) != null) {
+            providerEnabledOverrides.touched();
+        }
+
         registerJsonProvider(providerInfo);
     }
 
     public boolean removeJsonProvider(String providerId) {
-        boolean found = jsonProviderInfos
-                .get()
-                .keySet()
-                .removeIf(info -> info.providerId().equals(providerId));
-        if (!found) return false;
+        JsonProviderInfo providerInfo = jsonProviders.get().remove(providerId);
+        if (providerInfo == null) return false;
 
-        jsonProviderInfos.touched();
-        allProviders.keySet().stream()
-                .filter(id -> id.endsWith(providerId))
-                .findFirst()
-                .ifPresent(allProviders::remove);
+        jsonProviders.touched();
+        if (providerEnabledOverrides.get().remove(providerInfo.completeId()) != null) {
+            providerEnabledOverrides.touched();
+        }
+        unregisterProvider(providerInfo.completeId());
 
         return true;
     }
 
-    public boolean toggleJsonProvider(String providerId) {
-        Optional<JsonProviderInfo> providerOpt = jsonProviderInfos.get().keySet().stream()
-                .filter(info -> info.providerId().equals(providerId))
+    public Map<String, JsonProviderInfo> getJsonProviderInfos() {
+        return Collections.unmodifiableMap(jsonProviders.get());
+    }
+
+    public Optional<JsonProviderInfo> getJsonProviderInfoByCompleteId(String completeId) {
+        return jsonProviders.get().values().stream()
+                .filter(info -> info.completeId().equals(completeId))
                 .findFirst();
-        if (providerOpt.isEmpty()) return false;
+    }
 
-        JsonProviderInfo provider = providerOpt.get();
-        boolean enabled = jsonProviderInfos.get().get(provider);
-        jsonProviderInfos.get().put(provider, !enabled);
-        jsonProviderInfos.touched();
+    /**
+     * @return Every registered provider, enabled or not, keyed by complete provider id
+     */
+    public Map<String, MapDataProviderInfo> getProviderInfos() {
+        return Collections.unmodifiableMap(registeredProviders);
+    }
 
-        if (enabled) {
-            allProviders.entrySet().stream()
-                    .filter(entry -> entry.getKey().endsWith(providerId))
-                    .findFirst()
-                    .ifPresent(entry -> {
-                        allProviders.remove(entry.getKey());
-                        invalidateCaches(entry.getValue());
-                    });
+    public boolean isProviderEnabled(String providerId) {
+        MapDataProviderInfo info = registeredProviders.get(providerId);
+        if (info == null) return false;
+
+        // Overrides are ignored for structural providers, even if they end up in storage somehow
+        if (!info.toggleable()) return info.enabledByDefault();
+
+        return providerEnabledOverrides.get().getOrDefault(providerId, info.enabledByDefault());
+    }
+
+    /**
+     * Toggles a provider's enabled state.
+     *
+     * @param providerId The complete provider id
+     * @return false if no such provider is registered, or it is not toggleable
+     */
+    public boolean toggleProvider(String providerId) {
+        MapDataProviderInfo info = registeredProviders.get(providerId);
+        if (info == null || !info.toggleable()) return false;
+
+        boolean enabled = !isProviderEnabled(providerId);
+        if (enabled == info.enabledByDefault()) {
+            providerEnabledOverrides.get().remove(providerId);
         } else {
-            registerJsonProvider(provider);
+            providerEnabledOverrides.get().put(providerId, enabled);
+        }
+        providerEnabledOverrides.touched();
+
+        if (enabled && info.provider() == UNLOADED_PLACEHOLDER_PROVIDER) {
+            // This is a JSON provider that was disabled on load, so load it now
+            getJsonProviderInfoByCompleteId(providerId).ifPresent(this::registerJsonProvider);
+        } else {
+            invalidateCaches(info.provider());
         }
 
         return true;
     }
 
-    public boolean isJsonProviderEnabled(String providerId) {
-        return jsonProviderInfos.get().keySet().stream()
-                .filter(info -> info.providerId().equals(providerId))
-                .findFirst()
-                .map(jsonProviderInfos.get()::get)
-                .orElse(false);
+    public void addOverrideProvider(JsonOverrideProvider provider) {
+        jsonOverrideProviders.get().keySet().removeIf(i -> i.getProviderId().equals(provider.getProviderId()));
+        jsonOverrideProviders.get().put(provider, true);
+        jsonOverrideProviders.touched();
+        registerOverrideProvider(provider.getProviderId(), provider);
     }
 
-    public Map<JsonProviderInfo, Boolean> getJsonProviderInfos() {
-        return Collections.unmodifiableMap(jsonProviderInfos.get());
+    public void removeOverrideProvider(String providerId) {
+        jsonOverrideProviders.get().keySet().removeIf(i -> i.getProviderId().equals(providerId));
+        jsonOverrideProviders.touched();
+        unregisterOverrideProvider(providerId);
+    }
+
+    public void toggleOverrideProvider(String providerId) {
+        Optional<JsonOverrideProvider> providerOpt = jsonOverrideProviders.get().keySet().stream()
+                .filter(info -> info.getProviderId().equals(providerId))
+                .findFirst();
+        if (providerOpt.isEmpty()) return;
+
+        JsonOverrideProvider provider = providerOpt.get();
+        boolean enabled = jsonOverrideProviders.get().get(provider);
+        jsonOverrideProviders.get().put(provider, !enabled);
+        jsonOverrideProviders.touched();
+
+        if (enabled) {
+            unregisterOverrideProvider(providerId);
+        } else {
+            registerOverrideProvider(providerId, provider);
+        }
+    }
+
+    public JsonOverrideProvider getOverrideProvider(String providerId) {
+        return jsonOverrideProviders.get().keySet().stream()
+                .filter(info -> info.getProviderId().equals(providerId))
+                .findFirst()
+                .orElse(null);
     }
 
     public void registerOverrideProvider(String overrideProviderId, MapDataOverrideProvider provider) {
@@ -247,38 +403,60 @@ public class MapDataService extends Service {
     /**
      * Register a built-in provider. Call this method in a listener for {@link com.wynntils.core.mod.event.WynntilsInitEvent.ModInitFinished}, unless you have a good reason not to.
      *
-     * @param provider The provider to register
+     * @param provider   The provider to register
+     * @param owner      The component registering the provider
+     * @param toggleable Whether users can disable this provider. Must be false for providers that other providers
+     *                   depend on (e.g. category or icon definitions).
      */
-    public void registerBuiltInProvider(BuiltInProvider provider) {
-        registerProvider("built-in:" + provider.getProviderId(), provider);
+    public void registerBuiltInProvider(BuiltInProvider provider, Object owner, boolean toggleable) {
+        registerProvider(
+                "built-in:" + provider.getProviderId(), new MapDataProviderInfo(provider, owner, toggleable, true));
         WynntilsMod.registerEventListener(provider);
     }
 
     private void createBuiltInProviders() {
-        // Metadata
-        registerBuiltInProvider(CATEGORIES_PROVIDER);
-        registerBuiltInProvider(MAP_ICONS_PROVIDER);
+        // Metadata, which all other providers depend on
+        registerBuiltInProvider(CATEGORIES_PROVIDER, this, false);
+        registerBuiltInProvider(MAP_ICONS_PROVIDER, this, false);
 
         // Locations
-        registerBuiltInProvider(SERVICE_LIST_PROVIDER);
-        registerBuiltInProvider(COMBAT_LIST_PROVIDER);
-        registerBuiltInProvider(PLACE_LIST_PROVIDER);
+        registerBuiltInProvider(SERVICE_LIST_PROVIDER, this, true);
+        registerBuiltInProvider(COMBAT_LIST_PROVIDER, this, true);
+        registerBuiltInProvider(PLACE_LIST_PROVIDER, this, true);
     }
 
-    private void registerProvider(String providerId, MapDataProvider provider) {
-        if (provider == null) {
-            WynntilsMod.warn("Provider missing for '" + providerId + "'");
-            return;
-        }
+    private void registerProvider(String providerId, MapDataProviderInfo providerInfo) {
         // Add or update the provider
-        allProviders.putFirst(providerId, provider);
-        provider.onChange(this::onProviderChange);
+        registeredProviders.putFirst(providerId, providerInfo);
+        providerInfo.provider().onChange(this::onProviderChange);
 
         // Invalidate caches
-        invalidateCaches(provider);
+        invalidateCaches(providerInfo.provider());
+    }
+
+    private void unregisterProvider(String providerId) {
+        MapDataProviderInfo providerInfo = registeredProviders.remove(providerId);
+        if (providerInfo == null) return;
+
+        invalidateCaches(providerInfo.provider());
+    }
+
+    public Optional<JsonProviderInfo> getJsonProviderInfo(MapDataProvider provider) {
+        if (provider == null) return Optional.empty();
+
+        return jsonProviders.get().values().stream()
+                .filter(info -> getJsonProviderFromInfo(info)
+                        .map(p -> p == provider || p.equals(provider))
+                        .orElse(false))
+                .findFirst();
     }
 
     private void registerJsonProvider(JsonProviderInfo providerInfo) {
+        if (!providerEnabledOverrides.get().getOrDefault(providerInfo.completeId(), true)) {
+            registerJsonProvider(providerInfo.completeId(), UNLOADED_PLACEHOLDER_PROVIDER);
+            return;
+        }
+
         switch (providerInfo.providerType()) {
             case BUNDLED -> createBundledProvider(providerInfo.providerId(), providerInfo.providerFilename());
             case LOCAL -> createLocalProvider(providerInfo.providerId(), providerInfo.providerFilePath());
@@ -286,30 +464,78 @@ public class MapDataService extends Service {
         }
     }
 
+    private void registerJsonProvider(String completeId, MapDataProvider provider) {
+        if (provider == null) {
+            WynntilsMod.warn("Provider missing for '" + completeId + "'");
+            return;
+        }
+
+        registerProvider(completeId, new MapDataProviderInfo(provider, JSON_PROVIDER_OWNER, true, true));
+    }
+
     private void createBundledProvider(String id, String filename) {
         String completeId = "bundled:" + id;
         JsonProvider provider = JsonProvider.loadBundledResource(completeId, filename);
-        registerProvider(completeId, provider);
+        registerJsonProvider(completeId, provider);
     }
 
     private void createLocalProvider(String id, String filename) {
         String completeId = "local:" + id;
         JsonProvider provider = JsonProvider.loadLocalFile(completeId, new File(filename));
-        registerProvider(completeId, provider);
+        registerJsonProvider(completeId, provider);
     }
 
     private void createOnlineProvider(String id, String url) {
         String completeId = "online:" + id;
         // Register a dummy provider; this will be replaced once loading has finished
-        registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
-        JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
+        registerJsonProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
+        JsonProvider.loadOnlineResource(completeId, url, (loadedId, provider) -> {
+            // Do not resurrect a provider that was removed while it was downloading
+            if (!registeredProviders.containsKey(loadedId)) return;
+
+            registerJsonProvider(loadedId, provider);
+        });
     }
 
     private void reloadJsonProviders() {
-        jsonProviderInfos.get().entrySet().stream()
+        jsonProviders.get().values().forEach(this::registerJsonProvider);
+    }
+
+    public void refreshLocalJsonProviders() {
+        File[] files = LOCAL_PROVIDERS.listFiles();
+
+        if (files != null) {
+            for (File file : files) {
+                if (!file.getName().endsWith(".json")) continue;
+
+                boolean alreadyKnown = jsonProviders.get().values().stream()
+                        .anyMatch(info -> info.providerType() == JsonProviderInfo.JsonProviderType.LOCAL
+                                && info.providerFilePath().equals(file.getAbsolutePath()));
+
+                if (alreadyKnown) continue;
+
+                String providerId = file.getName().substring(0, file.getName().length() - ".json".length());
+
+                JsonProviderInfo providerInfo = JsonProviderInfo.createLocal(providerId, file.getAbsolutePath());
+
+                addJsonProvider(providerInfo);
+            }
+        }
+
+        // Delete local providers whose file no longer exists
+        jsonProviders.get().values().stream()
+                .filter(info -> info.providerType() == JsonProviderInfo.JsonProviderType.LOCAL)
+                .filter(info -> !new File(info.providerFilePath()).isFile())
+                .map(JsonProviderInfo::providerId)
+                .toList()
+                .forEach(this::removeJsonProvider);
+    }
+
+    private void reloadJsonOverrideProviders() {
+        jsonOverrideProviders.get().entrySet().stream()
                 .filter(Map.Entry::getValue)
                 .map(Map.Entry::getKey)
-                .forEach(this::registerJsonProvider);
+                .forEach(provider -> this.registerOverrideProvider(provider.getProviderId(), provider));
     }
 
     private void onProviderChange(MapDataProvidedType mapDataProvidedType) {
@@ -343,8 +569,22 @@ public class MapDataService extends Service {
         iconCache.keySet().removeAll(toBeRemovedIcons);
     }
 
-    private Stream<MapDataProvider> getProviders() {
-        return allProviders.values().stream();
+    public Stream<MapDataProvider> getProviders() {
+        return registeredProviders.entrySet().stream()
+                .filter(entry -> isProviderEnabled(entry.getKey()))
+                .map(entry -> entry.getValue().provider());
+    }
+
+    public Optional<MapDataProvider> getProviderFromId(String providerId) {
+        return registeredProviders.entrySet().stream()
+                .filter(entry ->
+                        entry.getKey().equals(providerId) || entry.getKey().endsWith(":" + providerId))
+                .map(entry -> entry.getValue().provider())
+                .findFirst();
+    }
+
+    private Optional<MapDataProvider> getJsonProviderFromInfo(JsonProviderInfo info) {
+        return Optional.ofNullable(registeredProviders.get(info.completeId())).map(MapDataProviderInfo::provider);
     }
 
     // endregion
@@ -426,6 +666,12 @@ public class MapDataService extends Service {
         }
 
         return 0;
+    }
+
+    private String getParentCategoryId(String categoryId) {
+        int index = categoryId.lastIndexOf(':');
+        if (index == -1) return null;
+        return categoryId.substring(0, index);
     }
 
     private static final class PlaceholderProvider implements MapDataProvider {
