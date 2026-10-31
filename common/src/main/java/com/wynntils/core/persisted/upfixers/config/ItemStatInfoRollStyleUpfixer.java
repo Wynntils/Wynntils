@@ -22,21 +22,44 @@ public class ItemStatInfoRollStyleUpfixer implements Upfixer {
             configObject.add(PREFIX + "overallRollInSpecialName", overallPercentage);
         }
 
+        JsonElement overallPercentageInName = configObject.remove(PREFIX + "overallPercentageInName");
+        JsonElement identificationDecorations = configObject.remove(PREFIX + "identificationDecorations");
+        boolean showOverall = overallPercentageInName == null || overallPercentageInName.getAsBoolean();
+        boolean showDecorations = identificationDecorations == null || identificationDecorations.getAsBoolean();
+
+        if (overallPercentageInName != null && !configObject.has(PREFIX + "identifiedOverallRollStyle")) {
+            configObject.addProperty(
+                    PREFIX + "identifiedOverallRollStyle",
+                    EnumUtils.toJsonFormat(showOverall ? RollStyle.PERCENTAGE : RollStyle.NONE));
+        }
+        if (identificationDecorations != null && !configObject.has(PREFIX + "identifiedRollStyle")) {
+            configObject.addProperty(
+                    PREFIX + "identifiedRollStyle",
+                    EnumUtils.toJsonFormat(showDecorations ? RollStyle.PERCENTAGE : RollStyle.NONE));
+        }
+
         JsonElement craftedPercentages = configObject.remove(PREFIX + "craftedPercentages");
         JsonElement showRollWheel = configObject.remove(PREFIX + "showRollWheel");
 
-        if (craftedPercentages != null || showRollWheel != null) {
+        if (craftedPercentages != null
+                || showRollWheel != null
+                || overallPercentageInName != null
+                || identificationDecorations != null) {
             boolean percentages = craftedPercentages == null || craftedPercentages.getAsBoolean();
             boolean wheel = showRollWheel == null || showRollWheel.getAsBoolean();
 
             RollStyle rollStyle = percentages ? RollStyle.PERCENTAGE : wheel ? RollStyle.WHEEL : RollStyle.NONE;
 
             if (!configObject.has(PREFIX + "craftedOverallRollStyle")) {
-                configObject.addProperty(PREFIX + "craftedOverallRollStyle", EnumUtils.toJsonFormat(rollStyle));
+                configObject.addProperty(
+                        PREFIX + "craftedOverallRollStyle",
+                        EnumUtils.toJsonFormat(showOverall ? rollStyle : RollStyle.NONE));
             }
 
             if (!configObject.has(PREFIX + "craftedRollStyle")) {
-                configObject.addProperty(PREFIX + "craftedRollStyle", EnumUtils.toJsonFormat(rollStyle));
+                configObject.addProperty(
+                        PREFIX + "craftedRollStyle",
+                        EnumUtils.toJsonFormat(showDecorations ? rollStyle : RollStyle.NONE));
             }
         }
 
