@@ -47,40 +47,40 @@ public class ItemStatInfoFeature extends Feature {
     private final Set<WynnItem> brokenItems = new HashSet<>();
 
     @Persisted
-    public final Config<Boolean> perfect = new Config<>(true);
+    private final Config<Boolean> perfect = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> defective = new Config<>(true);
+    private final Config<Boolean> defective = new Config<>(true);
 
     @Persisted
-    public final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
+    private final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
 
     @Persisted
-    public final Config<Boolean> groupIdentifications = new Config<>(true);
+    private final Config<Boolean> groupIdentifications = new Config<>(true);
 
     @Persisted
-    public final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.ALL);
+    private final Config<ItemWeightSource> itemWeights = new Config<>(ItemWeightSource.ALL);
 
     @Persisted
-    public final Config<RollStyle> identifiedOverallRollStyle = new Config<>(RollStyle.PERCENTAGE);
+    private final Config<RollStyle> identifiedOverallRollStyle = new Config<>(RollStyle.PERCENTAGE);
 
     @Persisted
-    public final Config<Boolean> overallRollInSpecialName = new Config<>(true);
+    private final Config<Boolean> overallRollInSpecialName = new Config<>(true);
 
     @Persisted
-    public final Config<RollStyle> craftedOverallRollStyle = new Config<>(RollStyle.NONE);
+    private final Config<RollStyle> craftedOverallRollStyle = new Config<>(RollStyle.PERCENTAGE);
 
     @Persisted
-    public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
+    private final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @Persisted
-    public final Config<Boolean> rainbowInternalRoll = new Config<>(true);
+    private final Config<Boolean> rainbowInternalRoll = new Config<>(true);
 
     @Persisted
-    public final Config<RollStyle> identifiedRollStyle = new Config<>(RollStyle.PERCENTAGE);
+    private final Config<RollStyle> identifiedRollStyle = new Config<>(RollStyle.PERCENTAGE);
 
     @Persisted
-    public final Config<RollStyle> craftedRollStyle = new Config<>(RollStyle.WHEEL);
+    private final Config<RollStyle> craftedRollStyle = new Config<>(RollStyle.PERCENTAGE);
 
     @Persisted
     public final Config<Boolean> colorLerp = new Config<>(true);
