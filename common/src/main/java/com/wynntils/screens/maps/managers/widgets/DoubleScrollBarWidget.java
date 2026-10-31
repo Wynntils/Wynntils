@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps.managers.widgets;
 
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -45,7 +44,6 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
 
     private final int x;
     private final int y;
-    private final CategoryManagementScreen parent;
 
     private int canvasWidth;
     private int canvasHeight;
@@ -63,11 +61,10 @@ public abstract class DoubleScrollBarWidget extends AbstractWidget {
     private float verticalButtonLength;
     private float horizontalButtonLength;
 
-    public DoubleScrollBarWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
+    public DoubleScrollBarWidget(int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("Category Tree Widget"));
         this.x = x;
         this.y = y;
-        this.parent = parent;
 
         this.canvasWidth = width;
         this.canvasHeight = height;

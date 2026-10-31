@@ -94,8 +94,7 @@ public abstract class ScrollBarWidget extends AbstractWidget {
             onScrollOffsetChanged();
         }
 
-        RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, x, y, this.width, this.height);
+        renderBackground(guiGraphics, mouseX, mouseY, partialTick);
 
         RenderUtils.enableScissor(
                 guiGraphics,
@@ -117,6 +116,11 @@ public abstract class ScrollBarWidget extends AbstractWidget {
         } else if (isOntopOfVerticalUpButton(mouseX, mouseY) || isOntopOfVerticalDownButton(mouseX, mouseY)) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
+    }
+
+    protected void renderBackground(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, x, y, this.width, this.height);
     }
 
     protected abstract void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick);
