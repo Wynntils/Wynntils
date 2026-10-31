@@ -374,9 +374,6 @@ public final class ItemHandler extends Handler {
             try {
                 annotation = annotator.getAnnotation(itemStack, simplified);
                 if (annotation != null) {
-                    if (annotation instanceof PagedItemProperty pagedItem) {
-                        ItemPageAnnotator.update(pagedItem, itemStack);
-                    }
                     break;
                 }
             } catch (Throwable t) {
