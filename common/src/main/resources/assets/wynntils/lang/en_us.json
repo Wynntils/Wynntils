@@ -3048,6 +3048,8 @@
   "function.wynntils.rainbowShader.name": "Wynncraft Rainbow Shader",
   "function.wynntils.remnantCount.description": "Returns the amount of your currently active Remnants",
   "function.wynntils.remnantCount.name": "Shaman Remnant Count",
+  "function.wynntils.ritualCircleRadius.description": "The current radius of Ritual Circle",
+  "function.wynntils.ritualCircleRadius.name": "Ritual Circle radius",
   "function.wynntils.scoreboardPartyMembers.description": "Number of party members parsed from scoreboard",
   "function.wynntils.scoreboardPartyMembers.name": "Scoreboard Party Members",
   "function.wynntils.shamanMask.argument.isColored": "Should the name be colored according to the mask's color?",
