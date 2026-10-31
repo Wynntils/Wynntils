@@ -144,7 +144,7 @@ public class UnknownGearItem extends GameItem
 
     @Override
     public boolean meetsActualRequirements() {
-        return gearInstanceRequirements.meetsAllRequirements();
+        return gearInstanceRequirements != null && gearInstanceRequirements.meetsAllRequirements();
     }
 
     @Override
