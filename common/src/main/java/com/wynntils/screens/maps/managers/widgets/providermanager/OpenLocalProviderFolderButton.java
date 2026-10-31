@@ -2,43 +2,37 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.managers.widgets;
+package com.wynntils.screens.maps.managers.widgets.providermanager;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.ProviderManagementScreen;
+import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Util;
 
-public class ResetButtonWidget extends AbstractWidget implements TooltipProvider {
+public class OpenLocalProviderFolderButton extends AbstractWidget {
     private final int x;
     private final int y;
-    private final CategoryManagementScreen parent;
-    private List<Component> generatedTooltip = new ArrayList<>();
+    private final ProviderManagementScreen parent;
 
-    public ResetButtonWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
-        super(x, y, width, height, Component.literal("Reset Button Widget"));
+    public OpenLocalProviderFolderButton(int x, int y, int width, int height, ProviderManagementScreen parent) {
+        super(x, y, width, height, Component.literal("Open Local Provider Folder Button"));
         this.x = x;
         this.y = y;
         this.parent = parent;
-        generateTooltip();
     }
 
     @Override
@@ -52,7 +46,7 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.translatable(
-                                "screens.wynntils.map.managers.categoryManager.resetButton.label")),
+                                "screens.wynntils.map.managers.providerManager.openLocalProviderFolderButton.text")),
                         x + this.width / 2f,
                         y + this.height / 2f,
                         CommonColors.WHITE,
@@ -65,34 +59,13 @@ public class ResetButtonWidget extends AbstractWidget implements TooltipProvider
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
-        this.playDownSound(Minecraft.getInstance().getSoundManager());
+        Util.getPlatform().openFile(MapDataService.LOCAL_PROVIDERS);
 
-        parent.setSelectedCategory(parent.getSelectedCategory());
+        this.playDownSound(McUtils.mc().getSoundManager());
 
         return true;
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
-
-    @Override
-    public List<Component> getTooltipLines() {
-        return Collections.unmodifiableList(this.generatedTooltip);
-    }
-
-    private void generateTooltip() {
-        this.generatedTooltip = new ArrayList<>();
-
-        this.generatedTooltip.add(
-                Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.label")
-                        .withStyle(ChatFormatting.GOLD));
-
-        Component description =
-                Component.translatable("screens.wynntils.map.managers.categoryManager.resetButton.description");
-
-        for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(description), 210)) {
-            this.generatedTooltip.add(
-                    Component.empty().append(line.getComponent()).withStyle(ChatFormatting.GRAY));
-        }
-    }
 }

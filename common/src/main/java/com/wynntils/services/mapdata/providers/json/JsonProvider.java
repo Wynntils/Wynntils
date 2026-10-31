@@ -22,9 +22,11 @@ import java.io.Reader;
 import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 
 public final class JsonProvider implements MapDataProvider {
     // Note: The version field is not used, but is kept for future compatibility
@@ -34,12 +36,19 @@ public final class JsonProvider implements MapDataProvider {
     private final JsonFeatures features;
     private final List<MapCategory> categories;
     private final List<MapIcon> icons;
+    private final Component description;
 
-    public JsonProvider(int version, JsonFeatures features, List<MapCategory> categories, List<MapIcon> icons) {
+    public JsonProvider(
+            int version,
+            JsonFeatures features,
+            List<MapCategory> categories,
+            List<MapIcon> icons,
+            Component description) {
         this.version = version;
         this.features = features;
         this.categories = categories;
         this.icons = icons;
+        this.description = description;
     }
 
     /**
@@ -112,6 +121,10 @@ public final class JsonProvider implements MapDataProvider {
 
     public int getVersion() {
         return version;
+    }
+
+    public Optional<Component> getDescription() {
+        return Optional.ofNullable(description);
     }
 
     @Override

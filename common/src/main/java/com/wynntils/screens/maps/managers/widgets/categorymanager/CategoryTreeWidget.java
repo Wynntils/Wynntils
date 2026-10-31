@@ -2,11 +2,12 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.managers.widgets;
+package com.wynntils.screens.maps.managers.widgets.categorymanager;
 
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.CategoryTree;
 import com.wynntils.screens.maps.managers.type.CategoryTreeNode;
+import com.wynntils.screens.maps.managers.widgets.DoubleScrollBarWidget;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import java.util.ArrayList;
@@ -47,6 +48,33 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
         expandedFullIds.clear();
         selectedFullId = null;
         rebuildVisibleRows();
+    }
+
+    public void selectCategory(String categoryId) {
+        if (fullTree == null || categoryId == null) return;
+
+        int separator = categoryId.indexOf(':');
+        while (separator != -1) {
+            expandedFullIds.add(categoryId.substring(0, separator));
+            separator = categoryId.indexOf(':', separator + 1);
+        }
+
+        selectedFullId = categoryId;
+        rebuildVisibleRows();
+
+        for (int i = 0; i < rowWidgets.size(); i++) {
+            if (categoryId.equals(rowWidgets.get(i).getNode().getFullId())) {
+                scrollOffsetY = Math.max(
+                        0,
+                        i * CategoryTreeEntryWidget.ROW_HEIGHT
+                                + TREE_TOP_PADDING
+                                - (this.height - CategoryTreeEntryWidget.ROW_HEIGHT) / 2);
+                break;
+            }
+        }
+
+        recalculateCanvasSize();
+        updateRowPositions();
     }
 
     public void filter(String searchText) {

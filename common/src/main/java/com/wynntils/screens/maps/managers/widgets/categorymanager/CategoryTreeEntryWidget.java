@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.managers.widgets;
+package com.wynntils.screens.maps.managers.widgets.categorymanager;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
@@ -188,10 +188,10 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
     private void renderIcon(GuiGraphics guiGraphics, int iconX, boolean isLeaf) {
         if (isLeaf) {
             RenderUtils.drawTexturedRect(
-                    guiGraphics, Texture.MANAGER_FILE_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
+                    guiGraphics, Texture.CATEGORY_MANAGER_FILE_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
         } else {
             RenderUtils.drawTexturedRect(
-                    guiGraphics, Texture.MANAGER_FOLDER_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
+                    guiGraphics, Texture.CATEGORY_MANAGER_FOLDER_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
         }
     }
 

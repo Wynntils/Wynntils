@@ -2,12 +2,12 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.managers.widgets;
+package com.wynntils.screens.maps.managers.widgets.providermanager;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
-import com.wynntils.screens.maps.managers.type.OverrideType;
+import com.wynntils.screens.maps.managers.ProviderManagementScreen;
+import com.wynntils.screens.maps.managers.type.ProviderType;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -21,11 +21,11 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
-public class InfoWidget extends AbstractWidget implements TooltipProvider {
-    private final CategoryManagementScreen parent;
+public class ProviderManagerInfoWidget extends AbstractWidget implements TooltipProvider {
+    private final ProviderManagementScreen parent;
     private List<Component> generatedTooltip = new ArrayList<>();
 
-    public InfoWidget(int x, int y, int width, int height, CategoryManagementScreen parent) {
+    public ProviderManagerInfoWidget(int x, int y, int width, int height, ProviderManagementScreen parent) {
         super(x, y, width, height, Component.literal("Info Widget"));
         this.parent = parent;
         generateTooltip();
@@ -59,71 +59,37 @@ public class InfoWidget extends AbstractWidget implements TooltipProvider {
     public void generateTooltip() {
         this.generatedTooltip = new ArrayList<>();
 
+        // Overview
         this.generatedTooltip.add(
-                Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.title")
+                Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.overview.title")
                         .withStyle(ChatFormatting.GOLD));
 
-        Component description = Component.translatable(
-                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.description");
+        Component overviewDescription =
+                Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.overview.description");
 
-        for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(description), 210)) {
+        for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(overviewDescription), 210)) {
             this.generatedTooltip.add(
                     Component.empty().append(line.getComponent()).withStyle(ChatFormatting.GRAY));
         }
 
         this.generatedTooltip.add(Component.empty());
 
-        this.generatedTooltip.add(Component.literal("- ")
-                .withStyle(ChatFormatting.GOLD)
-                .append(Component.translatable(
-                                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.inherited.title")
-                        .withStyle(ChatFormatting.WHITE)));
-
-        Component inheritedDescription = Component.translatable(
-                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.inherited.description");
-
-        for (StyledText line :
-                RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(inheritedDescription), 210)) {
-            this.generatedTooltip.add(
-                    Component.empty().append(line.getComponent()).withStyle(ChatFormatting.GRAY));
-        }
-
-        this.generatedTooltip.add(Component.empty());
-
-        this.generatedTooltip.add(Component.literal("- ")
-                .withStyle(ChatFormatting.GOLD)
-                .append(Component.translatable(
-                                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.notInherited.title")
-                        .withStyle(ChatFormatting.WHITE)));
-
-        Component notInheritedDescription = Component.translatable(
-                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.notInherited.description");
-
-        for (StyledText line :
-                RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(notInheritedDescription), 210)) {
-            this.generatedTooltip.add(
-                    Component.empty().append(line.getComponent()).withStyle(ChatFormatting.GRAY));
-        }
-
-        this.generatedTooltip.add(Component.empty());
-
+        // Provider types
         this.generatedTooltip.add(
-                Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.override.title")
+                Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.types.title")
                         .withStyle(ChatFormatting.GOLD));
 
-        Component overrideTypeIntro =
-                Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.override.description");
+        Component typesDescription =
+                Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.types.description");
 
-        for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(overrideTypeIntro), 210)) {
+        for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(typesDescription), 210)) {
             this.generatedTooltip.add(
                     Component.empty().append(line.getComponent()).withStyle(ChatFormatting.GRAY));
         }
 
-        OverrideType currentType = parent.getSelectedOverrideType();
+        ProviderType currentType = parent.getSelectedProviderType();
 
-        OverrideType[] overrideTypes = OverrideType.values();
-
-        for (OverrideType type : overrideTypes) {
+        for (ProviderType type : ProviderType.values()) {
             this.generatedTooltip.add(Component.empty());
 
             boolean isCurrent = type == currentType;
@@ -136,7 +102,7 @@ public class InfoWidget extends AbstractWidget implements TooltipProvider {
                         .copy()
                         .append(" ")
                         .append(Component.translatable(
-                                        "screens.wynntils.map.managers.categoryManager.infoWidget.override.current")
+                                        "screens.wynntils.map.managers.providerManager.infoWidget.types.current")
                                 .withStyle(labelColor));
             }
 
@@ -145,15 +111,18 @@ public class InfoWidget extends AbstractWidget implements TooltipProvider {
 
             Component typeDescription =
                     switch (type) {
-                        case MAP_LOCATION_OVERRIDE ->
+                        case BUILT_IN ->
                             Component.translatable(
-                                    "screens.wynntils.map.managers.categoryManager.infoWidget.override.mapLocationOverride.description");
-                        case MAP_PATH_OVERRIDE ->
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.builtIn.description");
+                        case JSON_BUNDLED ->
                             Component.translatable(
-                                    "screens.wynntils.map.managers.categoryManager.infoWidget.override.mapPathOverride.description");
-                        case MAP_AREA_OVERRIDE ->
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonBundled.description");
+                        case JSON_LOCAL ->
                             Component.translatable(
-                                    "screens.wynntils.map.managers.categoryManager.infoWidget.override.mapAreaOverride.description");
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonLocal.description");
+                        case JSON_REMOTE ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonRemote.description");
                     };
 
             for (StyledText line : RenderedStringUtils.wrapTextBySize(StyledText.fromComponent(typeDescription), 210)) {

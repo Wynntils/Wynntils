@@ -10,7 +10,7 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.StyledButton;
-import com.wynntils.screens.maps.managers.widgets.options.AbstractOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.AbstractOptionWidget;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
