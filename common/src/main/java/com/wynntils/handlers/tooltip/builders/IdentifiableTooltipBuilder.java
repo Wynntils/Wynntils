@@ -222,6 +222,8 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
                         displayName += matchedName;
                     } else if (itemName.equals("Ascended " + matchedName)) {
                         displayName += "Ascended " + matchedName;
+                    } else {
+                        displayName += matchedName;
                     }
 
                     Component nameComponent = buildItemName(
