@@ -188,12 +188,12 @@ public class UnknownGearItem extends GameItem
 
     @Override
     public boolean isPerfect() {
-        return getOverallPercentage() == 100;
+        return hasOverallValue() && getOverallPercentage() == 100;
     }
 
     @Override
     public boolean isDefective() {
-        return getOverallPercentage() == 0;
+        return hasOverallValue() && getOverallPercentage() == 0;
     }
 
     @Override

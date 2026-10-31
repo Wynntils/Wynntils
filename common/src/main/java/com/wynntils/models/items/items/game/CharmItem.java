@@ -174,12 +174,12 @@ public class CharmItem extends GameItem
 
     @Override
     public boolean isPerfect() {
-        return charmInstance != null && charmInstance.isPerfect();
+        return charmInstance != null && charmInstance.isPerfect() || hasOverallValue() && getOverallPercentage() == 100;
     }
 
     @Override
     public boolean isDefective() {
-        return charmInstance != null && charmInstance.isDefective();
+        return charmInstance != null && charmInstance.isDefective() || hasOverallValue() && getOverallPercentage() == 0;
     }
 
     @Override

@@ -153,12 +153,12 @@ public class GearItem extends GameItem
 
     @Override
     public boolean isPerfect() {
-        return (gearInstance != null && gearInstance.isPerfect()) || getOverallPercentage() == 100;
+        return gearInstance != null && gearInstance.isPerfect() || hasOverallValue() && getOverallPercentage() == 100;
     }
 
     @Override
     public boolean isDefective() {
-        return (gearInstance != null && gearInstance.isDefective()) || getOverallPercentage() == 0;
+        return (gearInstance != null && gearInstance.isDefective()) || hasOverallValue() && getOverallPercentage() == 0;
     }
 
     @Override

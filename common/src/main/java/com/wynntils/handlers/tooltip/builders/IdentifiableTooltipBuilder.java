@@ -247,10 +247,10 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         TooltipOptions options = Handlers.Tooltip.getTooltipOptions();
 
         MutableComponent nameComponent = Component.literal(itemName).withStyle(style);
-        if (options.perfectTitle() && item.isPerfect() && item.hasOverallValue()) {
+        if (options.perfectTitle() && item.isPerfect()) {
             nameComponent = ComponentUtils.makeRainbowStyle("Perfect " + itemName, true)
                     .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT));
-        } else if (options.defectiveTitle() && item.isDefective() && item.hasOverallValue()) {
+        } else if (options.defectiveTitle() && item.isDefective()) {
             nameComponent = ComponentUtils.makeCrimsonStyle("Defective " + itemName, true)
                     .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT));
         }

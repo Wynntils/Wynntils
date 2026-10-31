@@ -131,12 +131,12 @@ public class TomeItem extends GameItem
 
     @Override
     public boolean isPerfect() {
-        return tomeInstance != null && tomeInstance.isPerfect();
+        return tomeInstance != null && tomeInstance.isPerfect() || hasOverallValue() && getOverallPercentage() == 100;
     }
 
     @Override
     public boolean isDefective() {
-        return tomeInstance != null && tomeInstance.isDefective();
+        return tomeInstance != null && tomeInstance.isDefective() || hasOverallValue() && getOverallPercentage() == 0;
     }
 
     @Override
