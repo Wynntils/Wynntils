@@ -94,8 +94,7 @@ public final class RequirementsLineBuilder {
         // don't add the requirement line
         if (parsedLevel == 0 && questInfo.removed()) return null;
 
-        String displayName =
-                parsedLevel > 0 || questInfo == SimpleQuestInfo.UNKNOWN ? questRequirement : questInfo.displayName();
+        String displayName = questInfo == SimpleQuestInfo.UNKNOWN ? questRequirement : questInfo.displayName();
         int level = parsedLevel > 0 ? parsedLevel : questInfo.level();
 
         MutableComponent questName = Component.empty()
