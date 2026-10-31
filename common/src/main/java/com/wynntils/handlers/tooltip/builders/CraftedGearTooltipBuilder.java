@@ -146,7 +146,9 @@ public class CraftedGearTooltipBuilder extends TooltipBuilder {
                     Component nameComponent = buildItemName(
                             item, itemName, lastPart.getPartStyle().getStyle());
 
-                    styledText = styledText.replaceFirst(itemName, "").append(StyledText.fromComponent(nameComponent));
+                    styledText = styledText
+                            .replaceFirst(Pattern.quote(itemName), "")
+                            .append(StyledText.fromComponent(nameComponent));
 
                     updatedName = true;
 
