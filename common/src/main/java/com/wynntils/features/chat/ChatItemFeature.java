@@ -245,6 +245,12 @@ public class ChatItemFeature extends Feature {
             return;
         }
 
+        if (pendingParser.tickRestoreTimeout()) {
+            pendingParser.state().cancel();
+            pageParser = null;
+            return;
+        }
+
         if (pendingParser.state().isWaitingToSend()) {
             if (pendingParser.state().canSend()) {
                 requestNextPage();
@@ -513,6 +519,8 @@ public class ChatItemFeature extends Feature {
     }
 
     private static final class PageParser {
+        private static final int RESTORE_TIMEOUT_TICKS = 100;
+
         private final Screen screen;
         private final ItemSharingScreen sharingScreen;
         private final AbstractContainerMenu menu;
@@ -525,6 +533,7 @@ public class ChatItemFeature extends Feature {
         private int expectedPage;
         private int waitTicks;
         private boolean timedOut;
+        private int restoreWaitTicks;
 
         private PageParser(
                 Screen screen,
@@ -595,6 +604,10 @@ public class ChatItemFeature extends Feature {
 
         private void setTimedOut(boolean timedOut) {
             this.timedOut = timedOut;
+        }
+
+        private boolean tickRestoreTimeout() {
+            return timedOut && ++restoreWaitTicks >= RESTORE_TIMEOUT_TICKS;
         }
 
         private boolean isScreenCurrent() {
