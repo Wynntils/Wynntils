@@ -178,7 +178,7 @@ public abstract class TooltipBuilder {
                 .append(primaryTag)
                 .append(Component.literal("\uDB00\uDC03").withStyle(CommonStyles.SPACE))
                 .append(secondaryTag)
-                .append(Component.literal("\uDB00\uDC01").withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT)));
+                .append(Component.literal("\uDB00\uDC03").withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT)));
 
         if (bannerIcon != null) {
             tagLine.append(Component.literal("\uDB00\uDC02").withStyle(CommonStyles.SPACE));
@@ -191,10 +191,11 @@ public abstract class TooltipBuilder {
         if (tertiaryTag.isPresent()) {
             MutableComponent secondTagLine = Component.empty()
                     .append(Component.literal("\uDB00\uDC26").withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT)))
-                    .append(tertiaryTag.get())
-                    .append(Component.literal("\uDB00\uDC03").withStyle(CommonStyles.SPACE));
+                    .append(tertiaryTag.get());
 
-            quaternaryTag.ifPresent(secondTagLine::append);
+            quaternaryTag.ifPresent(tag -> secondTagLine
+                    .append(Component.literal("\uDB00\uDC01").withStyle(CommonStyles.SPACE))
+                    .append(tag));
 
             headerLines.add(TooltipLine.left(secondTagLine));
         }

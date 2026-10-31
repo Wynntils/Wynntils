@@ -7,6 +7,7 @@ package com.wynntils.handlers.tooltip.components;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CommonStyles;
 import com.wynntils.core.text.fonts.CommonFonts;
+import com.wynntils.core.text.fonts.FontManager;
 import com.wynntils.handlers.tooltip.type.TooltipAlignment;
 import com.wynntils.handlers.tooltip.type.TooltipElement;
 import com.wynntils.handlers.tooltip.type.TooltipGrid;
@@ -21,6 +22,7 @@ import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -189,8 +191,8 @@ public final class RequirementsLineBuilder {
             List<Pair<Skill, Integer>> skillReqs, GearInstanceRequirements gearInstanceRequirements, GearTier tier) {
         List<TooltipElement> lines = new ArrayList<>();
 
-        TooltipGrid.Builder frameGrid = skillReqGrid();
-        TooltipGrid.Builder valueGrid = skillReqGrid();
+        MutableComponent frames = Component.empty();
+        MutableComponent values = Component.empty();
 
         for (Skill skill : Skill.values()) {
             int count = skillReqs.stream()
@@ -201,24 +203,33 @@ public final class RequirementsLineBuilder {
             boolean fulfilled = gearInstanceRequirements != null
                     && gearInstanceRequirements.skillReqsMet().getOrDefault(skill, false);
 
-            frameGrid.add(buildSkillFrame(skill, count, tier), TooltipAlignment.CENTER);
-            valueGrid.add(buildSkillValue(count, fulfilled), TooltipAlignment.CENTER);
+            appendSkillCell(frames, buildSkillFrame(skill, count, tier), 29);
+            appendSkillCell(values, buildSkillValue(count, fulfilled), 30);
         }
 
         lines.add(TooltipLine.empty());
-        lines.add(frameGrid.build());
+        lines.add(skillReqGrid(frames, 0));
         lines.add(TooltipLine.empty());
-        lines.add(valueGrid.build());
+        lines.add(skillReqGrid(values, SKILL_REQ_TABLE_WIDTH));
         lines.add(TooltipLine.empty());
 
         return lines;
     }
 
-    private static TooltipGrid.Builder skillReqGrid() {
-        return TooltipGrid.builder(Skill.values().length)
-                .cellWidth(SKILL_REQ_TABLE_WIDTH / Skill.values().length)
+    private static void appendSkillCell(MutableComponent row, Component content, int width) {
+        int padding = Math.max(0, (width - McUtils.mc().font.width(content)) / 2);
+        Component space =
+                Component.literal(FontManager.calculateOffset(0, padding)).withStyle(CommonStyles.SPACE);
+        row.append(space).append(content).append(space);
+    }
+
+    private static TooltipGrid skillReqGrid(Component row, int rowWidth) {
+        return TooltipGrid.builder(1)
+                .cellWidth(rowWidth)
                 .tableWidth(SKILL_REQ_TABLE_WIDTH)
-                .alignment(TooltipAlignment.CENTER);
+                .alignment(TooltipAlignment.CENTER)
+                .add(row, TooltipAlignment.LEFT)
+                .build();
     }
 
     private static Component buildSkillFrame(Skill skill, int count, GearTier tier) {

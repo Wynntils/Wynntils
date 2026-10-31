@@ -83,8 +83,6 @@ public final class PowderLineBuilder {
             TooltipGrid.Builder grid = TooltipGrid.builder(POWDER_GRID_COLUMNS)
                     .cellWidth(POWDER_CELL_WIDTH)
                     .tableWidth(POWDER_TABLE_WIDTH)
-                    .spacing(Component.literal(" ")
-                            .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)))
                     .alignment(TooltipAlignment.LEFT);
 
             for (int slot = 0; slot < powderSlots; slot++) {
@@ -116,9 +114,13 @@ public final class PowderLineBuilder {
                         .append(Component.literal(" " + label)
                                 .withStyle(Style.EMPTY
                                         .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
-                                        .withColor(powder == null ? ChatFormatting.DARK_GRAY : powder.getLightColor())))
-                        .append(Component.literal("\uDB00\uDC08")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT)));
+                                        .withColor(
+                                                powder == null ? ChatFormatting.DARK_GRAY : powder.getLightColor())));
+                if (slot % POWDER_GRID_COLUMNS != 0) {
+                    cell = Component.literal(" ")
+                            .withStyle(CommonStyles.WHITE_LANGUAGE_WYNNCRAFT)
+                            .append(cell);
+                }
                 grid.add(cell, TooltipAlignment.LEFT);
             }
 

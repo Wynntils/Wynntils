@@ -138,7 +138,7 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
         if (setName.isPresent()) {
             tertiaryTag = Optional.of(BannerBoxFont.buildMessage(
-                    setName.get() + " set", getGearTier().getSecondaryColor(), CommonColors.BLACK, ""));
+                    setName.get() + " set", getGearTier().getSecondaryColor(), CommonColors.BLACK, "\uDB00\uDC02"));
 
             if (!elements.isEmpty()) {
                 quaternaryTag = Optional.of(elementTag);
@@ -612,7 +612,7 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         } else {
             Component equipItems = Component.literal("Equip more pieces of this set to unlock its bonus")
                     .withStyle(CommonStyles.GRAY_LANGUAGE_WYNNCRAFT);
-            lines.add(TooltipWrappedText.center(equipItems, 172));
+            lines.add(TooltipWrappedText.center(equipItems, 140));
         }
 
         if (sourceType == ItemSourceType.ITEM) {
@@ -892,11 +892,16 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             elementTag.append(TooltipBannerFont.buildMessage(
                     getElementIcon(elements.getFirst()), getGearTier().getSecondaryColor(), "\uDAFF\uDFFF"));
             elementTag.append(BannerBoxFont.buildMessage(
-                    elements.getFirst().getDisplayName(), getGearTier().getSecondaryColor(), CommonColors.BLACK, ""));
+                    elements.getFirst().getDisplayName(),
+                    getGearTier().getSecondaryColor(),
+                    CommonColors.BLACK,
+                    "\uDB00\uDC02"));
         } else {
             for (Element element : elements) {
                 elementTag.append(TooltipBannerFont.buildMessage(
-                        getElementIcon(element), getGearTier().getSecondaryColor(), "\uDAFF\uDFFF"));
+                        getElementIcon(element),
+                        getGearTier().getSecondaryColor(),
+                        element == elements.getLast() ? "" : "\uDAFF\uDFFF"));
             }
         }
 

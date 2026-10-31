@@ -17,6 +17,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
@@ -79,7 +80,7 @@ public final class HeaderStatsLineBuilder {
 
         for (Pair<DamageType, RangedValue> damage : damages) {
             Component cell = Component.empty()
-                    .append(Component.literal(damage.a().getTooltipSprite())
+                    .append(Component.literal(paddedAttributeSprite(damage.a().getTooltipSprite()))
                             .withStyle(Style.EMPTY
                                     .withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT)
                                     .withoutShadow()))
@@ -96,17 +97,17 @@ public final class HeaderStatsLineBuilder {
     }
 
     public static TooltipGrid buildDefenceGrid(List<Pair<Element, Integer>> defences) {
-        TooltipGrid.Builder grid = TooltipGrid.builder(DEFENCE_GRID_COLUMNS)
-                .cellWidth(DEFENCE_CELL_WIDTH)
-                .spacing(Component.literal(" ")
-                        .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
+        TooltipGrid.Builder grid = TooltipGrid.builder(DEFENCE_GRID_COLUMNS);
+        int cellWidth = DEFENCE_CELL_WIDTH;
+        int column = 0;
 
         for (Pair<Element, Integer> defence : defences) {
             Component cell = Component.empty()
                     .append(Component.empty()
                             .withStyle(
                                     Style.EMPTY.withColor(ChatFormatting.WHITE).withoutShadow())
-                            .append(Component.literal(defence.a().getTooltipSprite())
+                            .append(Component.literal(
+                                            paddedAttributeSprite(defence.a().getTooltipSprite()))
                                     .withStyle(Style.EMPTY.withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT)))
                             .append(Component.literal(" ")
                                     .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))))
@@ -115,9 +116,23 @@ public final class HeaderStatsLineBuilder {
                                     .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
                                     .withColor(ChatFormatting.GRAY)));
 
+            if (column++ % DEFENCE_GRID_COLUMNS != 0) {
+                cell = Component.literal(" ")
+                        .withStyle(CommonStyles.WHITE_LANGUAGE_WYNNCRAFT)
+                        .append(cell);
+            }
+            cellWidth = Math.max(cellWidth, McUtils.mc().font.width(cell));
             grid.add(cell, TooltipAlignment.LEFT);
         }
 
-        return grid.build();
+        return grid.cellWidth(cellWidth).build();
+    }
+
+    private static String paddedAttributeSprite(String sprite) {
+        return switch (sprite) {
+            case "\uE000" -> "\uDAFF\uDFFF\uE000\uDAFF\uDFFF";
+            case "\uE001", "\uE004" -> sprite + "\uDAFF\uDFFF";
+            default -> sprite;
+        };
     }
 }
