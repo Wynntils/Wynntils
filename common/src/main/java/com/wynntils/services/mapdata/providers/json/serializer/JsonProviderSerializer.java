@@ -60,10 +60,15 @@ public final class JsonProviderSerializer implements JsonDeserializer<JsonProvid
         List<MapIcon> icons = context.deserialize(
                 JsonUtils.getNullableJsonArray(jsonProvider, "icons"), new TypeToken<List<MapIcon>>() {}.getType());
 
-        String descriptionString = jsonProvider.has("description")
-                ? jsonProvider.get("description").getAsString()
-                : null;
-        Component description = descriptionString != null ? Component.literal(descriptionString) : null;
+        // The description is optional, so a missing, null or non-string value is ignored
+        // instead of failing to load the whole provider
+        JsonElement descriptionElement = jsonProvider.get("description");
+        Component description = null;
+        if (descriptionElement != null
+                && descriptionElement.isJsonPrimitive()
+                && descriptionElement.getAsJsonPrimitive().isString()) {
+            description = Component.literal(descriptionElement.getAsString());
+        }
 
         return new JsonProvider(version, features, categories, icons, description);
     }
