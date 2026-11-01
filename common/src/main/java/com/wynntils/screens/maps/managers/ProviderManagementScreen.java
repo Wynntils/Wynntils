@@ -321,6 +321,13 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         updateMenu();
     }
 
+    public void clearSelectionIfProviderMissing() {
+        if (providerManagerMode != ProviderManagerMode.DEFAULT) return;
+        if (Services.MapData.getProviderFromId(selectedCompleteProviderId).isPresent()) return;
+
+        setSelectedProvider("", null);
+    }
+
     public String getSelectedCompleteProviderId() {
         return selectedCompleteProviderId;
     }
