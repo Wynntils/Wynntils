@@ -240,6 +240,8 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
+        if (!this.visible) return false;
+
         return super.isMouseOver(mouseX, mouseY)
                 || featuresButton.isMouseOver(mouseX, mouseY)
                 || categoriesButton.isMouseOver(mouseX, mouseY)
