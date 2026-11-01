@@ -54,7 +54,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
     private ProviderManagerMode providerManagerMode = ProviderManagerMode.NONE;
 
-    private String selectedProviderId = "";
+    private String selectedCompleteProviderId = "";
     private ProviderType selectedProviderType;
 
     public ProviderManagerInfoWidget infoWidget;
@@ -268,8 +268,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
             descriptionScrollBarWidget.visible = true;
             descriptionScrollBarWidget.updateContentHeight();
 
-            String providerUrl = Services.MapData.getProviderFromId(getSelectedProviderId())
-                    .flatMap(Services.MapData::getJsonProviderInfo)
+            String providerUrl = getSelectedJsonProviderInfo()
                     .map(JsonProviderInfo::providerUrl)
                     .orElse(null);
 
@@ -286,12 +285,13 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         }
     }
 
-    public void setSelectedProvider(String providerId, ProviderType providerType) {
-        selectedProviderId = providerId;
+    public void setSelectedProvider(String completeProviderId, ProviderType providerType) {
+        selectedCompleteProviderId = completeProviderId;
         selectedProviderType = providerType;
         providerInfoScrollBarWidget.populateWidgets();
 
-        Optional<MapDataProvider> providerOptional = Services.MapData.getProviderFromId(getSelectedProviderId());
+        Optional<MapDataProvider> providerOptional =
+                Services.MapData.getProviderFromId(getSelectedCompleteProviderId());
 
         if (providerOptional.isEmpty()) {
             descriptionScrollBarWidget.setDescription(null);
@@ -321,8 +321,12 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         updateMenu();
     }
 
-    public String getSelectedProviderId() {
-        return selectedProviderId;
+    public String getSelectedCompleteProviderId() {
+        return selectedCompleteProviderId;
+    }
+
+    public Optional<JsonProviderInfo> getSelectedJsonProviderInfo() {
+        return Services.MapData.getJsonProviderInfoByCompleteId(selectedCompleteProviderId);
     }
 
     public ProviderType getSelectedProviderType() {

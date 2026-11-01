@@ -138,7 +138,7 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         }
 
         private void refresh() {
-            MapDataProvider provider = Services.MapData.getProviderFromId(parent.getSelectedProviderId())
+            MapDataProvider provider = Services.MapData.getProviderFromId(parent.getSelectedCompleteProviderId())
                     .orElseThrow();
 
             stats = List.of(
@@ -153,7 +153,7 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
                             provider.getIcons().count()));
 
             JsonProviderInfo jsonProviderInfo =
-                    Services.MapData.getJsonProviderInfo(provider).orElse(null);
+                    parent.getSelectedJsonProviderInfo().orElse(null);
             if (jsonProviderInfo != null && jsonProviderInfo.providerUrl() != null) {
                 urlString = jsonProviderInfo.providerUrl();
                 url = Component.translatable(

@@ -75,8 +75,8 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
     public void populateWidgets() {
         registeredWidgets = new ArrayList<>();
         scrollOffsetY = 0;
-        String providerId = parent.getSelectedProviderId();
-        Optional<MapDataProvider> providerOpt = Services.MapData.getProviderFromId(providerId);
+        Optional<MapDataProvider> providerOpt =
+                Services.MapData.getProviderFromId(parent.getSelectedCompleteProviderId());
 
         if (providerOpt.isEmpty()) return;
 
