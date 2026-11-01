@@ -56,6 +56,8 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
     private String selectedCompleteProviderId = "";
     private ProviderType selectedProviderType;
+    // Kept here rather than in the info widget, so it survives the widgets being rebuilt on resize
+    private ProviderInfoScrollBarWidget.Mode selectedInfoMode = ProviderInfoScrollBarWidget.Mode.FEATURES;
 
     public ProviderManagerInfoWidget infoWidget;
     public ManagerSearchWidget providerSearchWidget;
@@ -158,7 +160,12 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
         // end region
 
-        updateMenu();
+        if (providerManagerMode == ProviderManagerMode.DEFAULT) {
+            // The widgets were rebuilt (for example on resize), so apply the selection to them again
+            setSelectedProvider(selectedCompleteProviderId, selectedProviderType);
+        } else {
+            updateMenu();
+        }
     }
 
     @Override
@@ -289,6 +296,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         selectedCompleteProviderId = completeProviderId;
         selectedProviderType = providerType;
         providerInfoScrollBarWidget.populateWidgets();
+        infoWidget.generateTooltip();
 
         Optional<MapDataProvider> providerOptional =
                 Services.MapData.getProviderFromId(getSelectedCompleteProviderId());
@@ -343,5 +351,13 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     public void setProviderManagerMode(ProviderManagerMode providerManagerMode) {
         this.providerManagerMode = providerManagerMode;
         updateMenu();
+    }
+
+    public ProviderInfoScrollBarWidget.Mode getSelectedInfoMode() {
+        return selectedInfoMode;
+    }
+
+    public void setSelectedInfoMode(ProviderInfoScrollBarWidget.Mode mode) {
+        selectedInfoMode = mode;
     }
 }
