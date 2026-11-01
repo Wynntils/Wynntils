@@ -81,13 +81,6 @@ public class CategoryTreeWidget extends DoubleScrollBarWidget {
         updateRowPositions();
     }
 
-    public void expandCategory(String categoryId) {
-        if (fullTree == null || categoryId == null) return;
-
-        expandedFullIds.add(categoryId);
-        rebuildVisibleRows();
-    }
-
     public void filter(String searchText) {
         if (fullTree == null) return;
 

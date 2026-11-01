@@ -12,7 +12,9 @@ import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OverrideType;
+import com.wynntils.screens.maps.waypoints.WaypointCategoryScreen;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
+import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.type.MapArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
@@ -50,11 +52,24 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
     private final String categoryId;
     private final MapIcon icon;
 
+    private final WaypointCategoryScreen waypointParent;
+
     private List<Component> generatedTooltip = new ArrayList<>();
 
     public FeatureEntryWidget(int x, int y, int width, int height, MapFeature<?> mapFeature) {
+        this(null, x, y, width, height, mapFeature);
+    }
+
+    public FeatureEntryWidget(
+            int x, int y, int width, int height, WaypointLocation waypoint, WaypointCategoryScreen parent) {
+        this(parent, x, y, width, height, waypoint);
+    }
+
+    private FeatureEntryWidget(
+            WaypointCategoryScreen waypointParent, int x, int y, int width, int height, MapFeature<?> mapFeature) {
         super(x, y, width, height, Component.literal(mapFeature.getFeatureId()));
         this.mapFeature = mapFeature;
+        this.waypointParent = waypointParent;
 
         this.attributes = Services.MapData.resolveMapAttributes(mapFeature);
         this.featureId = mapFeature.getFeatureId();
@@ -69,7 +84,9 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        handleCursor(guiGraphics);
+        if (!isWaypointEntry()) {
+            handleCursor(guiGraphics);
+        }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, getX(), getY(), this.width, this.height);
@@ -124,7 +141,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.literal(categoryId).withStyle(ChatFormatting.GRAY)),
+                        StyledText.fromComponent(getSecondLine()),
                         textX,
                         getY() + this.height - 9,
                         maxTextWidth,
@@ -136,6 +153,8 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (isWaypointEntry()) return false;
+
         if (!isMouseOver(event.x(), event.y())) return false;
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && mapFeature instanceof MapLocation mapLocation) {
             Services.UserMarker.removeAllUserMarkedFeatures();
@@ -160,6 +179,28 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
         return Collections.unmodifiableList(this.generatedTooltip);
     }
 
+    private boolean isWaypointEntry() {
+        return waypointParent != null;
+    }
+
+    private Component getSecondLine() {
+        if (isWaypointEntry() && mapFeature instanceof MapLocation mapLocation) {
+            Location location = mapLocation.getLocation();
+
+            return Component.literal(location.asChatCoordinates())
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(Component.literal(" (%dm)"
+                                    .formatted(Math.round(Math.sqrt(waypointParent
+                                            .creationScreen
+                                            .getWaypoint()
+                                            .getLocation()
+                                            .distanceToSqr(location.toPosition())))))
+                            .withStyle(ChatFormatting.DARK_GRAY));
+        }
+
+        return Component.literal(categoryId).withStyle(ChatFormatting.GRAY);
+    }
+
     private OverrideType getOverrideType() {
         if (mapFeature instanceof MapPath) {
             return OverrideType.MAP_PATH_OVERRIDE;
@@ -175,26 +216,29 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
         this.generatedTooltip.add(Component.literal(featureId).withStyle(ChatFormatting.GOLD));
 
-        if (mapFeature instanceof MapLocation) {
-            addLine(
-                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
-                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapLocation")
-                            .withStyle(ChatFormatting.WHITE));
-        } else if (mapFeature instanceof MapPath) {
-            addLine(
-                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
-                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapPath")
-                            .withStyle(ChatFormatting.WHITE));
-        } else if (mapFeature instanceof MapArea) {
-            addLine(
-                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
-                    Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapArea")
-                            .withStyle(ChatFormatting.WHITE));
+        if (!isWaypointEntry()) {
+            if (mapFeature instanceof MapLocation) {
+                addLine(
+                        Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
+                        Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapLocation")
+                                .withStyle(ChatFormatting.WHITE));
+            } else if (mapFeature instanceof MapPath) {
+                addLine(
+                        Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
+                        Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapPath")
+                                .withStyle(ChatFormatting.WHITE));
+            } else if (mapFeature instanceof MapArea) {
+                addLine(
+                        Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
+                        Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.mapArea")
+                                .withStyle(ChatFormatting.WHITE));
+            }
         }
 
         addLine(
                 Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.label"),
                 attributes.label());
+
         addLine(
                 Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.categoryId"),
                 categoryId);
@@ -216,6 +260,8 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
                         iconValue);
             }
         }
+
+        if (isWaypointEntry()) return;
 
         if (mapFeature instanceof MapLocation mapLocation) {
             Location location = mapLocation.getLocation();

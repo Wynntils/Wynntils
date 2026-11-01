@@ -8,6 +8,7 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
+import com.wynntils.screens.maps.managers.widgets.providermanager.FeatureEntryWidget;
 import com.wynntils.screens.maps.waypoints.WaypointCategoryScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -35,8 +36,6 @@ public class FeatureScrollBarWidget extends ScrollBarWidget implements TooltipPr
     }
 
     public void populateWidgets(String categoryId) {
-        registeredWidgets = new ArrayList<>();
-
         registeredWidgets = Services.Waypoints.getWaypoints().stream()
                 .filter(waypoint -> waypoint.getCategoryId().equals(categoryId))
                 .map(waypoint -> new FeatureEntryWidget(0, 0, 0, ENTRY_HEIGHT, waypoint, parent))
