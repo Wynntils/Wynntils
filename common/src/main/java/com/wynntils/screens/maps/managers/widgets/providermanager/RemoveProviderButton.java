@@ -58,7 +58,7 @@ public class RemoveProviderButton extends AbstractWidget {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
-        Services.MapData.removeJsonProvider(parent.getSelectedProviderId());
+        parent.getSelectedJsonProviderInfo().ifPresent(info -> Services.MapData.removeJsonProvider(info.providerId()));
         parent.providerScrollBarWidget.populateWidgets();
         parent.setSelectedProvider("", null);
 
