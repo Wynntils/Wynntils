@@ -31,7 +31,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 
 public class IconSelectionScreen extends WynntilsScreen {
@@ -39,10 +38,12 @@ public class IconSelectionScreen extends WynntilsScreen {
     private static final int CELL_SIZE = 32;
     private static final int GRID_WIDTH_BUFFER = 24;
 
-    private static final int BUTTON_WIDTH = 80;
+    private static final int BUTTON_WIDTH = 76;
     private static final int BUTTON_HEIGHT = 20;
     private static final int BUTTON_GAP = 10;
     private static final int BUTTON_TOP_GAP = 5;
+
+    private static final int ICON_BORDER = 2;
 
     private static final CustomColor SELECTED_COLOR = CustomColor.fromInt(0x8033cc33);
     private static final CustomColor HOVERED_COLOR = CustomColor.fromInt(0x40ffffff);
@@ -51,6 +52,7 @@ public class IconSelectionScreen extends WynntilsScreen {
     private final Consumer<MapIcon> onIconSelect;
 
     private String tempSelectedIconId;
+    private boolean scrollToSelectedIcon = false;
 
     private IconSelectionScreen(Screen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
         super(Component.literal("Icon Selection Screen"));
@@ -75,21 +77,40 @@ public class IconSelectionScreen extends WynntilsScreen {
 
         this.addRenderableWidget(new IconGridScrollWidget(gridX, gridY, gridWidth, gridHeight));
 
+        int buttonY = gridY + gridHeight + BUTTON_TOP_GAP;
+        int centerButtonX = (this.width - BUTTON_WIDTH) / 2;
+
         this.addRenderableWidget(new StyledButton(
-                (this.width / 2) - BUTTON_WIDTH - BUTTON_GAP / 2,
-                gridY + gridHeight + BUTTON_TOP_GAP,
+                centerButtonX - BUTTON_WIDTH - BUTTON_GAP,
+                buttonY,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
-                Component.translatable("screens.wynntils.map.managers.categoryManager.iconSelectionScreen.cancel"),
+                Component.translatable("screens.wynntils.map.managers.iconSelectionScreen.cancel"),
                 Texture.MANAGER_WIDGET_BACKGROUND_RED,
                 this::onClose));
 
         this.addRenderableWidget(new StyledButton(
-                (this.width / 2) + BUTTON_GAP / 2,
-                gridY + gridHeight + BUTTON_TOP_GAP,
+                centerButtonX,
+                buttonY,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
-                Component.translatable("screens.wynntils.map.managers.categoryManager.iconSelectionScreen.save"),
+                Component.translatable("screens.wynntils.map.managers.iconSelectionScreen.createIcon"),
+                Texture.MANAGER_WIDGET_BACKGROUND,
+                () -> McUtils.setScreen(IconCreationScreen.create(this, icon -> {
+                    if (icon != null) {
+                        // The new icon is selected here; the grid is rebuilt (including the new icon)
+                        // when this screen is re-initialized after the creation screen closes.
+                        this.tempSelectedIconId = icon.getIconId();
+                        this.scrollToSelectedIcon = true;
+                    }
+                }))));
+
+        this.addRenderableWidget(new StyledButton(
+                centerButtonX + BUTTON_WIDTH + BUTTON_GAP,
+                buttonY,
+                BUTTON_WIDTH,
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.map.managers.iconSelectionScreen.save"),
                 Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
                 () -> {
                     if (tempSelectedIconId != null && !tempSelectedIconId.isEmpty()) {
@@ -126,7 +147,28 @@ public class IconSelectionScreen extends WynntilsScreen {
                     .toList());
 
             this.rows = chunkIntoRows(icons);
+
+            if (scrollToSelectedIcon) {
+                scrollToSelectedIcon = false;
+                scrollOffsetY = getScrollOffsetForSelectedIcon(icons);
+            }
+
             updateRowPositions();
+        }
+
+        // Centers the row containing the selected icon in the viewport (clamped on the next render)
+        private int getScrollOffsetForSelectedIcon(List<MapIcon> icons) {
+            for (int i = 0; i < icons.size(); i++) {
+                MapIcon icon = icons.get(i);
+                String iconId = icon == null ? MapIcon.NO_ICON_ID : icon.getIconId();
+
+                if (iconId.equals(tempSelectedIconId)) {
+                    int rowTop = (i / GRID_COLUMNS) * CELL_SIZE;
+                    return Math.max(0, rowTop - (getViewportHeight() - CELL_SIZE) / 2);
+                }
+            }
+
+            return 0;
         }
 
         private List<IconGridRowWidget> chunkIntoRows(List<MapIcon> icons) {
@@ -246,19 +288,18 @@ public class IconSelectionScreen extends WynntilsScreen {
                     int iconWidth = icon.getWidth();
                     int iconHeight = icon.getHeight();
 
-                    RenderUtils.drawTexturedRect(
+                    float scale = Math.min(1f, (float) (CELL_SIZE - ICON_BORDER * 2) / Math.max(iconWidth, iconHeight));
+                    int drawWidth = Math.max(1, Math.round(iconWidth * scale));
+                    int drawHeight = Math.max(1, Math.round(iconHeight * scale));
+
+                    RenderUtils.drawScalingTexturedRect(
                             guiGraphics,
-                            RenderPipelines.GUI_TEXTURED,
                             icon.getIdentifier(),
                             CommonColors.WHITE,
-                            cellX + (CELL_SIZE - iconWidth) / 2f,
-                            cellY + (CELL_SIZE - iconHeight) / 2f,
-                            iconWidth,
-                            iconHeight,
-                            0f,
-                            0f,
-                            iconWidth,
-                            iconHeight,
+                            cellX + (CELL_SIZE - drawWidth) / 2f,
+                            cellY + (CELL_SIZE - drawHeight) / 2f,
+                            drawWidth,
+                            drawHeight,
                             iconWidth,
                             iconHeight);
                 }
