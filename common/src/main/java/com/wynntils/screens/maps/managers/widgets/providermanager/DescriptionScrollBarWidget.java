@@ -139,7 +139,17 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
 
         private void refresh() {
             MapDataProvider provider = Services.MapData.getProviderFromId(parent.getSelectedCompleteProviderId())
-                    .orElseThrow();
+                    .orElse(null);
+
+            if (provider == null) {
+                // The selected provider is no longer registered, for example, its local file was deleted, so there
+                // is nothing to show for it
+                stats = List.of();
+                urlString = null;
+                url = null;
+                setHeight(PADDING * 2 + LINE_HEIGHT + LINE_GAP + LINE_HEIGHT);
+                return;
+            }
 
             stats = List.of(
                     Component.translatable(
