@@ -6,11 +6,8 @@ package com.wynntils.screens.maps.managers.widgets.categorymanager;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
-import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.CategoryTreeNode;
-import com.wynntils.screens.maps.managers.type.OverrideType;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -21,6 +18,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -53,7 +51,7 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
     private final Runnable onToggleExpand;
     private final Runnable onSelect;
 
-    private final CategoryManagementScreen parent;
+    private final Predicate<String> isHighlighted;
 
     public CategoryTreeEntryWidget(
             int x,
@@ -66,7 +64,7 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
             boolean selected,
             Runnable onToggleExpand,
             Runnable onSelect,
-            CategoryManagementScreen parent) {
+            Predicate<String> isHighlighted) {
         super(x, y, width, ROW_HEIGHT, Component.literal(""));
         this.x = x;
         this.y = y;
@@ -77,7 +75,7 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
         this.selected = selected;
         this.onToggleExpand = onToggleExpand;
         this.onSelect = onSelect;
-        this.parent = parent;
+        this.isHighlighted = isHighlighted;
     }
 
     @Override
@@ -160,7 +158,9 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
                         StyledText.fromString(node.getName()),
                         getIconX() + ICON_SIZE + ICON_TEXT_GAP,
                         y + ROW_HEIGHT / 2f,
-                        hasOverride() ? CommonColors.WHITE : CommonColors.GRAY,
+                        node.getFullId() != null && isHighlighted.test(node.getFullId())
+                                ? CommonColors.WHITE
+                                : CommonColors.GRAY,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -193,19 +193,6 @@ public class CategoryTreeEntryWidget extends AbstractWidget {
             RenderUtils.drawTexturedRect(
                     guiGraphics, Texture.CATEGORY_MANAGER_FOLDER_ICON, iconX, y + (ROW_HEIGHT - ICON_SIZE) / 2f);
         }
-    }
-
-    private boolean hasOverride() {
-        if (node.getFullId() == null) return false;
-
-        for (OverrideType overrideType : OverrideType.values()) {
-            String overrideName = parent.getOverrideName(overrideType, node.getFullId(), true);
-            if (Services.MapData.getOverrideProvider(overrideName) != null) {
-                return true;
-            }
-        }
-
-        return false;
     }
 
     @Override

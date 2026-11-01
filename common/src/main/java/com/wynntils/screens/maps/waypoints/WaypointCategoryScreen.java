@@ -4,216 +4,266 @@
  */
 package com.wynntils.screens.maps.waypoints;
 
+import com.google.common.collect.Lists;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.WynntilsGridLayoutScreen;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.maps.waypoints.widgets.CategoryWidget;
-import com.wynntils.utils.MathUtils;
+import com.wynntils.screens.maps.managers.widgets.ManagerSearchWidget;
+import com.wynntils.screens.maps.managers.widgets.StyledButton;
+import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryTreeWidget;
+import com.wynntils.screens.maps.waypoints.widgets.FeatureScrollBarWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
-    private static final int CATEGORIES_PER_PAGE = 16;
-    private static final int SCROLLBAR_HEIGHT = 40;
-    private static final float SCROLL_FACTOR = 10f;
+public final class WaypointCategoryScreen extends WynntilsScreen {
+    private static final int WIDTH_OFFSET = 15;
+    private static final int HEIGHT_OFFSET = 18;
+
     private static final String DEFAULT_CATEGORY = "wynntils:personal:waypoint";
-    private static final Pattern CATEGORY_PATTERN = Pattern.compile("^[a-z0-9:-]+$");
+    private static final String ROOT_CATEGORY = "waypoint";
+    private static final Pattern CATEGORY_PATTERN = Pattern.compile("^[a-z0-9-]+(:[a-z0-9-]+)*$");
 
-    private final List<String> categoriesList = new ArrayList<>();
-    private final WaypointCreationScreen creationScreen;
-    private List<CategoryWidget> categoryWidgets = new ArrayList<>();
+    public final WaypointCreationScreen creationScreen;
+    private final Set<String> categories = new TreeSet<>();
 
-    private boolean draggingScroll;
-    private Button useNewCategoryButton;
-    private float scrollRenderY;
-    private int scrollOffset = 0;
-    private String categoryPath;
-    private String currentCategory = "";
-    private Set<String> allCategories;
-    private TextInputBoxWidget newCategoryInput;
+    private int offsetX;
+    private int offsetY;
 
-    private WaypointCategoryScreen(WaypointCreationScreen creationScreen, String categoryPath) {
+    // Relative to the default category, empty for the default category itself
+    private String selectedCategory;
+
+    public ManagerSearchWidget categorySearchWidget;
+    public CategoryTreeWidget categoryTreeWidget;
+    public FeatureScrollBarWidget featureScrollBarWidget;
+
+    private TexturedTextInputBoxWidget newCategoryInput;
+    private StyledButton createCategoryButton;
+
+    private WaypointCategoryScreen(WaypointCreationScreen creationScreen, String category) {
         super(Component.literal("Waypoint Category Screen"));
 
         this.creationScreen = creationScreen;
-        this.categoryPath = categoryPath;
+        this.selectedCategory = category;
 
-        String[] pathList = this.categoryPath.split(":");
+        Services.Waypoints.getCategories().stream()
+                .filter(waypointCategory -> waypointCategory.startsWith(DEFAULT_CATEGORY + ":"))
+                .map(waypointCategory -> waypointCategory.substring(DEFAULT_CATEGORY.length() + 1))
+                .forEach(categories::add);
 
-        if (pathList.length == 1) {
-            currentCategory = pathList[0];
-        } else {
-            currentCategory = pathList[pathList.length - 1];
+        if (!category.isEmpty()) {
+            categories.add(category);
         }
-
-        allCategories = Services.Waypoints.getCategories();
-        // Get all of the categories and their subcategories
-        allCategories = allCategories.stream()
-                .map(category -> {
-                    if (category.equals(DEFAULT_CATEGORY)) {
-                        return "";
-                    } else {
-                        return category.substring(DEFAULT_CATEGORY.length() + 1); // +1 for the ":" on end
-                    }
-                })
-                .filter(category -> !category.isEmpty())
-                .collect(Collectors.toSet());
-
-        updateCategoryList();
     }
 
-    public static Screen create(WaypointCreationScreen creationScreen, String categoryPath) {
-        return new WaypointCategoryScreen(creationScreen, categoryPath);
+    public static Screen create(WaypointCreationScreen creationScreen, String category) {
+        return new WaypointCategoryScreen(creationScreen, category);
     }
 
     @Override
     protected void doInit() {
         super.doInit();
 
-        newCategoryInput = new TextInputBoxWidget(
-                (int) (dividedWidth * 49),
-                (int) (dividedHeight * 27),
-                (int) (dividedWidth * 14),
-                BUTTON_SIZE,
-                (s) -> useNewCategoryButton.active =
-                        CATEGORY_PATTERN.matcher(s).matches() && !s.equals(categoryPath) && !s.endsWith(":"),
+        offsetX = (int) ((this.width - Texture.MANAGER_BACKGROUND.width()) / 2f);
+        offsetY = (int) ((this.height - Texture.MANAGER_BACKGROUND.height()) / 2f);
+
+        // category tree menu
+
+        categorySearchWidget = new ManagerSearchWidget(
+                offsetX + WIDTH_OFFSET,
+                offsetY + HEIGHT_OFFSET,
+                200 - 5 - Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
+                20,
+                (text) -> categoryTreeWidget.filter(text),
+                this);
+        this.addRenderableWidget(categorySearchWidget);
+
+        categoryTreeWidget = new CategoryTreeWidget(
+                offsetX + WIDTH_OFFSET,
+                offsetY + HEIGHT_OFFSET + 25,
+                200,
+                284 - 25,
+                this::onCategorySelected,
+                category -> true);
+        this.addRenderableWidget(categoryTreeWidget);
+
+        // end region
+
+        // category info menu
+
+        featureScrollBarWidget = new FeatureScrollBarWidget(
+                offsetX + WIDTH_OFFSET + 200 + 5, offsetY + HEIGHT_OFFSET + 25 + 15, 341, 132, this);
+        this.addRenderableWidget(featureScrollBarWidget);
+
+        rebuildTree();
+
+        String inputText = newCategoryInput != null ? newCategoryInput.getTextBoxInput() : selectedCategory;
+
+        newCategoryInput = new TexturedTextInputBoxWidget(
+                offsetX + WIDTH_OFFSET + 200 + 5 + 5,
+                offsetY + HEIGHT_OFFSET + 177 + 58,
+                226,
+                18,
+                this::onNewCategoryChanged,
                 this,
-                newCategoryInput);
+                TexturedTextInputBoxWidget.Mode.STRING);
         newCategoryInput.setTooltip(
                 Tooltip.create(Component.translatable("screens.wynntils.waypointCategory.nameTooltip")));
         this.addRenderableWidget(newCategoryInput);
 
-        this.addRenderableWidget(
-                new Button.Builder(Component.translatable("screens.wynntils.waypointCategory.useCurrent"), (button) -> {
-                            creationScreen.setCategory(categoryPath);
-                            onClose();
-                        })
-                        .pos((int) (dividedWidth * 35), (int) (dividedHeight * 33))
-                        .size((int) (dividedWidth * 12), BUTTON_SIZE)
-                        .build());
+        createCategoryButton = new StyledButton(
+                offsetX + WIDTH_OFFSET + 200 + 20 + 213 + 8,
+                offsetY + HEIGHT_OFFSET + 177 + 57,
+                100,
+                20,
+                Component.translatable("screens.wynntils.waypointCategory.create"),
+                Texture.MANAGER_WIDGET_BACKGROUND,
+                this::createCategory);
+        this.addRenderableWidget(createCategoryButton);
 
-        useNewCategoryButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.waypointCategory.useNew"), (button) -> {
-                            creationScreen.setCategory(newCategoryInput.getTextBoxInput());
-                            onClose();
-                        })
-                .pos((int) (dividedWidth * 50), (int) (dividedHeight * 33))
-                .size((int) (dividedWidth * 12), BUTTON_SIZE)
-                .build();
-        useNewCategoryButton.active =
-                CATEGORY_PATTERN.matcher(newCategoryInput.getTextBoxInput()).matches();
-        this.addRenderableWidget(useNewCategoryButton);
+        this.addRenderableWidget(new StyledButton(
+                offsetX + WIDTH_OFFSET + 200 + 5,
+                offsetY + HEIGHT_OFFSET + 284 - 20,
+                100,
+                20,
+                Component.translatable("screens.wynntils.waypointCategory.back"),
+                Texture.MANAGER_WIDGET_BACKGROUND_RED,
+                this::onClose));
 
-        this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.waypointCategory.back"), (button) -> onClose())
-                .pos((int) (dividedWidth * 45), (int) (dividedHeight * 39))
-                .size((int) (dividedWidth * 7), BUTTON_SIZE)
-                .build());
+        this.addRenderableWidget(new StyledButton(
+                offsetX + WIDTH_OFFSET + 200 + 5 + 100 + 8,
+                offsetY + HEIGHT_OFFSET + 284 - 20,
+                341 - 100 - 8,
+                20,
+                Component.translatable("screens.wynntils.waypointCategory.useSelected"),
+                Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
+                () -> {
+                    creationScreen.setCategory(selectedCategory);
+                    onClose();
+                }));
 
-        if (!categoryPath.isEmpty()) {
-            newCategoryInput.setTextBoxInput(categoryPath);
-        }
+        // end region
 
-        populateCategories();
+        newCategoryInput.setTextBoxInput(inputText);
+        createCategoryButton.active = isValidNewCategory(inputText);
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawRect(
+        RenderUtils.drawTexturedRect(guiGraphics, Texture.MANAGER_BACKGROUND, offsetX, offsetY);
+
+        renderInfoPanel(guiGraphics);
+
+        renderables.forEach(renderable -> renderable.render(guiGraphics, mouseX, mouseY, partialTick));
+        renderTooltips(guiGraphics, mouseX, mouseY);
+    }
+
+    private void renderInfoPanel(GuiGraphics guiGraphics) {
+        RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                CommonColors.BLACK.withAlpha(100),
-                dividedWidth * 33,
-                dividedHeight * 18,
-                dividedWidth * 31,
-                dividedHeight * 26);
+                Texture.MANAGER_WIDGET_BACKGROUND,
+                offsetX + WIDTH_OFFSET + 200 + 5,
+                offsetY + HEIGHT_OFFSET + 177,
+                341,
+                82);
 
-        for (Renderable renderable : this.renderables) {
-            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
-        }
-
-        for (CategoryWidget categoryWidget : categoryWidgets) {
-            categoryWidget.render(guiGraphics, mouseX, mouseY, partialTick);
-        }
-
-        if (categoryWidgets.size() > CATEGORIES_PER_PAGE) {
-            renderScrollBar(guiGraphics);
-        } else if (categoryWidgets.isEmpty()) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            guiGraphics,
-                            StyledText.fromComponent(
-                                    Component.translatable("screens.wynntils.waypointCategory.noCategories")),
-                            dividedWidth * 2,
-                            dividedHeight * 32,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.LEFT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL,
-                            2);
-        }
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.MANAGER_TEXT_BACKGROUND_RED,
+                offsetX + WIDTH_OFFSET + 200 + 5 + 10 - 5,
+                offsetY + HEIGHT_OFFSET + 177 + 12 - 14 / 2f,
+                105,
+                14);
 
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString(I18n.get("screens.wynntils.waypointCategory.currentCategory") + ":"),
-                        dividedWidth * 34,
-                        dividedHeight * 21,
+                        StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.waypointCategory.selectedCategory")
+                                        .append(":")),
+                        offsetX + WIDTH_OFFSET + 200 + 5 + 10,
+                        offsetY + HEIGHT_OFFSET + 177 + 12,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.MANAGER_TEXT_BORDER_BROWN,
+                offsetX + WIDTH_OFFSET + 200 + 5 + 120 - 5,
+                offsetY + HEIGHT_OFFSET + 177 + 12 - 14 / 2f,
+                341 - 120 - 5 + 5,
+                14);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,
-                        StyledText.fromString(currentCategory),
-                        dividedWidth * 49,
-                        dividedHeight * 21,
-                        dividedWidth * 14,
+                        StyledText.fromString(getSelectedCategoryName()),
+                        offsetX + WIDTH_OFFSET + 200 + 5 + 120,
+                        offsetY + HEIGHT_OFFSET + 177 + 12,
+                        341 - 120 - 10,
+                        CommonColors.LIGHT_GRAY,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.MANAGER_TEXT_BACKGROUND_RED,
+                offsetX + WIDTH_OFFSET + 200 + 5 + 10 - 5,
+                offsetY + HEIGHT_OFFSET + 177 + 32 - 14 / 2f,
+                105,
+                14);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromComponent(
+                                Component.translatable("screens.wynntils.waypointCategory.categoryPath")
+                                        .append(":")),
+                        offsetX + WIDTH_OFFSET + 200 + 5 + 10,
+                        offsetY + HEIGHT_OFFSET + 177 + 32,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics,
-                        StyledText.fromString(I18n.get("screens.wynntils.waypointCategory.categoryPath") + ":"),
-                        dividedWidth * 34,
-                        dividedHeight * 25,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.MANAGER_TEXT_BORDER_BROWN,
+                offsetX + WIDTH_OFFSET + 200 + 5 + 120 - 5,
+                offsetY + HEIGHT_OFFSET + 177 + 32 - 14 / 2f,
+                341 - 120 - 5 + 5,
+                14);
 
         FontRenderer.getInstance()
                 .renderScrollingText(
                         guiGraphics,
-                        StyledText.fromString(categoryPath),
-                        dividedWidth * 49,
-                        dividedHeight * 25,
-                        dividedWidth * 14,
-                        CommonColors.WHITE,
+                        StyledText.fromString(toTreeId(selectedCategory)),
+                        offsetX + WIDTH_OFFSET + 200 + 5 + 120,
+                        offsetY + HEIGHT_OFFSET + 177 + 32,
+                        341 - 120 - 10,
+                        CommonColors.LIGHT_GRAY,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -221,13 +271,39 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromString(I18n.get("screens.wynntils.waypointCategory.newCategory") + ":"),
-                        dividedWidth * 34,
-                        dividedHeight * 29,
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.waypointCategory.newCategory")
+                                .append(":")),
+                        offsetX + WIDTH_OFFSET + 200 + 5 + 5,
+                        offsetY + HEIGHT_OFFSET + 177 + 51,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
+    }
+
+    private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        for (GuiEventListener child : children()) {
+            if (!(child instanceof TooltipProvider tooltipProvider) || !child.isMouseOver(mouseX, mouseY)) continue;
+
+            List<Component> lines = tooltipProvider.getTooltipLines();
+            if (lines.isEmpty()) continue;
+
+            guiGraphics.setTooltipForNextFrame(Lists.transform(lines, Component::getVisualOrderText), mouseX, mouseY);
+            break;
+        }
+    }
+
+    @Override
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        TextInputBoxWidget focusedBefore = getFocusedTextInput();
+        boolean handled = super.doMouseClicked(event, isDoubleClick);
+
+        TextInputBoxWidget focusedAfter = getFocusedTextInput();
+        if (focusedAfter != null && focusedAfter == focusedBefore && !focusedAfter.isMouseOver(event.x(), event.y())) {
+            setFocusedTextInput(null);
+        }
+
+        return handled;
     }
 
     @Override
@@ -235,162 +311,69 @@ public final class WaypointCategoryScreen extends WynntilsGridLayoutScreen {
         McUtils.setScreen(creationScreen);
     }
 
-    @Override
-    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        for (CategoryWidget widget : categoryWidgets) {
-            if (widget.isMouseOver((double) event.x(), (double) event.y())) {
-                return widget.mouseClicked(event, isDoubleClick);
-            }
-        }
+    private void createCategory() {
+        String category = newCategoryInput.getTextBoxInput();
+        if (!isValidNewCategory(category)) return;
 
-        if (!draggingScroll
-                && (categoryWidgets.size() > CATEGORIES_PER_PAGE)
-                && MathUtils.isInside(
-                        (int) event.x(),
-                        (int) event.y(),
-                        (int) (dividedWidth * 32),
-                        (int) (dividedWidth * 32) + (int) (dividedWidth / 2),
-                        (int) scrollRenderY,
-                        (int) (scrollRenderY + SCROLLBAR_HEIGHT))) {
-            draggingScroll = true;
-            return true;
-        }
+        categories.add(category);
+        selectedCategory = category;
 
-        return super.doMouseClicked(event, isDoubleClick);
+        categorySearchWidget.setTextBoxInput("");
+        rebuildTree();
+        newCategoryInput.setTextBoxInput(category);
     }
 
-    @Override
-    public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-        if (draggingScroll) {
-            int newOffset = Math.round(
-                    MathUtils.map((float) event.y(), 20, 20 + this.height - SCROLLBAR_HEIGHT, 0, getMaxScrollOffset()));
+    private void rebuildTree() {
+        List<String> treeCategories = new ArrayList<>();
+        treeCategories.add(ROOT_CATEGORY);
+        categories.forEach(category -> treeCategories.add(toTreeId(category)));
 
-            newOffset = Math.max(0, Math.min(newOffset, getMaxScrollOffset()));
+        categoryTreeWidget.setCategories(treeCategories);
+        categoryTreeWidget.selectCategory(toTreeId(selectedCategory));
 
-            scroll(newOffset);
-
-            return true;
-        }
-
-        return super.mouseDragged(event, dragX, dragY);
+        updateFeatures();
     }
 
-    @Override
-    public boolean mouseReleased(MouseButtonEvent event) {
-        draggingScroll = false;
+    private void onCategorySelected(String treeId) {
+        selectedCategory = fromTreeId(treeId);
+        newCategoryInput.setTextBoxInput(selectedCategory);
 
-        return super.mouseReleased(event);
+        updateFeatures();
     }
 
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double deltaX, double deltaY) {
-        int scrollAmount = (int) (-deltaY * SCROLL_FACTOR);
-
-        if (categoryWidgets.size() > CATEGORIES_PER_PAGE) {
-            int newOffset = Math.max(0, Math.min(scrollOffset + scrollAmount, getMaxScrollOffset()));
-            scroll(newOffset);
-        }
-
-        return super.mouseScrolled(mouseX, mouseY, deltaX, deltaY);
+    private void updateFeatures() {
+        featureScrollBarWidget.populateWidgets(getSelectedCategoryId());
     }
 
-    public void selectCategory(String category) {
-        currentCategory = category;
-
-        if (categoryPath.isEmpty()) {
-            categoryPath += category;
-        } else {
-            categoryPath += ":" + category;
-        }
-
-        newCategoryInput.setTextBoxInput(categoryPath);
-        updateCategoryList();
-        populateCategories();
-    }
-
-    public void selectPreviousCategory() {
-        String[] pathList = categoryPath.split(":");
-
-        if (pathList.length == 1) {
-            currentCategory = "";
-        } else {
-            currentCategory = pathList[pathList.length - 2];
-        }
-
-        String[] newPathList = Arrays.copyOfRange(pathList, 0, pathList.length - 1);
-        categoryPath = String.join(":", newPathList);
-
-        newCategoryInput.setTextBoxInput(categoryPath);
-        updateCategoryList();
-        populateCategories();
-    }
-
-    private void populateCategories() {
-        categoryWidgets = new ArrayList<>();
-
-        int renderY = 0;
-
-        if (!currentCategory.isEmpty()) {
-            CategoryWidget rootCategoryWidget = new CategoryWidget(
-                    renderY, (int) (dividedWidth * 32), (int) (dividedHeight * 4), currentCategory, true);
-            categoryWidgets.add(rootCategoryWidget);
-
-            renderY += (int) (dividedHeight * 4);
-        }
-
-        for (String category : categoriesList) {
-            CategoryWidget categoryWidget =
-                    new CategoryWidget(renderY, (int) (dividedWidth * 32), (int) (dividedHeight * 4), category, false);
-            categoryWidgets.add(categoryWidget);
-
-            renderY += (int) (dividedHeight * 4);
-        }
-
-        scroll(scrollOffset);
-    }
-
-    private void updateCategoryList() {
-        categoriesList.clear();
-
-        categoriesList.addAll(allCategories.stream()
-                .filter(category -> category.startsWith(categoryPath + ":") || categoryPath.isEmpty())
-                .map(category -> {
-                    if (categoryPath.isEmpty()) {
-                        return category.split(":")[0];
-                    } else {
-                        return category.split(":")[categoryPath.split(":").length];
-                    }
-                })
-                .filter(category -> !category.isEmpty())
-                .collect(Collectors.toSet()));
-    }
-
-    private void renderScrollBar(GuiGraphics guiGraphics) {
-        RenderUtils.drawRect(
-                guiGraphics, CommonColors.LIGHT_GRAY, (dividedWidth * 32), 0, (dividedWidth / 2), this.height);
-
-        scrollRenderY = (int) (MathUtils.map(scrollOffset, 0, getMaxScrollOffset(), 0, this.height - SCROLLBAR_HEIGHT));
-
-        RenderUtils.drawRect(
-                guiGraphics,
-                draggingScroll ? CommonColors.BLACK : CommonColors.GRAY,
-                (dividedWidth * 32),
-                scrollRenderY,
-                (dividedWidth / 2),
-                SCROLLBAR_HEIGHT);
-    }
-
-    private void scroll(int newOffset) {
-        scrollOffset = newOffset;
-
-        for (CategoryWidget categoryWidget : categoryWidgets) {
-            int newY = (categoryWidgets.indexOf(categoryWidget) * (int) (dividedHeight * 4)) - scrollOffset;
-
-            categoryWidget.setY(newY);
+    private void onNewCategoryChanged(String input) {
+        if (createCategoryButton != null) {
+            createCategoryButton.active = isValidNewCategory(input);
         }
     }
 
-    private int getMaxScrollOffset() {
-        return (categoriesList.size() - CATEGORIES_PER_PAGE) * (int) (dividedHeight * 4);
+    private boolean isValidNewCategory(String input) {
+        return CATEGORY_PATTERN.matcher(input).matches() && !categoryExists(input);
+    }
+
+    private boolean categoryExists(String input) {
+        return categories.stream().anyMatch(category -> category.equals(input) || category.startsWith(input + ":"));
+    }
+
+    private String getSelectedCategoryId() {
+        return selectedCategory.isEmpty() ? DEFAULT_CATEGORY : DEFAULT_CATEGORY + ":" + selectedCategory;
+    }
+
+    private String getSelectedCategoryName() {
+        return selectedCategory.isEmpty()
+                ? ROOT_CATEGORY
+                : selectedCategory.substring(selectedCategory.lastIndexOf(':') + 1);
+    }
+
+    private String toTreeId(String category) {
+        return category.isEmpty() ? ROOT_CATEGORY : ROOT_CATEGORY + ":" + category;
+    }
+
+    private String fromTreeId(String treeId) {
+        return treeId.equals(ROOT_CATEGORY) ? "" : treeId.substring(ROOT_CATEGORY.length() + 1);
     }
 }
