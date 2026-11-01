@@ -30,6 +30,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
@@ -243,13 +244,26 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
             if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
                     && urlString != null
                     && isMouseOverUrl(event.x(), event.y())) {
+                URI uri;
                 try {
-                    Util.getPlatform().openUri(URI.create(urlString));
+                    uri = URI.create(urlString);
                 } catch (IllegalArgumentException e) {
                     return false;
                 }
 
                 playDownSound(McUtils.mc().getSoundManager());
+
+                McUtils.setScreen(new ConfirmLinkScreen(
+                        confirmed -> {
+                            if (confirmed) {
+                                Util.getPlatform().openUri(uri);
+                            }
+
+                            McUtils.setScreen(parent);
+                        },
+                        urlString,
+                        false));
+
                 return true;
             }
 
