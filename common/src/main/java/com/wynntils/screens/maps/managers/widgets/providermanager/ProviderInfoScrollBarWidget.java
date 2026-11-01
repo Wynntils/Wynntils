@@ -26,7 +26,6 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
     private static final int WIDGET_HEIGHT_PADDING = 4;
 
     private final ProviderManagementScreen parent;
-    private Mode selectedMode = Mode.FEATURES;
 
     private final ProviderInfoScrollBarSelectorWidget featuresButton;
     private final ProviderInfoScrollBarSelectorWidget categoriesButton;
@@ -81,6 +80,7 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
         if (providerOpt.isEmpty()) return;
 
         MapDataProvider provider = providerOpt.get();
+        Mode selectedMode = getSelectedMode();
 
         if (selectedMode == Mode.FEATURES) {
             for (MapFeature<?> mapFeature : provider.getFeatures().toList()) {
@@ -246,12 +246,13 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
                 || iconsButton.isMouseOver(mouseX, mouseY);
     }
 
+    // The mode is kept on the screen, so it survives this widget being rebuilt (for example on resize)
     public Mode getSelectedMode() {
-        return selectedMode;
+        return parent.getSelectedInfoMode();
     }
 
     public void setSelectedMode(Mode mode) {
-        selectedMode = mode;
+        parent.setSelectedInfoMode(mode);
         populateWidgets();
     }
 
