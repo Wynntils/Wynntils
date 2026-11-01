@@ -22,12 +22,26 @@ import net.minecraft.network.chat.Component;
 
 public final class StyledButton extends AbstractWidget {
     private final Texture backgroundTexture;
+    private final Texture inactiveBackgroundTexture;
     private final Runnable onClick;
 
     public StyledButton(
             int x, int y, int width, int height, Component message, Texture backgroundTexture, Runnable onClick) {
+        this(x, y, width, height, message, backgroundTexture, backgroundTexture, onClick);
+    }
+
+    public StyledButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component message,
+            Texture backgroundTexture,
+            Texture inactiveBackgroundTexture,
+            Runnable onClick) {
         super(x, y, width, height, message);
         this.backgroundTexture = backgroundTexture;
+        this.inactiveBackgroundTexture = inactiveBackgroundTexture;
         this.onClick = onClick;
     }
 
@@ -36,7 +50,12 @@ public final class StyledButton extends AbstractWidget {
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics, backgroundTexture, getX(), getY(), getWidth(), getHeight());
+                guiGraphics,
+                this.active ? backgroundTexture : inactiveBackgroundTexture,
+                getX(),
+                getY(),
+                getWidth(),
+                getHeight());
 
         FontRenderer.getInstance()
                 .renderText(
