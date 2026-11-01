@@ -105,11 +105,11 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
             return true;
         }
 
-        for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
-            if (isInsideViewport(event.x(), event.y())
-                    && abstractOptionWidget.isHovered()
-                    && abstractOptionWidget.mouseClicked(event, isDoubleClick)) {
-                return true;
+        if (isInsideViewport(event.x(), event.y())) {
+            for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
+                if (abstractOptionWidget.isHovered() && abstractOptionWidget.mouseClicked(event, isDoubleClick)) {
+                    return true;
+                }
             }
         }
 
@@ -118,14 +118,17 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
-        for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
-            if (isInsideViewport(event.x(), event.y())
-                    && abstractOptionWidget.isHovered()
-                    && abstractOptionWidget.mouseReleased(event)) {
-                return true;
+        super.mouseReleased(event);
+
+        if (isInsideViewport(event.x(), event.y())) {
+            for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
+                if (abstractOptionWidget.isHovered() && abstractOptionWidget.mouseReleased(event)) {
+                    return true;
+                }
             }
         }
-        return super.mouseReleased(event);
+
+        return false;
     }
 
     @Override
@@ -134,13 +137,14 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
             return true;
         }
 
-        for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
-            if (isInsideViewport(event.x(), event.y())
-                    && abstractOptionWidget.isHovered()
-                    && abstractOptionWidget.mouseDragged(event, dragX, dragY)) {
-                return true;
+        if (isInsideViewport(event.x(), event.y())) {
+            for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
+                if (abstractOptionWidget.isHovered() && abstractOptionWidget.mouseDragged(event, dragX, dragY)) {
+                    return true;
+                }
             }
         }
+
         return false;
     }
 
@@ -151,11 +155,9 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         }
 
         for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
-            if (isInsideViewport(mouseX, mouseY)) {
-                if (abstractOptionWidget.isHovered()
-                        && abstractOptionWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
-                    return true;
-                }
+            if (abstractOptionWidget.isHovered()
+                    && abstractOptionWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
+                return true;
             }
         }
 
