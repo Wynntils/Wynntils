@@ -463,6 +463,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         for (AbstractOptionWidget<?> widget : optionsScrollBar.getWidgets()) {
             if (!overrideSelectionWidget.isMouseOver(mouseX, mouseY)
                     && widget.isMouseOver(mouseX, mouseY)
+                    && optionsScrollBar.visible
                     && optionsScrollBar.isInsideViewport(mouseX, mouseY)) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(widget.getTooltipLines(mouseX, mouseY), Component::getVisualOrderText),
