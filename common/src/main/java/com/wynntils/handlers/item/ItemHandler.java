@@ -10,9 +10,11 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.mc.event.ContainerClickEvent;
+import com.wynntils.mc.event.ContainerClickSentEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ItemStackSplitEvent;
+import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.SetCarriedItemEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -23,6 +25,7 @@ import com.wynntils.models.items.annotators.ItemPageAnnotator;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.models.items.properties.PagedItemProperty;
 import com.wynntils.models.items.properties.PowderedItemProperty;
+import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -53,6 +56,7 @@ public final class ItemHandler extends Handler {
     // A powder click temporarily swaps the target with the cursor on the client. Keep its
     // parsed pages until the server sends the updated target back to this menu slot.
     private PendingPowderTarget pendingPowderTarget;
+    private final PagedItemUpdateTracker pagedUpdates = new PagedItemUpdateTracker();
 
     private final List<ItemAnnotator> annotators = new ArrayList<>();
     private final Map<Class<?>, Integer> profilingTimes = new HashMap<>();
@@ -150,7 +154,7 @@ public final class ItemHandler extends Handler {
             return;
         }
 
-        onItemStackUpdate(getPreviousPowderTarget(menu, event.getSlot(), event.getItemStack()), event.getItemStack());
+        updateContainerSlot(menu, event.getSlot(), event.getItemStack());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -176,6 +180,7 @@ public final class ItemHandler extends Handler {
         }
 
         updateContainerContents(menu, event.getItems(), event.getCarriedItem());
+        pagedUpdates.contentsReceived(menu.containerId, System.nanoTime());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -208,8 +213,72 @@ public final class ItemHandler extends Handler {
         onCarriedItemUpdate(menu.getCarried(), carried);
 
         for (int i = 0; i < newItems.size(); i++) {
-            onItemStackUpdate(getPreviousPowderTarget(menu, i, newItems.get(i)), newItems.get(i));
+            updateContainerSlot(menu, i, newItems.get(i));
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onContainerClickSent(ContainerClickSentEvent event) {
+        if (McUtils.mc().isSameThread()) {
+            trackContainerClick(event);
+        } else {
+            McUtils.mc().execute(() -> trackContainerClick(event));
+        }
+    }
+
+    private void trackContainerClick(ContainerClickSentEvent event) {
+        if (McUtils.player() == null) return;
+        AbstractContainerMenu menu = McUtils.containerMenu();
+        if (event.getContainerId() != menu.containerId
+                || event.getSlotNum() < 0
+                || event.getSlotNum() >= menu.slots.size()) {
+            return;
+        }
+
+        if (event.getClickType() == ClickType.SWAP && event.getMouseButton() == 40) {
+            pagedUpdates.pageChangeRequested(menu.containerId, System.nanoTime());
+            return;
+        }
+
+        // Any other interaction may navigate an unknown UI. Do not let an older
+        // page request authorize annotation reuse for the resulting replacements.
+        pagedUpdates.reset(menu.containerId);
+    }
+
+    @SubscribeEvent
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Post event) {
+        pagedUpdates.reset(event.getContainerId());
+        pendingPowderTarget = null;
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onMenuClosed(MenuEvent.MenuClosedEvent event) {
+        if (event.isCanceled()
+                || McUtils.player() == null
+                || event.getContainerId() != McUtils.containerMenu().containerId) return;
+        pagedUpdates.reset(-1);
+        pendingPowderTarget = null;
+    }
+
+    private void updateContainerSlot(AbstractContainerMenu menu, int slot, ItemStack incoming) {
+        PendingPowderTarget powderTarget = pendingPowderTarget;
+        ItemStack previous = getPreviousPowderTarget(menu, slot, incoming);
+        boolean playerInventory = menu == McUtils.inventoryMenu()
+                || menu.slots.get(slot).container == McUtils.player().getInventory();
+        boolean reuse = pagedUpdates.canReuse(
+                menu.containerId,
+                playerInventory,
+                WynnItemParser.parseTooltipPage(previous) != WynnItemParser.parseTooltipPage(incoming),
+                Objects.equals(LoreUtils.getLore(previous), LoreUtils.getLore(incoming)),
+                System.nanoTime());
+
+        // A pending powder target is an explicitly tracked item transfer, even if its
+        // temporary client-side replacement no longer has the item's annotation.
+        boolean powderUpdate = powderTarget != null && previous == powderTarget.stack();
+        if (!reuse && !powderUpdate && ((ItemStackExtension) previous).getAnnotation() instanceof PagedItemProperty) {
+            previous = ItemStack.EMPTY;
+        }
+        onItemStackUpdate(previous, incoming);
     }
 
     private ItemStack getPreviousPowderTarget(AbstractContainerMenu menu, int slot, ItemStack incoming) {
