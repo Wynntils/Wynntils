@@ -178,7 +178,7 @@ public abstract class TooltipBuilder {
                 .append(primaryTag)
                 .append(Component.literal("\uDB00\uDC03").withStyle(CommonStyles.SPACE))
                 .append(secondaryTag)
-                .append(Component.literal("\uDB00\uDC03").withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT)));
+                .append(Component.literal("\uDB00\uDC01").withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT)));
 
         if (bannerIcon != null) {
             tagLine.append(Component.literal("\uDB00\uDC02").withStyle(CommonStyles.SPACE));
