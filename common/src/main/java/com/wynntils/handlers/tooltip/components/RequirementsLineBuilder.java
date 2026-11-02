@@ -156,7 +156,7 @@ public final class RequirementsLineBuilder {
                     .withStyle(Style.EMPTY.withFont(CommonFonts.PROFESSION_FONT)));
         }
 
-        professionName.append(Component.literal(professionType.getDisplayName() + " Level"));
+        professionName.append(Component.literal((includeIcon ? " " : "") + professionType.getDisplayName() + " Level"));
 
         return buildRequirementLine(
                 professionName,
