@@ -169,7 +169,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "841888c81feb2e87d4c2c53186b86cae",
+    "md5": "53550004530b00d51708ff1132e1f150",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -211,7 +211,7 @@
   },
   {
     "id": "dataStaticItemDisplayModelData",
-    "md5": "391b42a88f25569c57dbbd677555c07e",
+    "md5": "08ce2959f56e6857fe591f5517d1da59",
     "path": "Data-Storage/item_display_model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
@@ -223,7 +223,7 @@
   },
   {
     "id": "dataStaticItemObtainV2",
-    "md5": "4f3c92acadb5c1331b5886f6e397baa8",
+    "md5": "b0d7c00c885a5f7d2aa8b51248eb5407",
     "path": "Data-Storage/item_obtain_v2.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_obtain_v2.json"
   },
@@ -301,7 +301,7 @@
   },
   {
     "id": "dataStaticQuests",
-    "md5": "1266f6942b773e4f4a5f7a758407a517",
+    "md5": "d1648c28f45dd876a43ae8e5bb0ed83e",
     "path": "Reference/quests.json",
     "url": "https://cdn.wynntils.com/static/Reference/quests.json"
   },
