@@ -35,6 +35,7 @@ import java.util.Optional;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -175,8 +176,10 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ContainerInput containerInput) {
-        if (slot == null) return;
+    protected void slotClicked(SlotWidget slotWidget, int slotId, int mouseButton, ContainerInput containerInput) {
+        if (slotWidget == null) return;
+
+        Slot slot = slotWidget.slot();
         if (slot.getItem() == ItemStack.EMPTY) return;
 
         // Right click goes to sharing menu
@@ -234,8 +237,6 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         }
 
         renderScrollButton(guiGraphics);
-
-        this.extractTooltip(guiGraphics);
     }
 
     @Override
@@ -295,7 +296,8 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
     public boolean mouseReleased(MouseButtonEvent event) {
         draggingScroll = false;
 
-        Slot dragSelectionEndSlot = getHoveredSlot(event.x(), event.y());
+        SlotWidget hoveredSlot = getHoveredSlot();
+        Slot dragSelectionEndSlot = hoveredSlot == null ? null : hoveredSlot.slot();
 
         if (dragSelectionStartIndex != -1) {
             int dragSelectionEndIndex =

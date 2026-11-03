@@ -25,6 +25,7 @@ import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.Map;
@@ -84,9 +85,7 @@ public class ProfessionHighlightFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Post event) {
-        Screen screen = event.getScreen();
-
-        if (!(screen instanceof AbstractContainerScreen<?>)) return;
+        if (!(McUtils.screen() instanceof AbstractContainerScreen<?>)) return;
 
         if (!(Models.Container.getCurrentContainer()
                 instanceof HighlightableProfessionProperty highlightableProfessionProperty)) {

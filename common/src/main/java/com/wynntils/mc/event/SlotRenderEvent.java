@@ -5,49 +5,47 @@
 package com.wynntils.mc.event;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public abstract class SlotRenderEvent extends Event {
     private final GuiGraphicsExtractor guiGraphics;
-    private final Screen screen;
-    private final Slot slot;
+    private final SlotWidget slotWidget;
 
-    protected SlotRenderEvent(GuiGraphicsExtractor guiGraphics, Screen screen, Slot slot) {
+    protected SlotRenderEvent(GuiGraphicsExtractor guiGraphics, SlotWidget slotWidget) {
         this.guiGraphics = guiGraphics;
-        this.screen = screen;
-        this.slot = slot;
+        this.slotWidget = slotWidget;
     }
 
     public GuiGraphicsExtractor getGuiGraphics() {
         return guiGraphics;
     }
 
-    public Screen getScreen() {
-        return screen;
+    public SlotWidget getSlotWidget() {
+        return slotWidget;
     }
 
     public Slot getSlot() {
-        return slot;
+        return slotWidget.slot();
     }
 
     public static class Pre extends SlotRenderEvent implements ICancellableEvent {
-        public Pre(GuiGraphicsExtractor guiGraphics, Screen screen, Slot slot) {
-            super(guiGraphics, screen, slot);
+        public Pre(GuiGraphicsExtractor guiGraphics, SlotWidget slotWidget) {
+            super(guiGraphics, slotWidget);
         }
     }
 
     public static class CountPre extends SlotRenderEvent {
-        public CountPre(GuiGraphicsExtractor guiGraphics, Screen screen, Slot slot) {
-            super(guiGraphics, screen, slot);
+        public CountPre(GuiGraphicsExtractor guiGraphics, SlotWidget slotWidget) {
+            super(guiGraphics, slotWidget);
         }
     }
 
     public static class Post extends SlotRenderEvent {
-        public Post(GuiGraphicsExtractor guiGraphics, Screen screen, Slot slot) {
-            super(guiGraphics, screen, slot);
+        public Post(GuiGraphicsExtractor guiGraphics, SlotWidget slotWidget) {
+            super(guiGraphics, slotWidget);
         }
     }
 }

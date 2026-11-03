@@ -30,6 +30,7 @@ import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -166,9 +167,6 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
         renderables.forEach(c -> c.extractRenderState(guiGraphics));
 
-        // Render item tooltip
-        super.extractTooltip(guiGraphics);
-
         // Render tooltip for hovered widget
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider
@@ -252,8 +250,9 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
             return true;
         }
 
+        SlotWidget hoveredSlot = getHoveredSlot();
         if (hoveredSlot != null) {
-            holder.clickOnItem(hoveredSlot.getItem());
+            holder.clickOnItem(hoveredSlot.slot().getItem());
             return true;
         }
 

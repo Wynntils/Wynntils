@@ -289,10 +289,11 @@ public class ContainerSearchFeature extends Feature {
             }
 
             // Set direction based on hovered slot
-            if (abstractContainerScreen.hoveredSlot != null) {
-                if (abstractContainerScreen.hoveredSlot.index == currentContainer.getNextItemSlot()) {
+            if (abstractContainerScreen.getHoveredSlot() != null) {
+                if (abstractContainerScreen.getHoveredSlot().slot().index == currentContainer.getNextItemSlot()) {
                     direction = 1;
-                } else if (abstractContainerScreen.hoveredSlot.index == currentContainer.getPreviousItemSlot()) {
+                } else if (abstractContainerScreen.getHoveredSlot().slot().index
+                        == currentContainer.getPreviousItemSlot()) {
                     direction = -1;
                 }
             }

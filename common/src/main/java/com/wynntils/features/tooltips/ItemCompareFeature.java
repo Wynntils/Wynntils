@@ -137,9 +137,10 @@ public class ItemCompareFeature extends Feature {
         if (McUtils.screen() == null
                 || !(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
 
-        if (abstractContainerScreen.hoveredSlot == null) return;
+        if (abstractContainerScreen.getHoveredSlot() == null) return;
 
-        ItemStack hoveredItemStack = abstractContainerScreen.hoveredSlot.getItem();
+        ItemStack hoveredItemStack =
+                abstractContainerScreen.getHoveredSlot().slot().getItem();
 
         if (event.getItemStack() != hoveredItemStack) return;
 

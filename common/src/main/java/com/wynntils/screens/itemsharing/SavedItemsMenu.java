@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.itemsharing;
@@ -22,7 +22,7 @@ public final class SavedItemsMenu extends AbstractContainerMenu {
         int slotsOnCurrentRow = 0;
 
         for (int i = 0; i < MAX_ITEMS; i++) {
-            this.addSlot(new Slot(container, i, xPos, yPos));
+            this.addSlot(new Slot(container, i, xPos, yPos, Slot.Section.CONTAINER));
 
             xPos += 18;
             slotsOnCurrentRow++;

@@ -33,6 +33,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.social.EntityPortraitWidget;
 import net.minecraft.client.input.KeyEvent;
@@ -42,7 +43,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerInput;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
@@ -240,8 +240,6 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
         renderPlayerModel(guiGraphics, guiGraphics.mouseX(), guiGraphics.mouseY());
 
-        this.extractTooltip(guiGraphics);
-
         interactionButtons.forEach(button -> button.extractRenderState(guiGraphics));
         settingsButton.extractRenderState(guiGraphics);
 
@@ -283,7 +281,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ContainerInput containerInput) {
+    protected void slotClicked(SlotWidget slotWidget, int slotId, int mouseButton, ContainerInput containerInput) {
         // do nothing here, because we don't want the user interacting with slots at all
     }
 

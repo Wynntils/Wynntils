@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.event;
 
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.Event;
@@ -12,9 +13,10 @@ import net.neoforged.bus.api.ICancellableEvent;
 public class InventoryMouseClickedEvent extends Event implements ICancellableEvent {
     private final MouseButtonEvent mouseButtonEvent;
     private final boolean isDoubleClick;
-    private final Slot hoveredSlot;
+    private final SlotWidget hoveredSlot;
 
-    public InventoryMouseClickedEvent(MouseButtonEvent mouseButtonEvent, boolean isDoubleClick, Slot hoveredSlot) {
+    public InventoryMouseClickedEvent(
+            MouseButtonEvent mouseButtonEvent, boolean isDoubleClick, SlotWidget hoveredSlot) {
         this.mouseButtonEvent = mouseButtonEvent;
         this.isDoubleClick = isDoubleClick;
         this.hoveredSlot = hoveredSlot;
@@ -40,7 +42,11 @@ public class InventoryMouseClickedEvent extends Event implements ICancellableEve
         return isDoubleClick;
     }
 
-    public Slot getHoveredSlot() {
+    public SlotWidget getHoveredSlotWidget() {
         return hoveredSlot;
+    }
+
+    public Slot getHoveredSlot() {
+        return hoveredSlot == null ? null : hoveredSlot.slot();
     }
 }

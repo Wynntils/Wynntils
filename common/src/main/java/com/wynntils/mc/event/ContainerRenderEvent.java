@@ -5,8 +5,8 @@
 package com.wynntils.mc.event;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.Event;
 
 /** Fired on inventory render */
@@ -15,14 +15,14 @@ public class ContainerRenderEvent extends Event {
     private final GuiGraphicsExtractor guiGraphics;
     private final int mouseX;
     private final int mouseY;
-    private final Slot hoveredSlot;
+    private final SlotWidget hoveredSlot;
 
     public ContainerRenderEvent(
             AbstractContainerScreen<?> screen,
             GuiGraphicsExtractor guiGraphics,
             int mouseX,
             int mouseY,
-            Slot hoveredSlot) {
+            SlotWidget hoveredSlot) {
         this.screen = screen;
         this.guiGraphics = guiGraphics;
         this.mouseX = mouseX;
@@ -46,7 +46,7 @@ public class ContainerRenderEvent extends Event {
         return mouseY;
     }
 
-    public Slot getHoveredSlot() {
+    public SlotWidget getHoveredSlot() {
         return hoveredSlot;
     }
 }
