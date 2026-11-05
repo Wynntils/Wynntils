@@ -4,11 +4,11 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CardinalDirection;
-import org.jspecify.annotations.Nullable;
 
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -23,9 +23,9 @@ public final class LocationUtils {
     // - ',' or '/' with optional whitespace
     // - nothing, as long as the next number begins with a prefix (next char is in [xyz])
     // Complete pattern is `{prefix}?{num}{sep}{prefix}?{num}({sep}{prefix}?{num})?`
-    // Prefixes are groups xp, yp, zp, numbers are groups x, y, z, separator is non-capturing, groups zp and z are optional
+    // Prefixes are groups p1, p2, p3, numbers are groups n1, n2, n3, separator is non-capturing, groups p3 and n3 are optional
     private static final Pattern COORDINATE_PATTERN = Pattern.compile(
-            "(?<xp>[xyz]\\s*[=:]?\\s*)?(?<x>[+-]?\\d+)(?:\\.?\\d+)?(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<yp>[xyz]\\s*[=:]?\\s*)?(?<y>[+-]?\\d+)(?:\\.?\\d+)?(?:(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<zp>[xyz]\\s*[=:]?\\s*)?(?<z>[+-]?\\d+)(?:\\.?\\d+)?)?",
+            "(?<p1>[xyz]\\s*[=:]?\\s*)?(?<n1>[+-]?\\d+)(?:\\.?\\d+)?(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<p2>[xyz]\\s*[=:]?\\s*)?(?<n2>[+-]?\\d+)(?:\\.?\\d+)?(?:(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<p3>[xyz]\\s*[=:]?\\s*)?(?<n3>[+-]?\\d+)(?:\\.?\\d+)?)?",
             Pattern.CASE_INSENSITIVE);
 
     private static final Pattern STRICT_COORDINATE_PATTERN = Pattern.compile(
@@ -86,7 +86,7 @@ public final class LocationUtils {
     }
 
     private static Optional<Location> parseFromStringInner(String locString) {
-        // Shortest possible input is "1 2", reject shorter strings
+        // Shortest possible input is "1,2", reject shorter strings
         if (locString.length() < 3) {
             return Optional.empty();
         }
@@ -103,31 +103,36 @@ public final class LocationUtils {
         if (!matcher.matches()) {
             return Optional.empty();
         }
+        int coordinateLength = matcher.group("n3") == null ? 2 : 3;
 
         // Case 1: no prefixes used (ex: "73, 4, -5")
-        String prefix1 = matcher.group("xp");
-        String prefix2 = matcher.group("yp");
-        String prefix3 = matcher.group("zp");
+        String prefix1 = matcher.group("p1");
+        String prefix2 = matcher.group("p2");
+        String prefix3 = matcher.group("p3");
         if (prefix1 == null && prefix2 == null && prefix3 == null) {
-            String numStr1 = matcher.group("x");
-            String numStr2 = matcher.group("y");
-            String numStr3 = matcher.group("z");
-            return LocationUtils.parseFromStrings(numStr1, numStr2, numStr3);
+            String numStr1 = matcher.group("n1");
+            String numStr2 = matcher.group("n2");
+            if (coordinateLength == 3) {
+                String numStr3 = matcher.group("n3");
+                return LocationUtils.parseFromStrings(numStr1, numStr2, numStr3);
+            } else {
+                return LocationUtils.parseFromStrings(numStr1, null, numStr2);
+            }
         }
 
         // Case 2: all prefixes used (ex: "x=73, y=4, z=-5")
         // If prefixes only used on some numbers, input is ambiguous and rejected
-        // x, y, and z can be processed in any order, but if any strings are left null, they'll fail in parseFromStrings(String...)
+        // X, Y, and Z can be processed in any order, but if any strings are left null (except if only Y is null),
+        // they'll fail in parseFromStrings()
         String xStr = null;
         String yStr = null;
         String zStr = null;
-        int coordinateLength = matcher.group("z") == null ? 2 : 3;
         for (int i = 0; i < coordinateLength; i++) {
-            String prefix = matcher.group(LocationUtils.prefixGroup(i));
+            String prefix = matcher.group("p" + (i + 1));
             if (prefix == null) {
                 return Optional.empty();
             }
-            String numStr = matcher.group(LocationUtils.coordinateGroup(i));
+            String numStr = matcher.group("n" + (i + 1));
             // [xyz] is always the first character matched in the prefix group
             char maybeXyz = Character.toLowerCase(prefix.charAt(0));
             switch (maybeXyz) {
@@ -149,58 +154,37 @@ public final class LocationUtils {
                     }
                     zStr = numStr;
                 }
-                default -> throw new AssertionError("unreachable");
+                default -> {
+                    WynntilsMod.error("Unexpected coordinate prefix: " + maybeXyz);
+                    return Optional.empty();
+                }
             }
         }
-        if (coordinateLength == 2) {
-            if (yStr != null) {
-                return Optional.empty();
-            }
-            return LocationUtils.parseFromStrings(xStr, zStr, null);
-        } else {
-            return LocationUtils.parseFromStrings(xStr, yStr, zStr);
+        if (coordinateLength == 2 && yStr != null) {
+            return Optional.empty();
         }
+        return parseFromStrings(xStr, yStr, zStr);
     }
 
     private static Optional<Location> parseFromStrings(
-            @Nullable String firstStr,
-            @Nullable String secondStr,
-            @Nullable String thirdStr) {
+            String xStr,
+            String yStr,
+            String zStr) {
         try {
-            int first = Integer.parseInt(firstStr);
-            int second = Integer.parseInt(secondStr);
-            if (thirdStr == null) {
-                return Optional.of(new Location(first, 0, second));
-            } else {
-                int third = Integer.parseInt(thirdStr);
-                return Optional.of(new Location(first, second, third));
-            }
+            int x = Integer.parseInt(xStr);
+            int y = yStr != null ? Integer.parseInt(yStr) : 0;
+            int z = Integer.parseInt(zStr);
+            return Optional.of(new Location(x, y, z));
         } catch (NumberFormatException ignored) {
             return Optional.empty();
         }
     }
 
-    private static String prefixGroup(int index) {
-        return switch (index) {
-            case 0 -> "xp";
-            case 1 -> "yp";
-            case 2 -> "zp";
-            default -> throw new AssertionError("unreachable");
-        };
-    }
-
-    private static String coordinateGroup(int index) {
-        return switch (index) {
-            case 0 -> "x";
-            case 1 -> "y";
-            case 2 -> "z";
-            default -> throw new AssertionError("unreachable");
-        };
-    }
-
     // Trims brackets in the first/last character if they exist, returning empty if brackets are mismatched
-    private static @Nullable String trimBrackets(String str) {
-        assert str.length() >= 2;
+    private static String trimBrackets(String str) {
+        if (str.length() < 2) {
+            return null;
+        }
         char first = str.charAt(0);
         char last = str.charAt(str.length() - 1);
 

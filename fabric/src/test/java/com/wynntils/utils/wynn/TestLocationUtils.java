@@ -8,7 +8,6 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.Optional;
 import java.util.stream.Stream;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -103,6 +102,7 @@ public class TestLocationUtils {
                 "x:1, x:2, x:3",
                 "y:1, y:2, y:3",
                 "z:1, z:2, z:3",
+                "x:1, z:2, d:3",
                 "(37, -5, 1056>",
                 "((37, -5, 1056)",
                 "(37, -5, 1056))",
@@ -115,6 +115,8 @@ public class TestLocationUtils {
                 "1234567 8 9",
                 "1 2345 6",
                 "1 2 3456789",
+                "9999999999999999999",
+                "9999999999999999999 9999999999999999999",
                 "9999999999999999999 9999999999999999999 9999999999999999999",
                 "NaN, NaN, NaN",
                 "Infinity, Infinity, Infinity"
