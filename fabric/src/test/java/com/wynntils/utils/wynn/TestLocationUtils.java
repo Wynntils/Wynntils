@@ -77,6 +77,7 @@ public class TestLocationUtils {
                 "123 456 7b89",
                 "1b23 456",
                 "123 4b56",
+                "a 1, 2, 3 b",
                 "1. 2. 3.",
                 "1., 2., 3.,",
                 "x",

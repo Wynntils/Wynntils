@@ -17,7 +17,8 @@ import java.util.regex.Pattern;
 public final class LocationUtils {
     // Regex used to parse a coordinate
     // prefix: `([xyz] *[=:]? *)`, matches "x", "x:", "x=", with optional whitespace
-    // num: `([+-]?\d+)(?:\.?\d+)?`, matches a number with discarded decimal part, allows preceding but not trailing "."
+    // num: `([+-]?\d{1,6})(?:\.\d+)?`, matches a number with 1-6 digit whole part and discarded decimal part,
+    //   allows preceding but not trailing "."
     // sep: `(?: +| *[,/] *|(?=[xyz]))`, matches a separator, which can be either:
     // - 1+ whitespace characters
     // - ',' or '/' with optional whitespace
@@ -25,7 +26,7 @@ public final class LocationUtils {
     // Complete pattern is `{prefix}?{num}{sep}{prefix}?{num}({sep}{prefix}?{num})?`
     // Prefixes are groups p1, p2, p3, numbers are groups n1, n2, n3, separator is non-capturing, groups p3 and n3 are optional
     private static final Pattern COORDINATE_PATTERN = Pattern.compile(
-            "(?<p1>[xyz]\\s*[=:]?\\s*)?(?<n1>[+-]?\\d+)(?:\\.?\\d+)?(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<p2>[xyz]\\s*[=:]?\\s*)?(?<n2>[+-]?\\d+)(?:\\.?\\d+)?(?:(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<p3>[xyz]\\s*[=:]?\\s*)?(?<n3>[+-]?\\d+)(?:\\.?\\d+)?)?",
+            "(?<p1>[xyz]\\s*[=:]?\\s*)?(?<n1>[+-]?\\d{1,6})(?:\\.\\d+)?(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<p2>[xyz]\\s*[=:]?\\s*)?(?<n2>[+-]?\\d{1,6})(?:\\.\\d+)?(?:(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<p3>[xyz]\\s*[=:]?\\s*)?(?<n3>[+-]?\\d{1,6})(?:\\.\\d+)?)?",
             Pattern.CASE_INSENSITIVE);
 
     private static final Pattern STRICT_COORDINATE_PATTERN = Pattern.compile(
@@ -114,16 +115,15 @@ public final class LocationUtils {
             String numStr2 = matcher.group("n2");
             if (coordinateLength == 3) {
                 String numStr3 = matcher.group("n3");
-                return LocationUtils.parseFromStrings(numStr1, numStr2, numStr3);
+                return Optional.of(LocationUtils.parseFromStrings(numStr1, numStr2, numStr3));
             } else {
-                return LocationUtils.parseFromStrings(numStr1, null, numStr2);
+                return Optional.of(LocationUtils.parseFromStrings(numStr1, null, numStr2));
             }
         }
 
         // Case 2: all prefixes used (ex: "x=73, y=4, z=-5")
         // If prefixes only used on some numbers, input is ambiguous and rejected
-        // X, Y, and Z can be processed in any order, but if any strings are left null (except if only Y is null),
-        // they'll fail in parseFromStrings()
+        // X, Y, and Z can be processed in any order
         String xStr = null;
         String yStr = null;
         String zStr = null;
@@ -163,21 +163,17 @@ public final class LocationUtils {
         if (coordinateLength == 2 && yStr != null) {
             return Optional.empty();
         }
-        return parseFromStrings(xStr, yStr, zStr);
+        return Optional.of(LocationUtils.parseFromStrings(xStr, yStr, zStr));
     }
 
-    private static Optional<Location> parseFromStrings(
+    private static Location parseFromStrings(
             String xStr,
             String yStr,
             String zStr) {
-        try {
-            int x = Integer.parseInt(xStr);
-            int y = yStr != null ? Integer.parseInt(yStr) : 0;
-            int z = Integer.parseInt(zStr);
-            return Optional.of(new Location(x, y, z));
-        } catch (NumberFormatException ignored) {
-            return Optional.empty();
-        }
+        int x = Integer.parseInt(xStr);
+        int y = yStr != null ? Integer.parseInt(yStr) : 0;
+        int z = Integer.parseInt(zStr);
+        return new Location(x, y, z);
     }
 
     // Trims brackets in the first/last character if they exist, returning empty if brackets are mismatched
