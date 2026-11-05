@@ -16,6 +16,7 @@ import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapVisibility;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
+import com.wynntils.services.mapdata.features.type.MapArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.providers.MapDataProviderInfo;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
@@ -328,8 +329,9 @@ public class MapDataService extends Service {
         }
         providerEnabledOverrides.touched();
 
-        if (enabled && info.provider() == UNLOADED_PLACEHOLDER_PROVIDER) {
-            // This is a JSON provider that was disabled on load, so load it now
+        if (enabled && getJsonProviderInfoByCompleteId(providerId).isPresent()) {
+            // Reload and validate JSON providers before enabling them, including previously failed providers as they
+            // may have been fixed.
             getJsonProviderInfoByCompleteId(providerId).ifPresent(this::registerJsonProvider);
         } else {
             invalidateCaches(info.provider());
@@ -468,6 +470,24 @@ public class MapDataService extends Service {
         if (provider == null) {
             WynntilsMod.warn("Provider missing for '" + completeId + "'");
             return;
+        }
+
+        // Check that all areas have valid bounding polygons instead of letting the renderer crash when it tries
+        // to render them
+        try {
+            provider.getFeatures()
+                    .filter(feature -> feature instanceof MapArea)
+                    .map(feature -> (MapArea) feature)
+                    .forEach(MapArea::getBoundingPolygon);
+        } catch (AssertionError ae) {
+            providerEnabledOverrides.get().put(completeId, false);
+            providerEnabledOverrides.touched();
+            WynntilsMod.error(
+                    "Disabling map provider '" + completeId
+                            + "', a polygon was found that is not convex or has less than 3 vertices",
+                    ae);
+            McUtils.sendErrorToClient("Disabling map provider '" + completeId
+                    + "', a polygon was found that is not convex or has less than 3 vertices");
         }
 
         registerProvider(completeId, new MapDataProviderInfo(provider, JSON_PROVIDER_OWNER, true, true));
