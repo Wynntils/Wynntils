@@ -4416,6 +4416,7 @@
   "service.wynntils.itemRecord.cleanupComplete": "Item record cleanup complete. Removed %d faulty records. Readded %d records that can now be decoded.",
   "service.wynntils.lootrunPaths.lootrunCouldNotBeLoaded": "Lootrun \"%s\" could not be loaded.",
   "service.wynntils.lootrunPaths.lootrunStart": "Lootrun starts at [%s %s %s].",
+  "service.wynntils.mapdata.invalidProviderArea": "Disabling map provider '%s', a polygon was found that is not convex or has less than 3 vertices",
   "service.wynntils.mapdata.provider.activities.description": "Provides map features for the currently tracked activity from the content book, such as quests, caves, or boss altars.",
   "service.wynntils.mapdata.provider.activities.name": "Activities",
   "service.wynntils.mapdata.provider.categories.description": "Provides all the categories used by other map data providers to organize their features.",

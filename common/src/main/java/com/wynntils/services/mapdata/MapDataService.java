@@ -48,6 +48,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
+import net.minecraft.client.resources.language.I18n;
 
 public class MapDataService extends Service {
     public static final File LOCAL_PROVIDERS = WynntilsMod.getModStorageDir("localProviders");
@@ -486,8 +487,7 @@ public class MapDataService extends Service {
                     "Disabling map provider '" + completeId
                             + "', a polygon was found that is not convex or has less than 3 vertices",
                     ae);
-            McUtils.sendErrorToClient("Disabling map provider '" + completeId
-                    + "', a polygon was found that is not convex or has less than 3 vertices");
+            McUtils.sendErrorToClient(I18n.get("service.wynntils.mapdata.invalidProviderArea", completeId));
         }
 
         registerProvider(completeId, new MapDataProviderInfo(provider, JSON_PROVIDER_OWNER, true, true));
