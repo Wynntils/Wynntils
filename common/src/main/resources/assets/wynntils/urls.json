@@ -211,7 +211,7 @@
   },
   {
     "id": "dataStaticItemDisplayModelData",
-    "md5": "08ce2959f56e6857fe591f5517d1da59",
+    "md5": "f4136c165527ca05154c5b2169d8a1ef",
     "path": "Data-Storage/item_display_model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
@@ -361,7 +361,7 @@
   },
   {
     "id": "dataStaticTextureAndFingerprintHashes",
-    "md5": "89875964b0d6c10fefd64f70b1ef444e",
+    "md5": "3305151b2f2c8b77850d96c341f28804",
     "path": "Data-Storage/texture_and_fingerprint_hashes.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/texture_and_fingerprint_hashes.json"
   },
