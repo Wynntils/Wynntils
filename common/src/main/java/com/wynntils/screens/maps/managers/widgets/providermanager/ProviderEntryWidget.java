@@ -81,7 +81,7 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                !Objects.equals(parent.getSelectedProviderId(), providerId)
+                !Objects.equals(parent.getSelectedCompleteProviderId(), completeProviderId)
                         ? Texture.MANAGER_WIDGET_BACKGROUND
                         : Texture.MANAGER_WIDGET_BACKGROUND_RED,
                 getX(),
@@ -124,7 +124,7 @@ public class ProviderEntryWidget extends AbstractProviderWidget {
         } else {
             this.playDownSound(McUtils.mc().getSoundManager());
 
-            parent.setSelectedProvider(providerId, providerType);
+            parent.setSelectedProvider(completeProviderId, providerType);
         }
 
         return false;
