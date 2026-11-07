@@ -10,6 +10,7 @@ import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.List;
 import java.util.Optional;
 
 public class MapAttributesImpl implements MapAttributes {
@@ -142,13 +143,13 @@ public class MapAttributesImpl implements MapAttributes {
     }
 
     @Override
-    public Optional<CustomColor> getFillColor() {
-        return Optional.ofNullable(fillColor);
+    public Optional<List<CustomColor>> getFillColors() {
+        return Optional.ofNullable(fillColor).map(List::of);
     }
 
     @Override
-    public Optional<CustomColor> getBorderColor() {
-        return Optional.ofNullable(borderColor);
+    public Optional<List<CustomColor>> getBorderColors() {
+        return Optional.ofNullable(borderColor).map(List::of);
     }
 
     @Override

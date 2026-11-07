@@ -15,6 +15,7 @@ import java.awt.Color;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 import java.util.random.RandomGenerator;
@@ -214,6 +215,66 @@ public record CustomColor(int r, int g, int b, int a) {
         float[] hsb = this.asHSB();
         float brightness = hsb[2] + degree;
         return fromHSV(hsb[0], hsb[1], brightness, this.a);
+    }
+
+    /**
+     * Blends multiple colors into one, using a circular (hue-wheel) mean instead of a naive RGB
+     * average. An RGB average can wash out to grey for complementary inputs (e.g. dark red + teal),
+     * which is unacceptable when the blended color must stay visually distinct from an actual grey
+     * "no data" color. Saturation and value are averaged linearly; the hue is averaged by summing
+     * unit vectors around the hue wheel and taking the angle of the result, which is equivalent to
+     * picking the mean hue along the shortest arc between the inputs.
+     * <p>
+     * If the inputs are split exactly evenly around the wheel (e.g. two colors exactly 180 degrees
+     * apart), the summed vector has ~zero magnitude and the shortest arc is ambiguous in both
+     * directions. That tie is broken deterministically (independent of input order) by rotating 90
+     * degrees from the lowest input hue.
+     * <p>
+     * A single-element input is returned unchanged.
+     *
+     * FIXME: This exists only because MapAreaAttributes cannot express more than one fill/border
+     *        color, so it stands in for real multi-color area support. Revisit once MapAreaAttributes
+     *        can express more than one fill/border color (see also GuildMapScreen:996).
+     */
+    public static CustomColor blend(List<CustomColor> colors) {
+        if (colors.isEmpty()) {
+            return CommonColors.WHITE;
+        }
+
+        if (colors.size() == 1) {
+            return colors.getFirst();
+        }
+
+        double sinSum = 0;
+        double cosSum = 0;
+        float saturationSum = 0;
+        float valueSum = 0;
+        float alphaSum = 0;
+        float minHue = Float.MAX_VALUE;
+
+        for (CustomColor color : colors) {
+            float[] hsb = color.asHSB();
+            double angle = hsb[0] * 2 * Math.PI;
+            sinSum += Math.sin(angle);
+            cosSum += Math.cos(angle);
+            saturationSum += hsb[1];
+            valueSum += hsb[2];
+            alphaSum += color.a();
+            minHue = Math.min(minHue, hsb[0]);
+        }
+
+        int count = colors.size();
+        float hue;
+        if (Math.hypot(sinSum, cosSum) < 1.0e-4) {
+            // Degenerate case: the hues cancel out, so the shortest arc is ambiguous.
+            // Deterministically pick the point a quarter turn from the lowest input hue.
+            hue = (minHue + 0.25f) % 1f;
+        } else {
+            double angle = Math.atan2(sinSum, cosSum) / (2 * Math.PI);
+            hue = (float) (((angle % 1) + 1) % 1);
+        }
+
+        return CustomColor.fromHSV(hue, saturationSum / count, valueSum / count, (alphaSum / count) / 255f);
     }
 
     /** 0xAARRGGBB format */

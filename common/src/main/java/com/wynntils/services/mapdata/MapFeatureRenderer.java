@@ -19,6 +19,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.type.CircleMask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -37,6 +38,10 @@ public final class MapFeatureRenderer {
     // Generally <0.1f -> 0f, >0.9f -> 1f
     private static final float MINIMUM_RENDER_ALPHA = 0.1f;
 
+    // circularMask, when non-null, clips MapLocation icons to that mask (in absolute screen space)
+    // per-pixel instead of drawing them normally - used for the round minimap, where a feature near
+    // the mask boundary should clip smoothly against it instead of rendering past it. Null on
+    // rectangular map screens (main map, guild map), where features are never masked.
     public static void renderMapFeature(
             GuiGraphics guiGraphics,
             MapFeature feature,
@@ -48,7 +53,8 @@ public final class MapFeatureRenderer {
             float zoomRenderScale,
             float featureRenderScale,
             boolean hovered,
-            boolean fullscreenMap) {
+            boolean fullscreenMap,
+            CircleMask circularMask) {
         if (feature instanceof MapLocation location) {
             renderMapLocation(
                     guiGraphics,
@@ -61,7 +67,8 @@ public final class MapFeatureRenderer {
                     zoomRenderScale,
                     featureRenderScale,
                     hovered,
-                    fullscreenMap);
+                    fullscreenMap,
+                    circularMask);
         } else if (feature instanceof MapArea area) {
             renderMapArea(
                     guiGraphics,
@@ -93,7 +100,8 @@ public final class MapFeatureRenderer {
             float zoomRenderScale,
             float featureRenderScale,
             boolean hovered,
-            boolean fullscreenMap) {
+            boolean fullscreenMap,
+            CircleMask circularMask) {
         float renderScale = hovered ? featureRenderScale * 1.05f : featureRenderScale;
         int labelHeight = (int) (FontRenderer.getInstance().getFont().lineHeight * renderScale * TEXT_SCALE);
 
@@ -126,16 +134,30 @@ public final class MapFeatureRenderer {
                 iconAlpha = 1f;
             }
 
-            RenderUtils.drawScalingTexturedRect(
-                    guiGraphics,
-                    icon.get().getIdentifier(),
-                    attributes.iconColor().withAlpha(iconAlpha),
-                    0 - iconWidth / 2f,
-                    yOffset - iconHeight / 2f,
-                    iconWidth,
-                    iconHeight,
-                    iconWidth,
-                    iconHeight);
+            if (circularMask != null) {
+                // Clip the icon to the mask per-pixel instead of drawing it in full, so an icon
+                // near the mask boundary fades out smoothly
+                RenderUtils.drawCircularMaskedTexturedRect(
+                        guiGraphics,
+                        icon.get().getIdentifier(),
+                        attributes.iconColor().withAlpha(iconAlpha),
+                        0 - iconWidth / 2f,
+                        yOffset - iconHeight / 2f,
+                        iconWidth,
+                        iconHeight,
+                        circularMask);
+            } else {
+                RenderUtils.drawScalingTexturedRect(
+                        guiGraphics,
+                        icon.get().getIdentifier(),
+                        attributes.iconColor().withAlpha(iconAlpha),
+                        0 - iconWidth / 2f,
+                        yOffset - iconHeight / 2f,
+                        iconWidth,
+                        iconHeight,
+                        iconWidth,
+                        iconHeight);
+            }
             yOffset += (iconHeight + labelHeight) / 2 + SPACING;
         }
 
