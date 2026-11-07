@@ -21,28 +21,9 @@ public class CustomRenderPipelines extends RenderPipelines {
             .withDepthWrite(false)
             .buildSnippet();
 
-    public static final RenderPipeline LOOTRUN_QUAD_PIPELINE =
-            register(RenderPipeline.builder(RenderPipelines.MATRICES_PROJECTION_SNIPPET)
-                    .withLocation("pipeline/wynntils_lootrun_quad")
-                    .withVertexShader("core/position_tex_color")
-                    .withFragmentShader("core/position_tex_color")
-                    .withSampler("Sampler0")
-                    .withBlend(BlendFunction.TRANSLUCENT)
-                    .withVertexFormat(DefaultVertexFormat.POSITION_TEX_COLOR, VertexFormat.Mode.QUADS)
-                    .withDepthTestFunction(DepthTestFunction.LEQUAL_DEPTH_TEST)
-                    .withCull(false)
-                    .build());
-
     public static final RenderPipeline POSITION_COLOR_QUAD_PIPELINE =
             register(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
                     .withLocation("pipeline/wynntils_position_color_quad")
-                    .withCull(false)
-                    .build());
-
-    public static final RenderPipeline PLAYER_PING_QUAD_PIPELINE =
-            register(RenderPipeline.builder(POSITION_COLOR_QUAD_SNIPPET)
-                    .withLocation("pipeline/wynntils_player_ping_quad")
-                    .withDepthTestFunction(DepthTestFunction.NO_DEPTH_TEST)
                     .withCull(false)
                     .build());
 
