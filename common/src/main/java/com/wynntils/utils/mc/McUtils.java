@@ -154,6 +154,13 @@ public final class McUtils {
 
     public static void sendWynntilsPrefixMessage(Component component) {
         StyledText styledText = StyledText.fromComponent(component);
+        // If called early then addWynntilsPrefix will crash as it relies on options.chatWidth().
+        // We can just log the message instead as it wouldn't be visible anyway
+        if (options() == null) {
+            WynntilsMod.info(styledText.getString());
+            return;
+        }
+
         StyledText wrapedText = StyledTextUtils.addWynntilsPrefix(styledText);
 
         sendMessageToClient(wrapedText.getComponent());
