@@ -14,7 +14,6 @@ import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.AbstractMapScreen;
-import com.wynntils.screens.maps.managers.IconCreationScreen;
 import com.wynntils.screens.maps.managers.IconSelectionScreen;
 import com.wynntils.screens.maps.waypoints.widgets.IconButton;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
@@ -59,7 +58,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
     private static final String DEFAULT_CATEGORY = "wynntils:personal:waypoint";
 
     // Widgets
-    private Button addCustomIconButton;
     private Button chooseIconButton;
     private Button centerOnPlayerButton;
     private Button centerOnWorldButton;
@@ -251,18 +249,6 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         this.addRenderableWidget(chooseIconButton);
 
         updateIconPreview();
-
-        addCustomIconButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.waypointCreation.addCustomIcon"),
-                        (button) -> McUtils.setScreen(IconCreationScreen.create(this, icon -> {
-                            if (icon != null) {
-                                setIconId(icon.getIconId());
-                            }
-                        })))
-                .pos((int) (dividedWidth * 12), (int) (dividedHeight * 22))
-                .size((int) (dividedWidth * 10), 20)
-                .build();
-        this.addRenderableWidget(addCustomIconButton);
 
         iconColorInput = new TextInputBoxWidget(
                 (int) (dividedWidth * 23),

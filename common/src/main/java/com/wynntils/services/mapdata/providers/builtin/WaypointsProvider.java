@@ -59,6 +59,7 @@ public class WaypointsProvider extends BuiltInProvider {
         PROVIDED_ICONS.forEach(this::notifyCallbacks);
         PROVIDED_ICONS.clear();
         icons.forEach(WaypointsProvider::registerIcon);
+        PROVIDED_ICONS.forEach(this::notifyCallbacks);
     }
 
     private static void registerFeature(WaypointLocation waypoint) {
