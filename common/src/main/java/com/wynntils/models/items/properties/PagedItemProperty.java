@@ -4,14 +4,23 @@
  */
 package com.wynntils.models.items.properties;
 
+import com.wynntils.core.text.StyledText;
+
 /**
  * Items that have multiple pages in the tooltip
  */
 public interface PagedItemProperty {
     int currentPage();
 
-    // This should only be updated from ItemHandler for now
-    void updatePage(int newPage);
+    void setCurrentPage(int page);
+
+    boolean hasParsedPage(int page);
+
+    void markParsedPage(int page);
+
+    StyledText getLore();
+
+    void setLore(StyledText lore);
 
     default boolean isStatPage() {
         return currentPage() == 0;

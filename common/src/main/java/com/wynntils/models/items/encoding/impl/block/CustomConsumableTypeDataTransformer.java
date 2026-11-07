@@ -17,7 +17,7 @@ public class CustomConsumableTypeDataTransformer extends DataTransformer<CustomC
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, CustomConsumableTypeData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> encodeCustomConsumableTypeData(data);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> encodeCustomConsumableTypeData(data);
         };
     }
 
@@ -25,7 +25,7 @@ public class CustomConsumableTypeDataTransformer extends DataTransformer<CustomC
     public ErrorOr<CustomConsumableTypeData> decodeData(
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> decodeCustomConsumableTypeData(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> decodeCustomConsumableTypeData(byteReader);
         };
     }
 

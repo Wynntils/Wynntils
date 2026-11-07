@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.properties;
@@ -8,6 +8,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
@@ -21,6 +22,8 @@ public interface IdentifiableItemProperty<T, U> extends NamedItemProperty {
     T getItemInfo();
 
     Optional<U> getItemInstance();
+
+    boolean isUnidentified();
 
     ClassType getRequiredClass();
 
@@ -39,4 +42,21 @@ public interface IdentifiableItemProperty<T, U> extends NamedItemProperty {
     boolean isDefective();
 
     float getOverallPercentage();
+
+    default boolean hasEstimatedOverallPercentage() {
+        return getIdentifications().stream().anyMatch(actual -> {
+            if (actual.vanillaMeter() == CappedValue.EMPTY) return false;
+            return getPossibleValues().stream()
+                    .filter(possible -> possible.statType().equals(actual.statType()))
+                    .findFirst()
+                    .map(possible -> !possible.range().inRange(actual.value()))
+                    .orElse(true);
+        });
+    }
+
+    default boolean hasFullPerfectInternalRolls() {
+        return getIdentifications().stream()
+                .filter(statActualValue -> statActualValue.vanillaMeter() != CappedValue.EMPTY)
+                .allMatch(StatActualValue::perfectInternalRoll);
+    }
 }

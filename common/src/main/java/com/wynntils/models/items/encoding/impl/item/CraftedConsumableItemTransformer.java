@@ -74,16 +74,16 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
             identifications = !customIdentificationsData.identifications().isEmpty()
                     ? customIdentificationsData.identifications()
                     : customIdentificationsData.possibleValues().stream()
-                            .map(statPossibleValues -> new StatActualValue(
-                                    statPossibleValues.statType(),
-                                    statPossibleValues.range().high(),
-                                    false,
-                                    RangedValue.NONE))
+                            .map(possibleValues -> new StatActualValue(
+                                    possibleValues.statType(),
+                                    possibleValues.range().high(),
+                                    RangedValue.NONE,
+                                    false))
                             .toList();
         }
 
-        return ErrorOr.of(
-                new CraftedConsumableItem(name, consumableType, level, identifications, namedEffects, List.of(), uses));
+        return ErrorOr.of(new CraftedConsumableItem(
+                name, consumableType, level, identifications, namedEffects, List.of(), uses, "", ""));
     }
 
     @Override
@@ -98,7 +98,7 @@ public class CraftedConsumableItemTransformer extends ItemTransformer<CraftedCon
         // Crafted names deliberately remain outside the encoded payload. They are appended as normal
         // chat text by ItemEncodingModel so Wynncraft's chat moderation can inspect them.
         dataList.add(new EffectsData(item.getNamedEffects()));
-        dataList.add(new CustomIdentificationsData(item.getPossibleValues(), item.getIdentifications()));
+        dataList.add(new CustomIdentificationsData(item.getIdentifications()));
 
         return dataList;
     }

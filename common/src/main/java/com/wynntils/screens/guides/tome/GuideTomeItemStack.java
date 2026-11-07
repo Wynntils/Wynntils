@@ -4,14 +4,12 @@
  */
 package com.wynntils.screens.guides.tome;
 
-import com.wynntils.core.components.Handlers;
-import com.wynntils.models.items.WynnItemData;
+import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.builders.IdentifiableTooltipBuilder;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.items.items.game.TomeItem;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.screens.guides.GuideItemStack;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.TooltipUtils;
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -37,9 +35,8 @@ public class GuideTomeItemStack extends GuideItemStack {
     @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
         if (generatedTooltip == null) {
-            List<Component> tooltip = new ArrayList<>(buildTooltip());
-
-            generatedTooltip = tooltip;
+            generatedTooltip = IdentifiableTooltipBuilder.buildNewItem(tomeItem, ItemSourceType.GUIDE, "", currentPage)
+                    .getTooltipLines(Models.Character.getClassType());
         }
 
         return generatedTooltip;
@@ -50,28 +47,9 @@ public class GuideTomeItemStack extends GuideItemStack {
     }
 
     public void changePage() {
-        if (currentPage == 0) {
-            currentPage = 1;
-        } else {
-            currentPage = 0;
-        }
+        // Page 2 is the lore page in the builder which is what we want here
+        currentPage = currentPage == 0 ? 2 : 0;
 
         generatedTooltip = null;
-    }
-
-    public List<Component> buildTooltip() {
-        if (currentPage == 0) {
-            tomeItem.getData().getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(tomeItem));
-            return TooltipUtils.getWynnItemTooltip(this, tomeItem);
-        } else {
-            List<Component> tooltipLines =
-                    buildObtainInfoPage(tomeItem.getItemInfo().metaInfo().obtainInfo());
-            int widestLine = tooltipLines.stream()
-                    .mapToInt(McUtils.mc().font::width)
-                    .max()
-                    .orElse(0);
-            tooltipLines.addAll(buildPaginationLines(currentPage, 3, widestLine));
-            return tooltipLines;
-        }
     }
 }

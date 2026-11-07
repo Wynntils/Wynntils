@@ -36,7 +36,10 @@ public class EmeraldGuideButton extends GuideButton {
         }
 
         renderFavoriteIcon(guiGraphics);
-        renderTooltipIfHovered(guiGraphics, mouseX, mouseY);
+
+        if (isHovered) {
+            renderTooltip(guiGraphics, mouseX, mouseY);
+        }
     }
 
     @Override

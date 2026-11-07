@@ -4,21 +4,17 @@
  */
 package com.wynntils.models.gear;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.items.annotators.ItemPageAnnotator;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.items.items.game.UnknownGearItem;
-import com.wynntils.models.stats.type.StatPossibleValues;
-import com.wynntils.models.stats.type.StatType;
-import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
@@ -89,108 +85,31 @@ public final class GearModel extends Model {
 
     // For "real" gear items eg. from the inventory
     public GearItem parseInstance(GearInfo gearInfo, ItemStack itemStack, boolean isUnidentified) {
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, gearInfo.getVariableStatsMap());
-        if (result.tier() != gearInfo.tier()) {
-            WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
-        }
-
-        // Temporary check for ascended items as they have no visible difference beside the stats at the moment
-        if (result.level() != gearInfo.requirements().level() && gearInfo.tier() == GearTier.MYTHIC) {
-            WynntilsMod.warn("Gear level for " + gearInfo.name() + " is reported as " + result.level());
-            GearInfo ascendedGearInfo = Models.Gear.getGearInfoFromDisplayName("Ascended " + gearInfo.name());
-            if (ascendedGearInfo != null && ascendedGearInfo.requirements().level() == result.level()) {
-                WynntilsMod.info("Parsing " + gearInfo.name() + " as an ascended item");
-                return parseInstance(ascendedGearInfo, itemStack, isUnidentified);
-            } else {
-                WynntilsMod.warn("No ascended gear info found for " + gearInfo.name());
-            }
-        }
-
-        GearInstance gearInstance = null;
-        if (!isUnidentified) {
-            gearInstance = GearInstance.create(
-                    gearInfo,
-                    result.identifications(),
-                    result.powders(),
-                    result.rerolls(),
-                    result.shinyStat(),
-                    result.gearInstanceRequirements(),
-                    result.setInstance());
-        }
-
-        return new GearItem(gearInfo, gearInstance, result.currentPage(), result.shinyStat());
+        GearItem item = new GearItem(gearInfo, isUnidentified);
+        ItemPageAnnotator.update(item, itemStack);
+        return item;
     }
 
     public CraftedGearItem parseCraftedGearItem(String name, ItemStack itemStack) {
-        // We pass this down to the parser, so it can populate it
-        // (gears don't have to parse possible values on the fly, since the api provides them)
-        Map<StatType, StatPossibleValues> possibleValuesMap = new HashMap<>();
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, possibleValuesMap);
-
-        GearType gearType = GearType.fromFrameSprite(result.itemType());
-        if (gearType == null && result.requirements().classType().isPresent()) {
-            // If the item is a weapon, we can find the class type from the requirements
-            gearType = GearType.fromClassType(result.requirements().classType().get());
-        }
-
-        // If we still failed to find the gear type, try to find it from the item stack
+        GearType gearType = GearType.fromFrameSprite(WynnItemParser.extractFrameSpriteCode(itemStack));
         if (gearType == null) {
             gearType = GearType.fromItemStack(itemStack);
 
             if (gearType == null) {
-                // If we failed to find the gear type, assume it is a weapon
                 gearType = GearType.WEAPON;
             }
         }
 
-        return new CraftedGearItem(
-                name,
-                gearType,
-                result.attackSpeed(),
-                result.dps(),
-                result.health(),
-                result.damages(),
-                result.defences(),
-                result.requirements(),
-                possibleValuesMap.values().stream().toList(),
-                result.identifications(),
-                result.powders(),
-                result.powderSlots(),
-                result.gearInstanceRequirements(),
-                result.durability(),
-                result.currentPage());
+        CraftedGearItem item = new CraftedGearItem(name, gearType);
+        ItemPageAnnotator.update(item, itemStack);
+        return item;
     }
 
     public UnknownGearItem parseUnknownGearItem(
             String name, GearType gearType, GearTier gearTier, boolean isUnidentified, ItemStack itemStack) {
-        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
-
-        if (gearType == GearType.WEAPON) {
-            // If the gear type is weapon, we can try to find the weapon type from the requirements
-            gearType = result.requirements()
-                    .classType()
-                    .map(GearType::fromClassType)
-                    .orElse(gearType);
-        }
-
-        return new UnknownGearItem(
-                name,
-                gearType,
-                gearTier,
-                isUnidentified,
-                result.level(),
-                result.attackSpeed(),
-                result.health(),
-                result.damages(),
-                result.defences(),
-                result.requirements(),
-                result.gearInstanceRequirements(),
-                result.identifications(),
-                result.powders(),
-                result.powderSlots(),
-                result.rerolls(),
-                result.setInstance().orElse(null),
-                result.shinyStat().orElse(null));
+        UnknownGearItem item = new UnknownGearItem(name, gearTier, gearType, isUnidentified);
+        ItemPageAnnotator.update(item, itemStack);
+        return item;
     }
 
     public GearInfo getGearInfoFromDisplayName(String gearName) {

@@ -17,18 +17,18 @@ import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.gear.type.GearMetaInfo;
+import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.rewards.type.CharmInfo;
-import com.wynntils.models.rewards.type.CharmRequirements;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
+import com.wynntils.models.wynnitem.type.ItemEmblem;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.type.RangedValue;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -107,8 +107,16 @@ public class CharmInfoRegistry {
                 throw new RuntimeException("Invalid Wynncraft data: charm has no tier");
             }
 
+            String emblemStr = JsonUtils.getNullableJsonString(json, "emblem");
+
+            ItemEmblem emblem = emblemStr == null
+                    ? new ItemEmblem(ItemEmblem.ItemEmblemShape.STICKER, 5)
+                    : ItemEmblem.fromString(emblemStr);
+
             GearMetaInfo metaInfo = parseMetaInfo(json, internalName);
-            CharmRequirements requirements = parseCharmRequirements(json);
+            int levelRequirement = parseCharmLevelRequirement(json);
+            GearRequirements requirements =
+                    new GearRequirements(levelRequirement, Optional.empty(), List.of(), Optional.empty());
 
             // Base stats are parsed the same way as variable stats
             List<Pair<StatType, StatPossibleValues>> baseStats = parseVariableStats(json, "base");
@@ -118,6 +126,7 @@ public class CharmInfoRegistry {
             return new CharmInfo(
                     displayName,
                     tier,
+                    emblem,
                     metaInfo,
                     requirements,
                     Stream.concat(baseStats.stream(), variableStats.stream()).toList());
@@ -144,18 +153,13 @@ public class CharmInfoRegistry {
             return material;
         }
 
-        private CharmRequirements parseCharmRequirements(JsonObject json) {
+        private int parseCharmLevelRequirement(JsonObject json) {
             JsonObject requirementsJson = json.getAsJsonObject("requirements");
             if (requirementsJson == null) {
                 throw new RuntimeException("Invalid Wynncraft data: charm has no requirements");
             }
 
-            int level = JsonUtils.getNullableJsonInt(requirementsJson, "level");
-
-            int max = level + 20;
-
-            // Minimum is always the required level of the charm
-            return new CharmRequirements(level, RangedValue.of(level, max));
+            return JsonUtils.getNullableJsonInt(requirementsJson, "level");
         }
     }
 }

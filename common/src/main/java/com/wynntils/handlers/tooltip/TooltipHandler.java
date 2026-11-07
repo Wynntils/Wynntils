@@ -1,117 +1,88 @@
 /*
- * Copyright © Wynntils 2023-2026.
+ * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.tooltip;
 
 import com.wynntils.core.components.Handler;
-import com.wynntils.core.components.Models;
-import com.wynntils.handlers.tooltip.impl.crafted.CraftedTooltipBuilder;
-import com.wynntils.handlers.tooltip.impl.identifiable.IdentifiableTooltipBuilder;
-import com.wynntils.handlers.tooltip.impl.mount.MountTooltipBuilder;
+import com.wynntils.core.components.Managers;
+import com.wynntils.features.tooltips.ItemStatInfoFeature;
+import com.wynntils.handlers.tooltip.builders.CraftedConsumableTooltipBuilder;
+import com.wynntils.handlers.tooltip.builders.CraftedGearTooltipBuilder;
+import com.wynntils.handlers.tooltip.builders.IdentifiableTooltipBuilder;
+import com.wynntils.handlers.tooltip.builders.MountTooltipBuilder;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
+import com.wynntils.handlers.tooltip.type.TooltipElement;
 import com.wynntils.handlers.tooltip.type.TooltipOptions;
-import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.WynnItemData;
+import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.MountItem;
-import com.wynntils.models.items.properties.CraftedItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
-import java.util.HashMap;
+import com.wynntils.models.items.properties.PagedItemProperty;
 import java.util.List;
-import java.util.function.Supplier;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public final class TooltipHandler extends Handler {
-    public List<Component> updateWynnItemTooltip(
-            List<Component> originalLines, WynnItem wynnItem, TooltipOptions options) {
-        if (wynnItem instanceof IdentifiableItemProperty<?, ?> identifiableItem) {
-            return updateTooltip(originalLines, identifiableItem, options);
-        }
-
-        if (wynnItem instanceof CraftedGearItem craftedItem && craftedItem.isStatPage()) {
-            return updateTooltip(originalLines, craftedItem, options);
-        }
-
-        return originalLines;
-    }
-
-    public List<Component> updateTooltip(
-            List<Component> originalLines, IdentifiableItemProperty<?, ?> identifiableItem, TooltipOptions options) {
-        if (identifiableItem.getIdentifications().isEmpty()) return originalLines;
-
-        return updateTooltip(
-                originalLines,
-                identifiableItem,
-                options,
-                () -> calculateUpdatedTooltip(originalLines, identifiableItem, options));
-    }
-
-    public List<Component> updateTooltip(
-            List<Component> originalLines, CraftedItemProperty craftedItem, TooltipOptions options) {
-        if (craftedItem.getIdentifications().isEmpty()) return originalLines;
-
-        return updateTooltip(
-                originalLines,
-                craftedItem,
-                options,
-                () -> CraftedTooltipBuilder.fromTooltipLines(originalLines, craftedItem)
-                        .getTooltipLines(Models.Character.getClassType(), options));
-    }
-
-    private List<Component> updateTooltip(
-            List<Component> originalLines, Object item, TooltipOptions options, Supplier<List<Component>> calculator) {
-        if (!(item instanceof WynnItem wynnItem)) return calculator.get();
-
-        Object cachedTooltip = wynnItem.getData().get(WynnItemData.TOOLTIP_KEY);
-        if (cachedTooltip instanceof TooltipBuilder) {
-            return originalLines;
-        }
-
-        UpdatedTooltipCache cache;
-        if (cachedTooltip instanceof UpdatedTooltipCache updatedTooltipCache) {
-            cache = updatedTooltipCache;
-        } else {
-            cache = new UpdatedTooltipCache();
-            wynnItem.getData().store(WynnItemData.TOOLTIP_KEY, cache);
-        }
-
-        UpdateKey key = new UpdateKey(List.copyOf(originalLines), options);
-        return cache.computeIfAbsent(key, ignored -> calculator.get());
-    }
-
-    private List<Component> calculateUpdatedTooltip(
-            List<Component> originalLines, IdentifiableItemProperty<?, ?> identifiableItem, TooltipOptions options) {
-        return IdentifiableTooltipBuilder.fromTooltipLines(originalLines, identifiableItem)
-                .getTooltipLines(Models.Character.getClassType(), options);
-    }
-
-    public IdentifiableTooltipBuilder buildNew(IdentifiableItemProperty identifiableItem) {
-        return buildNew(identifiableItem, "");
-    }
-
-    public IdentifiableTooltipBuilder buildNew(IdentifiableItemProperty identifiableItem, String source) {
-        return IdentifiableTooltipBuilder.buildNewItem(identifiableItem, source);
+    // region Identifiable items
+    public IdentifiableTooltipBuilder buildNew(
+            IdentifiableItemProperty identifiableItem, ItemSourceType sourceType, String source, int page) {
+        return IdentifiableTooltipBuilder.buildNewItem(identifiableItem, sourceType, source, page);
     }
 
     public IdentifiableTooltipBuilder buildFromItemStack(
-            ItemStack itemStack, IdentifiableItemProperty identifiableItem, String source) {
-        return IdentifiableTooltipBuilder.buildFromItemStack(itemStack, identifiableItem, source);
+            ItemStack itemStack, IdentifiableItemProperty identifiableItem) {
+        // Tomes do not have pages
+        int page = identifiableItem instanceof PagedItemProperty pagedItem ? pagedItem.currentPage() : 0;
+
+        return IdentifiableTooltipBuilder.buildFromItemStack(itemStack, identifiableItem, page);
+    }
+    // endregion
+
+    // region Crafted items
+    public CraftedGearTooltipBuilder buildNew(
+            CraftedGearItem craftedGearItem, ItemSourceType sourceType, String source, int page) {
+        return CraftedGearTooltipBuilder.buildNewItem(craftedGearItem, sourceType, source, page);
     }
 
-    public CraftedTooltipBuilder buildNew(CraftedItemProperty craftedItemProperty, String source) {
-        return CraftedTooltipBuilder.buildNewItem(craftedItemProperty, source);
+    public CraftedGearTooltipBuilder buildFromItemStack(ItemStack itemStack, CraftedGearItem craftedGearItem) {
+        return CraftedGearTooltipBuilder.buildFromItemStack(itemStack, craftedGearItem, craftedGearItem.currentPage());
     }
 
-    public TooltipBuilder fromParsedItemStack(ItemStack itemStack, CraftedItemProperty craftedItemProperty) {
-        return CraftedTooltipBuilder.fromParsedItemStack(itemStack, craftedItemProperty);
+    public CraftedConsumableTooltipBuilder buildNew(
+            CraftedConsumableItem craftedConsumableItem, ItemSourceType sourceType, String source) {
+        return CraftedConsumableTooltipBuilder.buildNewItem(craftedConsumableItem, sourceType, source);
     }
 
-    public MountTooltipBuilder buildNew(MountItem mountItem, String source) {
-        return MountTooltipBuilder.buildNewItem(mountItem, source);
+    public CraftedConsumableTooltipBuilder buildFromItemStack(
+            ItemStack itemStack, CraftedConsumableItem craftedConsumableItem) {
+        return CraftedConsumableTooltipBuilder.buildFromItemStack(itemStack, craftedConsumableItem);
+    }
+    // endregion
+
+    // region Mounts
+    public MountTooltipBuilder buildNew(MountItem mountItem, ItemSourceType sourceType, String source) {
+        return MountTooltipBuilder.buildNewItem(mountItem, sourceType, source);
+    }
+    // endregion
+
+    public TooltipOptions getTooltipOptions() {
+        ItemStatInfoFeature isif = Managers.Feature.getFeatureInstance(ItemStatInfoFeature.class);
+
+        if (isif == null || !isif.isEnabled()) return TooltipOptions.DEFAULT;
+
+        return isif.getTooltipOptions();
     }
 
-    private record UpdateKey(List<Component> originalLines, TooltipOptions options) {}
+    public List<Component> alignTooltip(List<? extends TooltipElement> elements) {
+        return TooltipLayout.alignTooltip(elements);
+    }
 
-    private static final class UpdatedTooltipCache extends HashMap<UpdateKey, List<Component>> {}
+    public List<Component> alignTooltip(List<? extends TooltipElement> elements, int minimumWidth) {
+        return TooltipLayout.alignTooltip(elements, minimumWidth);
+    }
+
+    public List<Component> alignTooltip(List<? extends TooltipElement> elements, int minimumWidth, int partSpacing) {
+        return TooltipLayout.alignTooltip(elements, minimumWidth, partSpacing);
+    }
 }

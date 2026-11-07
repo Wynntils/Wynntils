@@ -59,7 +59,7 @@ public class GuideActionButton extends BasicTexturedButton {
     @Override
     public void setMessage(Component message) {
         MutableComponent component =
-                Component.empty().withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT));
+                Component.empty().withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT));
         component.append(message);
 
         super.setMessage(component);

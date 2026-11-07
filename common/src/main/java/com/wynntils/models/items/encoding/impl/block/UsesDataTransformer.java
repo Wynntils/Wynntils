@@ -17,14 +17,14 @@ public class UsesDataTransformer extends DataTransformer<UsesData> {
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, UsesData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> encodeUsesData(data);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> encodeUsesData(data);
         };
     }
 
     @Override
     public ErrorOr<UsesData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> decodeUsesData(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> decodeUsesData(byteReader);
         };
     }
 

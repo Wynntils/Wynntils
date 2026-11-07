@@ -4,12 +4,11 @@
  */
 package com.wynntils.screens.guides.emerald;
 
-import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.builders.EmeraldPouchTooltipBuilder;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
-import com.wynntils.utils.mc.ComponentUtils;
-import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Unit;
@@ -28,82 +27,13 @@ public final class GuideEmeraldPouchItemStack extends GuideEmeraldItemStack {
         this.set(DataComponents.UNBREAKABLE, Unit.INSTANCE);
     }
 
-    private static List<Component> generatePouchLore(int tier) {
-        int upTo = (tier - 1) / 3;
-        int rows = 0;
-        String totalString = "";
-
-        switch (tier % 3) {
-            case 0 -> {
-                rows = 6;
-                totalString = "54";
-            }
-            case 1 -> {
-                rows = 1;
-                totalString = "9";
-            }
-            case 2 -> {
-                rows = 3;
-                totalString = "27";
-            }
-        }
-
-        if (tier >= 10) {
-            rows = 6;
-        }
-
-        if (tier >= 7) {
-            totalString = tier - 6 + "stx";
-        } else if (tier >= 4) {
-            totalString += EmeraldUnits.LIQUID_EMERALD.getSymbol();
-        } else {
-            totalString += EmeraldUnits.EMERALD_BLOCK.getSymbol();
-        }
-
-        List<Component> itemLore = new ArrayList<>();
-
-        Component name = Component.literal("Emerald Pouch ")
-                .withStyle(ChatFormatting.GREEN)
-                .append(Component.literal("[Tier " + tier + "]").withStyle(ChatFormatting.DARK_GREEN));
-        itemLore.add(name);
-        itemLore.add(Component.empty());
-        itemLore.add(Component.literal("Emerald Pouches allow the wearer to easily ")
-                .withStyle(ChatFormatting.GRAY)
-                .append(Component.literal("store ").withStyle(ChatFormatting.AQUA))
-                .append(Component.literal("and ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal("convert ").withStyle(ChatFormatting.AQUA))
-                .append(Component.literal("emeralds without spending extra inventory slots.")
-                        .withStyle(ChatFormatting.GRAY)));
-        itemLore.add(Component.empty());
-        itemLore.add(Component.empty()
-                .append(Component.literal("- " + rows + " Row" + (rows == 1 ? " " : "s "))
-                        .withStyle(ChatFormatting.GRAY))
-                .append(Component.literal("(" + totalString + " Total)"))
-                .withStyle(ChatFormatting.DARK_GRAY));
-
-        switch (upTo) {
-            case 0 -> itemLore.add(Component.literal("- No Auto-Conversions").withStyle(ChatFormatting.GRAY));
-            case 1 ->
-                itemLore.add(Component.literal("- Converts up to")
-                        .withStyle(ChatFormatting.GRAY)
-                        .append(Component.literal(" Emerald Blocks").withStyle(ChatFormatting.WHITE)));
-            default ->
-                itemLore.add(Component.literal("- Converts up to")
-                        .withStyle(ChatFormatting.GRAY)
-                        .append(Component.literal(" Liquid Emeralds").withStyle(ChatFormatting.WHITE)));
-        }
-
-        return ComponentUtils.wrapTooltips(itemLore, 200);
+    @Override
+    public List<Component> buildTooltip() {
+        return EmeraldPouchTooltipBuilder.buildNewItem(tier, ItemSourceType.GUIDE, "")
+                .getTooltipLines(Models.Character.getClassType());
     }
 
     @Override
-    public List<Component> generateLore() {
-        List<Component> tooltip = new ArrayList<>();
-        tooltip.addAll(generatePouchLore(tier));
-
-        return tooltip;
-    }
-
     public int getTier() {
         return tier;
     }

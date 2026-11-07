@@ -4,7 +4,8 @@
  */
 package com.wynntils.core.text.fonts.wynnfonts;
 
-import com.wynntils.core.text.fonts.CommonFonts;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.CommonStyles;
 import com.wynntils.core.text.fonts.RegisteredFont;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.utils.colors.CustomColor;
@@ -18,7 +19,7 @@ import net.minecraft.resources.Identifier;
 public class TooltipIdentificationMeterFont extends RegisteredFont {
     public static final Integer STAGES = 36;
     private static final Component NEGATIVE_SPACE =
-            Component.literal("\uDAFF\uDFF7").withStyle(Style.EMPTY.withFont(CommonFonts.SPACE_FONT));
+            Component.literal("\uDAFF\uDFF7").withStyle(CommonStyles.SPACE);
     private static final String EMPTY_METER_SPACE = "\uDB00\uDC09";
     public static final FontDescription TOOLTIP_IDENTIFICATION_METER_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("tooltip/identification/meter"));
@@ -103,7 +104,10 @@ public class TooltipIdentificationMeterFont extends RegisteredFont {
         return component;
     }
 
-    public static int meterStage(char c) {
+    public static int meterStage(int c) {
+        // Zero rolls use a spacing glyph instead of a visible meter segment.
+        if (c == EMPTY_METER_SPACE.codePointAt(0)) return 0;
+
         String clockwiseFirst = WynnFont.toGlyph("1", TooltipIdentificationMeterFont.class);
         String clockwiseLast = WynnFont.toGlyph(String.valueOf(STAGES), TooltipIdentificationMeterFont.class);
 
@@ -121,8 +125,20 @@ public class TooltipIdentificationMeterFont extends RegisteredFont {
         return -1;
     }
 
+    public static CappedValue cappedValueFromCharacter(int c) {
+        int stage = meterStage(c);
+
+        if (stage == -1) {
+            WynntilsMod.error("Invalid identification meter character: " + c);
+            return CappedValue.EMPTY;
+        }
+
+        return new CappedValue(stage, STAGES);
+    }
+
     private static int normalizeToStage(CappedValue value) {
         if (value.max() <= 0) return 0;
+        if (value.max() == STAGES) return value.current();
 
         return (int) ((float) value.current() * STAGES / value.max());
     }
