@@ -538,6 +538,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.MirrorImageDurationFunction());
         registerFunction(new CharacterFunctions.MomentumFunction());
         registerFunction(new CharacterFunctions.MomentumPercentFunction());
+        registerFunction(new CharacterFunctions.OnTheBrinkFunction());
+        registerFunction(new CharacterFunctions.OnTheBrinkPercentFunction());
         registerFunction(new CharacterFunctions.OphanimActive());
         registerFunction(new CharacterFunctions.OphanimHealingPercentFunction());
         registerFunction(new CharacterFunctions.OphanimOrb());
@@ -547,6 +549,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
         registerFunction(new CharacterFunctions.PuppetCountFunction());
         registerFunction(new CharacterFunctions.RemnantCountFunction());
+        registerFunction(new CharacterFunctions.RitualCircleRadiusFunction());
         registerFunction(new CharacterFunctions.PatchworkAbominationDurationFunction());
         registerFunction(new CharacterFunctions.PuppetsInTimeRangeFunction());
         registerFunction(new CharacterFunctions.SnakeCountFunction());
