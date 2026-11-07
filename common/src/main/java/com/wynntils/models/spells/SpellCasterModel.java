@@ -417,7 +417,7 @@ public final class SpellCasterModel extends Model {
 
         @Override
         public void sendLeftClickInput() {
-            MouseUtils.sendLeftClickInput();
+            McUtils.player().swing(InteractionHand.MAIN_HAND);
         }
     }
 
