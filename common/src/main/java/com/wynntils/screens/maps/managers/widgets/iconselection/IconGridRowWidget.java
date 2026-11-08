@@ -35,7 +35,7 @@ public class IconGridRowWidget extends AbstractWidget {
     private final List<MapIcon> icons;
 
     public IconGridRowWidget(IconSelectionScreen parent, List<MapIcon> icons) {
-        super(0, 0, 0, CELL_SIZE, Component.literal("icon row"));
+        super(0, 0, 0, CELL_SIZE, Component.literal("Icon row"));
         this.parent = parent;
         this.icons = icons;
     }
