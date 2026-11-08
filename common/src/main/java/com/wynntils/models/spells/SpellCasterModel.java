@@ -76,7 +76,8 @@ public final class SpellCasterModel extends Model {
             SpellCasterLagCorrectionTracker lagCorrectionTracker,
             LongSupplier currentTimeMsSupplier) {
         this(
-                (click, usesRightClick, isArcher) -> dispatchClick(directClickTransport, usesRightClick),
+                (click, usesRightClick, isArcher, weaponSwing) ->
+                        dispatchClick(directClickTransport, usesRightClick, weaponSwing),
                 delayStrategy,
                 beforeDispatchHook,
                 lagCorrectionTracker,
@@ -148,6 +149,17 @@ public final class SpellCasterModel extends Model {
             int rightDelayMs,
             int cooldownMs,
             boolean adaptiveLagCorrectionEnabled) {
+        return queueClicks(clicks, isArcher, leftDelayMs, rightDelayMs, cooldownMs, adaptiveLagCorrectionEnabled, true);
+    }
+
+    public boolean queueClicks(
+            List<CombatClickType> clicks,
+            boolean isArcher,
+            int leftDelayMs,
+            int rightDelayMs,
+            int cooldownMs,
+            boolean adaptiveLagCorrectionEnabled,
+            boolean weaponSwing) {
         if (clicks.isEmpty()) return false;
 
         List<CombatClickType> copiedClicks = List.copyOf(clicks);
@@ -165,6 +177,7 @@ public final class SpellCasterModel extends Model {
                     normalizedRightDelayMs,
                     normalizedCooldownMs,
                     adaptiveLagCorrectionEnabled,
+                    weaponSwing,
                     generation));
         }
     }
@@ -339,7 +352,7 @@ public final class SpellCasterModel extends Model {
                 return false;
             }
 
-            clickSender.send(click, usesRightClick, isArcher);
+            clickSender.send(click, usesRightClick, isArcher, sequence.weaponSwing);
             return true;
         }
     }
@@ -382,11 +395,12 @@ public final class SpellCasterModel extends Model {
         }
     }
 
-    private static void dispatchClick(DirectClickTransport directClickTransport, boolean usesRightClick) {
+    private static void dispatchClick(
+            DirectClickTransport directClickTransport, boolean usesRightClick, boolean weaponSwing) {
         if (usesRightClick) {
             directClickTransport.sendDirectRightClickInput();
         } else {
-            directClickTransport.sendLeftClickInput();
+            directClickTransport.sendLeftClickInput(weaponSwing);
         }
     }
 
@@ -401,12 +415,13 @@ public final class SpellCasterModel extends Model {
             int rightDelayMs,
             int cooldownMs,
             boolean adaptiveLagCorrectionEnabled,
+            boolean weaponSwing,
             long generation) {}
 
     interface DirectClickTransport {
         void sendDirectRightClickInput();
 
-        void sendLeftClickInput();
+        void sendLeftClickInput(boolean weaponSwing);
     }
 
     private static final class MouseDirectClickTransport implements DirectClickTransport {
@@ -416,14 +431,14 @@ public final class SpellCasterModel extends Model {
         }
 
         @Override
-        public void sendLeftClickInput() {
-            McUtils.player().swing(InteractionHand.MAIN_HAND);
+        public void sendLeftClickInput(boolean weaponSwing) {
+            MouseUtils.sendLeftClickInput(weaponSwing);
         }
     }
 
     @FunctionalInterface
     interface ClickSender {
-        void send(CombatClickType click, boolean usesRightClick, boolean isArcher);
+        void send(CombatClickType click, boolean usesRightClick, boolean isArcher, boolean weaponSwing);
     }
 
     @FunctionalInterface
