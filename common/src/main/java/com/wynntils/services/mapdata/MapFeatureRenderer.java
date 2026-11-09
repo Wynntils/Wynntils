@@ -245,7 +245,7 @@ public final class MapFeatureRenderer {
 
         float labelWidth =
                 FontRenderer.getInstance().getFont().width(attributes.label()) * TEXT_SCALE * featureRenderScale;
-        float maxLabelWidth = boundingPolygon.maxWidth() * featureRenderScale;
+        float maxLabelWidth = area.getBoundingPolygon().maxWidth() * zoomRenderScale * featureRenderScale;
         float labelScaleModifier = Math.max(1f, labelWidth / maxLabelWidth);
         float textScale = TEXT_SCALE * featureRenderScale / labelScaleModifier;
 
