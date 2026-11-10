@@ -41,7 +41,7 @@ import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
-import net.minecraft.client.renderer.LightTexture;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -297,44 +297,44 @@ public class RangeVisualizerFeature extends Feature {
             consumer.addVertex(pose.pose(), x, yOffset, z)
                     .setColor(color)
                     .setUv(0.5f, 0.5f)
-                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setLight(LightCoordsUtil.FULL_BRIGHT)
                     .setNormal(pose, normalX, 0, normalZ);
             consumer.addVertex(pose.pose(), x, yOffset + HEIGHT, z)
                     .setColor(color)
                     .setUv(0.5f, 0.5f)
-                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setLight(LightCoordsUtil.FULL_BRIGHT)
                     .setNormal(pose, normalX, 0, normalZ);
             consumer.addVertex(pose.pose(), x2, yOffset + HEIGHT, z2)
                     .setColor(color)
                     .setUv(0.5f, 0.5f)
-                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setLight(LightCoordsUtil.FULL_BRIGHT)
                     .setNormal(pose, normalX, 0, normalZ);
             consumer.addVertex(pose.pose(), x2, yOffset, z2)
                     .setColor(color)
                     .setUv(0.5f, 0.5f)
-                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setLight(LightCoordsUtil.FULL_BRIGHT)
                     .setNormal(pose, normalX, 0, normalZ);
 
             // The beacon pipeline culls back faces, so add the other side too
             consumer.addVertex(pose.pose(), x2, yOffset, z2)
                     .setColor(color)
                     .setUv(0.5f, 0.5f)
-                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setLight(LightCoordsUtil.FULL_BRIGHT)
                     .setNormal(pose, -normalX, 0, -normalZ);
             consumer.addVertex(pose.pose(), x2, yOffset + HEIGHT, z2)
                     .setColor(color)
                     .setUv(0.5f, 0.5f)
-                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setLight(LightCoordsUtil.FULL_BRIGHT)
                     .setNormal(pose, -normalX, 0, -normalZ);
             consumer.addVertex(pose.pose(), x, yOffset + HEIGHT, z)
                     .setColor(color)
                     .setUv(0.5f, 0.5f)
-                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setLight(LightCoordsUtil.FULL_BRIGHT)
                     .setNormal(pose, -normalX, 0, -normalZ);
             consumer.addVertex(pose.pose(), x, yOffset, z)
                     .setColor(color)
                     .setUv(0.5f, 0.5f)
-                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setLight(LightCoordsUtil.FULL_BRIGHT)
                     .setNormal(pose, -normalX, 0, -normalZ);
         }
     }

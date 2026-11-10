@@ -13,13 +13,13 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.pipelines.CustomRenderTypes;
 import java.util.List;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
 
@@ -746,7 +746,7 @@ public final class PlayerPingRenderer {
     }
 
     private static void addVertex(Matrix4f matrix, VertexConsumer consumer, float x, float y, float z, int color) {
-        consumer.addVertex(matrix, x, y, z).setColor(color).setLight(LightTexture.FULL_BRIGHT);
+        consumer.addVertex(matrix, x, y, z).setColor(color).setLight(LightCoordsUtil.FULL_BRIGHT);
     }
 
     private static void submitTargetLabel(
