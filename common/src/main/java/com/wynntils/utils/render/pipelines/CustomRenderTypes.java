@@ -5,23 +5,13 @@
 package com.wynntils.utils.render.pipelines;
 
 import com.wynntils.utils.render.Texture;
-import net.minecraft.client.renderer.rendertype.RenderSetup;
 import net.minecraft.client.renderer.rendertype.RenderType;
+import net.minecraft.client.renderer.rendertype.RenderTypes;
 
 public class CustomRenderTypes {
-    public static final RenderType LOOTRUN_QUAD = RenderType.create(
-            "wynntils_lootrun_quad",
-            RenderSetup.nonOitBuilder(CustomRenderPipelines.LOOTRUN_QUAD_PIPELINE)
-                    .withTexture("Sampler0", Texture.LOOTRUN_LINE.identifier())
-                    .createRenderSetup());
+    public static final RenderType LOOTRUN_QUAD = RenderTypes.text(Texture.LOOTRUN_LINE.identifier());
 
-    public static final RenderType POSITION_COLOR_QUAD = RenderType.create(
-            "wynntils_position_color_quad",
-            RenderSetup.nonOitBuilder(CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE)
-                    .createRenderSetup());
+    public static final RenderType RANGE_QUAD = RenderTypes.beaconBeam(Texture.WHITE_PIXEL.identifier(), true);
 
-    public static final RenderType PLAYER_PING_QUAD = RenderType.create(
-            "wynntils_player_ping_quad",
-            RenderSetup.nonOitBuilder(CustomRenderPipelines.PLAYER_PING_QUAD_PIPELINE)
-                    .createRenderSetup());
+    public static final RenderType PLAYER_PING_QUAD = RenderTypes.textSeeThrough(Texture.WHITE_PIXEL.identifier());
 }

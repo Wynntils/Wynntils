@@ -31,6 +31,7 @@ import net.minecraft.core.Position;
 import net.minecraft.gizmos.GizmoStyle;
 import net.minecraft.gizmos.Gizmos;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.LightCoordsUtil;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
@@ -222,7 +223,7 @@ public final class LootrunRenderer {
                 }
 
                 for (Pair<ColoredPosition, ColoredPosition> pair : toRender) {
-                    renderTexturedPoint(pair.a(), pair.b(), poseStack, consumer);
+                    renderTexturedPoint(pair.a(), pair.b(), entry.pose(), consumer);
                 }
             });
         }
@@ -240,7 +241,7 @@ public final class LootrunRenderer {
     }
 
     private static void renderTexturedPoint(
-            ColoredPosition start, ColoredPosition end, PoseStack poseStack, VertexConsumer vertexConsumer) {
+            ColoredPosition start, ColoredPosition end, Matrix4f matrix, VertexConsumer vertexConsumer) {
         Vector3f camPos = McUtils.mc().gameRenderer.mainCamera().position().toVector3f();
         Vector3f startVec = start.position().toVector3f();
         Vector3f endVec = end.position().toVector3f();
@@ -277,20 +278,46 @@ public final class LootrunRenderer {
         pos4 = pos4.add(startVec).sub(camPos);
 
         vertexConsumer
-                .addVertex(poseStack.last().pose(), pos1.x, pos1.y, pos1.z)
+                .addVertex(matrix, pos1.x, pos1.y, pos1.z)
                 .setUv(0, 1)
-                .setColor(color);
+                .setColor(color)
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
         vertexConsumer
-                .addVertex(poseStack.last().pose(), pos2.x, pos2.y, pos2.z)
+                .addVertex(matrix, pos2.x, pos2.y, pos2.z)
                 .setUv(0, 0)
-                .setColor(color);
+                .setColor(color)
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
         vertexConsumer
-                .addVertex(poseStack.last().pose(), pos3.x, pos3.y, pos3.z)
+                .addVertex(matrix, pos3.x, pos3.y, pos3.z)
                 .setUv(1, 0)
-                .setColor(color);
+                .setColor(color)
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
         vertexConsumer
-                .addVertex(poseStack.last().pose(), pos4.x, pos4.y, pos4.z)
+                .addVertex(matrix, pos4.x, pos4.y, pos4.z)
                 .setUv(1, 1)
-                .setColor(color);
+                .setColor(color)
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
+
+        // The text pipeline culls back faces, so add the other side too
+        vertexConsumer
+                .addVertex(matrix, pos4.x, pos4.y, pos4.z)
+                .setUv(1, 1)
+                .setColor(color)
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
+        vertexConsumer
+                .addVertex(matrix, pos3.x, pos3.y, pos3.z)
+                .setUv(1, 0)
+                .setColor(color)
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
+        vertexConsumer
+                .addVertex(matrix, pos2.x, pos2.y, pos2.z)
+                .setUv(0, 0)
+                .setColor(color)
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
+        vertexConsumer
+                .addVertex(matrix, pos1.x, pos1.y, pos1.z)
+                .setUv(0, 1)
+                .setColor(color)
+                .setLight(LightCoordsUtil.FULL_BRIGHT);
     }
 }

@@ -13,6 +13,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.pipelines.CustomRenderTypes;
 import java.util.List;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
 import net.minecraft.client.renderer.SubmitNodeCollector;
 import net.minecraft.core.Direction;
@@ -736,10 +737,16 @@ public final class PlayerPingRenderer {
         addVertex(matrix, consumer, bx, by, bz, color);
         addVertex(matrix, consumer, cx, cy, cz, color);
         addVertex(matrix, consumer, dx, dy, dz, color);
+
+        // The text background pipeline culls back faces, so add the other side too
+        addVertex(matrix, consumer, dx, dy, dz, color);
+        addVertex(matrix, consumer, cx, cy, cz, color);
+        addVertex(matrix, consumer, bx, by, bz, color);
+        addVertex(matrix, consumer, ax, ay, az, color);
     }
 
     private static void addVertex(Matrix4f matrix, VertexConsumer consumer, float x, float y, float z, int color) {
-        consumer.addVertex(matrix, x, y, z).setColor(color);
+        consumer.addVertex(matrix, x, y, z).setColor(color).setLight(LightTexture.FULL_BRIGHT);
     }
 
     private static void submitTargetLabel(

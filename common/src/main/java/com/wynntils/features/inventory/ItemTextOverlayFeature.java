@@ -492,11 +492,13 @@ public class ItemTextOverlayFeature extends Feature {
 
         private int getSelectedMountStatValue() {
             if (mountItemStat.get() == ConfigMountStat.POTENTIAL) {
-                return estimatePotential.get()
+                int potential = item.getMountInfo().potential();
+
+                return estimatePotential.get() && potential >= 1000
                         ? item.getMountInfo().maxStats().values().stream()
                                 .mapToInt(Integer::intValue)
                                 .sum()
-                        : item.getMountInfo().potential();
+                        : potential;
             } else {
                 return item.getMountInfo()
                         .stats()
