@@ -6,6 +6,7 @@ package com.wynntils.features.map;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
@@ -36,6 +37,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.Camera;
@@ -263,7 +265,10 @@ public class WorldMarkersFeature extends Feature {
 
     // Rendering the icons and labels/distance happens here (screen-space rendering)
     @SubscribeEvent
-    public void onRenderGuiPost(RenderEvent.Post event) {
+    public void onRenderGuiPost(RenderEvent.Pre event) {
+        if (Models.Cutscene.isCutsceneActive()) return;
+        if (event.getType() != RenderElementType.HOTBAR) return;
+
         GuiGraphics guiGraphics = event.getGuiGraphics();
 
         for (RenderedMapLocation renderedMapLocation : renderedMapLocations) {
