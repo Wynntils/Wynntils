@@ -4,8 +4,6 @@
  */
 package com.wynntils.services.mapdata.providers.builtin;
 
-import com.wynntils.services.mapdata.attributes.impl.MapAttributesImpl;
-import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.impl.MapCategoryImpl;
@@ -13,12 +11,15 @@ import com.wynntils.services.mapdata.type.MapCategory;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.StringUtils;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Locale;
-import java.util.Optional;
+import java.util.Set;
 import java.util.stream.Stream;
 
 public class WaypointsProvider extends BuiltInProvider {
+    private static final String BASE_WAYPOINT_CATEGORY_ID = "wynntils:personal:waypoint";
+
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
     private static final List<MapIcon> PROVIDED_ICONS = new ArrayList<>();
     private static final List<MapCategory> PROVIDED_CATEGORIES = new ArrayList<>();
@@ -51,7 +52,7 @@ public class WaypointsProvider extends BuiltInProvider {
         PROVIDED_FEATURES.clear();
         PROVIDED_CATEGORIES.clear();
         waypoints.forEach(WaypointsProvider::registerFeature);
-        waypoints.forEach((WaypointsProvider::registerCategory));
+        registerCategories(waypoints);
     }
 
     public void updateIcons(List<? extends MapIcon> icons) {
@@ -68,14 +69,20 @@ public class WaypointsProvider extends BuiltInProvider {
         PROVIDED_ICONS.add(icon);
     }
 
-    private static void registerCategory(WaypointLocation waypoint) {
-        Optional<MapLocationAttributes> attributes = waypoint.getAttributes();
-        if (attributes.isEmpty()) return;
+    private static void registerCategories(List<WaypointLocation> waypoints) {
+        Set<String> categoryIds = new LinkedHashSet<>();
+        for (WaypointLocation waypoint : waypoints) {
+            categoryIds.add(waypoint.getCategoryId());
+        }
 
-        String categoryId = waypoint.getCategoryId();
-        String subcategory = categoryId.substring(categoryId.lastIndexOf(':') + 1);
-        String name = StringUtils.capitalizeFirst(subcategory.replace('_', ' ').toLowerCase(Locale.ROOT));
+        for (String categoryId : categoryIds) {
+            if (categoryId.equals(BASE_WAYPOINT_CATEGORY_ID)) continue;
 
-        PROVIDED_CATEGORIES.add(new MapCategoryImpl(categoryId, name, (MapAttributesImpl) attributes.get()));
+            String subcategory = categoryId.substring(categoryId.lastIndexOf(':') + 1);
+            String name =
+                    StringUtils.capitalizeFirst(subcategory.replace('_', ' ').toLowerCase(Locale.ROOT));
+
+            PROVIDED_CATEGORIES.add(new MapCategoryImpl(categoryId, name, null));
+        }
     }
 }

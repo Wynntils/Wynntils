@@ -60,6 +60,7 @@ public class RefreshLocalProvidersButton extends AbstractWidget {
 
         Services.MapData.refreshLocalJsonProviders();
         parent.providerScrollBarWidget.populateWidgets();
+        parent.clearSelectionIfProviderMissing();
 
         this.playDownSound(McUtils.mc().getSoundManager());
 

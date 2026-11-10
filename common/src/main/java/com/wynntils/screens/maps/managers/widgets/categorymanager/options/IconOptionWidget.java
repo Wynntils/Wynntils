@@ -26,7 +26,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 
 public class IconOptionWidget extends AbstractOptionWidget<String> {
@@ -113,25 +112,24 @@ public class IconOptionWidget extends AbstractOptionWidget<String> {
             int iconHeight = icon.getHeight();
             int iconBoxSize = Math.min(Math.max(iconWidth, iconHeight) + ICON_BORDER * 2, this.height);
 
+            float scale = Math.min(1f, (float) (iconBoxSize - ICON_BORDER * 2) / Math.max(iconWidth, iconHeight));
+            int drawWidth = Math.max(1, Math.round(iconWidth * scale));
+            int drawHeight = Math.max(1, Math.round(iconHeight * scale));
+
             int iconBoxX = getX() + this.width - BUTTON_WIDTH - iconBoxSize - 5;
             int iconBoxY = getY() + (this.height - iconBoxSize) / 2;
 
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics, Texture.MANAGER_TEXT_BOX_BACKGROUND, iconBoxX, iconBoxY, iconBoxSize, iconBoxSize);
 
-            RenderUtils.drawTexturedRect(
+            RenderUtils.drawScalingTexturedRect(
                     guiGraphics,
-                    RenderPipelines.GUI_TEXTURED,
                     icon.getIdentifier(),
                     CommonColors.WHITE,
-                    iconBoxX + (iconBoxSize - iconWidth) / 2f,
-                    iconBoxY + (iconBoxSize - iconHeight) / 2f,
-                    iconWidth,
-                    iconHeight,
-                    0f,
-                    0f,
-                    iconWidth,
-                    iconHeight,
+                    iconBoxX + (iconBoxSize - drawWidth) / 2f,
+                    iconBoxY + (iconBoxSize - drawHeight) / 2f,
+                    drawWidth,
+                    drawHeight,
                     iconWidth,
                     iconHeight);
         }
