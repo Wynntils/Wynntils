@@ -7,6 +7,7 @@ package com.wynntils.screens.maps.managers.widgets.providermanager;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.managers.type.ProviderType;
+import com.wynntils.screens.maps.managers.widgets.ProviderHeaderWidget;
 import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
 import com.wynntils.services.mapdata.providers.MapDataProviderInfo;
 import com.wynntils.services.mapdata.providers.builtin.BuiltInProvider;
@@ -16,14 +17,16 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.Component;
 
 public class ProviderScrollBarWidget extends ScrollBarWidget {
     private static final int WIDGET_HEIGHT_PADDING = 4;
 
     private final ProviderManagementScreen parent;
 
-    private List<AbstractProviderWidget> registeredWidgets = new ArrayList<>();
+    private List<ProviderManagerEntryWidget> registeredWidgets = new ArrayList<>();
     private final Map<ProviderType, ProviderHeaderWidget> providerHeaders = new EnumMap<>(ProviderType.class);
 
     public ProviderScrollBarWidget(int x, int y, int width, int height, ProviderManagementScreen parent) {
@@ -31,7 +34,8 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
         this.parent = parent;
 
         for (ProviderType providerType : ProviderType.values()) {
-            providerHeaders.put(providerType, new ProviderHeaderWidget(providerType));
+            providerHeaders.put(
+                    providerType, new ProviderHeaderWidget(Component.literal(providerType.getDisplayName())));
         }
 
         populateWidgets();
@@ -43,12 +47,12 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
         for (Map.Entry<String, MapDataProviderInfo> entry :
                 Services.MapData.getProviderInfos().entrySet()) {
             if (entry.getValue().provider() instanceof BuiltInProvider builtInProvider) {
-                registeredWidgets.add(ProviderEntryWidget.createBuiltInProviderEntry(builtInProvider, parent));
+                registeredWidgets.add(ProviderManagerEntryWidget.createBuiltInProviderEntry(builtInProvider, parent));
             }
         }
 
         Services.MapData.getJsonProviderInfos().forEach((providerId, jsonProviderInfo) -> {
-            registeredWidgets.add(ProviderEntryWidget.createJsonProviderEntry(
+            registeredWidgets.add(ProviderManagerEntryWidget.createJsonProviderEntry(
                     jsonProviderInfo, ProviderType.fromJsonProviderType(jsonProviderInfo.providerType()), parent));
         });
 
@@ -65,14 +69,13 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
     }
 
     @Override
-    public List<AbstractProviderWidget> getWidgets() {
+    public List<AbstractWidget> getWidgets() {
         boolean isSearching = !parent.providerSearchWidget.getTextBoxInput().isBlank();
 
-        List<AbstractProviderWidget> layout = new ArrayList<>();
+        List<AbstractWidget> layout = new ArrayList<>();
 
         for (ProviderType providerType : ProviderType.values()) {
-            List<AbstractProviderWidget> inProviderType = registeredWidgets.stream()
-                    .filter(widget -> widget.display)
+            List<ProviderManagerEntryWidget> inProviderType = registeredWidgets.stream()
                     .filter(widget -> widget.getProviderType() == providerType)
                     .filter(widget ->
                             !isSearching || searchMatches(widget.getMessage().getString()))
@@ -99,18 +102,20 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
 
         int currentY = getY() + SCROLL_BAR_HEIGHT_PADDING - scrollOffsetY;
 
-        List<AbstractProviderWidget> widgets = getWidgets();
+        List<AbstractWidget> widgets = getWidgets();
         for (int i = 0; i < widgets.size(); i++) {
-            AbstractProviderWidget abstractProviderWidget = widgets.get(i);
-            int widgetHeight = abstractProviderWidget.getHeight();
+            AbstractWidget abstractWidget = widgets.get(i);
+            int widgetHeight = abstractWidget.getHeight();
+
             if (currentY + widgetHeight >= viewportTop && currentY <= viewportBottom) {
-                abstractProviderWidget.visible = true;
-                abstractProviderWidget.setX(viewportLeft);
-                abstractProviderWidget.setY(currentY);
-                abstractProviderWidget.setWidth(getViewportWidth());
+                abstractWidget.visible = true;
+                abstractWidget.setX(viewportLeft);
+                abstractWidget.setY(currentY);
+                abstractWidget.setWidth(getViewportWidth());
             } else {
-                abstractProviderWidget.visible = false;
+                abstractWidget.visible = false;
             }
+
             currentY += getHeightWithPadding(i, widgetHeight, widgets.size());
         }
     }
@@ -127,8 +132,8 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
         }
 
         if (isInsideViewport(event.x(), event.y())) {
-            for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-                if (abstractProviderWidget.isHovered() && abstractProviderWidget.mouseClicked(event, isDoubleClick)) {
+            for (AbstractWidget abstractWidget : getWidgets()) {
+                if (abstractWidget.isHovered() && abstractWidget.mouseClicked(event, isDoubleClick)) {
                     return true;
                 }
             }
@@ -142,8 +147,8 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
         super.mouseReleased(event);
 
         if (isInsideViewport(event.x(), event.y())) {
-            for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-                if (abstractProviderWidget.isHovered() && abstractProviderWidget.mouseReleased(event)) {
+            for (AbstractWidget abstractWidget : getWidgets()) {
+                if (abstractWidget.isHovered() && abstractWidget.mouseReleased(event)) {
                     return true;
                 }
             }
@@ -158,8 +163,8 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
         }
 
         if (isInsideViewport(event.x(), event.y())) {
-            for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-                if (abstractProviderWidget.isHovered() && abstractProviderWidget.mouseDragged(event, dragX, dragY)) {
+            for (AbstractWidget abstractWidget : getWidgets()) {
+                if (abstractWidget.isHovered() && abstractWidget.mouseDragged(event, dragX, dragY)) {
                     return true;
                 }
             }
@@ -173,9 +178,8 @@ public class ProviderScrollBarWidget extends ScrollBarWidget {
             return false;
         }
 
-        for (AbstractProviderWidget abstractProviderWidget : getWidgets()) {
-            if (abstractProviderWidget.isHovered()
-                    && abstractProviderWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
+        for (AbstractWidget abstractWidget : getWidgets()) {
+            if (abstractWidget.isHovered() && abstractWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
                 return true;
             }
         }
