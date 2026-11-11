@@ -10,6 +10,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.guides.GuideItemStack;
+import com.wynntils.services.favorites.FavoriteRenderer;
+import com.wynntils.services.favorites.type.FavoriteCategory;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -60,17 +62,10 @@ public abstract class GuideButton extends WynntilsButton {
     }
 
     protected void renderFavoriteIcon(GuiGraphics guiGraphics) {
-        if (!Services.Favorites.isFavorite(itemName)) return;
+        FavoriteCategory category = Services.Favorites.getCategory(itemName);
+        if (category == null) return;
 
-        RenderUtils.drawScalingTexturedRect(
-                guiGraphics,
-                Texture.FAVORITE_ICON.identifier(),
-                getX(),
-                getY(),
-                9,
-                9,
-                Texture.FAVORITE_ICON.width(),
-                Texture.FAVORITE_ICON.height());
+        FavoriteRenderer.renderIcon(guiGraphics, category, getX(), getY());
     }
 
     protected void renderTextOverlay(
@@ -98,6 +93,10 @@ public abstract class GuideButton extends WynntilsButton {
         if (isHovered) {
             renderTooltip(guiGraphics, mouseX, mouseY);
         }
+    }
+
+    public String getItemName() {
+        return itemName;
     }
 
     protected abstract CustomColor getColor();
