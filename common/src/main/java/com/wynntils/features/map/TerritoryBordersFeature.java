@@ -78,9 +78,7 @@ public class TerritoryBordersFeature extends Feature {
                             borderStyle);
                     break;
                 case LAYERS:
-                    for (int level = Integer.max(0, (int) (cameraPosition.y() / 4 - 20));
-                            level < cameraPosition.y() / 4 + 20 && 4 * level < 256;
-                            level++)
+                    for (int level = (int) (cameraPosition.y() / 4 - 20); level < cameraPosition.y() / 4 + 20; level++)
                         Gizmos.cuboid(
                                 new AABB(
                                         territory.getStartX(),
