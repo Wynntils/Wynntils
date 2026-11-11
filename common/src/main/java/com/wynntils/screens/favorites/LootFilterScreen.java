@@ -4,7 +4,9 @@
  */
 package com.wynntils.screens.favorites;
 
+import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.base.widgets.ColorPickerWidget;
@@ -39,8 +41,8 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class LootFilterScreen extends WynntilsGridLayoutScreen {
-
     private static final int MAX_VISIBLE_ROWS = 8;
+    private static final String CATEGORY_CLIPBOARD_PREFIX = "wynntilsFavoriteCategory,";
     private static final int SCROLL_BAR_WIDTH = 3;
     private static final CustomColor SCROLL_BAR_TRACK_COLOR = new CustomColor(0, 0, 0, 150);
 
@@ -359,6 +361,55 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
                 ChatFormatting.RED,
                 categories.size() > 1,
                 () -> confirmDelete(selectedCategory.getName(), () -> categories.remove(selectedCategory)));
+
+        int clipboardActionsY = actionsY + LIST_ROW_HEIGHT;
+        addActionButton(
+                CATEGORIES_X,
+                clipboardActionsY,
+                0,
+                "import",
+                ChatFormatting.GREEN,
+                true,
+                () -> importCategory(categories));
+        addActionButton(CATEGORIES_X, clipboardActionsY, 1, "export", ChatFormatting.BLUE, true, this::exportCategory);
+    }
+
+    private void importCategory(List<FavoriteCategory> categories) {
+        String clipboard = McUtils.mc().keyboardHandler.getClipboard();
+
+        FavoriteCategory category = null;
+        if (clipboard != null && clipboard.startsWith(CATEGORY_CLIPBOARD_PREFIX)) {
+            try {
+                category = JsonManager.GSON.fromJson(
+                        clipboard.substring(CATEGORY_CLIPBOARD_PREFIX.length()), FavoriteCategory.class);
+            } catch (JsonSyntaxException e) {
+                category = null;
+            }
+        }
+
+        if (category == null || !category.isValid()) {
+            McUtils.sendErrorToClient(I18n.get("screens.wynntils.lootFilters.invalidCategoryClipboard"));
+            return;
+        }
+
+        // An item can only be in one category, so items that are already a favorite stay where they are
+        category.getItems().removeAll(Services.Favorites.getFavoriteItems());
+        categories.add(category);
+        selectedCategory = category;
+        categoryList.scroll = categories.size();
+
+        McUtils.sendWynntilsPrefixMessage(
+                Component.translatable("screens.wynntils.lootFilters.importedCategory", category.getName())
+                        .withStyle(ChatFormatting.GREEN));
+    }
+
+    private void exportCategory() {
+        McUtils.mc()
+                .keyboardHandler
+                .setClipboard(CATEGORY_CLIPBOARD_PREFIX + JsonManager.GSON.toJson(selectedCategory));
+        McUtils.sendWynntilsPrefixMessage(
+                Component.translatable("screens.wynntils.lootFilters.exportedCategory", selectedCategory.getName())
+                        .withStyle(ChatFormatting.GREEN));
     }
 
     private void initCategoryEditor() {
