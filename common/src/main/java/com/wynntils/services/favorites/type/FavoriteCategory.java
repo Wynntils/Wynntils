@@ -31,6 +31,10 @@ public final class FavoriteCategory {
     private CustomColor overlayColor = DISABLED_COLOR;
     private CustomColor borderColor = DISABLED_COLOR;
 
+    private String sound = "";
+    private float soundVolume = 1f;
+    private float soundPitch = 1f;
+
     private FavoriteCategory() {}
 
     public FavoriteCategory(String name) {
@@ -49,6 +53,9 @@ public final class FavoriteCategory {
         copy.backgroundColor = backgroundColor;
         copy.overlayColor = overlayColor;
         copy.borderColor = borderColor;
+        copy.sound = sound;
+        copy.soundVolume = soundVolume;
+        copy.soundPitch = soundPitch;
         return copy;
     }
 
@@ -60,7 +67,8 @@ public final class FavoriteCategory {
                 && iconColor != null
                 && backgroundColor != null
                 && overlayColor != null
-                && borderColor != null;
+                && borderColor != null
+                && sound != null;
     }
 
     public String getName() {
@@ -145,5 +153,29 @@ public final class FavoriteCategory {
 
     public void setBorderColor(CustomColor borderColor) {
         this.borderColor = borderColor;
+    }
+
+    public String getSound() {
+        return sound;
+    }
+
+    public void setSound(String sound) {
+        this.sound = sound;
+    }
+
+    public float getSoundVolume() {
+        return soundVolume;
+    }
+
+    public void setSoundVolume(float soundVolume) {
+        this.soundVolume = soundVolume;
+    }
+
+    public float getSoundPitch() {
+        return soundPitch;
+    }
+
+    public void setSoundPitch(float soundPitch) {
+        this.soundPitch = soundPitch;
     }
 }

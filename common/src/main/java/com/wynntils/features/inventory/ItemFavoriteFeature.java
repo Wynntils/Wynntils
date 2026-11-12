@@ -19,10 +19,13 @@ import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.mc.event.TickEvent;
+import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.containers.reward.RewardContainer;
 import com.wynntils.models.containers.type.FullscreenContainerProperty;
 import com.wynntils.models.items.WynnItem;
@@ -64,6 +67,8 @@ public class ItemFavoriteFeature extends Feature {
 
     private int lootChestCloseOverrideCounter = 0;
     private FavoriteCategoryPopup categoryPopup = null;
+    private int foundSoundIndex = Integer.MAX_VALUE;
+    private int playedSoundIndex = Integer.MAX_VALUE;
 
     public ItemFavoriteFeature() {
         super(ProfileDefault.ENABLED);
@@ -109,6 +114,29 @@ public class ItemFavoriteFeature extends Feature {
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
         lootChestCloseOverrideCounter = 0;
         categoryPopup = null;
+        foundSoundIndex = Integer.MAX_VALUE;
+        playedSoundIndex = Integer.MAX_VALUE;
+    }
+
+    @SubscribeEvent
+    public void onSetSlot(ContainerSetSlotEvent.Post event) {
+        if (!(Models.Container.getCurrentContainer() instanceof RewardContainer rewardContainer)) return;
+        if (event.getContainerId() != rewardContainer.getContainerId()) return;
+        if (event.getSlot() >= LootChestModel.LOOT_CHEST_ITEM_COUNT) return;
+
+        FavoriteCategory category = getCategory(event.getItemStack());
+        if (category == null || category.getSound().isEmpty()) return;
+
+        foundSoundIndex =
+                Math.min(foundSoundIndex, Services.Favorites.getCategories().indexOf(category));
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (foundSoundIndex >= playedSoundIndex) return;
+
+        playedSoundIndex = foundSoundIndex;
+        Services.Favorites.playSound(Services.Favorites.getCategories().get(playedSoundIndex));
     }
 
     @SubscribeEvent

@@ -17,12 +17,15 @@ import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.services.favorites.type.FavoriteCategory;
 import com.wynntils.services.favorites.type.LootFilter;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 
 public final class FavoritesService extends Service {
@@ -110,6 +113,20 @@ public final class FavoritesService extends Service {
         List<FavoriteCategory> categories = getCategories();
         int nextIndex = categories.indexOf(getCategory(unformattedName)) + 1;
         setCategory(unformattedName, nextIndex < categories.size() ? categories.get(nextIndex) : null);
+    }
+
+    public SoundEvent getSoundEvent(String sound) {
+        Identifier soundId = Identifier.tryParse(sound);
+        if (soundId == null || McUtils.mc().getSoundManager().getSoundEvent(soundId) == null) return null;
+
+        return SoundEvent.createVariableRangeEvent(soundId);
+    }
+
+    public void playSound(FavoriteCategory category) {
+        SoundEvent soundEvent = getSoundEvent(category.getSound());
+        if (soundEvent == null) return;
+
+        McUtils.playSoundAmbient(soundEvent, category.getSoundVolume(), category.getSoundPitch());
     }
 
     public void touched() {

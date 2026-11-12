@@ -30,6 +30,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
@@ -41,6 +42,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -67,19 +69,24 @@ public final class LootFilterScreen extends WynntilsScreen {
     private static final int SCROLL_BAR_PADDING = 4;
     private static final int SCROLL_BUTTON_PADDING = 11;
     private static final int ACTIONS_Y = LIST_Y + LIST_HEIGHT + 3;
-    private static final int LOOT_FILTER_NAME_Y = ACTIONS_Y + ROW_PITCH * 2 + 2;
+    private static final int LIST_NAME_Y = ACTIONS_Y + ROW_PITCH * 2 + 2;
 
-    private static final int NAME_Y = 21;
-    private static final int ICON_Y = 54;
+    private static final int ICON_Y = 21;
+    private static final int CLOSE_OVERRIDE_Y = 54;
     private static final int ICON_COLOR_Y = 96;
     private static final int OVERLAY_COLOR_Y = 129;
-    private static final int CLOSE_OVERRIDE_Y = 162;
+    private static final int SOUND_Y = 162;
     private static final int FOOTER_Y = 208;
     private static final int ICON_BUTTON_WIDTH = 50;
     private static final int ICON_INPUT_WIDTH = 26;
     private static final int COLOR_INPUT_WIDTH = 80;
     private static final int COLOR_COLUMN_WIDTH = 108;
     private static final int CLOSE_OVERRIDE_INPUT_WIDTH = 40;
+    private static final int SOUND_INPUT_WIDTH = 100;
+    private static final int SOUND_VALUE_INPUT_WIDTH = 38;
+    private static final int SOUND_VOLUME_X = SOUND_INPUT_WIDTH + BUTTON_GAP;
+    private static final int SOUND_PITCH_X = SOUND_VOLUME_X + SOUND_VALUE_INPUT_WIDTH + BUTTON_GAP;
+    private static final int PLAY_SOUND_X = SOUND_PITCH_X + SOUND_VALUE_INPUT_WIDTH + BUTTON_GAP;
     private static final int DONE_BUTTON_WIDTH = 60;
     private static final int PREVIEW_X = 142;
 
@@ -90,10 +97,17 @@ public final class LootFilterScreen extends WynntilsScreen {
     private static final int MIN_ICON_SIZE = 4;
     private static final int MAX_ICON_SIZE = FavoriteRenderer.SLOT_SIZE;
     private static final int MAX_ICON_EDGE = FavoriteRenderer.SLOT_SIZE + PREVIEW_MARGIN;
+    private static final float MAX_SOUND_VALUE = 2f;
 
     private static final ItemStack PREVIEW_ITEM = new ItemStack(Items.DIAMOND_SWORD);
     private static final CustomColor PREVIEW_SLOT_COLOR = new CustomColor(139, 139, 139);
     private static final CustomColor LABEL_COLOR = new CustomColor(64, 42, 20);
+
+    private static final int MAX_SUGGESTIONS = 8;
+    private static final int SUGGESTION_HEIGHT = 12;
+    private static final int SUGGESTION_PADDING = 2;
+    private static final CustomColor SUGGESTION_BACKGROUND_COLOR = new CustomColor(0, 0, 0, 220);
+    private static final CustomColor SUGGESTION_HOVERED_COLOR = new CustomColor(255, 255, 255, 60);
 
     private final Screen previousScreen;
     private final ListView lootFilterList = new ListView();
@@ -115,6 +129,8 @@ public final class LootFilterScreen extends WynntilsScreen {
     private TextInputBoxWidget iconXInput;
     private TextInputBoxWidget iconYInput;
     private TextInputBoxWidget iconSizeInput;
+    private TextInputBoxWidget soundInput;
+    private List<String> soundSuggestions = List.of();
 
     private LootFilterScreen(Screen previousScreen) {
         super(Component.literal("Loot Filter Screen"));
@@ -180,8 +196,8 @@ public final class LootFilterScreen extends WynntilsScreen {
         renderList(guiGraphics, lootFilterList, Services.Favorites.getLootFilters());
         renderList(guiGraphics, categoryList, Services.Favorites.getCategories());
 
-        renderLabel(guiGraphics, "lootFilterName", lootFilterList.x, LOOT_FILTER_NAME_Y);
-        renderLabel(guiGraphics, "categoryName", editorX, NAME_Y);
+        renderLabel(guiGraphics, "lootFilterName", lootFilterList.x, LIST_NAME_Y);
+        renderLabel(guiGraphics, "categoryName", categoryList.x, LIST_NAME_Y);
         renderLabel(guiGraphics, "icon", editorX, ICON_Y);
         renderLabel(guiGraphics, "iconX", getIconInputX(0), ICON_Y);
         renderLabel(guiGraphics, "iconY", getIconInputX(1), ICON_Y);
@@ -191,6 +207,12 @@ public final class LootFilterScreen extends WynntilsScreen {
         renderLabel(guiGraphics, "overlayColor", editorX, OVERLAY_COLOR_Y);
         renderLabel(guiGraphics, "borderColor", editorX + COLOR_COLUMN_WIDTH, OVERLAY_COLOR_Y);
         renderLabel(guiGraphics, "closeOverride", editorX, CLOSE_OVERRIDE_Y);
+        int closeOverrideHintX = editorX + CLOSE_OVERRIDE_INPUT_WIDTH + 4;
+        renderLabel(guiGraphics, "closeOverrideOff", closeOverrideHintX, CLOSE_OVERRIDE_Y + LABEL_HEIGHT + 1);
+        renderLabel(guiGraphics, "closeOverrideNever", closeOverrideHintX, CLOSE_OVERRIDE_Y + LABEL_HEIGHT * 2 + 1);
+        renderLabel(guiGraphics, "sound", editorX, SOUND_Y);
+        renderLabel(guiGraphics, "soundVolume", editorX + SOUND_VOLUME_X, SOUND_Y);
+        renderLabel(guiGraphics, "soundPitch", editorX + SOUND_PITCH_X, SOUND_Y);
 
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
@@ -206,6 +228,7 @@ public final class LootFilterScreen extends WynntilsScreen {
         }
 
         renderPreview(guiGraphics);
+        renderSoundSuggestions(guiGraphics, mouseX, mouseY);
 
         if (isListDrag()) {
             getDraggedListButton().render(guiGraphics, mouseX, mouseY, partialTick);
@@ -214,6 +237,12 @@ public final class LootFilterScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        int suggestion = getHoveredSuggestion(event.x(), event.y());
+        if (suggestion != -1) {
+            soundInput.setTextBoxInput(soundSuggestions.get(suggestion));
+            return true;
+        }
+
         if (isInPreview(event.x(), event.y())) {
             startIconDrag(toSlotX(event.x()), toSlotY(event.y()));
             return true;
@@ -360,7 +389,7 @@ public final class LootFilterScreen extends WynntilsScreen {
                     Services.Favorites.setActiveLootFilter(lootFilters.getFirst());
                 }));
 
-        addInput(lootFilterList.x, LOOT_FILTER_NAME_Y + LABEL_HEIGHT, LIST_WIDTH, activeLootFilter.getName(), name -> {
+        addInput(lootFilterList.x, LIST_NAME_Y + LABEL_HEIGHT, LIST_WIDTH, activeLootFilter.getName(), name -> {
             // The active loot filter is identified by its name, so it has to stay unique
             boolean valid = !name.isBlank()
                     && lootFilters.stream()
@@ -464,7 +493,7 @@ public final class LootFilterScreen extends WynntilsScreen {
     private void initCategoryEditor() {
         FavoriteCategory category = selectedCategory;
 
-        addInput(editorX, NAME_Y + LABEL_HEIGHT, PREVIEW_X - COLUMN_GAP, category.getName(), name -> {
+        addInput(categoryList.x, LIST_NAME_Y + LABEL_HEIGHT, LIST_WIDTH, category.getName(), name -> {
             if (name.isBlank()) return false;
 
             category.setName(name);
@@ -526,6 +555,26 @@ public final class LootFilterScreen extends WynntilsScreen {
                     category.setLootChestCloseOverride(Integer.parseInt(text));
                     return true;
                 });
+
+        soundInput = addInput(editorX, SOUND_Y + LABEL_HEIGHT, SOUND_INPUT_WIDTH, category.getSound(), sound -> {
+            boolean valid = sound.isEmpty() || Services.Favorites.getSoundEvent(sound) != null;
+            soundSuggestions = valid ? List.of() : findSounds(sound);
+            if (!valid) return false;
+
+            category.setSound(sound);
+            return true;
+        });
+        addSoundValueInput(SOUND_VOLUME_X, category.getSoundVolume(), 0f, category::setSoundVolume);
+        addSoundValueInput(SOUND_PITCH_X, category.getSoundPitch(), 0.5f, category::setSoundPitch);
+
+        this.addRenderableWidget(new LootFilterButton(
+                editorX + PLAY_SOUND_X,
+                contentY + SOUND_Y + LABEL_HEIGHT,
+                EDITOR_WIDTH - PLAY_SOUND_X,
+                INPUT_HEIGHT,
+                Component.translatable("screens.wynntils.lootFilters.playSound"),
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
+                () -> Services.Favorites.playSound(category)));
     }
 
     private void renderTitle(GuiGraphics guiGraphics, String key, int x, int width) {
@@ -582,6 +631,78 @@ public final class LootFilterScreen extends WynntilsScreen {
                 : MathUtils.map(list.scroll, 0, maxScroll, getScrollTrackTop(), getScrollTrackBottom());
         RenderUtils.drawTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON, getScrollBarX(list) + 1, buttonY);
+    }
+
+    private static List<String> findSounds(String search) {
+        String lowerCaseSearch = search.toLowerCase(Locale.ROOT);
+        return McUtils.mc().getSoundManager().getAvailableSounds().stream()
+                .map(Identifier::toString)
+                .filter(sound -> sound.contains(lowerCaseSearch))
+                .sorted()
+                .limit(MAX_SUGGESTIONS)
+                .toList();
+    }
+
+    private void renderSoundSuggestions(GuiGraphics guiGraphics, int mouseX, int mouseY) {
+        if (!isShowingSuggestions()) return;
+
+        int x = getSuggestionsX();
+        int width = getSuggestionsWidth();
+        RenderUtils.drawRect(
+                guiGraphics,
+                SUGGESTION_BACKGROUND_COLOR,
+                x,
+                getSuggestionsY(),
+                width,
+                soundSuggestions.size() * SUGGESTION_HEIGHT);
+
+        int hovered = getHoveredSuggestion(mouseX, mouseY);
+        for (int i = 0; i < soundSuggestions.size(); i++) {
+            int rowY = getSuggestionsY() + i * SUGGESTION_HEIGHT;
+            if (i == hovered) {
+                RenderUtils.drawRect(guiGraphics, SUGGESTION_HOVERED_COLOR, x, rowY, width, SUGGESTION_HEIGHT);
+            }
+
+            FontRenderer.getInstance()
+                    .renderText(
+                            guiGraphics,
+                            StyledText.fromString(soundSuggestions.get(i)),
+                            x + SUGGESTION_PADDING,
+                            rowY + SUGGESTION_PADDING,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL);
+        }
+    }
+
+    private boolean isShowingSuggestions() {
+        return !soundSuggestions.isEmpty() && getFocusedTextInput() == soundInput;
+    }
+
+    private int getSuggestionsWidth() {
+        int textWidth = 0;
+        for (String sound : soundSuggestions) {
+            textWidth = Math.max(textWidth, McUtils.mc().font.width(sound));
+        }
+        return textWidth + SUGGESTION_PADDING * 2;
+    }
+
+    private int getSuggestionsX() {
+        return Math.min(soundInput.getX(), this.width - getSuggestionsWidth());
+    }
+
+    // The suggestions open upwards, there is no room for them below the input
+    private int getSuggestionsY() {
+        return soundInput.getY() - soundSuggestions.size() * SUGGESTION_HEIGHT;
+    }
+
+    private int getHoveredSuggestion(double mouseX, double mouseY) {
+        if (!isShowingSuggestions()) return -1;
+        if (mouseX < getSuggestionsX() || mouseX >= getSuggestionsX() + getSuggestionsWidth()) return -1;
+
+        int row = (int) Math.floor((mouseY - getSuggestionsY()) / SUGGESTION_HEIGHT);
+        return row >= 0 && row < soundSuggestions.size() ? row : -1;
     }
 
     private void renderPreview(GuiGraphics guiGraphics) {
@@ -678,7 +799,7 @@ public final class LootFilterScreen extends WynntilsScreen {
     }
 
     private int getPreviewY() {
-        return contentY + NAME_Y;
+        return contentY + ICON_Y;
     }
 
     private boolean isInPreview(double mouseX, double mouseY) {
@@ -842,6 +963,18 @@ public final class LootFilterScreen extends WynntilsScreen {
             if (!text.matches("-?\\d{1,2}") || !validator.test(Integer.parseInt(text))) return false;
 
             setter.accept(Integer.parseInt(text));
+            return true;
+        });
+    }
+
+    private void addSoundValueInput(int x, float value, float min, Consumer<Float> setter) {
+        addInput(editorX + x, SOUND_Y + LABEL_HEIGHT, SOUND_VALUE_INPUT_WIDTH, Float.toString(value), text -> {
+            if (!text.matches("\\d(\\.\\d{1,2})?")) return false;
+
+            float newValue = Float.parseFloat(text);
+            if (newValue < min || newValue > MAX_SOUND_VALUE) return false;
+
+            setter.accept(newValue);
             return true;
         });
     }
