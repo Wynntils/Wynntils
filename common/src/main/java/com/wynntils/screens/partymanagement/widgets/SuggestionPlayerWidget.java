@@ -6,6 +6,7 @@ package com.wynntils.screens.partymanagement.widgets;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -17,11 +18,19 @@ import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 
 public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
+    private final PartyManagementScreen.SuggestedPlayer suggestedPlayer;
     private final Button inviteButton;
 
     public SuggestionPlayerWidget(
-            float x, float y, int width, int height, String playerName, boolean isOffline, float gridDivisions) {
-        super((int) x, (int) y, width, height, playerName, isOffline, gridDivisions);
+            float x,
+            float y,
+            int width,
+            int height,
+            PartyManagementScreen.SuggestedPlayer suggestedPlayer,
+            boolean isOffline,
+            float gridDivisions) {
+        super((int) x, (int) y, width, height, suggestedPlayer.username(), isOffline, gridDivisions);
+        this.suggestedPlayer = suggestedPlayer;
         this.inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> Models.Party.partyInvite(playerName))
@@ -45,7 +54,9 @@ public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
                         StyledText.fromString(playerName),
                         this.getX() + (this.width / gridDivisions * 3),
                         this.getY() + this.height / 2,
-                        CommonColors.GREEN,
+                        suggestedPlayer.suggestedPlayerType() == PartyManagementScreen.SuggestedPlayerType.FRIEND
+                                ? CommonColors.GREEN
+                                : CommonColors.AQUA,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);

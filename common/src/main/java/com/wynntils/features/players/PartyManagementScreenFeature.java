@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.players.event.FriendsEvent;
+import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -104,6 +105,13 @@ public class PartyManagementScreenFeature extends Feature {
     @SubscribeEvent
     public void onOnlineFriendsList(FriendsEvent.OnlineListed e) {
         Managers.TickScheduler.scheduleLater(this::reloadScreenWidgets, 2);
+    }
+    // endregion
+
+    // region Guild events
+    @SubscribeEvent
+    public void onGuildMemberList(HadesRelationsUpdateEvent.GuildMemberList e) {
+        reloadScreenWidgets();
     }
     // endregion
 
