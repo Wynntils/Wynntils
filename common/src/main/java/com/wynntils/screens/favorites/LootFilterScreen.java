@@ -6,11 +6,13 @@ package com.wynntils.screens.favorites;
 
 import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.WynntilsGridLayoutScreen;
 import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.screens.favorites.widgets.LootFilterButton;
+import com.wynntils.screens.favorites.widgets.LootFilterInputWidget;
 import com.wynntils.services.favorites.FavoriteRenderer;
 import com.wynntils.services.favorites.type.FavoriteCategory;
 import com.wynntils.services.favorites.type.FavoriteIcon;
@@ -22,16 +24,18 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.function.IntPredicate;
 import java.util.function.Predicate;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -40,33 +44,44 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public final class LootFilterScreen extends WynntilsGridLayoutScreen {
-    private static final int MAX_VISIBLE_ROWS = 8;
+public final class LootFilterScreen extends WynntilsScreen {
     private static final String CATEGORY_CLIPBOARD_PREFIX = "wynntilsFavoriteCategory,";
-    private static final int SCROLL_BAR_WIDTH = 3;
-    private static final CustomColor SCROLL_BAR_TRACK_COLOR = new CustomColor(0, 0, 0, 150);
 
-    private static final int FILTERS_X = 3;
-    private static final int CATEGORIES_X = 19;
-    private static final int LIST_WIDTH = 14;
-    private static final int EDITOR_X = 36;
-    private static final int EDITOR_SECOND_COLUMN_X = 50;
-    private static final int EDITOR_COLUMN_WIDTH = 10;
-    private static final int ICON_X_INPUT_X = 45;
-    private static final int ICON_Y_INPUT_X = 50;
-    private static final int ICON_SIZE_INPUT_X = 55;
-    private static final int ICON_INPUT_WIDTH = 4;
+    private static final int PANEL_WIDTH = 444;
+    private static final int PANEL_HEIGHT = 244;
+    private static final int PANEL_PADDING = 8;
+    private static final int COLUMN_GAP = 6;
+    private static final int LIST_WIDTH = 100;
+    private static final int EDITOR_WIDTH = 216;
+    private static final int LABEL_HEIGHT = 10;
+    private static final int INPUT_HEIGHT = 20;
+    private static final int BUTTON_HEIGHT = 16;
+    private static final int BUTTON_GAP = 2;
 
-    private static final int HEADER_ROW_Y = 6;
-    private static final int LIST_FIRST_ROW_Y = 8;
-    private static final int LIST_ROW_HEIGHT = 5;
-    private static final int NAME_ROW_Y = 11;
-    private static final int ICON_ROW_Y = 19;
-    private static final int ICON_COLOR_ROW_Y = 27;
-    private static final int OVERLAY_COLOR_ROW_Y = 35;
-    private static final int CLOSE_OVERRIDE_ROW_Y = 43;
-    private static final int PREVIEW_ROW_Y = 45;
-    private static final int DONE_ROW_Y = 56;
+    private static final int LIST_Y = 20;
+    private static final int LIST_PADDING = 3;
+    private static final int MAX_VISIBLE_ROWS = 6;
+    private static final int ROW_PITCH = BUTTON_HEIGHT + BUTTON_GAP;
+    private static final int LIST_HEIGHT = MAX_VISIBLE_ROWS * ROW_PITCH - BUTTON_GAP + LIST_PADDING * 2;
+    private static final int SCROLL_BAR_SPACE = 12;
+    private static final int SCROLL_BAR_PADDING = 4;
+    private static final int SCROLL_BUTTON_PADDING = 11;
+    private static final int ACTIONS_Y = LIST_Y + LIST_HEIGHT + 3;
+    private static final int LOOT_FILTER_NAME_Y = ACTIONS_Y + ROW_PITCH * 2 + 2;
+
+    private static final int NAME_Y = 21;
+    private static final int ICON_Y = 54;
+    private static final int ICON_COLOR_Y = 96;
+    private static final int OVERLAY_COLOR_Y = 129;
+    private static final int CLOSE_OVERRIDE_Y = 162;
+    private static final int FOOTER_Y = 208;
+    private static final int ICON_BUTTON_WIDTH = 50;
+    private static final int ICON_INPUT_WIDTH = 26;
+    private static final int COLOR_INPUT_WIDTH = 80;
+    private static final int COLOR_COLUMN_WIDTH = 108;
+    private static final int CLOSE_OVERRIDE_INPUT_WIDTH = 40;
+    private static final int DONE_BUTTON_WIDTH = 60;
+    private static final int PREVIEW_X = 142;
 
     private static final int PREVIEW_SCALE = 3;
     private static final int PREVIEW_MARGIN = 4;
@@ -77,23 +92,26 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
     private static final int MAX_ICON_EDGE = FavoriteRenderer.SLOT_SIZE + PREVIEW_MARGIN;
 
     private static final ItemStack PREVIEW_ITEM = new ItemStack(Items.DIAMOND_SWORD);
-    private static final CustomColor PREVIEW_BACKGROUND_COLOR = new CustomColor(0, 0, 0, 150);
     private static final CustomColor PREVIEW_SLOT_COLOR = new CustomColor(139, 139, 139);
+    private static final CustomColor LABEL_COLOR = new CustomColor(64, 42, 20);
 
     private final Screen previousScreen;
-    private final ListView lootFilterList = new ListView(FILTERS_X);
-    private final ListView categoryList = new ListView(CATEGORIES_X);
+    private final ListView lootFilterList = new ListView();
+    private final ListView categoryList = new ListView();
+    private final Set<AbstractWidget> invalidInputs = new HashSet<>();
+
+    private int contentX;
+    private int contentY;
+    private int editorX;
 
     private FavoriteCategory selectedCategory;
     private DragMode dragMode = DragMode.NONE;
-
     private double iconGrabX;
     private double iconGrabY;
-
     private double listGrabY;
 
-    private Button activeLootFilterButton;
-    private Button selectedCategoryButton;
+    private LootFilterButton activeLootFilterButton;
+    private LootFilterButton selectedCategoryButton;
     private TextInputBoxWidget iconXInput;
     private TextInputBoxWidget iconYInput;
     private TextInputBoxWidget iconSizeInput;
@@ -112,6 +130,12 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
     protected void doInit() {
         super.doInit();
 
+        contentX = (this.width - PANEL_WIDTH) / 2 + PANEL_PADDING;
+        contentY = (this.height - PANEL_HEIGHT) / 2 + PANEL_PADDING;
+        lootFilterList.x = contentX;
+        categoryList.x = lootFilterList.x + LIST_WIDTH + COLUMN_GAP;
+        editorX = categoryList.x + LIST_WIDTH + COLUMN_GAP;
+
         LootFilter lootFilter = Services.Favorites.getActiveLootFilter();
         if (!lootFilter.getCategories().contains(selectedCategory)) {
             selectedCategory = lootFilter.getCategories().getFirst();
@@ -119,40 +143,69 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
 
         lootFilterList.scroll = clampScroll(lootFilterList.scroll, Services.Favorites.getLootFilters());
         categoryList.scroll = clampScroll(categoryList.scroll, lootFilter.getCategories());
+        invalidInputs.clear();
 
         initLootFilterList(lootFilter);
         initCategoryList(lootFilter);
         initCategoryEditor();
 
-        this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.lootFilters.done"), (button) -> this.onClose())
-                .pos((int) (dividedWidth * EDITOR_X), (int) (dividedHeight * DONE_ROW_Y))
-                .size((int) (dividedWidth * 8), BUTTON_SIZE)
-                .build());
+        this.addRenderableWidget(new LootFilterButton(
+                editorX + EDITOR_WIDTH - DONE_BUTTON_WIDTH,
+                contentY + FOOTER_Y + 4,
+                DONE_BUTTON_WIDTH,
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.lootFilters.done"),
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE,
+                this::onClose));
     }
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
+                contentX - PANEL_PADDING,
+                contentY - PANEL_PADDING,
+                PANEL_WIDTH,
+                PANEL_HEIGHT);
+
+        // Separates the button that closes the screen from the columns above it
+        RenderUtils.drawRect(
+                guiGraphics, LABEL_COLOR, contentX, contentY + FOOTER_Y, PANEL_WIDTH - PANEL_PADDING * 2, 1);
+
+        renderTitle(guiGraphics, "lootFilters", lootFilterList.x, LIST_WIDTH);
+        renderTitle(guiGraphics, "categories", categoryList.x, LIST_WIDTH);
+        renderTitle(guiGraphics, "editorTitle", editorX, EDITOR_WIDTH);
+
+        renderList(guiGraphics, lootFilterList, Services.Favorites.getLootFilters());
+        renderList(guiGraphics, categoryList, Services.Favorites.getCategories());
+
+        renderLabel(guiGraphics, "lootFilterName", lootFilterList.x, LOOT_FILTER_NAME_Y);
+        renderLabel(guiGraphics, "categoryName", editorX, NAME_Y);
+        renderLabel(guiGraphics, "icon", editorX, ICON_Y);
+        renderLabel(guiGraphics, "iconX", getIconInputX(0), ICON_Y);
+        renderLabel(guiGraphics, "iconY", getIconInputX(1), ICON_Y);
+        renderLabel(guiGraphics, "iconSize", getIconInputX(2), ICON_Y);
+        renderLabel(guiGraphics, "iconColor", editorX, ICON_COLOR_Y);
+        renderLabel(guiGraphics, "backgroundColor", editorX + COLOR_COLUMN_WIDTH, ICON_COLOR_Y);
+        renderLabel(guiGraphics, "overlayColor", editorX, OVERLAY_COLOR_Y);
+        renderLabel(guiGraphics, "borderColor", editorX + COLOR_COLUMN_WIDTH, OVERLAY_COLOR_Y);
+        renderLabel(guiGraphics, "closeOverride", editorX, CLOSE_OVERRIDE_Y);
+
         super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
-        renderLabel(guiGraphics, "lootFilters", FILTERS_X, HEADER_ROW_Y);
-        renderLabel(guiGraphics, "categories", CATEGORIES_X, HEADER_ROW_Y);
-        renderLabel(guiGraphics, "lootFilterName", FILTERS_X, getLootFilterNameRowY());
-
-        renderLabel(guiGraphics, "categoryName", EDITOR_X, NAME_ROW_Y);
-        renderLabel(guiGraphics, "icon", EDITOR_X, ICON_ROW_Y);
-        renderLabel(guiGraphics, "iconX", ICON_X_INPUT_X, ICON_ROW_Y);
-        renderLabel(guiGraphics, "iconY", ICON_Y_INPUT_X, ICON_ROW_Y);
-        renderLabel(guiGraphics, "iconSize", ICON_SIZE_INPUT_X, ICON_ROW_Y);
-        renderLabel(guiGraphics, "iconColor", EDITOR_X, ICON_COLOR_ROW_Y);
-        renderLabel(guiGraphics, "backgroundColor", EDITOR_SECOND_COLUMN_X, ICON_COLOR_ROW_Y);
-        renderLabel(guiGraphics, "overlayColor", EDITOR_X, OVERLAY_COLOR_ROW_Y);
-        renderLabel(guiGraphics, "borderColor", EDITOR_SECOND_COLUMN_X, OVERLAY_COLOR_ROW_Y);
-        renderLabel(guiGraphics, "closeOverride", EDITOR_X, CLOSE_OVERRIDE_ROW_Y);
+        for (AbstractWidget input : invalidInputs) {
+            RenderUtils.drawRectBorders(
+                    guiGraphics,
+                    CommonColors.RED,
+                    input.getX(),
+                    input.getY(),
+                    input.getX() + input.getWidth(),
+                    input.getY() + input.getHeight(),
+                    1);
+        }
 
         renderPreview(guiGraphics);
-        renderScrollBar(guiGraphics, lootFilterList, Services.Favorites.getLootFilters());
-        renderScrollBar(guiGraphics, categoryList, Services.Favorites.getCategories());
 
         if (isListDrag()) {
             getDraggedListButton().render(guiGraphics, mouseX, mouseY, partialTick);
@@ -178,12 +231,17 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
             return true;
         }
 
+        TextInputBoxWidget focused = getFocusedTextInput();
         boolean handled = super.doMouseClicked(event, isDoubleClick);
 
+        if (focused != null && !focused.isMouseOver(event.x(), event.y())) {
+            setFocusedTextInput(null);
+        }
+
         // Clicking a list entry selects it, so from here on the selected entry is the dragged one
-        if (isInList(event.x(), event.y(), lootFilterList, Services.Favorites.getLootFilters())) {
+        if (isOverListEntry(event.x(), event.y(), lootFilterList, Services.Favorites.getLootFilters())) {
             dragMode = DragMode.LOOT_FILTER;
-        } else if (isInList(event.x(), event.y(), categoryList, Services.Favorites.getCategories())) {
+        } else if (isOverListEntry(event.x(), event.y(), categoryList, Services.Favorites.getCategories())) {
             dragMode = DragMode.CATEGORY;
         }
 
@@ -241,12 +299,12 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
     public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
         int rows = (int) -Math.signum(scrollY);
 
-        if (isInList(mouseX, mouseY, lootFilterList, Services.Favorites.getLootFilters())) {
+        if (isOverList(mouseX, mouseY, lootFilterList)) {
             scrollTo(lootFilterList, Services.Favorites.getLootFilters(), lootFilterList.scroll + rows);
             return true;
         }
 
-        if (isInList(mouseX, mouseY, categoryList, Services.Favorites.getCategories())) {
+        if (isOverList(mouseX, mouseY, categoryList)) {
             scrollTo(categoryList, Services.Favorites.getCategories(), categoryList.scroll + rows);
             return true;
         }
@@ -271,7 +329,7 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
         activeLootFilterButton = null;
         for (int i = lootFilterList.scroll; i < lootFilterList.scroll + getVisibleRows(lootFilters); i++) {
             LootFilter lootFilter = lootFilters.get(i);
-            Button button = addListButton(
+            LootFilterButton button = addListButton(
                     lootFilterList,
                     i,
                     lootFilter.getName(),
@@ -282,28 +340,27 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
             }
         }
 
-        int actionsY = LIST_FIRST_ROW_Y + getVisibleRows(lootFilters) * LIST_ROW_HEIGHT;
-        addActionButton(FILTERS_X, actionsY, 0, "new", ChatFormatting.GREEN, true, () -> {
+        addActionButton(lootFilterList, 0, 0, "new", Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN, true, () -> {
             Services.Favorites.addLootFilter(new LootFilter(I18n.get("screens.wynntils.lootFilters.newName")));
             lootFilterList.scroll = lootFilters.size();
         });
-        addActionButton(FILTERS_X, actionsY, 1, "copy", ChatFormatting.BLUE, true, () -> {
+        addActionButton(lootFilterList, 0, 1, "copy", Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE, true, () -> {
             Services.Favorites.addLootFilter(activeLootFilter.copy());
             lootFilterList.scroll = lootFilters.size();
         });
         addActionButton(
-                FILTERS_X,
-                actionsY,
-                2,
+                lootFilterList,
+                1,
+                0,
                 "delete",
-                ChatFormatting.RED,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_RED,
                 lootFilters.size() > 1,
                 () -> confirmDelete(activeLootFilter.getName(), () -> {
                     lootFilters.remove(activeLootFilter);
                     Services.Favorites.setActiveLootFilter(lootFilters.getFirst());
                 }));
 
-        addInput(FILTERS_X, getLootFilterNameRowY(), LIST_WIDTH, activeLootFilter.getName(), name -> {
+        addInput(lootFilterList.x, LOOT_FILTER_NAME_Y + LABEL_HEIGHT, LIST_WIDTH, activeLootFilter.getName(), name -> {
             // The active loot filter is identified by its name, so it has to stay unique
             boolean valid = !name.isBlank()
                     && lootFilters.stream()
@@ -313,7 +370,7 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
                 activeLootFilter.setName(name);
                 Services.Favorites.setActiveLootFilter(activeLootFilter);
                 if (activeLootFilterButton != null) {
-                    activeLootFilterButton.setMessage(getListButtonMessage(name, true));
+                    activeLootFilterButton.setMessage(Component.literal(name));
                 }
             }
             return valid;
@@ -326,7 +383,7 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
         selectedCategoryButton = null;
         for (int i = categoryList.scroll; i < categoryList.scroll + getVisibleRows(categories); i++) {
             FavoriteCategory category = categories.get(i);
-            Button button = addListButton(
+            LootFilterButton button = addListButton(
                     categoryList,
                     i,
                     category.getName(),
@@ -337,41 +394,35 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
             }
         }
 
-        int selectedIndex = categories.indexOf(selectedCategory);
-        int actionsY = LIST_FIRST_ROW_Y + getVisibleRows(categories) * LIST_ROW_HEIGHT;
-        addActionButton(CATEGORIES_X, actionsY, 0, "new", ChatFormatting.GREEN, true, () -> {
+        addActionButton(categoryList, 0, 0, "new", Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GREEN, true, () -> {
             selectedCategory = new FavoriteCategory(I18n.get("screens.wynntils.lootFilters.newName"));
             categories.add(selectedCategory);
             categoryList.scroll = categories.size();
         });
-        // The order of the categories decides which one wins if an item matches several
         addActionButton(
-                CATEGORIES_X,
-                actionsY,
+                categoryList,
+                0,
                 1,
-                "moveUp",
-                ChatFormatting.WHITE,
-                selectedIndex > 0,
-                () -> categories.set(selectedIndex, categories.set(selectedIndex - 1, selectedCategory)));
-        addActionButton(
-                CATEGORIES_X,
-                actionsY,
-                2,
                 "delete",
-                ChatFormatting.RED,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_RED,
                 categories.size() > 1,
                 () -> confirmDelete(selectedCategory.getName(), () -> categories.remove(selectedCategory)));
-
-        int clipboardActionsY = actionsY + LIST_ROW_HEIGHT;
         addActionButton(
-                CATEGORIES_X,
-                clipboardActionsY,
+                categoryList,
+                1,
                 0,
                 "import",
-                ChatFormatting.GREEN,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_GOLD,
                 true,
                 () -> importCategory(categories));
-        addActionButton(CATEGORIES_X, clipboardActionsY, 1, "export", ChatFormatting.BLUE, true, this::exportCategory);
+        addActionButton(
+                categoryList,
+                1,
+                1,
+                "export",
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE,
+                true,
+                this::exportCategory);
     }
 
     private void importCategory(List<FavoriteCategory> categories) {
@@ -399,8 +450,7 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
         categoryList.scroll = categories.size();
 
         McUtils.sendWynntilsPrefixMessage(
-                Component.translatable("screens.wynntils.lootFilters.importedCategory", category.getName())
-                        .withStyle(ChatFormatting.GREEN));
+                Component.translatable("screens.wynntils.lootFilters.importedCategory", category.getName()));
     }
 
     private void exportCategory() {
@@ -408,59 +458,67 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
                 .keyboardHandler
                 .setClipboard(CATEGORY_CLIPBOARD_PREFIX + JsonManager.GSON.toJson(selectedCategory));
         McUtils.sendWynntilsPrefixMessage(
-                Component.translatable("screens.wynntils.lootFilters.exportedCategory", selectedCategory.getName())
-                        .withStyle(ChatFormatting.GREEN));
+                Component.translatable("screens.wynntils.lootFilters.exportedCategory", selectedCategory.getName()));
     }
 
     private void initCategoryEditor() {
         FavoriteCategory category = selectedCategory;
 
-        addInput(EDITOR_X, NAME_ROW_Y, EDITOR_COLUMN_WIDTH, category.getName(), name -> {
+        addInput(editorX, NAME_Y + LABEL_HEIGHT, PREVIEW_X - COLUMN_GAP, category.getName(), name -> {
             if (name.isBlank()) return false;
 
             category.setName(name);
             if (selectedCategoryButton != null) {
-                selectedCategoryButton.setMessage(getListButtonMessage(name, true));
+                selectedCategoryButton.setMessage(Component.literal(name));
             }
             return true;
         });
 
-        this.addRenderableWidget(new Button.Builder(
-                        Component.literal(EnumUtils.toNiceString(category.getIcon())), (button) -> {
-                            FavoriteIcon[] icons = FavoriteIcon.values();
-                            category.setIcon(icons[(category.getIcon().ordinal() + 1) % icons.length]);
-                            button.setMessage(Component.literal(EnumUtils.toNiceString(category.getIcon())));
-                        })
-                .pos((int) (dividedWidth * EDITOR_X), (int) (dividedHeight * ICON_ROW_Y))
-                .size((int) (dividedWidth * 8), BUTTON_SIZE)
-                .build());
+        LootFilterButton[] iconButton = new LootFilterButton[1];
+        iconButton[0] = new LootFilterButton(
+                editorX,
+                contentY + ICON_Y + LABEL_HEIGHT,
+                ICON_BUTTON_WIDTH,
+                INPUT_HEIGHT,
+                Component.literal(EnumUtils.toNiceString(category.getIcon())),
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
+                () -> {
+                    FavoriteIcon[] icons = FavoriteIcon.values();
+                    category.setIcon(icons[(category.getIcon().ordinal() + 1) % icons.length]);
+                    iconButton[0].setMessage(Component.literal(EnumUtils.toNiceString(category.getIcon())));
+                });
+        this.addRenderableWidget(iconButton[0]);
 
         iconXInput = addIntInput(
-                ICON_X_INPUT_X,
+                getIconInputX(0),
                 category.getIconX(),
                 x -> isValidIconPosition(x, category.getIconSize()),
                 category::setIconX);
         iconYInput = addIntInput(
-                ICON_Y_INPUT_X,
+                getIconInputX(1),
                 category.getIconY(),
                 y -> isValidIconPosition(y, category.getIconSize()),
                 category::setIconY);
         iconSizeInput = addIntInput(
-                ICON_SIZE_INPUT_X,
+                getIconInputX(2),
                 category.getIconSize(),
                 size -> size >= MIN_ICON_SIZE && size <= getMaxIconSize(category),
                 category::setIconSize);
 
-        addColorInput(EDITOR_X, ICON_COLOR_ROW_Y, category.getIconColor(), category::setIconColor);
+        addColorInput(editorX, ICON_COLOR_Y, category.getIconColor(), category::setIconColor);
         addColorInput(
-                EDITOR_SECOND_COLUMN_X, ICON_COLOR_ROW_Y, category.getBackgroundColor(), category::setBackgroundColor);
-        addColorInput(EDITOR_X, OVERLAY_COLOR_ROW_Y, category.getOverlayColor(), category::setOverlayColor);
-        addColorInput(EDITOR_SECOND_COLUMN_X, OVERLAY_COLOR_ROW_Y, category.getBorderColor(), category::setBorderColor);
+                editorX + COLOR_COLUMN_WIDTH,
+                ICON_COLOR_Y,
+                category.getBackgroundColor(),
+                category::setBackgroundColor);
+        addColorInput(editorX, OVERLAY_COLOR_Y, category.getOverlayColor(), category::setOverlayColor);
+        addColorInput(
+                editorX + COLOR_COLUMN_WIDTH, OVERLAY_COLOR_Y, category.getBorderColor(), category::setBorderColor);
 
         addInput(
-                EDITOR_X,
-                CLOSE_OVERRIDE_ROW_Y,
-                EDITOR_COLUMN_WIDTH,
+                editorX,
+                CLOSE_OVERRIDE_Y + LABEL_HEIGHT,
+                CLOSE_OVERRIDE_INPUT_WIDTH,
                 Integer.toString(category.getLootChestCloseOverride()),
                 text -> {
                     if (!text.matches("-1|\\d{1,3}")) return false;
@@ -470,10 +528,72 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
                 });
     }
 
-    private void renderPreview(GuiGraphics guiGraphics) {
-        RenderUtils.drawRect(
-                guiGraphics, PREVIEW_BACKGROUND_COLOR, getPreviewX(), getPreviewY(), PREVIEW_SIZE, PREVIEW_SIZE);
+    private void renderTitle(GuiGraphics guiGraphics, String key, int x, int width) {
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_MENU_RIBBON,
+                x,
+                contentY,
+                width,
+                Texture.BUILD_LOADOUTS_MENU_RIBBON.height());
 
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(I18n.get("screens.wynntils.lootFilters." + key)),
+                        x + width / 2f,
+                        contentY + Texture.BUILD_LOADOUTS_MENU_RIBBON.height() / 2f,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+    }
+
+    private void renderLabel(GuiGraphics guiGraphics, String key, int x, int y) {
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(I18n.get("screens.wynntils.lootFilters." + key)),
+                        x,
+                        contentY + y,
+                        LABEL_COLOR,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
+    }
+
+    private void renderList(GuiGraphics guiGraphics, ListView list, List<?> entries) {
+        int listY = contentY + LIST_Y;
+
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, list.x, listY, LIST_WIDTH, LIST_HEIGHT);
+
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_SCROLL_SIDE_BAR,
+                getScrollBarX(list),
+                listY + SCROLL_BAR_PADDING,
+                Texture.BUILD_LOADOUTS_SCROLL_SIDE_BAR.width(),
+                LIST_HEIGHT - SCROLL_BAR_PADDING * 2);
+
+        int maxScroll = entries.size() - getVisibleRows(entries);
+        float buttonY = maxScroll == 0
+                ? getScrollTrackTop()
+                : MathUtils.map(list.scroll, 0, maxScroll, getScrollTrackTop(), getScrollTrackBottom());
+        RenderUtils.drawTexturedRect(
+                guiGraphics, Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON, getScrollBarX(list) + 1, buttonY);
+    }
+
+    private void renderPreview(GuiGraphics guiGraphics) {
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                guiGraphics,
+                Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT,
+                getPreviewX(),
+                getPreviewY(),
+                PREVIEW_SIZE,
+                PREVIEW_SIZE);
+
+        // Everything inside is drawn in slot pixels, with the slot at the origin
         guiGraphics.pose().pushMatrix();
         guiGraphics
                 .pose()
@@ -549,12 +669,16 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
         return Math.min(MAX_ICON_SIZE, MAX_ICON_EDGE - Math.max(category.getIconX(), category.getIconY()));
     }
 
+    private int getIconInputX(int index) {
+        return editorX + ICON_BUTTON_WIDTH + BUTTON_GAP + index * (ICON_INPUT_WIDTH + BUTTON_GAP);
+    }
+
     private int getPreviewX() {
-        return (int) (dividedWidth * EDITOR_SECOND_COLUMN_X);
+        return editorX + PREVIEW_X;
     }
 
     private int getPreviewY() {
-        return (int) (dividedHeight * PREVIEW_ROW_Y);
+        return contentY + NAME_Y;
     }
 
     private boolean isInPreview(double mouseX, double mouseY) {
@@ -576,7 +700,7 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
         return dragMode == DragMode.LOOT_FILTER || dragMode == DragMode.CATEGORY;
     }
 
-    private Button getDraggedListButton() {
+    private LootFilterButton getDraggedListButton() {
         return dragMode == DragMode.LOOT_FILTER ? activeLootFilterButton : selectedCategoryButton;
     }
 
@@ -614,111 +738,107 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
     }
 
     private int getListRowY(int row) {
-        return (int) (dividedHeight * (LIST_FIRST_ROW_Y + row * LIST_ROW_HEIGHT));
+        return contentY + LIST_Y + LIST_PADDING + row * ROW_PITCH;
     }
 
     private int getListRow(double mouseY) {
-        return (int) Math.floor((mouseY - dividedHeight * LIST_FIRST_ROW_Y) / (dividedHeight * LIST_ROW_HEIGHT));
+        return (int) Math.floor((mouseY - getListRowY(0)) / ROW_PITCH);
     }
 
-    private boolean isInList(double mouseX, double mouseY, ListView list, List<?> entries) {
+    private boolean isOverList(double mouseX, double mouseY, ListView list) {
+        return mouseX >= list.x
+                && mouseX < list.x + LIST_WIDTH
+                && mouseY >= contentY + LIST_Y
+                && mouseY < contentY + LIST_Y + LIST_HEIGHT;
+    }
+
+    private boolean isOverListEntry(double mouseX, double mouseY, ListView list, List<?> entries) {
         int row = getListRow(mouseY);
-        return mouseX >= dividedWidth * list.gridX
-                && mouseX < dividedWidth * (list.gridX + LIST_WIDTH)
+        return isOverList(mouseX, mouseY, list)
+                && mouseX < getScrollBarX(list)
                 && row >= 0
                 && row < getVisibleRows(entries);
     }
 
-    private int getScrollBarX(ListView list) {
-        return (int) (dividedWidth * (list.gridX + LIST_WIDTH)) + 1;
-    }
-
-    private int getListHeight(List<?> entries) {
-        return getListRowY(getVisibleRows(entries) - 1) + BUTTON_SIZE - getListRowY(0);
-    }
-
-    private float getScrollThumbHeight(List<?> entries) {
-        return getListHeight(entries) * (float) getVisibleRows(entries) / entries.size();
-    }
-
     private boolean isOverScrollBar(double mouseX, double mouseY, ListView list, List<?> entries) {
-        return entries.size() > MAX_VISIBLE_ROWS
-                && mouseX >= getScrollBarX(list)
-                && mouseX < getScrollBarX(list) + SCROLL_BAR_WIDTH
-                && mouseY >= getListRowY(0)
-                && mouseY < getListRowY(0) + getListHeight(entries);
+        return entries.size() > MAX_VISIBLE_ROWS && isOverList(mouseX, mouseY, list) && mouseX >= getScrollBarX(list);
+    }
+
+    private int getScrollBarX(ListView list) {
+        return list.x + LIST_WIDTH - SCROLL_BAR_SPACE;
+    }
+
+    private int getScrollTrackTop() {
+        return contentY + LIST_Y + SCROLL_BUTTON_PADDING;
+    }
+
+    private int getScrollTrackBottom() {
+        return contentY
+                + LIST_Y
+                + LIST_HEIGHT
+                - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height()
+                - SCROLL_BUTTON_PADDING;
     }
 
     private void dragScrollBar(ListView list, List<?> entries, double mouseY) {
-        float thumbHeight = getScrollThumbHeight(entries);
-        double progress = (mouseY - getListRowY(0) - thumbHeight / 2) / (getListHeight(entries) - thumbHeight);
+        double buttonY = mouseY - Texture.BUILD_LOADOUTS_SCOLL_BAR_BUTTON.height() / 2d;
+        double progress = (buttonY - getScrollTrackTop()) / (getScrollTrackBottom() - getScrollTrackTop());
         scrollTo(list, entries, (int) Math.round(progress * (entries.size() - MAX_VISIBLE_ROWS)));
     }
 
-    private void renderScrollBar(GuiGraphics guiGraphics, ListView list, List<?> entries) {
-        if (entries.size() <= MAX_VISIBLE_ROWS) return;
-
-        int height = getListHeight(entries);
-        float thumbHeight = getScrollThumbHeight(entries);
-        float thumbY = getListRowY(0) + (height - thumbHeight) * list.scroll / (entries.size() - MAX_VISIBLE_ROWS);
-
-        RenderUtils.drawRect(
-                guiGraphics, SCROLL_BAR_TRACK_COLOR, getScrollBarX(list), getListRowY(0), SCROLL_BAR_WIDTH, height);
-        RenderUtils.drawRect(
-                guiGraphics, CommonColors.WHITE, getScrollBarX(list), thumbY, SCROLL_BAR_WIDTH, thumbHeight);
-    }
-
-    private int getLootFilterNameRowY() {
-        return LIST_FIRST_ROW_Y + (getVisibleRows(Services.Favorites.getLootFilters()) + 1) * LIST_ROW_HEIGHT + 3;
-    }
-
-    private static Component getListButtonMessage(String name, boolean selected) {
-        return Component.literal(name).withStyle(selected ? ChatFormatting.YELLOW : ChatFormatting.WHITE);
-    }
-
-    private Button addListButton(ListView list, int index, String name, boolean selected, Runnable onPress) {
-        return this.addRenderableWidget(new Button.Builder(getListButtonMessage(name, selected), (button) -> {
+    private LootFilterButton addListButton(ListView list, int index, String name, boolean selected, Runnable onPress) {
+        return this.addRenderableWidget(new LootFilterButton(
+                list.x + LIST_PADDING,
+                getListRowY(index - list.scroll),
+                LIST_WIDTH - LIST_PADDING - SCROLL_BAR_SPACE,
+                BUTTON_HEIGHT,
+                Component.literal(name),
+                selected ? Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_BLUE : Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND,
+                () -> {
                     onPress.run();
                     this.rebuildWidgets();
-                })
-                .pos((int) (dividedWidth * list.gridX), getListRowY(index - list.scroll))
-                .size((int) (dividedWidth * LIST_WIDTH), BUTTON_SIZE)
-                .build());
+                }));
     }
 
     private void addActionButton(
-            int gridX, int gridY, int index, String key, ChatFormatting color, boolean active, Runnable onPress) {
-        float buttonWidth = dividedWidth * LIST_WIDTH / 3;
-        Button button = new Button.Builder(
-                        Component.translatable("screens.wynntils.lootFilters." + key)
-                                .withStyle(color),
-                        (b) -> {
-                            onPress.run();
-                            this.rebuildWidgets();
-                        })
-                .pos((int) (dividedWidth * gridX + index * buttonWidth), (int) (dividedHeight * gridY))
-                .size((int) buttonWidth, BUTTON_SIZE)
-                .build();
+            ListView list, int row, int column, String key, Texture texture, boolean active, Runnable onPress) {
+        int buttonWidth = (LIST_WIDTH - BUTTON_GAP) / 2;
+        LootFilterButton button = new LootFilterButton(
+                list.x + column * (buttonWidth + BUTTON_GAP),
+                contentY + ACTIONS_Y + row * ROW_PITCH,
+                buttonWidth,
+                BUTTON_HEIGHT,
+                Component.translatable("screens.wynntils.lootFilters." + key),
+                texture,
+                () -> {
+                    onPress.run();
+                    this.rebuildWidgets();
+                });
         button.active = active;
         this.addRenderableWidget(button);
     }
 
-    private TextInputBoxWidget addInput(int gridX, int gridY, int gridWidth, String value, Predicate<String> onUpdate) {
+    private TextInputBoxWidget addInput(int x, int y, int width, String value, Predicate<String> onUpdate) {
         TextInputBoxWidget[] input = new TextInputBoxWidget[1];
-        input[0] = new TextInputBoxWidget(
-                (int) (dividedWidth * gridX),
-                (int) (dividedHeight * gridY),
-                (int) (dividedWidth * gridWidth),
-                BUTTON_SIZE,
-                text -> input[0].setRenderColor(onUpdate.test(text) ? CommonColors.WHITE : CommonColors.RED),
+        input[0] = new LootFilterInputWidget(
+                x,
+                contentY + y,
+                width,
+                text -> {
+                    if (onUpdate.test(text)) {
+                        invalidInputs.remove(input[0]);
+                    } else {
+                        invalidInputs.add(input[0]);
+                    }
+                },
                 this);
         input[0].setTextBoxInput(value);
         this.addRenderableWidget(input[0]);
         return input[0];
     }
 
-    private TextInputBoxWidget addIntInput(int gridX, int value, IntPredicate validator, Consumer<Integer> setter) {
-        return addInput(gridX, ICON_ROW_Y, ICON_INPUT_WIDTH, Integer.toString(value), text -> {
+    private TextInputBoxWidget addIntInput(int x, int value, IntPredicate validator, Consumer<Integer> setter) {
+        return addInput(x, ICON_Y + LABEL_HEIGHT, ICON_INPUT_WIDTH, Integer.toString(value), text -> {
             if (!text.matches("-?\\d{1,2}") || !validator.test(Integer.parseInt(text))) return false;
 
             setter.accept(Integer.parseInt(text));
@@ -726,8 +846,8 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
         });
     }
 
-    private void addColorInput(int gridX, int gridY, CustomColor color, Consumer<CustomColor> setter) {
-        TextInputBoxWidget input = addInput(gridX, gridY, EDITOR_COLUMN_WIDTH, color.toHexString(), text -> {
+    private void addColorInput(int x, int y, CustomColor color, Consumer<CustomColor> setter) {
+        TextInputBoxWidget input = addInput(x, y + LABEL_HEIGHT, COLOR_INPUT_WIDTH, color.toHexString(), text -> {
             CustomColor newColor = CustomColor.fromHexString(text);
             if (newColor == CustomColor.NONE) return false;
 
@@ -736,34 +856,12 @@ public final class LootFilterScreen extends WynntilsGridLayoutScreen {
         });
 
         this.addRenderableWidget(new ColorPickerWidget(
-                (int) (dividedWidth * (gridX + EDITOR_COLUMN_WIDTH)) + 2,
-                (int) (dividedHeight * gridY),
-                BUTTON_SIZE,
-                BUTTON_SIZE,
-                input));
-    }
-
-    private void renderLabel(GuiGraphics guiGraphics, String key, int gridX, int gridY) {
-        FontRenderer.getInstance()
-                .renderText(
-                        guiGraphics,
-                        StyledText.fromString(I18n.get("screens.wynntils.lootFilters." + key)),
-                        (int) (dividedWidth * gridX),
-                        (int) (dividedHeight * gridY),
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.BOTTOM,
-                        TextShadow.NORMAL);
+                x + COLOR_INPUT_WIDTH + BUTTON_GAP, contentY + y + LABEL_HEIGHT, INPUT_HEIGHT, INPUT_HEIGHT, input));
     }
 
     private static final class ListView {
-        private final int gridX;
-
+        private int x;
         private int scroll = 0;
-
-        private ListView(int gridX) {
-            this.gridX = gridX;
-        }
     }
 
     private enum DragMode {
