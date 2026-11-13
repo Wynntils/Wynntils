@@ -34,18 +34,26 @@ public final class QueuedMeleeScheduler {
     }
 
     public static MeleeQueueResult queueCurrentMelee(
-            int leftDelayMs, int rightDelayMs, boolean adaptiveLagCorrectionEnabled, boolean checkValidWeapon) {
+            int leftDelayMs,
+            int rightDelayMs,
+            boolean adaptiveLagCorrectionEnabled,
+            boolean weaponSwing,
+            boolean checkValidWeapon) {
         if (!canHandleCombatInput()) return MeleeQueueResult.NOT_QUEUED;
         if (!isMeleeReady()) return MeleeQueueResult.BLOCKED_BY_COOLDOWN;
 
         WeaponContext weaponContext = resolveWeaponContext(checkValidWeapon);
         if (!weaponContext.valid()) return MeleeQueueResult.NOT_QUEUED;
 
-        return queueCurrentMelee(weaponContext, leftDelayMs, rightDelayMs, adaptiveLagCorrectionEnabled);
+        return queueCurrentMelee(weaponContext, leftDelayMs, rightDelayMs, adaptiveLagCorrectionEnabled, weaponSwing);
     }
 
     public static MeleeQueueResult queueCurrentMelee(
-            WeaponContext weaponContext, int leftDelayMs, int rightDelayMs, boolean adaptiveLagCorrectionEnabled) {
+            WeaponContext weaponContext,
+            int leftDelayMs,
+            int rightDelayMs,
+            boolean adaptiveLagCorrectionEnabled,
+            boolean weaponSwing) {
         if (!weaponContext.valid()) return MeleeQueueResult.NOT_QUEUED;
 
         return Models.SpellCaster.queueClicks(
@@ -54,7 +62,8 @@ public final class QueuedMeleeScheduler {
                         Math.max(leftDelayMs, 0),
                         Math.max(rightDelayMs, 0),
                         0,
-                        adaptiveLagCorrectionEnabled)
+                        adaptiveLagCorrectionEnabled,
+                        weaponSwing)
                 ? MeleeQueueResult.QUEUED
                 : MeleeQueueResult.NOT_QUEUED;
     }
