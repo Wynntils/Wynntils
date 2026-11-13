@@ -60,11 +60,18 @@ jobs:
     steps:
       - uses: actions/checkout@v6
 
-      - name: Cache Gradle data
+      - name: Cache Loom project data
         uses: actions/cache@v5
         with:
-          path: .gradle
-          key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
+          path: |
+            .gradle/loom-cache
+            common/.gradle/loom-cache
+            fabric/.gradle/loom-cache
+            neoforge/.gradle/loom-cache
+          key: ${{ runner.os }}-loom-v2-${{ hashFiles('**/*.gradle', '**/gradle.properties', 'gradle/wrapper/gradle-wrapper.properties') }}-${{ github.sha }}
+          restore-keys: |
+            ${{ runner.os }}-loom-v2-${{ hashFiles('**/*.gradle', '**/gradle.properties', 'gradle/wrapper/gradle-wrapper.properties') }}-
+            ${{ runner.os }}-loom-v2-
 
       - uses: actions/download-artifact@v8 # Download version information from changelog
         with:
@@ -75,10 +82,12 @@ jobs:
         with:
           distribution: "temurin"
           java-version: 21
-          cache: "gradle"
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
+        with:
+          # Save release dependencies instead of only reading the main cache.
+          cache-read-only: false
 
       - name: Build with Gradle
         run: ./gradlew buildDependents -x spotlessCheck -x test
