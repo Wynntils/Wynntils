@@ -189,6 +189,12 @@ public final class ConfigManager extends Manager {
     }
 
     public void reloadConfiguration(boolean initOverlayGroups) {
+        Managers.Overlay.clearHistory();
+        reloadEditorConfiguration(initOverlayGroups);
+    }
+
+    public void reloadEditorConfiguration(boolean initOverlayGroups) {
+        Managers.Overlay.discardUnsavedHistory();
         configObject = Managers.Json.loadPreciousJson(GLOBAL_CONFIG);
         loadConfigOptions(true, initOverlayGroups);
     }
@@ -311,6 +317,7 @@ public final class ConfigManager extends Manager {
     public synchronized void saveConfig() {
         // Requesting to save before we have read the old config? Just skip it
         if (configObject == null) return;
+        Managers.Overlay.finishHistory();
 
         // create json object, with entry for each option of each container
         JsonObject configJson = new JsonObject();
@@ -341,6 +348,7 @@ public final class ConfigManager extends Manager {
         configJson.add(OVERLAY_GROUPS_JSON_KEY, overlayGroups);
 
         Managers.Json.savePreciousJson(GLOBAL_CONFIG, configJson);
+        Managers.Overlay.saveHistory();
     }
 
     public File getGlobalConfigFile() {
@@ -368,6 +376,8 @@ public final class ConfigManager extends Manager {
     public void setSelectedProfile(ConfigProfile profile) {
         if (profile == null || profile == selectedProfile.get()) return;
 
+        Managers.Overlay.clearHistory();
+
         selectedProfile.store(profile);
         applyProfileDefaults();
         saveConfig();
@@ -381,7 +391,7 @@ public final class ConfigManager extends Manager {
         }
     }
 
-    private List<Config<?>> getConfigOptions(PersistedOwner owner) {
+    public List<Config<?>> getConfigOptions(PersistedOwner owner) {
         return new ArrayList<>(Managers.Persisted.getPersisted(owner, Config.class).stream()
                 .map(p -> processConfig(owner, p.a(), p.b()))
                 .toList());

@@ -6,7 +6,8 @@
         "Y\uE001",
         "\uF010\uE002",
         "[\uE003",
-        "]\uE004"
+        "]\uE004",
+        "Z\uE005"
       ],
       "file": "wynntils:font/keybind.png",
       "height": 10,
