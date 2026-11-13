@@ -115,13 +115,16 @@ public class ItemLockFeature extends Feature {
 
             if (modelData != null && modelData.strings().contains(INTERACT_MODEL_DATA_KEY)) return;
         }
+
         // We have to match slot.index here, because the event slot number is an index as well
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()
                 .filter(slot -> slot.container instanceof Inventory && slot.index == event.getSlotNum())
                 .findFirst();
+
         if (slotOptional.isEmpty()) {
             return;
         }
+
         // We want to allow opening emerald pouches and deleting potions even if locked
         // Right click is used to perform these actions, left click picks them up
         // So only allow right click actions
