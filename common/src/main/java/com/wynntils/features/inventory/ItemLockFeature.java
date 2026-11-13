@@ -44,6 +44,11 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemLockFeature extends Feature {
+    @Persisted
+    private final Config<Boolean> preventClicksInCutscene = new Config<>(true);
+
+    private static final int INVENTORY_SLOTS = 46;
+
     private static final String INTERACT_MODEL_DATA_KEY = "interact";
 
     @RegisterKeyBind
@@ -60,11 +65,6 @@ public class ItemLockFeature extends Feature {
 
     @Persisted
     private final Config<Boolean> allowClickOnMultiHealthPotionsInBlockingMode = new Config<>(true);
-
-    @Persisted
-    private final Config<Boolean> preventClicksInCutscene = new Config<>(true);
-
-    private static final int INVENTORY_SLOTS = 46;
 
     public ItemLockFeature() {
         super(ProfileDefault.ENABLED);
