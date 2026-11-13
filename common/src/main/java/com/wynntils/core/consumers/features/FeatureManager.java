@@ -159,7 +159,6 @@ import com.wynntils.features.ui.ProfessionHighlightFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
-import com.wynntils.features.utilities.AntiVoidFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.AutoProgressDialogueFeature;
 import com.wynntils.features.utilities.AutoSkipCutscenesFeature;
@@ -418,7 +417,6 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region utilities
-        registerFeature(new AntiVoidFeature());
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new AutoProgressDialogueFeature());
         registerFeature(new AutoSkipCutscenesFeature());

@@ -61,6 +61,11 @@ public class ItemLockFeature extends Feature {
     @Persisted
     private final Config<Boolean> allowClickOnMultiHealthPotionsInBlockingMode = new Config<>(true);
 
+    @Persisted
+    private final Config<Boolean> preventClicksInCutscene = new Config<>(true);
+
+    private static final int INVENTORY_SLOTS = 46;
+
     public ItemLockFeature() {
         super(ProfileDefault.ENABLED);
     }
@@ -92,6 +97,12 @@ public class ItemLockFeature extends Feature {
         if (!(McUtils.screen() instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || Models.Container.getCurrentContainer() instanceof FullscreenContainerProperty) return;
         if (Models.Container.getCurrentContainer() instanceof MountFeederContainer) return;
+        if (preventClicksInCutscene.get()
+                && Models.Cutscene.isCutsceneActive()
+                && event.getContainerMenu().slots.size() == INVENTORY_SLOTS) {
+            event.setCanceled(true);
+            return;
+        }
         if (!blockAllActionsOnLockedItems.get() && event.getClickType() != ClickType.THROW) return;
         if (Models.Housing.isInEditMode()) return;
 
@@ -104,16 +115,13 @@ public class ItemLockFeature extends Feature {
 
             if (modelData != null && modelData.strings().contains(INTERACT_MODEL_DATA_KEY)) return;
         }
-
         // We have to match slot.index here, because the event slot number is an index as well
         Optional<Slot> slotOptional = abstractContainerScreen.getMenu().slots.stream()
                 .filter(slot -> slot.container instanceof Inventory && slot.index == event.getSlotNum())
                 .findFirst();
-
         if (slotOptional.isEmpty()) {
             return;
         }
-
         // We want to allow opening emerald pouches and deleting potions even if locked
         // Right click is used to perform these actions, left click picks them up
         // So only allow right click actions
