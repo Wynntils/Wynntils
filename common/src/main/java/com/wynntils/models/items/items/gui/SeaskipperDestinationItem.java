@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.gui;
@@ -11,11 +11,13 @@ public class SeaskipperDestinationItem extends GuiItem implements TargetedItemPr
     private final String destination;
     private final int price;
     private final String shorthand;
+    private final boolean available;
 
-    public SeaskipperDestinationItem(String destination, int price, String shorthand) {
+    public SeaskipperDestinationItem(String destination, int price, String shorthand, boolean available) {
         this.destination = destination;
         this.price = price;
         this.shorthand = shorthand;
+        this.available = available;
     }
 
     public String getDestination() {
@@ -28,6 +30,10 @@ public class SeaskipperDestinationItem extends GuiItem implements TargetedItemPr
 
     public String getShorthand() {
         return shorthand;
+    }
+
+    public boolean isAvailable() {
+        return available;
     }
 
     @Override
