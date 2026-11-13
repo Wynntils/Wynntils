@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.features.ui.CustomTerritoryManagementScreenFeature;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.screens.territorymanagement.TerritoryManagementHolder;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
@@ -19,8 +20,14 @@ import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 
 public class GuildOverallProductionWidget extends AbstractWidget {
+    // The screen re-creates this widget on every init, so the toggle state is kept static to
+    // survive a resize or a round trip through the territory container
+    private static boolean showDeltas = false;
+    private static boolean controlWasDown = false;
+
     private final TerritoryManagementHolder holder;
 
     public GuildOverallProductionWidget(int x, int y, int width, int height, TerritoryManagementHolder holder) {
@@ -88,40 +95,46 @@ public class GuildOverallProductionWidget extends AbstractWidget {
 
         lines.add(Component.literal(""));
 
-        long emeraldDelta = emeraldProduction - emeraldUsage;
-        long oreDelta = oreProduction - oreUsage;
-        long woodDelta = woodProduction - woodUsage;
-        long fishDelta = fishProduction - fishUsage;
-        long cropDelta = cropsProduction - cropsUsage;
+        // This widget receives no input events of its own, so the control key is polled here
+        if (!controlWasDown && KeyboardUtils.isControlDown()) {
+            showDeltas = !showDeltas;
+            controlWasDown = true;
+        } else if (!KeyboardUtils.isControlDown()) {
+            controlWasDown = false;
+        }
+
+        boolean showDelta = showDeltas || KeyboardUtils.isShiftDown();
+
         // Show overall cost
         lines.add(Component.literal("Overall Cost (per hour):").withStyle(ChatFormatting.GRAY));
-        lines.add(Component.literal("%.1fk Emeralds (%.1f%%)"
-                        .formatted(emeraldUsage / 1000d, (double) emeraldUsage / emeraldProduction * 100d))
-                .withStyle(ChatFormatting.GREEN)
-                .append(Component.literal(" [%s%.1fk]".formatted(emeraldDelta >= 0 ? "+" : "", emeraldDelta / 1000d))
-                        .withStyle(emeraldDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
-        lines.add(Component.literal(
-                        "Ⓑ %.1fk Ore (%.1f%%)".formatted(oreUsage / 1000d, (double) oreUsage / oreProduction * 100d))
-                .withStyle(ChatFormatting.WHITE)
-                .append(Component.literal(" [%s%.1fk]".formatted(oreDelta >= 0 ? "+" : "", oreDelta / 1000d))
-                        .withStyle(oreDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
-        lines.add(Component.literal("Ⓒ %.1fk Wood (%.1f%%)"
-                        .formatted(woodUsage / 1000d, (double) woodUsage / woodProduction * 100d))
-                .withStyle(ChatFormatting.GOLD)
-                .append(Component.literal(" [%s%.1fk]".formatted(woodDelta >= 0 ? "+" : "", woodDelta / 1000d))
-                        .withStyle(woodDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
-        lines.add(Component.literal("Ⓚ %.1fk Fish (%.1f%%)"
-                        .formatted(fishUsage / 1000d, (double) fishUsage / fishProduction * 100d))
-                .withStyle(ChatFormatting.AQUA)
-                .append(Component.literal(" [%s%.1fk]".formatted(fishDelta >= 0 ? "+" : "", fishDelta / 1000d))
-                        .withStyle(fishDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
-        lines.add(Component.literal("Ⓙ %.1fk Crops (%.1f%%)"
-                        .formatted(cropsUsage / 1000d, (double) cropsUsage / cropsProduction * 100d))
-                .withStyle(ChatFormatting.YELLOW)
-                .append(Component.literal(" [%s%.1fk]".formatted(cropDelta >= 0 ? "+" : "", cropDelta / 1000d))
-                        .withStyle(cropDelta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED)));
+        addOverallCostLine(lines, "", "Emeralds", emeraldUsage, emeraldProduction, ChatFormatting.GREEN, showDelta);
+        addOverallCostLine(lines, "Ⓑ ", "Ore", oreUsage, oreProduction, ChatFormatting.WHITE, showDelta);
+        addOverallCostLine(lines, "Ⓒ ", "Wood", woodUsage, woodProduction, ChatFormatting.GOLD, showDelta);
+        addOverallCostLine(lines, "Ⓚ ", "Fish", fishUsage, fishProduction, ChatFormatting.AQUA, showDelta);
+        addOverallCostLine(lines, "Ⓙ ", "Crops", cropsUsage, cropsProduction, ChatFormatting.YELLOW, showDelta);
 
         RenderUtils.renderTooltip(guiGraphics, lines, this.getX(), this.getY());
+    }
+
+    private static void addOverallCostLine(
+            List<Component> lines,
+            String symbol,
+            String name,
+            long usage,
+            int production,
+            ChatFormatting color,
+            boolean showDelta) {
+        MutableComponent line = Component.literal("%s%.1fk %s (%.1f%%)"
+                        .formatted(symbol, usage / 1000d, name, (double) usage / production * 100d))
+                .withStyle(color);
+
+        if (showDelta) {
+            long delta = production - usage;
+            line.append(Component.literal(" [%s%.1fk]".formatted(delta >= 0 ? "+" : "", delta / 1000d))
+                    .withStyle(delta >= 0 ? ChatFormatting.BLUE : ChatFormatting.RED));
+        }
+
+        lines.add(line);
     }
 
     @Override

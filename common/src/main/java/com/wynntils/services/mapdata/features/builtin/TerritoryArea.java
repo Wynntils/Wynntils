@@ -91,13 +91,13 @@ public class TerritoryArea implements MapArea {
             }
 
             @Override
-            public Optional<CustomColor> getFillColor() {
-                return Optional.of(guildColor.withAlpha(80));
+            public Optional<List<CustomColor>> getFillColors() {
+                return Optional.of(List.of(guildColor.withAlpha(80)));
             }
 
             @Override
-            public Optional<CustomColor> getBorderColor() {
-                return Optional.of(guildColor);
+            public Optional<List<CustomColor>> getBorderColors() {
+                return Optional.of(List.of(guildColor));
             }
         });
     }

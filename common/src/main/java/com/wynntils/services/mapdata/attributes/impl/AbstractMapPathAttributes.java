@@ -9,6 +9,7 @@ import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractMapPathAttributes extends AbstractMapAttributes implements MapPathAttributes {
@@ -43,12 +44,12 @@ public abstract class AbstractMapPathAttributes extends AbstractMapAttributes im
     }
 
     @Override
-    public final Optional<CustomColor> getFillColor() {
+    public final Optional<List<CustomColor>> getFillColors() {
         return Optional.empty();
     }
 
     @Override
-    public final Optional<CustomColor> getBorderColor() {
+    public final Optional<List<CustomColor>> getBorderColors() {
         return Optional.empty();
     }
 
