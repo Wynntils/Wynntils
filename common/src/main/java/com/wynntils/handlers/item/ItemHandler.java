@@ -265,11 +265,13 @@ public final class ItemHandler extends Handler {
         ItemStack previous = getPreviousPowderTarget(menu, slot, incoming);
         boolean playerInventory = menu == McUtils.inventoryMenu()
                 || menu.slots.get(slot).container == McUtils.player().getInventory();
+        List<StyledText> previousLore = LoreUtils.getLore(previous);
+        List<StyledText> incomingLore = LoreUtils.getLore(incoming);
         boolean reuse = pagedUpdates.canReuse(
                 menu.containerId,
                 playerInventory,
-                WynnItemParser.parseTooltipPage(previous) != WynnItemParser.parseTooltipPage(incoming),
-                Objects.equals(LoreUtils.getLore(previous), LoreUtils.getLore(incoming)),
+                WynnItemParser.parseTooltipPage(previousLore) != WynnItemParser.parseTooltipPage(incomingLore),
+                Objects.equals(previousLore, incomingLore),
                 System.nanoTime());
 
         // A pending powder target is an explicitly tracked item transfer, even if its
@@ -277,8 +279,9 @@ public final class ItemHandler extends Handler {
         boolean powderUpdate = powderTarget != null && previous == powderTarget.stack();
         if (!reuse && !powderUpdate && ((ItemStackExtension) previous).getAnnotation() instanceof PagedItemProperty) {
             previous = ItemStack.EMPTY;
+            previousLore = List.of();
         }
-        onItemStackUpdate(previous, incoming);
+        onItemStackUpdate(previous, incoming, previousLore, incomingLore);
     }
 
     private ItemStack getPreviousPowderTarget(AbstractContainerMenu menu, int slot, ItemStack incoming) {
@@ -335,6 +338,11 @@ public final class ItemHandler extends Handler {
     }
 
     private void onItemStackUpdate(ItemStack existingItem, ItemStack newItem) {
+        onItemStackUpdate(existingItem, newItem, null, null);
+    }
+
+    private void onItemStackUpdate(
+            ItemStack existingItem, ItemStack newItem, List<StyledText> existingLore, List<StyledText> newLore) {
         // For e.g. FakeItemStacks we will already have an annotation
         if (((ItemStackExtension) newItem).getAnnotation() != null) return;
 
@@ -357,12 +365,32 @@ public final class ItemHandler extends Handler {
                 StyledText.fromComponent(existingItem.getHoverName()).getNormalized();
         StyledText newName = StyledText.fromComponent(newItem.getHoverName()).getNormalized();
 
-        if (newName.equals(existingName) && annotation instanceof PagedItemProperty pagedItem) {
-            ItemPageAnnotator.update(pagedItem, newItem);
+        if (!newName.equals(existingName)) {
+            annotate(newItem);
+            return;
+        }
+
+        // Server updates already converted these lists for page-response tracking.
+        // Other update paths only need to read them after the identity checks above.
+        if (existingLore == null) {
+            existingLore = LoreUtils.getLore(existingItem);
+        }
+
+        if (newLore == null) {
+            newLore = LoreUtils.getLore(newItem);
+        }
+
+        if (annotation instanceof PagedItemProperty pagedItem) {
+            int page = WynnItemParser.parseTooltipPage(newLore);
+            if (!Objects.equals(existingLore, newLore) || !pagedItem.hasParsedPage(page)) {
+                ItemPageAnnotator.update(pagedItem, newItem);
+            } else {
+                pagedItem.setCurrentPage(page);
+            }
             updateItem(newItem, annotation, originalName);
-        } else if (newName.equals(existingName)) {
+        } else {
             // The name is identical to the existing stack; now check the lore
-            if (isLoreSoftMatching(existingItem, newItem)) {
+            if (isLoreSoftMatching(existingLore, newLore)) {
                 // This is exactly the same item, so copy existing annotation
                 updateItem(newItem, annotation, originalName);
             } else {
@@ -371,11 +399,6 @@ public final class ItemHandler extends Handler {
                 // We need to reparse the lore since it has changed
                 annotate(newItem);
             }
-        } else {
-            // The name is different, and it is not a know special name. This means it could be a
-            // completely new item, or it could be the same item slightly changed (e.g. durability
-            // has decreased). In any case, we need to reparse the complete item.
-            annotate(newItem);
         }
     }
 
@@ -402,10 +425,7 @@ public final class ItemHandler extends Handler {
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem) {
-        List<StyledText> firstLoreLines = LoreUtils.getLore(firstItem);
-        List<StyledText> secondLoreLines = LoreUtils.getLore(secondItem);
-
+    private boolean isLoreSoftMatching(List<StyledText> firstLoreLines, List<StyledText> secondLoreLines) {
         // Tags implement equals, so we can use this to check if the lore is identical
         // This is the most common short-circuit case
         if (Objects.equals(firstLoreLines, secondLoreLines)) return true;

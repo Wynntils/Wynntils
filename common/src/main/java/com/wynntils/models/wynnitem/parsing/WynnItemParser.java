@@ -842,9 +842,13 @@ public final class WynnItemParser {
     }
 
     public static int parseTooltipPage(ItemStack itemStack) {
+        return parseTooltipPage(LoreUtils.getLore(itemStack));
+    }
+
+    public static int parseTooltipPage(List<StyledText> lore) {
         // The same glyph is also used by headers and dividers. Only the page font
         // identifies the paginator; matching any occurrence can reset saved stats.
-        for (StyledText line : LoreUtils.getLore(itemStack).reversed()) {
+        for (StyledText line : lore.reversed()) {
             for (StyledTextPart part : line) {
                 if (part.getPartStyle().getFont().equals(CommonFonts.TOOLTIP_PAGE_FONT)) {
                     return parseTooltipPage(line);
