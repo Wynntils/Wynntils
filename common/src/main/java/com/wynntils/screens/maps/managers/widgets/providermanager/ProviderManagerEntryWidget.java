@@ -24,6 +24,7 @@ public class ProviderManagerEntryWidget extends ProviderEntryWidget {
     private static final int BUTTON_PADDING = 5;
 
     private final ProviderType providerType;
+    private final ProviderManagementScreen parent;
     private final boolean toggleable;
 
     public boolean enabled;
@@ -36,6 +37,7 @@ public class ProviderManagerEntryWidget extends ProviderEntryWidget {
                 parent::getSelectedCompleteProviderId,
                 id -> parent.setSelectedProvider(id, providerType));
         this.providerType = providerType;
+        this.parent = parent;
         this.enabled = Services.MapData.isProviderEnabled(completeProviderId);
 
         MapDataProviderInfo info = Services.MapData.getProviderInfos().get(completeProviderId);
@@ -85,6 +87,7 @@ public class ProviderManagerEntryWidget extends ProviderEntryWidget {
 
             if (Services.MapData.toggleProvider(getProviderId())) {
                 enabled = Services.MapData.isProviderEnabled(getProviderId());
+                parent.setSelectedProvider(getProviderId(), providerType);
             }
 
             return true;

@@ -142,8 +142,8 @@ public class MapDataService extends Service {
         return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
     }
 
-    public Optional<MapAttributes> getBaseAttributesForCategory(String categoryId) {
-        List<MapAttributes> attributesList = getCategoryDefinitions(categoryId)
+    public Optional<MapAttributes> getBaseAttributesForCategory(String categoryId, String includedProviderId) {
+        List<MapAttributes> attributesList = getCategoryDefinitions(categoryId, includedProviderId)
                 .map(MapCategory::getAttributes)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -156,6 +156,10 @@ public class MapDataService extends Service {
     }
 
     public Optional<MapAttributes> getOwnAttributesForCategory(String categoryId) {
+        return getOwnAttributesForCategory(categoryId, null);
+    }
+
+    public Optional<MapAttributes> getOwnAttributesForCategory(String categoryId, String includedProviderId) {
         List<MapAttributes> ownAttributes = new ArrayList<>();
 
         overrideProviders.values().stream()
@@ -164,7 +168,7 @@ public class MapDataService extends Service {
                 .filter(Objects::nonNull)
                 .forEach(ownAttributes::add);
 
-        getBaseAttributesForCategory(categoryId).ifPresent(ownAttributes::add);
+        getBaseAttributesForCategory(categoryId, includedProviderId).ifPresent(ownAttributes::add);
 
         if (ownAttributes.isEmpty()) {
             return Optional.empty();
@@ -173,6 +177,10 @@ public class MapDataService extends Service {
     }
 
     public Optional<MapAttributes> getInheritedAttributesForCategory(String categoryId) {
+        return getInheritedAttributesForCategory(categoryId, null);
+    }
+
+    public Optional<MapAttributes> getInheritedAttributesForCategory(String categoryId, String includedProviderId) {
         List<MapAttributes> resolvedAttributes = new ArrayList<>();
 
         overrideProviders.values().stream()
@@ -183,7 +191,7 @@ public class MapDataService extends Service {
                 .forEach(resolvedAttributes::add);
 
         for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
-            getBaseAttributesForCategory(id).ifPresent(resolvedAttributes::add);
+            getBaseAttributesForCategory(id, includedProviderId).ifPresent(resolvedAttributes::add);
         }
 
         if (resolvedAttributes.isEmpty()) {
@@ -198,8 +206,20 @@ public class MapDataService extends Service {
         return resolvedAttributesCache.computeIfAbsent(feature, k -> MapAttributesResolver.resolve(feature));
     }
 
+    public ResolvedMapAttributes resolveMapAttributes(MapFeature feature, String includedProviderId) {
+        if (includedProviderId == null || isProviderEnabled(includedProviderId)) {
+            return resolveMapAttributes(feature);
+        }
+
+        return MapAttributesResolver.resolve(feature, includedProviderId);
+    }
+
     public Stream<MapCategory> getCategoryDefinitions(String categoryId) {
-        return getProviders()
+        return getCategoryDefinitions(categoryId, null);
+    }
+
+    public Stream<MapCategory> getCategoryDefinitions(String categoryId, String includedProviderId) {
+        return getProvidersIncluding(includedProviderId)
                 .flatMap(MapDataProvider::getCategories)
                 .filter(p -> p.getCategoryId().equals(categoryId));
     }
@@ -220,6 +240,19 @@ public class MapDataService extends Service {
             Stream<MapIcon> allIcons = getProviders().flatMap(MapDataProvider::getIcons);
             return allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst();
         });
+    }
+
+    public Optional<MapIcon> getIcon(String iconId, String includedProviderId) {
+        if (includedProviderId == null || isProviderEnabled(includedProviderId)) {
+            return getIcon(iconId);
+        }
+
+        if (iconId.equals(MapIcon.NO_ICON_ID)) return Optional.empty();
+
+        return getProvidersIncluding(includedProviderId)
+                .flatMap(MapDataProvider::getIcons)
+                .filter(i -> i.getIconId().equals(iconId))
+                .findFirst();
     }
 
     public Optional<MapIcon> getIcon(MapFeature feature) {
@@ -580,8 +613,12 @@ public class MapDataService extends Service {
     }
 
     public Stream<MapDataProvider> getProviders() {
+        return getProvidersIncluding(null);
+    }
+
+    private Stream<MapDataProvider> getProvidersIncluding(String includedProviderId) {
         return registeredProviders.entrySet().stream()
-                .filter(entry -> isProviderEnabled(entry.getKey()))
+                .filter(entry -> entry.getKey().equals(includedProviderId) || isProviderEnabled(entry.getKey()))
                 .map(entry -> entry.getValue().provider());
     }
 

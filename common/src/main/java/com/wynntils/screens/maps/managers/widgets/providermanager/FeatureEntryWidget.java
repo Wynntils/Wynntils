@@ -56,27 +56,33 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     private List<Component> generatedTooltip = new ArrayList<>();
 
-    public FeatureEntryWidget(int x, int y, int width, int height, MapFeature<?> mapFeature) {
-        this(null, x, y, width, height, mapFeature);
+    public FeatureEntryWidget(int x, int y, int width, int height, MapFeature<?> mapFeature, String providerId) {
+        this(null, providerId, x, y, width, height, mapFeature);
     }
 
     public FeatureEntryWidget(
             int x, int y, int width, int height, WaypointLocation waypoint, WaypointCategoryScreen parent) {
-        this(parent, x, y, width, height, waypoint);
+        this(parent, null, x, y, width, height, waypoint);
     }
 
     private FeatureEntryWidget(
-            WaypointCategoryScreen waypointParent, int x, int y, int width, int height, MapFeature<?> mapFeature) {
+            WaypointCategoryScreen waypointParent,
+            String providerId,
+            int x,
+            int y,
+            int width,
+            int height,
+            MapFeature<?> mapFeature) {
         super(x, y, width, height, Component.literal(mapFeature.getFeatureId()));
         this.mapFeature = mapFeature;
         this.waypointParent = waypointParent;
 
-        this.attributes = Services.MapData.resolveMapAttributes(mapFeature);
+        this.attributes = Services.MapData.resolveMapAttributes(mapFeature, providerId);
         this.featureId = mapFeature.getFeatureId();
         this.categoryId = mapFeature.getCategoryId();
 
         this.icon = mapFeature instanceof MapLocation
-                ? Services.MapData.getIcon(attributes.iconId()).orElse(null)
+                ? Services.MapData.getIcon(attributes.iconId(), providerId).orElse(null)
                 : null;
 
         generateTooltip();

@@ -43,6 +43,7 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
     private static final int TEXT_GAP = 6;
 
     private final MapCategory mapCategory;
+    private final String providerId;
     private final String categoryId;
     private final Optional<String> categoryName;
     private final MapIcon icon;
@@ -51,9 +52,10 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
     private List<Component> generatedTooltip = new ArrayList<>();
 
-    public CategoryEntryWidget(int x, int y, int width, int height, MapCategory mapCategory) {
+    public CategoryEntryWidget(int x, int y, int width, int height, MapCategory mapCategory, String providerId) {
         super(x, y, width, height, Component.literal(mapCategory.getCategoryId()));
         this.mapCategory = mapCategory;
+        this.providerId = providerId;
         this.categoryId = mapCategory.getCategoryId();
         this.categoryName = mapCategory.getName();
 
@@ -62,7 +64,7 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
         this.icon = this.iconId.equals(MapIcon.NO_ICON_ID)
                 ? null
-                : Services.MapData.getIcon(this.iconId).orElse(null);
+                : Services.MapData.getIcon(this.iconId, providerId).orElse(null);
 
         generateTooltip();
     }
@@ -163,9 +165,9 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
     }
 
     private <T> Optional<T> resolveAttribute(Function<MapAttributes, Optional<T>> getter) {
-        return Services.MapData.getOwnAttributesForCategory(categoryId)
+        return Services.MapData.getOwnAttributesForCategory(categoryId, providerId)
                 .flatMap(getter)
-                .or(() -> Services.MapData.getInheritedAttributesForCategory(categoryId)
+                .or(() -> Services.MapData.getInheritedAttributesForCategory(categoryId, providerId)
                         .flatMap(getter));
     }
 
