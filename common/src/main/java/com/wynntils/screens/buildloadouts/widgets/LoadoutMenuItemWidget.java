@@ -7,6 +7,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.character.type.SavableItem;
 import com.wynntils.models.character.type.SavableSkillPointSet;
 import com.wynntils.models.character.type.SavableTome;
@@ -107,6 +108,14 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (event.button() != 0 || !visible || !active) return false;
+
+        List<ItemStack> stacks = getBoxItemStacks();
+        int index = getHoveredBoxIndex((int) event.x(), (int) event.y());
+        if (index >= 0 && index < stacks.size() && stacks.get(index) instanceof FakeItemStack fakeItemStack) {
+            return fakeItemStack.cyclePage();
+        }
+
         return false;
     }
 
@@ -176,7 +185,7 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
 
         WynnItem item = errorOrItem.getValue();
         if (item instanceof GearItem gearItem) {
-            return Optional.of(new FakeItemStack(gearItem, "From loadout"));
+            return Optional.of(new FakeItemStack(gearItem, ItemSourceType.ENCODED, "From loadout"));
         }
         // todo: fix this once crafted item encoding works.
         if (item instanceof CraftedGearItem craftedGearItem) {
@@ -210,10 +219,10 @@ public class LoadoutMenuItemWidget extends AbstractWidget implements ItemTooltip
                     DataComponents.CUSTOM_MODEL_DATA,
                     new CustomModelData(List.of(customModelData), List.of(), List.of(), List.of()));
 
-            return Optional.of(new FakeItemStack(craftedGearItem, itemStack, "From loadout"));
+            return Optional.of(new FakeItemStack(craftedGearItem, itemStack, ItemSourceType.ENCODED, "From loadout"));
         }
         if (item instanceof TomeItem tomeItem) {
-            return Optional.of(new FakeItemStack(tomeItem, "From loadout"));
+            return Optional.of(new FakeItemStack(tomeItem, ItemSourceType.ENCODED, "From loadout"));
         }
 
         return Optional.empty();

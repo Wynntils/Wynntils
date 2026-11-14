@@ -4,12 +4,12 @@
  */
 package com.wynntils.models.stats;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatCalculationInfo;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.math.BigDecimal;
@@ -22,8 +22,6 @@ public final class StatCalculator {
     // This constant is used to verify the calculated internal rolls
     // Enable this in development environments to check if the calculated internal rolls are correct
     private static final boolean VERIFY_CALCULATED_ROLLS = false;
-    private static final char EMPTY_VANILLA_METER = '\uE000';
-    private static final char FULL_VANILLA_METER = '\uE023';
 
     public static RangedValue calculatePossibleValuesRange(int baseValue, boolean preIdentified, StatType statType) {
         if (preIdentified) {
@@ -181,10 +179,9 @@ public final class StatCalculator {
 
     public static PercentageCalculation calculatePercentage(
             StatActualValue actualValue, StatPossibleValues possibleValues) {
-        if (!possibleValues.range().inRange(actualValue.value())
-                && actualValue.vanillaMeter().isPresent()) {
-            return new PercentageCalculation(
-                    getPercentageFromVanillaMeter(actualValue.vanillaMeter().get()), true);
+        if ((possibleValues == null || !possibleValues.range().inRange(actualValue.value()))
+                && actualValue.vanillaMeter() != CappedValue.EMPTY) {
+            return new PercentageCalculation((float) actualValue.vanillaMeter().getPercentage(), true);
         }
 
         int min = possibleValues.range().low();
@@ -197,14 +194,6 @@ public final class StatCalculator {
         }
 
         return new PercentageCalculation(MathUtils.inverseLerp(min, max, actualValue.value()) * 100, false);
-    }
-
-    public static float getPercentageFromVanillaMeter(char vanillaMeter) {
-        if (vanillaMeter < EMPTY_VANILLA_METER || vanillaMeter > FULL_VANILLA_METER) {
-            throw new IllegalArgumentException("Invalid vanilla identification meter: " + vanillaMeter);
-        }
-
-        return MathUtils.inverseLerp(EMPTY_VANILLA_METER, FULL_VANILLA_METER, vanillaMeter) * 100;
     }
 
     public static double getPerfectChance(StatPossibleValues possibleValues) {
@@ -271,13 +260,10 @@ public final class StatCalculator {
                             .filter(possibleValue -> possibleValue.statType().equals(actualValue.statType()))
                             .findFirst()
                             .orElse(null);
-                    if (possibleValues == null) {
-                        WynntilsMod.warn(
-                                "Error:" + itemName + " claims to have identification " + actualValue.statType());
-                        return false;
+                    if (possibleValues == null || !possibleValues.range().inRange(actualValue.value())) {
+                        return actualValue.vanillaMeter() != CappedValue.EMPTY;
                     }
-                    return !possibleValues.range().isFixed()
-                            && possibleValues.range().inRange(actualValue.value());
+                    return !possibleValues.range().isFixed();
                 })
                 .mapToDouble(actualValue -> {
                     StatPossibleValues possibleValues = possibleValuesList.stream()
@@ -292,16 +278,14 @@ public final class StatCalculator {
         return Optional.of((float) percents.getAverage());
     }
 
-    public static Optional<Float> calculateOverallQualityFromVanillaMeters(List<StatActualValue> identifications) {
+    public static float calculateOverallQualityFromVanillaMeters(List<StatActualValue> identifications) {
         DoubleSummaryStatistics percents = identifications.stream()
-                .mapToDouble(actualValue -> actualValue
-                        .vanillaMeter()
-                        .map(StatCalculator::getPercentageFromVanillaMeter)
-                        .orElse(0f))
+                .filter(actualValue -> actualValue.vanillaMeter() != CappedValue.EMPTY)
+                .mapToDouble(actualValue -> actualValue.vanillaMeter().getPercentage())
                 .summaryStatistics();
-        if (percents.getCount() == 0) return Optional.empty();
+        if (percents.getCount() == 0) return 0f;
 
-        return Optional.of((float) percents.getAverage());
+        return (float) percents.getAverage();
     }
 
     private static void verifyCalculatedInternalRoll(

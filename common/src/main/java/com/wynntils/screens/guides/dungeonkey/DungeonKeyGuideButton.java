@@ -33,7 +33,10 @@ public class DungeonKeyGuideButton extends GuideButton {
                 HorizontalAlignment.LEFT);
 
         renderFavoriteIcon(guiGraphics);
-        renderTooltipIfHovered(guiGraphics, mouseX, mouseY);
+
+        if (isHovered) {
+            renderTooltip(guiGraphics, mouseX, mouseY);
+        }
     }
 
     @Override

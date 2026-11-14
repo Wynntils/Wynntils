@@ -29,6 +29,7 @@ import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.stats.type.StatUnit;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.RangedValue;
 import java.io.Reader;
 import java.lang.reflect.Type;
@@ -73,7 +74,7 @@ public final class StatModel extends Model {
 
     public StatActualValue buildActualValue(
             StatType statType, int value, boolean perfectInternalRoll, StatPossibleValues possibleValues) {
-        return buildActualValue(statType, value, perfectInternalRoll, possibleValues, false);
+        return buildActualValue(statType, value, perfectInternalRoll, possibleValues, CappedValue.EMPTY);
     }
 
     public StatActualValue buildActualValue(
@@ -81,21 +82,11 @@ public final class StatModel extends Model {
             int value,
             boolean perfectInternalRoll,
             StatPossibleValues possibleValues,
-            boolean hasIconPrefix) {
-        return buildActualValue(statType, value, perfectInternalRoll, possibleValues, hasIconPrefix, Optional.empty());
-    }
-
-    public StatActualValue buildActualValue(
-            StatType statType,
-            int value,
-            boolean perfectInternalRoll,
-            StatPossibleValues possibleValues,
-            boolean hasIconPrefix,
-            Optional<Character> vanillaMeter) {
+            CappedValue vanillaMeter) {
         RangedValue internalRoll = possibleValues != null
                 ? StatCalculator.calculateInternalRollRange(possibleValues, value, perfectInternalRoll)
                 : RangedValue.NONE;
-        return new StatActualValue(statType, value, perfectInternalRoll, internalRoll, hasIconPrefix, vanillaMeter);
+        return new StatActualValue(statType, value, internalRoll, perfectInternalRoll, vanillaMeter);
     }
 
     public StatType fromDisplayName(String displayName, String unit) {

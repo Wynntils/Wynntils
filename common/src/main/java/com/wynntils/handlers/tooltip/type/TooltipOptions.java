@@ -4,43 +4,53 @@
  */
 package com.wynntils.handlers.tooltip.type;
 
+import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.models.gear.type.ItemWeightSource;
 import com.wynntils.models.stats.type.StatListOrdering;
-import java.util.Collections;
 import java.util.NavigableMap;
 import net.minecraft.network.chat.TextColor;
 
 public record TooltipOptions(
-        TooltipStyle style,
+        RollStyle identifiedOverallRollStyle,
+        RollStyle craftedOverallRollStyle,
         boolean perfectTitle,
         boolean defectiveTitle,
-        boolean identificationDecorations,
-        IdentificationDisplay identificationDisplay,
+        boolean overallRollInSpecialName,
         ItemWeightSource itemWeightSource,
         WeightDisplay weightDisplay,
-        boolean overallPercentageInName,
-        boolean overallPercentageInSpecialName,
+        StatListOrdering identificationOrdering,
+        boolean groupIdentifications,
+        IdentificationDisplay identificationDisplay,
+        boolean showBestValueLastAlways,
+        boolean rainbowInternalRoll,
+        RollStyle identifiedRollStyle,
+        RollStyle craftedRollStyle,
+        int decimalPlaces,
         NavigableMap<Float, TextColor> colorMap,
-        boolean colorLerp,
-        int decimalPlaces) {
+        boolean colorLerp) {
     public static final TooltipOptions DEFAULT = new TooltipOptions(
-            new TooltipStyle(StatListOrdering.WYNNCRAFT, false, false, true, false, true),
+            RollStyle.PERCENTAGE,
+            RollStyle.NONE,
             false,
             false,
             false,
-            TooltipOptions.IdentificationDisplay.PERCENTAGE,
             ItemWeightSource.NONE,
-            TooltipOptions.WeightDisplay.OVERALL,
-            false,
-            false,
-            Collections.emptyNavigableMap(),
-            false,
-            0);
+            WeightDisplay.OVERALL,
+            StatListOrdering.WYNNCRAFT,
+            true,
+            IdentificationDisplay.PERCENTAGE,
+            true,
+            true,
+            RollStyle.WHEEL,
+            RollStyle.WHEEL,
+            0,
+            ItemStatInfoFeature.LERP_MAP,
+            true);
 
     public enum IdentificationDisplay {
         PERCENTAGE,
-        RANGE,
-        REROLL,
+        STAT_RANGES,
+        REROLL_CHANCE,
         INTERNAL_ROLL
     }
 
@@ -48,5 +58,11 @@ public record TooltipOptions(
         OVERALL,
         DISTRIBUTION,
         CONTRIBUTION
+    }
+
+    public enum RollStyle {
+        PERCENTAGE,
+        WHEEL,
+        NONE
     }
 }

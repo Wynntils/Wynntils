@@ -23,14 +23,14 @@ public class MountStatsDataTransformer extends DataTransformer<MountStatsData> {
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, MountStatsData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> encodeMountStatsData(data);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> encodeMountStatsData(data);
         };
     }
 
     @Override
     public ErrorOr<MountStatsData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> decodeMountStatsData(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> decodeMountStatsData(byteReader);
         };
     }
 

@@ -5,12 +5,11 @@
 package com.wynntils.models.wynnitem.parsing;
 
 import com.wynntils.models.elements.type.Element;
-import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
 import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
+import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.SetInstance;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -21,10 +20,9 @@ import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.network.chat.Component;
 
-// Note that "rerolls" and "durabilityCurrent" actually reflect the same value.
-// Its interpretation is determined what kind of item where parsed.
-public record WynnItemParseResult(
+public record WynnItemStatsParseResult(
         GearTier tier,
         String itemType,
         int dps,
@@ -37,13 +35,13 @@ public record WynnItemParseResult(
         List<StatActualValue> identifications,
         List<NamedItemEffect> namedEffects,
         List<ItemEffect> effects,
-        List<Powder> powders,
-        int powderSlots,
         int rerolls,
         CappedValue durability,
         CappedValue uses,
         int durationSeconds,
+        String lore,
+        String creator,
         Optional<ShinyStat> shinyStat,
         GearInstanceRequirements gearInstanceRequirements,
-        Optional<SetInstance> setInstance,
-        int currentPage) {}
+        List<Component> majorIdLines,
+        GearRestrictions restrictions) {}

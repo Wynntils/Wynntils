@@ -127,7 +127,7 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
                 .renderScrollingText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal(provider.getDisplayName())
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         getX(),
                         getY(),
                         getWidth(),
@@ -380,7 +380,7 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
 
         private void updateMessage() {
             setMessage(Component.literal("Value: " + filterMode.label)
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
         }
 
         private FilterMode nextMode(FilterMode mode) {
@@ -431,7 +431,7 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
         @Override
         protected void updateMessage() {
             setMessage(Component.literal((minSlider ? "Min: " : "Max: ") + statValue)
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
         }
 
         @Override

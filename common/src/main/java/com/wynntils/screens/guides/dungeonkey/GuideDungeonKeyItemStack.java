@@ -4,11 +4,13 @@
  */
 package com.wynntils.screens.guides.dungeonkey;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.handlers.tooltip.builders.DungeonKeyTooltipBuilder;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.activities.type.Dungeon;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.screens.guides.GuideItemStack;
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.component.DataComponents;
@@ -57,103 +59,12 @@ public class GuideDungeonKeyItemStack extends GuideItemStack {
     @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag flag) {
         if (generatedTooltip == null) {
-            List<Component> tooltip = new ArrayList<>();
-            tooltip.addAll(generateLore());
-
-            generatedTooltip = tooltip;
+            generatedTooltip = DungeonKeyTooltipBuilder.buildNewItem(
+                            dungeon, corrupted, broken, ItemSourceType.GUIDE, "")
+                    .getTooltipLines(Models.Character.getClassType());
         }
 
         return generatedTooltip;
-    }
-
-    private List<Component> generateLore() {
-        List<Component> itemLore = new ArrayList<>();
-
-        Component name = Component.empty()
-                .withStyle(highlightColor)
-                .append(Component.literal(getName(dungeon, corrupted, broken)));
-        itemLore.add(name);
-
-        if (broken) {
-            itemLore.addAll(getBrokenKeyTooltip());
-        } else {
-            itemLore.addAll(getUnbrokenKeyTooltip());
-        }
-
-        itemLore.addAll(getDungeonInfoTooltipSection());
-        itemLore.addAll(getObtainTooltipSection());
-
-        return itemLore;
-    }
-
-    private List<Component> getUnbrokenKeyTooltip() {
-        List<Component> itemLore = new ArrayList<>();
-
-        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage1")
-                .withStyle(ChatFormatting.GRAY));
-        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage2", dungeon.getName())
-                .withStyle(ChatFormatting.WHITE)
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage3")
-                        .withStyle(ChatFormatting.GRAY)));
-
-        return itemLore;
-    }
-
-    private List<Component> getBrokenKeyTooltip() {
-        List<Component> itemLore = new ArrayList<>();
-
-        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.broken.usage1")
-                .withStyle(ChatFormatting.GRAY));
-        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.broken.usage2")
-                .withStyle(ChatFormatting.WHITE)
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.broken.usage3")
-                        .withStyle(ChatFormatting.GRAY)));
-        itemLore.add(Component.literal(getName(dungeon, true, false)).withStyle(highlightColor));
-
-        return itemLore;
-    }
-
-    private List<Component> getDungeonInfoTooltipSection() {
-        List<Component> itemLore = new ArrayList<>();
-
-        itemLore.add(Component.empty());
-        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage4")
-                .withStyle(highlightColor));
-
-        Dungeon.DungeonData dungeonData =
-                (isCorrupted() ? dungeon.getCorruptedDungeonData() : dungeon.getDungeonData()).orElseThrow();
-        itemLore.add(Component.literal("- ")
-                .withStyle(highlightColor)
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage5")
-                        .withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(dungeonData.getCombatLevel() + "").withStyle(ChatFormatting.WHITE)));
-
-        itemLore.add(Component.literal("- ")
-                .withStyle(highlightColor)
-                .append(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.usage6")
-                        .withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(dungeonData.getXPos() + " " + dungeonData.getZPos())
-                        .withStyle(ChatFormatting.WHITE)));
-
-        itemLore.add(Component.empty());
-
-        return itemLore;
-    }
-
-    private List<Component> getObtainTooltipSection() {
-        List<Component> itemLore = new ArrayList<>();
-
-        itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.obtain1"));
-
-        if (broken) {
-            itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.broken.obtain2")
-                    .withStyle(ChatFormatting.AQUA));
-        } else {
-            itemLore.add(Component.translatable("screens.wynntils.wynntilsGuides.misc.keys.obtain2")
-                    .withStyle(ChatFormatting.AQUA));
-        }
-
-        return itemLore;
     }
 
     private static ItemStack getItemStack(boolean broken) {

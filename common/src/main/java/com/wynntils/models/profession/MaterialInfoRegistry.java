@@ -191,8 +191,8 @@ public class MaterialInfoRegistry {
                                 || part.getPartStyle().getFont() instanceof FontDescription.Resource(Identifier id)
                                         && id.getPath().equals("default")) {
                             changes.remove(part);
-                            changes.add(
-                                    part.withStyle(part.getPartStyle().withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)));
+                            changes.add(part.withStyle(
+                                    part.getPartStyle().withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
                             return IterationDecision.CONTINUE;
                         }
 

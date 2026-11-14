@@ -19,7 +19,7 @@ public abstract class GuideFilterCheckbox<T extends ItemStatProvider<?>> extends
                 0,
                 0,
                 16,
-                Component.literal(label).withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)),
+                Component.literal(label).withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)),
                 false,
                 100);
     }

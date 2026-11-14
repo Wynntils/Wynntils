@@ -119,7 +119,7 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
         if (itemObtainTypes.isEmpty()) {
             JsonObject requirements = JsonUtils.getNullableJsonObject(json, "requirements");
             int level = requirements.get("level").getAsInt();
-            String levelRange = "Between level " + Math.max(level - 4, 1) + " and " + (level + 4);
+            String levelRange = "between level " + Math.max(level - 4, 1) + " and " + (level + 4);
 
             if (dropRestriction == DropRestriction.NORMAL) {
                 obtainInfo.add(new ItemObtainInfo(ItemObtainType.NORMAL_MOB_DROP, Optional.of(levelRange)));
@@ -160,10 +160,21 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
     }
 
     private Optional<StyledText> parseLore(JsonObject json) {
-        String lore = JsonUtils.getNullableJsonString(json, "lore");
-        if (lore == null) return Optional.empty();
+        JsonArray loreJson = JsonUtils.getNullableJsonArray(json, "jsonLore");
+        if (loreJson == null || loreJson.isEmpty()) return Optional.empty();
 
-        return Optional.of(StyledText.fromString(lore));
+        StyledText lore = StyledText.fromJson(loreJson).iterate((part, changes) -> {
+            if (part.getPartStyle().getFont() == null
+                    || part.getPartStyle().getFont() instanceof FontDescription.Resource(Identifier id)
+                            && id.getPath().equals("default")) {
+                changes.remove(part);
+                changes.add(part.withStyle(part.getPartStyle().withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
+            }
+
+            return IterationDecision.CONTINUE;
+        });
+
+        return Optional.of(lore);
     }
 
     protected GearRestrictions parseRestrictions(JsonObject json) {
@@ -414,7 +425,8 @@ public abstract class AbstractItemInfoDeserializer<T> implements JsonDeserialize
                             || part.getPartStyle().getFont() instanceof FontDescription.Resource(Identifier id)
                                     && id.getPath().equals("default")) {
                         changes.remove(part);
-                        changes.add(part.withStyle(part.getPartStyle().withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)));
+                        changes.add(part.withStyle(
+                                part.getPartStyle().withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
                     }
 
                     return IterationDecision.CONTINUE;

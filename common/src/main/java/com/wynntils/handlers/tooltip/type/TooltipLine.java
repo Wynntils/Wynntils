@@ -4,29 +4,37 @@
  */
 package com.wynntils.handlers.tooltip.type;
 
+import java.util.List;
 import net.minecraft.network.chat.Component;
 
-public sealed interface TooltipLine permits TooltipLine.Fixed, TooltipLine.Aligned, TooltipLine.Centered {
-    Component unaligned();
+public record TooltipLine(List<TooltipLinePart> parts) implements TooltipElement {
+    private static final TooltipLine EMPTY = new TooltipLine(List.of());
 
-    record Fixed(Component component) implements TooltipLine {
-        @Override
-        public Component unaligned() {
-            return component;
-        }
+    public TooltipLine {
+        parts = List.copyOf(parts);
     }
 
-    record Aligned(Component left, Component right) implements TooltipLine {
-        @Override
-        public Component unaligned() {
-            return Component.empty().append(left.copy()).append(right.copy());
-        }
+    public static TooltipLine of(TooltipLinePart... parts) {
+        return new TooltipLine(List.of(parts));
     }
 
-    record Centered(Component component) implements TooltipLine {
-        @Override
-        public Component unaligned() {
-            return component;
-        }
+    public static TooltipLine empty() {
+        return EMPTY;
+    }
+
+    public static TooltipLine left(Component component) {
+        return of(TooltipLinePart.left(component));
+    }
+
+    public static TooltipLine center(Component component) {
+        return of(TooltipLinePart.center(component));
+    }
+
+    public static TooltipLine right(Component component) {
+        return of(TooltipLinePart.right(component));
+    }
+
+    public static TooltipLine leftRight(Component left, Component right) {
+        return of(TooltipLinePart.left(left), TooltipLinePart.right(right));
     }
 }

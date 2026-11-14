@@ -55,7 +55,7 @@ public record IdentificationData(
             boolean perfectInternalRoll = internalRoll == perfectRoll;
 
             identifications.add(new StatActualValue(
-                    statType, value, perfectInternalRoll, RangedValue.of(internalRoll, internalRoll)));
+                    statType, value, RangedValue.of(internalRoll, internalRoll), perfectInternalRoll));
         }
 
         pendingCalculations.clear();

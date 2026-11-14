@@ -5,8 +5,14 @@
 package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.wynntils.core.keybinds.KeyBind;
 
 public final class KeyboardUtils {
+    public static boolean isKeybindDown(KeyBind keyBind) {
+        return !keyBind.getKeyMapping().isUnbound()
+                && isKeyDown(keyBind.getKeyMapping().key.getValue());
+    }
+
     public static boolean isKeyDown(int keyCode) {
         return InputConstants.isKeyDown(McUtils.window(), keyCode);
     }

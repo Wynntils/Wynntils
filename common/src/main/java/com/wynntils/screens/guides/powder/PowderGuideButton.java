@@ -34,7 +34,10 @@ public class PowderGuideButton extends GuideButton {
                 HorizontalAlignment.CENTER);
 
         renderFavoriteIcon(guiGraphics);
-        renderTooltipIfHovered(guiGraphics, mouseX, mouseY);
+
+        if (isHovered) {
+            renderTooltip(guiGraphics, mouseX, mouseY);
+        }
     }
 
     @Override
