@@ -20,6 +20,8 @@ import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.screens.maps.managers.CategoryManagementScreen;
+import com.wynntils.screens.maps.managers.ProviderManagementScreen;
 import com.wynntils.screens.maps.waypoints.WaypointManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
 import com.wynntils.screens.settings.WynntilsFeaturesSettingsScreen;
@@ -129,6 +131,40 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                     Component.translatable("screens.wynntils.wynntilsQuestBook.mainMap.description")
                                             .withStyle(ChatFormatting.GRAY))));
         }
+
+        x += (BUTTON_SIZE + 5);
+        buttons.get(1)
+                .add(createMenuButton(
+                        x,
+                        y,
+                        Texture.CATEGORY_MANAGER_ICON,
+                        false,
+                        CategoryManagementScreen.create(this),
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable("screens.wynntils.map.categoryManager.name")
+                                                .withStyle(ChatFormatting.BOLD)),
+                                Component.translatable("screens.wynntils.map.categoryManager.description1")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.translatable("screens.wynntils.map.categoryManager.description2")
+                                        .withStyle(ChatFormatting.GRAY))));
+
+        x += (BUTTON_SIZE + 5);
+        buttons.get(1)
+                .add(createMenuButton(
+                        x,
+                        y,
+                        Texture.PROVIDER_MANAGER_ICON,
+                        false,
+                        ProviderManagementScreen.create(this),
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable("screens.wynntils.map.providerManager.name")
+                                                .withStyle(ChatFormatting.BOLD)),
+                                Component.translatable("screens.wynntils.map.providerManager.description1")
+                                        .withStyle(ChatFormatting.GRAY))));
 
         x += (BUTTON_SIZE + 5);
         buttons.get(1)

@@ -10,7 +10,6 @@ import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.screens.maps.managers.type.ProviderManagerMode;
 import com.wynntils.screens.maps.managers.type.ProviderType;
 import com.wynntils.screens.maps.managers.widgets.ManagerSearchWidget;
@@ -48,7 +47,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     private static final int WIDTH_OFFSET = 15;
     private static final int HEIGHT_OFFSET = 18;
 
-    private final AbstractMapScreen previousScreen;
+    private final Screen previousScreen;
     private int offsetX;
     private int offsetY;
 
@@ -71,13 +70,13 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     public OpenLocalProviderFolderButton openLocalProviderFolderButton;
     public RemoteProviderCreationWidget remoteProviderCreationWidget;
 
-    private ProviderManagementScreen(AbstractMapScreen previousScreen) {
+    private ProviderManagementScreen(Screen previousScreen) {
         super(Component.literal("Provider Management Screen"));
         this.previousScreen = previousScreen;
     }
 
-    public static Screen create(AbstractMapScreen oldMapScreen) {
-        return new ProviderManagementScreen(oldMapScreen);
+    public static Screen create(Screen previousScreen) {
+        return new ProviderManagementScreen(previousScreen);
     }
 
     // This makes it so when we open a color picker screen or an icon selection screen that the widgets do not get
