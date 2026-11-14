@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.mapdata;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.mod.event.WynntilsInitEvent;
@@ -11,10 +12,13 @@ import com.wynntils.mc.event.SubmitCustomGeometryEvent;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.features.type.MapPath;
 import com.wynntils.services.mapdata.paths.CompiledMapPath;
+import com.wynntils.services.mapdata.paths.LootrunPathMigration;
 import com.wynntils.services.mapdata.paths.MapPathCompiler;
 import com.wynntils.services.mapdata.paths.MapPathWorldRenderer;
 import com.wynntils.services.mapdata.paths.PathCategoriesProvider;
+import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.type.MapIcon;
+import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -35,6 +39,17 @@ public final class MapPathsService extends Service {
     @SubscribeEvent
     public void onModInitFinished(WynntilsInitEvent.ModInitFinished event) {
         Services.MapData.registerBuiltInProvider(PATH_CATEGORIES_PROVIDER, this, false);
+        List<Path> migrated = LootrunPathMigration.migrate(
+                WynntilsMod.getModStorageDir("lootruns").toPath(), MapDataService.LOCAL_PROVIDERS.toPath());
+        for (Path file : migrated) {
+            String id = file.getFileName().toString().replaceFirst("\\.json$", "");
+            JsonProviderInfo providerInfo =
+                    JsonProviderInfo.createLocal(id, file.toAbsolutePath().toString());
+            Services.MapData.addJsonProvider(providerInfo);
+            if (Services.MapData.isProviderEnabled(providerInfo.completeId())) {
+                Services.MapData.toggleProvider(providerInfo.completeId());
+            }
+        }
     }
 
     @SubscribeEvent
