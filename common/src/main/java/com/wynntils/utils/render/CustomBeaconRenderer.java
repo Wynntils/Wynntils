@@ -15,8 +15,8 @@ import net.minecraft.util.Mth;
 
 public class CustomBeaconRenderer extends BeaconRenderer {
     // This is the same as BeaconRenderer.submitBeaconBeam with some changes to not complain about
-    // non final variables in lambdas and changing the first RenderTypes.beaconBeam call to use true
-    // for the translucent argument
+    // non final variables in lambdas and changing the RenderTypes from beaconBeam text so that Wynncraft's
+    // shader colors apply to beacon beams
     public static void submitBeaconBeam(
             final PoseStack poseStack,
             final SubmitNodeCollector submitNodeCollector,
@@ -42,7 +42,7 @@ public class CustomBeaconRenderer extends BeaconRenderer {
 
         submitNodeCollector.submitCustomGeometry(
                 poseStack,
-                RenderTypes.beaconBeam(beamLocation, true),
+                RenderTypes.text(beamLocation),
                 (pose, buffer) -> renderPart(
                         pose,
                         buffer,
@@ -73,11 +73,11 @@ public class CustomBeaconRenderer extends BeaconRenderer {
 
         submitNodeCollector.submitCustomGeometry(
                 poseStack,
-                RenderTypes.beaconBeam(beamLocation, true),
+                RenderTypes.text(beamLocation),
                 (pose, buffer) -> renderPart(
                         pose,
                         buffer,
-                        ARGB.color(32, color),
+                        ARGB.color(ARGB.alpha(color) * 32 / 255, color),
                         beamStart,
                         beamEnd,
                         glowWnx,
