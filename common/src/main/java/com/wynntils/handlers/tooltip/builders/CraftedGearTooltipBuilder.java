@@ -168,7 +168,7 @@ public class CraftedGearTooltipBuilder extends TooltipBuilder {
 
         MutableComponent nameComponent = Component.literal(itemName).withStyle(style);
 
-        if (!item.hasParsedPage(0)) return nameComponent;
+        if (!item.hasParsedPage(0) || !item.hasOverallValue()) return nameComponent;
 
         if (options.craftedOverallRollStyle() == RollStyle.PERCENTAGE) {
             nameComponent.append(ColorScaleUtils.getPercentageTextComponent(

@@ -182,6 +182,8 @@ public class CraftedConsumableTooltipBuilder extends TooltipBuilder {
 
         MutableComponent nameComponent = Component.literal(itemName).withStyle(style);
 
+        if (!item.hasOverallValue()) return nameComponent;
+
         if (options.craftedOverallRollStyle() == TooltipOptions.RollStyle.PERCENTAGE) {
             nameComponent.append(ColorScaleUtils.getPercentageTextComponent(
                     options.colorMap(),
