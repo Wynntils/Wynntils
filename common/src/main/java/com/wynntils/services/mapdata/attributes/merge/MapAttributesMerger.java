@@ -34,6 +34,13 @@ public final class MapAttributesMerger {
         CustomColor borderColor =
                 getFirstOrNull(attributes, attrs -> MapAttributes.firstColor(attrs.getBorderColors()));
         Float borderWidth = getFirstOrNull(attributes, MapAttributes::getBorderWidth);
+        String pathIcon = getFirstOrNull(attributes, MapAttributes::getPathIconId);
+        CustomColor pathFillColor = getFirstOrNull(attributes, MapAttributes::getPathFillColor);
+        CustomColor pathBorderColor = getFirstOrNull(attributes, MapAttributes::getPathBorderColor);
+        Float pathBorderWidth = getFirstOrNull(attributes, MapAttributes::getPathBorderWidth);
+        Float pathWidth = getFirstOrNull(attributes, MapAttributes::getPathWidth);
+        CustomColor pathColor = getFirstOrNull(attributes, MapAttributes::getPathColor);
+        Boolean hasPath = getFirstOrNull(attributes, MapAttributes::getHasPath);
 
         return new MapAttributesImpl(
                 priority,
@@ -50,7 +57,14 @@ public final class MapAttributesMerger {
                 markerOptions,
                 fillColor,
                 borderColor,
-                borderWidth);
+                borderWidth,
+                pathIcon,
+                pathFillColor,
+                pathBorderColor,
+                pathBorderWidth,
+                pathWidth,
+                pathColor,
+                hasPath);
     }
 
     private static <T, R> Optional<R> firstPresent(List<T> items, Function<T, Optional<R>> extractor) {

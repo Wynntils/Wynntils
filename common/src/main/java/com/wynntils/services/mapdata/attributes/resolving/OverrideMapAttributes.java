@@ -119,4 +119,39 @@ public final class OverrideMapAttributes implements MapAttributes {
     public Optional<Float> getBorderWidth() {
         return resolveAttribute(MapAttributes::getBorderWidth);
     }
+
+    @Override
+    public Optional<String> getPathIconId() {
+        return resolveAttribute(MapAttributes::getPathIconId);
+    }
+
+    @Override
+    public Optional<CustomColor> getPathFillColor() {
+        return resolveAttribute(MapAttributes::getPathFillColor);
+    }
+
+    @Override
+    public Optional<CustomColor> getPathBorderColor() {
+        return resolveAttribute(MapAttributes::getPathBorderColor);
+    }
+
+    @Override
+    public Optional<Float> getPathBorderWidth() {
+        return resolveAttribute(MapAttributes::getPathBorderWidth);
+    }
+
+    @Override
+    public Optional<Float> getPathWidth() {
+        return resolveAttribute(MapAttributes::getPathWidth);
+    }
+
+    @Override
+    public Optional<CustomColor> getPathColor() {
+        return resolveAttribute(MapAttributes::getPathColor);
+    }
+
+    @Override
+    public Optional<Boolean> getHasPath() {
+        return resolveAttribute(MapAttributes::getHasPath);
+    }
 }

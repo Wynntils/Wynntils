@@ -47,7 +47,14 @@ public final class MapAttributesResolver {
                 resolver.getResolvedMarkerOptions(MapAttributes::getMarkerOptions),
                 resolver.getAttribute(MapAttributes::getFillColors),
                 resolver.getAttribute(MapAttributes::getBorderColors),
-                resolver.getAttribute(MapAttributes::getBorderWidth));
+                resolver.getAttribute(MapAttributes::getBorderWidth),
+                resolver.getAttribute(MapAttributes::getPathIconId),
+                resolver.getAttribute(MapAttributes::getPathFillColor),
+                resolver.getAttribute(MapAttributes::getPathBorderColor),
+                resolver.getAttribute(MapAttributes::getPathBorderWidth),
+                resolver.getAttribute(MapAttributes::getPathWidth),
+                resolver.getAttribute(MapAttributes::getPathColor),
+                resolver.getAttribute(MapAttributes::getHasPath));
     }
 
     private <T> T getAttribute(Function<MapAttributes, Optional<T>> attributeGetter) {

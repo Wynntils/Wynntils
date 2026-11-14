@@ -11,6 +11,8 @@ public enum OptionCategory {
     LABEL("label"),
     ICON("icon"),
     MARKER("marker"),
+    PATH("path"),
+    MAP_PATH("mapPath"),
     AREA_BORDER("areaAndBorder");
 
     private static final String TRANSLATION_KEY_PREFIX =

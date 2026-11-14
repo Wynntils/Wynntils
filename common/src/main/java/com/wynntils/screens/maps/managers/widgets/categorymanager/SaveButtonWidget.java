@@ -99,6 +99,13 @@ public class SaveButtonWidget extends AbstractWidget implements TooltipProvider 
         applyOption(builder, parent.fillColorOptionWidget, MapAttributesBuilder::setFillColor);
         applyOption(builder, parent.borderColorOptionWidget, MapAttributesBuilder::setBorderColor);
         applyOption(builder, parent.borderWidthOptionWidget, MapAttributesBuilder::setBorderWidth);
+        applyOption(builder, parent.pathIconOptionWidget, MapAttributesBuilder::setPathIcon);
+        applyOption(builder, parent.pathFillColorOptionWidget, MapAttributesBuilder::setPathFillColor);
+        applyOption(builder, parent.pathBorderColorOptionWidget, MapAttributesBuilder::setPathBorderColor);
+        applyOption(builder, parent.pathBorderWidthOptionWidget, MapAttributesBuilder::setPathBorderWidth);
+        applyOption(builder, parent.pathWidthOptionWidget, MapAttributesBuilder::setPathWidth);
+        applyOption(builder, parent.hasPathOptionWidget, MapAttributesBuilder::setHasPath);
+        applyOption(builder, parent.pathColorOptionWidget, MapAttributesBuilder::setPathColor);
 
         // labelVisibility
         VisiblityOptionWidget labelVisibility = parent.labelVisibilityOptionWidget;

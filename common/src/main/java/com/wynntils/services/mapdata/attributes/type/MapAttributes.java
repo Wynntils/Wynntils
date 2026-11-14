@@ -77,7 +77,7 @@ public interface MapAttributes {
 
     // region Area & Border Attributes
 
-    // The colors of the area on the map
+    // The colors of the area interior on the map
     Optional<List<CustomColor>> getFillColors();
 
     // The colors of the border on the map
@@ -85,6 +85,40 @@ public interface MapAttributes {
 
     // The width of the border on the map
     Optional<Float> getBorderWidth();
+
+    // endregion
+
+    // region Path Attributes
+
+    default Optional<String> getPathIconId() {
+        return Optional.empty();
+    }
+
+    default Optional<CustomColor> getPathFillColor() {
+        return Optional.empty();
+    }
+
+    default Optional<CustomColor> getPathBorderColor() {
+        return Optional.empty();
+    }
+
+    default Optional<Float> getPathBorderWidth() {
+        return Optional.empty();
+    }
+
+    // The full width of a path's colored stroke, excluding its border, in GUI pixels.
+    default Optional<Float> getPathWidth() {
+        return Optional.empty();
+    }
+
+    // The color of the path in the world.
+    default Optional<CustomColor> getPathColor() {
+        return Optional.empty();
+    }
+
+    default Optional<Boolean> getHasPath() {
+        return Optional.empty();
+    }
 
     // endregion
 

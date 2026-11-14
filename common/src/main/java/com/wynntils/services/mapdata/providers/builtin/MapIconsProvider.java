@@ -39,6 +39,7 @@ public class MapIconsProvider extends BuiltInProvider {
             new BuiltInIcon("wynntils:icon:lootrun:slay", Texture.SLAY),
             new BuiltInIcon("wynntils:icon:lootrun:destroy", Texture.DESTROY),
             new BuiltInIcon("wynntils:icon:lootrun:defend", Texture.DEFEND),
+            new BuiltInIcon("wynntils:icon:path:arrows", Texture.LOOTRUN_LINE),
             new BuiltInIcon("wynntils:icon:player:head", Texture.PLAYER_HEAD),
             new BuiltInIcon("wynntils:icon:service:blacksmith", Texture.BLACKSMITH),
             new BuiltInIcon("wynntils:icon:service:booth-shop", Texture.BOOTH_SHOP),

@@ -14,4 +14,11 @@ public record CircleMask(float centerX, float centerY, float radiusX, float radi
     public Vector2f point(float angle) {
         return new Vector2f(centerX + (float) Math.cos(angle) * radiusX, centerY + (float) Math.sin(angle) * radiusY);
     }
+
+    public boolean contains(float x, float y) {
+        float normalizedX = (x - centerX) / radiusX;
+        float normalizedY = (y - centerY) / radiusY;
+
+        return normalizedX * normalizedX + normalizedY * normalizedY <= 1f;
+    }
 }

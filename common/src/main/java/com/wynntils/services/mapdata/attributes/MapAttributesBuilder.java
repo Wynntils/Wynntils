@@ -34,6 +34,13 @@ public class MapAttributesBuilder {
     private CustomColor fillColor;
     private CustomColor borderColor;
     private Float borderWidth;
+    private String pathIcon;
+    private CustomColor pathFillColor;
+    private CustomColor pathBorderColor;
+    private Float pathBorderWidth;
+    private Float pathWidth;
+    private CustomColor pathColor;
+    private Boolean hasPath;
 
     public MapAttributesBuilder from(MapAttributes attributes) {
         if (attributes == null) return this;
@@ -56,6 +63,14 @@ public class MapAttributesBuilder {
         this.borderColor =
                 MapAttributes.firstColor(attributes.getBorderColors()).orElse(null);
         this.borderWidth = attributes.getBorderWidth().orElse(null);
+        this.pathIcon = attributes.getPathIconId().orElse(null);
+        this.pathFillColor = attributes.getPathFillColor().orElse(null);
+        this.pathBorderColor = attributes.getPathBorderColor().orElse(null);
+        this.pathBorderWidth = attributes.getPathBorderWidth().orElse(null);
+        this.pathWidth = attributes.getPathWidth().orElse(null);
+        this.pathColor = attributes.getPathColor().orElse(null);
+        this.hasPath = attributes.getHasPath().orElse(null);
+
         return this;
     }
 
@@ -134,6 +149,48 @@ public class MapAttributesBuilder {
         return this;
     }
 
+    public MapAttributesBuilder setPathIcon(String pathIcon) {
+        this.pathIcon = pathIcon;
+
+        return this;
+    }
+
+    public MapAttributesBuilder setPathFillColor(CustomColor pathFillColor) {
+        this.pathFillColor = pathFillColor;
+
+        return this;
+    }
+
+    public MapAttributesBuilder setPathBorderColor(CustomColor pathBorderColor) {
+        this.pathBorderColor = pathBorderColor;
+
+        return this;
+    }
+
+    public MapAttributesBuilder setPathBorderWidth(Float pathBorderWidth) {
+        this.pathBorderWidth = pathBorderWidth;
+
+        return this;
+    }
+
+    public MapAttributesBuilder setPathWidth(Float pathWidth) {
+        this.pathWidth = pathWidth;
+
+        return this;
+    }
+
+    public MapAttributesBuilder setPathColor(CustomColor pathColor) {
+        this.pathColor = pathColor;
+
+        return this;
+    }
+
+    public MapAttributesBuilder setHasPath(Boolean hasPath) {
+        this.hasPath = hasPath;
+
+        return this;
+    }
+
     public MapLocationAttributesBuilder asLocationAttributes() {
         return new MapLocationAttributesBuilder();
     }
@@ -185,7 +242,20 @@ public class MapAttributesBuilder {
             MapPathAttributes.getUnsupportedAttributes().forEach(this::checkInvalidAttribute);
 
             return new MapPathAttributesImpl(
-                    priority, level, label, description, labelVisibility, labelColor, labelShadow);
+                    priority,
+                    level,
+                    label,
+                    description,
+                    labelVisibility,
+                    labelColor,
+                    labelShadow,
+                    pathIcon,
+                    pathColor,
+                    hasPath,
+                    pathFillColor,
+                    pathWidth,
+                    pathBorderColor,
+                    pathBorderWidth);
         }
     }
 

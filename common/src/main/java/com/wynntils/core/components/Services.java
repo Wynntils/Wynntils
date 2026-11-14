@@ -23,6 +23,7 @@ import com.wynntils.services.leaderboard.LeaderboardService;
 import com.wynntils.services.loadout.LoadoutService;
 import com.wynntils.services.map.MapService;
 import com.wynntils.services.mapdata.MapDataService;
+import com.wynntils.services.mapdata.MapPathsService;
 import com.wynntils.services.mapdata.WaypointsService;
 import com.wynntils.services.ping.PingService;
 import com.wynntils.services.resourcepack.ResourcePackService;
@@ -50,6 +51,7 @@ public final class Services {
     public static final LeaderboardService Leaderboard = new LeaderboardService();
     public static final LoadoutService loadout = new LoadoutService();
     public static final MapDataService MapData = new MapDataService();
+    public static final MapPathsService MapPaths = new MapPathsService();
     public static final MapService Map = new MapService();
     public static final PingService Ping = new PingService();
     public static final ResourcePackService ResourcePack = new ResourcePackService();
