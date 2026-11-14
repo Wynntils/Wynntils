@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -121,7 +122,10 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                                 .withStyle(ChatFormatting.STRIKETHROUGH))
                         .append(Component.literal("\n"))
                         .append(Component.translatable("screens.wynntils.partyManagementGui.friend")
-                                .withStyle(ChatFormatting.GREEN))));
+                                .withStyle(ChatFormatting.GREEN))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.guild")
+                                .withStyle(ChatFormatting.AQUA))));
         // endregion
     }
 
@@ -357,14 +361,28 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
      * This should be called when a friend joins/leaves the world or when the refresh button is pressed
      */
     public void reloadSuggestedPlayersWidgets() {
-        List<String> suggestedPlayers =
-                new ArrayList<>(Models.Friends.getOnlineFriends().keySet());
-        suggestedPlayers.removeAll(Models.Party.getPartyMembers()); // No need to suggest party members
-        suggestedPlayers.sort(String.CASE_INSENSITIVE_ORDER);
+        List<SuggestedPlayer> suggestedPlayers = Models.Friends.getOnlineFriends().keySet().stream()
+                .map(username -> new SuggestedPlayer(username, SuggestedPlayerType.FRIEND))
+                .collect(Collectors.toList());
+        Models.Guild.requestGuildMembers();
+        if (!Models.Guild.getOnlineGuildMembers().isEmpty()) {
+            suggestedPlayers.addAll(Models.Guild.getOnlineGuildMembers().stream()
+                    .map(username -> new SuggestedPlayer(username, SuggestedPlayerType.GUILD))
+                    .toList());
+        }
+
+        suggestedPlayers = suggestedPlayers.stream()
+                .filter(suggestedPlayer -> !Models.Party.getPartyMembers().contains(suggestedPlayer.username())
+                        && !suggestedPlayer
+                                .username()
+                                .equals(this.minecraft.getGameProfile().name()))
+                .collect(Collectors.toList()); // No need to suggest party members or yourself
+        suggestedPlayers.sort(null);
 
         suggestedPlayersWidgets = new ArrayList<>();
         for (int i = 0; i < suggestedPlayers.size(); i++) {
-            String playerName = suggestedPlayers.get(i);
+            SuggestedPlayer suggestedPlayer = suggestedPlayers.get(i);
+            String playerName = suggestedPlayer.username();
             boolean isOffline = !Models.Friends.getOnlineFriends().containsKey(playerName);
             if (playerName == null) continue;
 
@@ -373,7 +391,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                     dividedHeight * (23 + i * 3),
                     (int) ((dividedWidth * 60) - (dividedWidth * 36)),
                     BUTTON_SIZE,
-                    playerName,
+                    suggestedPlayer,
                     isOffline,
                     60 - 36));
         }
@@ -399,5 +417,18 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         reloadCreateLeaveButton();
         reloadMembersWidgets();
         reloadSuggestedPlayersWidgets();
+    }
+
+    public record SuggestedPlayer(String username, SuggestedPlayerType suggestedPlayerType)
+            implements Comparable<SuggestedPlayer> {
+        @Override
+        public int compareTo(SuggestedPlayer suggestedPlayer) {
+            return username().compareToIgnoreCase(suggestedPlayer.username());
+        }
+    }
+
+    public enum SuggestedPlayerType {
+        FRIEND,
+        GUILD
     }
 }

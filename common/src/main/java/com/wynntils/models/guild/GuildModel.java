@@ -52,7 +52,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.TreeMap;
 import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -162,7 +162,8 @@ public final class GuildModel extends Model {
     private String guildName = "";
     private GuildRank guildRank;
     private int guildLevel = -1;
-    private Set<String> guildMembers = new TreeSet<>();
+    // [username, online]
+    private Map<String, Boolean> guildMembers = new TreeMap<>();
     private CappedValue guildLevelProgress = CappedValue.EMPTY;
     private CappedValue objectivesCompletedProgress = CappedValue.EMPTY;
     private int objectiveStreak = 0;
@@ -219,7 +220,7 @@ public final class GuildModel extends Model {
         if (memberJoinedMatcher.matches()) {
             String playerName = memberJoinedMatcher.group(2);
             WynntilsMod.info("Player " + playerName + " joined guild");
-            guildMembers.add(playerName);
+            guildMembers.put(playerName, true);
             WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
                     Set.of(playerName), HadesRelationsUpdateEvent.ChangeType.ADD));
             return;
@@ -464,11 +465,18 @@ public final class GuildModel extends Model {
     }
 
     public Set<String> getGuildMembers() {
-        return Collections.unmodifiableSet(guildMembers);
+        return Collections.unmodifiableSet(guildMembers.keySet());
+    }
+
+    public Set<String> getOnlineGuildMembers() {
+        return guildMembers.entrySet().stream()
+                .filter(Map.Entry::getValue)
+                .map(Map.Entry::getKey)
+                .collect(Collectors.toSet());
     }
 
     public boolean isGuildMember(String username) {
-        return guildMembers.contains(username);
+        return guildMembers.containsKey(username);
     }
 
     public void requestGuildMembers() {
@@ -481,17 +489,20 @@ public final class GuildModel extends Model {
                         WynntilsMod.error("Failed to retrieve players guild (" + guildName + ") info", throwable);
                     } else {
                         guildMembers = guild.guildMembers().stream()
-                                .map(GuildMemberInfo::username)
-                                .collect(Collectors.toSet());
+                                .collect(Collectors.toMap(
+                                        GuildMemberInfo::username,
+                                        GuildMemberInfo::online,
+                                        (existing, replacement) -> existing,
+                                        TreeMap::new));
                         lastGuildRequest = System.currentTimeMillis();
                         WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
-                                guildMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+                                guildMembers.keySet(), HadesRelationsUpdateEvent.ChangeType.RELOAD));
                     }
                 });
             } else {
                 WynntilsMod.info("Skipping guild member list update request because it was requested recently.");
                 WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
-                        guildMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+                        guildMembers.keySet(), HadesRelationsUpdateEvent.ChangeType.RELOAD));
             }
         }
     }
@@ -501,12 +512,12 @@ public final class GuildModel extends Model {
         guildName = "";
         guildRank = null;
         guildLevel = -1;
-        guildMembers = new TreeSet<>();
+        guildMembers = new TreeMap<>();
         guildLevelProgress = CappedValue.EMPTY;
         objectivesCompletedProgress = CappedValue.EMPTY;
         objectiveStreak = 0;
         WynntilsMod.postEvent(new HadesRelationsUpdateEvent.GuildMemberList(
-                guildMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+                guildMembers.keySet(), HadesRelationsUpdateEvent.ChangeType.RELOAD));
     }
 
     public String getGuildName() {
