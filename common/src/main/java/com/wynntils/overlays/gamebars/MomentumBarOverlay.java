@@ -28,7 +28,7 @@ import net.minecraft.resources.Identifier;
 
 public class MomentumBarOverlay extends BaseBarOverlay {
     @Persisted
-    private final Config<CustomColor> maximumColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> maximumColor = new Config<>(CommonColors.GREEN).withShaderColors();
 
     public MomentumBarOverlay() {
         super(

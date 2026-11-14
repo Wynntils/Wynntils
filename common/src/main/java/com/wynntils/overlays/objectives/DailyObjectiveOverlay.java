@@ -32,7 +32,7 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
     private final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @Persisted(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-    private final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN).withShaderColors();
 
     public DailyObjectiveOverlay() {
         super(

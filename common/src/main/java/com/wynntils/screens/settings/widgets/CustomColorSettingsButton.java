@@ -26,7 +26,8 @@ public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<Custom
             int maskBottomY) {
         super(x, y, config, tooltip, textboxScreen, maskTopY, maskBottomY);
 
-        colorPickerWidget = new ColorPickerWidget(getX() + getWidth() + 4, getY(), 20, 20, this);
+        colorPickerWidget =
+                new ColorPickerWidget(getX() + getWidth() + 4, getY(), 20, 20, this, config.showShaderColors());
     }
 
     @Override

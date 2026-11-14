@@ -227,8 +227,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             labelColorInput.setTextBoxInput("#FFFFFF");
         }
 
-        labelColorPicker =
-                new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 14), 20, 20, labelColorInput);
+        labelColorPicker = new ColorPickerWidget(
+                (int) (dividedWidth * 29), (int) (dividedHeight * 14), 20, 20, labelColorInput, true);
         this.addRenderableWidget(labelColorPicker);
         // endregion
 
@@ -293,8 +293,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             iconColorInput.setTextBoxInput("#FFFFFF");
         }
 
-        iconColorPicker =
-                new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 22), 20, 20, iconColorInput);
+        iconColorPicker = new ColorPickerWidget(
+                (int) (dividedWidth * 29), (int) (dividedHeight * 22), 20, 20, iconColorInput, false);
         this.addRenderableWidget(iconColorPicker);
         // endregion
 

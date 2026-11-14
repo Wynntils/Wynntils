@@ -44,7 +44,7 @@ public abstract class BaseBarOverlay extends Overlay {
 
     // hacky override of custom color
     @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor")
-    protected final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
+    protected final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE).withShaderColors();
 
     protected float currentProgress = 0f;
 

@@ -48,10 +48,10 @@ public class DurabilityOverlayFeature extends Feature {
     private final Config<ColorScheme> colorScheme = new Config<>(ColorScheme.VANILLA);
 
     @Persisted
-    private final Config<CustomColor> fullDurabilityColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> fullDurabilityColor = new Config<>(CommonColors.GREEN).withShaderColors();
 
     @Persisted
-    private final Config<CustomColor> noDurabilityColor = new Config<>(CommonColors.RED);
+    private final Config<CustomColor> noDurabilityColor = new Config<>(CommonColors.RED).withShaderColors();
 
     private static final CustomColor VANILLA_DURABILITY_COLOR = CustomColor.fromHexString("00C8FF");
 

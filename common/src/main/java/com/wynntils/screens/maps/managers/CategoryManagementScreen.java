@@ -207,7 +207,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.labelColor.description"),
                 OptionCategory.LABEL,
                 MapAttributes::getLabelColor,
-                this);
+                this,
+                true);
 
         labelShadowOptionWidget = new TextShadowOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.labelShadow"),
@@ -245,7 +246,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.iconColor.description"),
                 OptionCategory.ICON,
                 MapAttributes::getIconColor,
-                this);
+                this,
+                false);
 
         iconVisibilityOptionWidget = new VisiblityOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibility"),
@@ -307,7 +309,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.markerBeaconColor.description"),
                 OptionCategory.MARKER,
                 attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getBeaconColor),
-                this);
+                this,
+                true);
 
         markerHasLabelOptionWidget = new ToggleOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasLabel"),
@@ -337,14 +340,16 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.fillColor.description"),
                 OptionCategory.AREA_BORDER,
                 attrs -> MapAttributes.firstColor(attrs.getFillColors()),
-                this);
+                this,
+                false);
 
         borderColorOptionWidget = new ColorOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.borderColor"),
                 Component.translatable("screens.wynntils.map.managers.categoryManager.borderColor.description"),
                 OptionCategory.AREA_BORDER,
                 attrs -> MapAttributes.firstColor(attrs.getBorderColors()),
-                this);
+                this,
+                false);
 
         borderWidthOptionWidget = new FloatSliderOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.borderWidth"),

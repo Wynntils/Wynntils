@@ -21,7 +21,7 @@ public class ArcherBeastTrackerOverlay extends TextOverlay {
                     + "{IF(GREATER_THAN(SNAKE_COUNT;0);CONCAT(\"\\nSnakes: \";STRING(SNAKE_COUNT));\"\")}";
 
     @Persisted
-    private final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE).withShaderColors();
 
     public ArcherBeastTrackerOverlay() {
         super(

@@ -6,9 +6,10 @@ package com.wynntils.screens.maps.managers.widgets.categorymanager.options;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.wynnfonts.WynntilsColorSwatchFont;
+import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.colorpicker.ColorPickerScreen;
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
@@ -37,16 +38,17 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
     private static final int ELEMENT_GAP = 5;
 
     private final TexturedTextInputBoxWidget valueTextBox;
-    private final CategoryManagementScreen parent;
+    private final boolean showShaderColors;
 
     public ColorOptionWidget(
             Component label,
             Component description,
             OptionCategory category,
             Function<MapAttributes, Optional<CustomColor>> valueGetter,
-            CategoryManagementScreen parent) {
+            TextboxScreen parent,
+            boolean showShaderColors) {
         super(label, description, 20, category, valueGetter);
-        this.parent = parent;
+        this.showShaderColors = showShaderColors;
         this.valueTextBox = new TexturedTextInputBoxWidget(
                 0, 0, 60, BUTTON_SIZE, this::onTextInputUpdate, parent, TexturedTextInputBoxWidget.Mode.HEXSTRING);
         setValue(defaultValue);
@@ -83,13 +85,15 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
         RenderUtils.drawTexturedRect(
                 guiGraphics, Texture.MANAGER_SWATCH_BACKGROUND, swatchX + SWATCH_BORDER, elementY + SWATCH_BORDER);
 
-        RenderUtils.fill(
-                guiGraphics,
-                CustomColor.fromInt(value.asInt()),
-                swatchX + SWATCH_BORDER,
-                elementY + SWATCH_BORDER,
-                swatchX + BUTTON_SIZE - SWATCH_BORDER,
-                elementY + BUTTON_SIZE - SWATCH_BORDER);
+        if (value.a() > 0) {
+            WynntilsColorSwatchFont.render(
+                    guiGraphics,
+                    swatchX + SWATCH_BORDER,
+                    elementY + SWATCH_BORDER,
+                    BUTTON_SIZE - SWATCH_BORDER * 2,
+                    BUTTON_SIZE - SWATCH_BORDER * 2,
+                    value);
+        }
 
         // Value text box
         valueTextBox.setX(textBoxX);
@@ -125,7 +129,7 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
             this.playDownSound(McUtils.mc().getSoundManager());
 
             setValue(value);
-            McUtils.setScreen(ColorPickerScreen.create(McUtils.screen(), valueTextBox));
+            McUtils.setScreen(ColorPickerScreen.create(McUtils.screen(), valueTextBox, showShaderColors));
             return true;
         }
         return false;

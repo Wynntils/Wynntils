@@ -31,7 +31,7 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     private final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @Persisted(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-    private final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE).withShaderColors();
 
     public GuildObjectiveOverlay() {
         super(

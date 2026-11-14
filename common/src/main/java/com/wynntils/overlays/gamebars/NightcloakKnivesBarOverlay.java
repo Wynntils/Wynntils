@@ -24,7 +24,7 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public class NightcloakKnivesBarOverlay extends BaseBarOverlay {
     @Persisted
-    private final Config<CustomColor> activatedColor = new Config<>(CommonColors.RED);
+    private final Config<CustomColor> activatedColor = new Config<>(CommonColors.RED).withShaderColors();
 
     public NightcloakKnivesBarOverlay() {
         super(

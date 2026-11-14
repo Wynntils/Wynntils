@@ -40,10 +40,10 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class PersonalStorageUtilitiesFeature extends Feature {
     @Persisted
-    private final Config<CustomColor> selectedQuickJumpColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> selectedQuickJumpColor = new Config<>(CommonColors.GREEN).withShaderColors();
 
     @Persisted
-    private final Config<CustomColor> lockedQuickJumpColor = new Config<>(CommonColors.GRAY);
+    private final Config<CustomColor> lockedQuickJumpColor = new Config<>(CommonColors.GRAY).withShaderColors();
 
     private static final int STORAGE_TYPE_SLOT = 47;
     private static final Pattern PAGE_PATTERN = Pattern.compile("§7- §f.*§8 Page (\\d+)");

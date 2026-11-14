@@ -22,7 +22,7 @@ public class MantleShieldTrackerOverlay extends TextOverlay {
                     .formatted(MANTLE_SYMBOL, MANTLE_SYMBOL);
 
     @Persisted
-    private final Config<CustomColor> textColor = new Config<>(CommonColors.PURPLE);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.PURPLE).withShaderColors();
 
     public MantleShieldTrackerOverlay() {
         super(
