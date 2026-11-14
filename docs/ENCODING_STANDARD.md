@@ -420,7 +420,7 @@ Wynntils writes the item's actual powder tiers and powder special for both gear 
 | Fire | 3 | 22 | 23 | 24 | 25 | 26 | 27 | 28 |
 | Air | 4 | 29 | 30 | 31 | 32 | 33 | 34 | 35 |
 
-Powder special ids and tiers are resolved through Wynntils' element data, using `PowderSpecialTierInfo.encodingId()` and `tier()`. These ids are separate from element ids. A nonzero special id must be followed by a tier, and the pair must identify a known special; otherwise decoding fails. See [`ElementModel`](../elements/ElementModel.java) for the lookup.
+Powder special ids and tiers are resolved through Wynntils' element data, using `PowderSpecialTierInfo.encodingId()` and `tier()`. These ids are separate from element ids. A nonzero special id must be followed by a tier, and the pair must identify a known special; otherwise decoding fails. See [`ElementModel`](../common/src/main/java/com/wynntils/models/elements/ElementModel.java) for the lookup.
 
 All specials accept tiers `1`–`7`:
 
