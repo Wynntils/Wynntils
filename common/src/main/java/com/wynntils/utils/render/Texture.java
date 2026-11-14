@@ -453,6 +453,10 @@ public enum Texture {
     LEADERBOARD_BADGES("players/leaderboard_badges.png", 855, 54),
     // endregion
 
+    // region Render
+    WHITE_PIXEL("render/white_pixel.png", 1, 1),
+    // endregion
+
     // region Seaskipper
     DESTINATION_BUTTON("seaskipper/destination_button.png", 135, 40),
     DESTINATION_LIST("seaskipper/destination_list_background.png", 151, 226),

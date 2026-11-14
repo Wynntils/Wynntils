@@ -28,7 +28,7 @@ public class TestSpellCasterModel {
     @Test
     public void rejectsAdditionalSpellWhileBusy() throws Exception {
         CountDownLatch sleeping = new CountDownLatch(1);
-        SpellCasterModel model = new SpellCasterModel((click, usesRightClick, isArcher) -> {}, delayMs -> {
+        SpellCasterModel model = new SpellCasterModel((click, usesRightClick, isArcher, weaponSwing) -> {}, delayMs -> {
             sleeping.countDown();
             Thread.sleep(TimeUnit.SECONDS.toMillis(5));
         });
@@ -48,8 +48,8 @@ public class TestSpellCasterModel {
     public void clearDropsQueuedSequencesBeforeTheyExecute() throws Exception {
         List<String> events = Collections.synchronizedList(new ArrayList<>());
         CountDownLatch sleeping = new CountDownLatch(1);
-        SpellCasterModel model =
-                new SpellCasterModel((click, usesRightClick, isArcher) -> events.add(click.name()), delayMs -> {
+        SpellCasterModel model = new SpellCasterModel(
+                (click, usesRightClick, isArcher, weaponSwing) -> events.add(click.name()), delayMs -> {
                     sleeping.countDown();
                     Thread.sleep(TimeUnit.SECONDS.toMillis(5));
                 });
@@ -83,7 +83,7 @@ public class TestSpellCasterModel {
         CountDownLatch secondDispatchBlocked = new CountDownLatch(1);
         AtomicBoolean holdSecondDispatch = new AtomicBoolean(true);
         SpellCasterModel model = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> events.add(click.name()),
+                (click, usesRightClick, isArcher, weaponSwing) -> events.add(click.name()),
                 delayMs -> {
                     if (firstDelayStarted.getCount() != 0L) {
                         firstDelayStarted.countDown();
@@ -130,7 +130,7 @@ public class TestSpellCasterModel {
     public void clearDoesNotInvokeIdleListener() throws Exception {
         CountDownLatch sleeping = new CountDownLatch(1);
         CountDownLatch idleCallbackInvoked = new CountDownLatch(1);
-        SpellCasterModel model = new SpellCasterModel((click, usesRightClick, isArcher) -> {}, delayMs -> {
+        SpellCasterModel model = new SpellCasterModel((click, usesRightClick, isArcher, weaponSwing) -> {}, delayMs -> {
             sleeping.countDown();
             Thread.sleep(TimeUnit.SECONDS.toMillis(5));
         });
@@ -156,7 +156,7 @@ public class TestSpellCasterModel {
     public void acceptsNextSpellAfterCurrentSequenceFinishes() throws Exception {
         List<String> events = Collections.synchronizedList(new ArrayList<>());
         SpellCasterModel model = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> events.add(click.name()),
+                (click, usesRightClick, isArcher, weaponSwing) -> events.add(click.name()),
                 delayMs -> events.add("sleep:" + delayMs));
 
         try {
@@ -177,7 +177,7 @@ public class TestSpellCasterModel {
         CountDownLatch releaseClickDelay = new CountDownLatch(1);
         CountDownLatch cooldownStarted = new CountDownLatch(1);
         CountDownLatch releaseCooldown = new CountDownLatch(1);
-        SpellCasterModel model = new SpellCasterModel((click, usesRightClick, isArcher) -> {}, delayMs -> {
+        SpellCasterModel model = new SpellCasterModel((click, usesRightClick, isArcher, weaponSwing) -> {}, delayMs -> {
             if (delayMs == 25) {
                 clickDelayStarted.countDown();
                 releaseClickDelay.await();
@@ -227,7 +227,7 @@ public class TestSpellCasterModel {
     public void sleepsAfterFinalCombatInput() throws Exception {
         List<String> events = Collections.synchronizedList(new ArrayList<>());
         SpellCasterModel model = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> events.add(click.name() + ":" + usesRightClick),
+                (click, usesRightClick, isArcher, weaponSwing) -> events.add(click.name() + ":" + usesRightClick),
                 delayMs -> events.add("sleep:" + delayMs));
 
         try {
@@ -244,7 +244,7 @@ public class TestSpellCasterModel {
     public void appliesDelayBasedOnTheSentCombatInput() throws Exception {
         List<String> events = Collections.synchronizedList(new ArrayList<>());
         SpellCasterModel model = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> events.add(click.name() + ":" + usesRightClick),
+                (click, usesRightClick, isArcher, weaponSwing) -> events.add(click.name() + ":" + usesRightClick),
                 delayMs -> events.add("sleep:" + delayMs));
 
         try {
@@ -269,7 +269,7 @@ public class TestSpellCasterModel {
     public void preservesMixedSequenceTimingForRepeatedLeftClicks() throws Exception {
         List<String> events = Collections.synchronizedList(new ArrayList<>());
         SpellCasterModel model = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> events.add(click.name() + ":" + usesRightClick),
+                (click, usesRightClick, isArcher, weaponSwing) -> events.add(click.name() + ":" + usesRightClick),
                 delayMs -> events.add("sleep:" + delayMs));
 
         try {
@@ -294,7 +294,7 @@ public class TestSpellCasterModel {
     public void executesCombinedMeleeAndSpellSequenceInOrder() throws Exception {
         List<String> events = Collections.synchronizedList(new ArrayList<>());
         SpellCasterModel model = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> events.add(click.name() + ":" + usesRightClick),
+                (click, usesRightClick, isArcher, weaponSwing) -> events.add(click.name() + ":" + usesRightClick),
                 delayMs -> events.add("sleep:" + delayMs));
 
         try {
@@ -367,7 +367,10 @@ public class TestSpellCasterModel {
         populateLaggingSpellCadence(tracker);
         List<Integer> adaptiveSleeps = new CopyOnWriteArrayList<>();
         SpellCasterModel adaptiveModel = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> {}, delayMs -> adaptiveSleeps.add(delayMs), tracker, clock::get);
+                (click, usesRightClick, isArcher, weaponSwing) -> {},
+                delayMs -> adaptiveSleeps.add(delayMs),
+                tracker,
+                clock::get);
 
         try {
             Assertions.assertTrue(adaptiveModel.queueClicks(List.of(CombatClickType.PRIMARY), false, 5, 7, 0, true));
@@ -383,7 +386,10 @@ public class TestSpellCasterModel {
         populateLaggingSpellCadence(fixedTracker);
         List<Integer> fixedSleeps = new CopyOnWriteArrayList<>();
         SpellCasterModel fixedModel = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> {}, delayMs -> fixedSleeps.add(delayMs), fixedTracker, clock::get);
+                (click, usesRightClick, isArcher, weaponSwing) -> {},
+                delayMs -> fixedSleeps.add(delayMs),
+                fixedTracker,
+                clock::get);
 
         try {
             Assertions.assertTrue(fixedModel.queueClicks(List.of(CombatClickType.PRIMARY), false, 5, 7, 0));
@@ -402,7 +408,10 @@ public class TestSpellCasterModel {
         populateMixedChannelSamples(tracker);
         List<Integer> adaptiveSleeps = new CopyOnWriteArrayList<>();
         SpellCasterModel model = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> {}, delayMs -> adaptiveSleeps.add(delayMs), tracker, clock::get);
+                (click, usesRightClick, isArcher, weaponSwing) -> {},
+                delayMs -> adaptiveSleeps.add(delayMs),
+                tracker,
+                clock::get);
 
         try {
             Assertions.assertTrue(
@@ -423,7 +432,10 @@ public class TestSpellCasterModel {
         populateStableSpellCadence(tracker, 500L, 100L, 520L, 4);
         List<Integer> sleeps = new CopyOnWriteArrayList<>();
         SpellCasterModel model = new SpellCasterModel(
-                (click, usesRightClick, isArcher) -> {}, delayMs -> sleeps.add(delayMs), tracker, clock::get);
+                (click, usesRightClick, isArcher, weaponSwing) -> {},
+                delayMs -> sleeps.add(delayMs),
+                tracker,
+                clock::get);
 
         try {
             Assertions.assertTrue(model.queueClicks(List.of(CombatClickType.PRIMARY), false, 5, 7, 0, true));
@@ -438,8 +450,8 @@ public class TestSpellCasterModel {
     public void spellPartialEventsContributeToAdaptiveLagCorrection() {
         AtomicLong clock = new AtomicLong(0L);
         SpellCasterLagCorrectionTracker tracker = new SpellCasterLagCorrectionTracker();
-        SpellCasterModel model =
-                new SpellCasterModel((click, usesRightClick, isArcher) -> {}, delayMs -> {}, tracker, clock::get);
+        SpellCasterModel model = new SpellCasterModel(
+                (click, usesRightClick, isArcher, weaponSwing) -> {}, delayMs -> {}, tracker, clock::get);
 
         try {
             tracker.beginAdaptiveWindow(0L);
@@ -565,7 +577,7 @@ public class TestSpellCasterModel {
         }
 
         @Override
-        public void sendLeftClickInput() {
+        public void sendLeftClickInput(boolean weaponSwing) {
             events.add("left");
         }
     }
