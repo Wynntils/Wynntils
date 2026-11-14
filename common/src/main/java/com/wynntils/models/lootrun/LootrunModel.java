@@ -37,9 +37,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.neoforged.bus.api.SubscribeEvent;
 
-/** A model dedicated to lootruns (the Wynncraft lootrun runs).
- * Don't confuse this with {@link com.wynntils.services.lootrunpaths.LootrunPathsService}.
- */
+/** A model dedicated to lootruns. */
 public class LootrunModel extends Model {
     private static final Pattern LOOTRUN_COMPLETED_PATTERN = Pattern.compile("\uDB00\uDC62§6§lLootrun Completed!");
 

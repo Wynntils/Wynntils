@@ -19,7 +19,6 @@ import com.wynntils.screens.crowdsourcing.WynntilsCrowdSourcingSettingsScreen;
 import com.wynntils.screens.downloads.DownloadScreen;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.itemsharing.SavedItemsScreen;
-import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.waypoints.WaypointManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySettingsScreen;
@@ -130,24 +129,6 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                     Component.translatable("screens.wynntils.wynntilsQuestBook.mainMap.description")
                                             .withStyle(ChatFormatting.GRAY))));
         }
-
-        x += (BUTTON_SIZE + 5);
-        buttons.get(1)
-                .add(createMenuButton(
-                        x,
-                        y,
-                        Texture.LOOTRUN_ICON,
-                        true,
-                        WynntilsLootrunPathsScreen.create(this),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable(
-                                                        "screens.wynntils.wynntilsQuestBook.lootruns.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsQuestBook.lootruns.description")
-                                        .withStyle(ChatFormatting.GRAY))));
 
         x += (BUTTON_SIZE + 5);
         buttons.get(1)
