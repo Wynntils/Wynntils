@@ -1031,6 +1031,8 @@
   "feature.wynntils.itemLock.blockAllActionsOnLockedItems.name": "Block All Actions on Locked Items",
   "feature.wynntils.itemLock.description": "Adds the ability to lock items in your inventory to prevent dropping or interacting with them.",
   "feature.wynntils.itemLock.name": "Item Lock",
+  "feature.wynntils.itemLock.preventClicksInCutscene.description": "Should clicks be blocked in cutscenes?",
+  "feature.wynntils.itemLock.preventClicksInCutscene.name": "Block Clicks in Cutscenes",
   "feature.wynntils.itemScreenshot.copy.error": "Error while copying screenshot to clipboard",
   "feature.wynntils.itemScreenshot.copy.message": "Copied screenshot to clipboard",
   "feature.wynntils.itemScreenshot.copy.osWarning": "Item screenshot cannot be copied to clipboard on macOS or on Linux when using Wayland.",
