@@ -55,8 +55,9 @@ public interface IdentifiableItemProperty<T, U> extends NamedItemProperty {
     }
 
     default boolean hasFullPerfectInternalRolls() {
-        return getIdentifications().stream()
+        List<StatActualValue> metered = getIdentifications().stream()
                 .filter(statActualValue -> statActualValue.vanillaMeter() != CappedValue.EMPTY)
-                .allMatch(StatActualValue::perfectInternalRoll);
+                .toList();
+        return !metered.isEmpty() && metered.stream().allMatch(StatActualValue::perfectInternalRoll);
     }
 }
