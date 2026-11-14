@@ -13,12 +13,19 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.mc.event.ArmSwingEvent;
+import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.PlayerAttackEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
+import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.activities.beacons.ActivityBeaconKind;
 import com.wynntils.models.activities.beacons.ActivityBeaconMarkerKind;
 import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
+import com.wynntils.models.activities.event.ContentBookOpenEvent;
+import com.wynntils.models.activities.event.ContentBookOpenEvent.OpenAction;
 import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
 import com.wynntils.models.activities.markers.ActivityMarkerProvider;
 import com.wynntils.models.activities.quests.QuestInfo;
@@ -43,12 +50,14 @@ import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.activities.ContentBookHolder;
 import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.Deque;
 import java.util.List;
@@ -60,8 +69,12 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.entity.player.Inventory;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
+import net.neoforged.bus.api.ICancellableEvent;
 import net.neoforged.bus.api.SubscribeEvent;
 
 /* An "Activity" is the name we've given to the kind of stuff that appears in the Wynncraft
@@ -74,6 +87,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 public final class ActivityModel extends Model {
     public static final String CONTENT_BOOK_TITLE = "\uDAFF\uDFEE\uE004";
     private static final String PLAYER_PROGRESS_ITEM_NAME = "All Player Progress";
+    private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
 
     private static final Pattern LEVEL_REQ_PATTERN =
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
@@ -114,6 +128,69 @@ public final class ActivityModel extends Model {
         for (ActivityBeaconMarkerKind beaconMarkerKind : ActivityBeaconMarkerKind.values()) {
             Models.Beacon.registerBeaconMarker(beaconMarkerKind);
         }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContentBookSwing(ArmSwingEvent event) {
+        if (event.getActionContext() != ArmSwingEvent.ArmSwingContext.ATTACK_OR_START_BREAKING_BLOCK) return;
+        handleContentBookInput(event, event.getHand(), OpenAction.LEFT_CLICK);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContentBookAttack(PlayerAttackEvent event) {
+        handleContentBookInput(event, InteractionHand.MAIN_HAND, OpenAction.LEFT_CLICK);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContentBookUse(UseItemEvent event) {
+        handleContentBookInput(event, event.getHand(), OpenAction.RIGHT_CLICK);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContentBookUseOn(PlayerInteractEvent.RightClickBlock event) {
+        handleContentBookInput(event, event.getHand(), OpenAction.RIGHT_CLICK);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContentBookInteract(PlayerInteractEvent.Interact event) {
+        handleContentBookInput(event, event.getHand(), OpenAction.RIGHT_CLICK);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onContentBookInventoryClick(ContainerClickEvent event) {
+        if (event.isCanceled() || !Models.WorldState.onWorld() || Models.WorldState.inCharacterWardrobe()) return;
+        if (event.getSlotNum() < 0
+                || event.getSlotNum() >= event.getContainerMenu().slots.size()) return;
+        if (McUtils.player() == null) return;
+
+        OpenAction action = KeyboardUtils.isShiftDown() ? OpenAction.SHIFT_INVENTORY_CLICK : OpenAction.INVENTORY_CLICK;
+        Slot slot = event.getContainerMenu().getSlot(event.getSlotNum());
+        if (slot.container instanceof Inventory
+                && slot.getContainerSlot() == InventoryUtils.CONTENT_BOOK_SLOT_NUM
+                && isContentBook(slot.getItem())
+                && WynntilsMod.postEvent(new ContentBookOpenEvent(action))) {
+            event.setCanceled(true);
+        }
+    }
+
+    private void handleContentBookInput(ICancellableEvent event, InteractionHand hand, OpenAction action) {
+        if (event.isCanceled() || !Models.WorldState.onWorld() || Models.WorldState.inCharacterWardrobe()) return;
+        if (McUtils.player() == null || !isContentBook(McUtils.player().getItemInHand(hand))) return;
+
+        if (McUtils.player().isShiftKeyDown()) {
+            action = switch (action) {
+                case LEFT_CLICK -> OpenAction.SHIFT_LEFT_CLICK;
+                case RIGHT_CLICK -> OpenAction.SHIFT_RIGHT_CLICK;
+                default -> action;
+            };
+        }
+        if (WynntilsMod.postEvent(new ContentBookOpenEvent(action))) {
+            event.setCanceled(true);
+        }
+    }
+
+    private static boolean isContentBook(ItemStack itemStack) {
+        return StyledText.fromComponent(itemStack.getHoverName()).equals(CONTENT_BOOK_NAME);
     }
 
     @SubscribeEvent
