@@ -9,7 +9,6 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CardinalDirection;
-
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +23,7 @@ public final class LocationUtils {
     // - ',' or '/' with optional whitespace
     // - nothing, as long as the next number begins with a prefix (next char is in [xyz])
     // Complete pattern is `{prefix}?{num}{sep}{prefix}?{num}({sep}{prefix}?{num})?`
-    // Prefixes are groups p1, p2, p3, numbers are groups n1, n2, n3, separator is non-capturing, groups p3 and n3 are optional
+    // Prefixes are groups p1-p3, numbers are groups n1-n3, separator is non-capturing, groups p3 and n3 are optional
     private static final Pattern COORDINATE_PATTERN = Pattern.compile(
             "(?<p1>[xyz]\\s*[=:]?\\s*)?(?<n1>[+-]?\\d{1,6})(?:\\.\\d+)?(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<p2>[xyz]\\s*[=:]?\\s*)?(?<n2>[+-]?\\d{1,6})(?:\\.\\d+)?(?:(?:\\s+|\\s*[,/]\\s*|(?=[xyz]))(?<p3>[xyz]\\s*[=:]?\\s*)?(?<n3>[+-]?\\d{1,6})(?:\\.\\d+)?)?",
             Pattern.CASE_INSENSITIVE);
@@ -166,10 +165,7 @@ public final class LocationUtils {
         return Optional.of(LocationUtils.parseFromStrings(xStr, yStr, zStr));
     }
 
-    private static Location parseFromStrings(
-            String xStr,
-            String yStr,
-            String zStr) {
+    private static Location parseFromStrings(String xStr, String yStr, String zStr) {
         int x = Integer.parseInt(xStr);
         int y = yStr != null ? Integer.parseInt(yStr) : 0;
         int z = Integer.parseInt(zStr);
