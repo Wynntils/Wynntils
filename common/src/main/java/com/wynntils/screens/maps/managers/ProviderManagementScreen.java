@@ -295,6 +295,10 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     public void setSelectedProvider(String completeProviderId, ProviderType providerType) {
         selectedCompleteProviderId = completeProviderId;
         selectedProviderType = providerType;
+
+        Services.MapData.ensureProviderLoaded(
+                completeProviderId, () -> McUtils.mc().execute(() -> refreshAfterProviderLoaded(completeProviderId)));
+
         providerInfoScrollBarWidget.populateWidgets();
         infoWidget.generateTooltip();
 
@@ -327,6 +331,14 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         descriptionScrollBarWidget.updateContentHeight();
         setProviderManagerMode(ProviderManagerMode.DEFAULT);
         updateMenu();
+    }
+
+    private void refreshAfterProviderLoaded(String completeProviderId) {
+        if (McUtils.screen() != this) return;
+        if (providerManagerMode != ProviderManagerMode.DEFAULT) return;
+        if (!completeProviderId.equals(selectedCompleteProviderId)) return;
+
+        setSelectedProvider(completeProviderId, selectedProviderType);
     }
 
     public void clearSelectionIfProviderMissing() {

@@ -374,6 +374,21 @@ public class MapDataService extends Service {
         return true;
     }
 
+    public void ensureProviderLoaded(String completeProviderId, Runnable onLoaded) {
+        loadPlaceholderProvider(completeProviderId, onLoaded);
+    }
+
+    private boolean loadPlaceholderProvider(String completeProviderId, Runnable onLoaded) {
+        MapDataProviderInfo info = registeredProviders.get(completeProviderId);
+        if (info == null || info.provider() != UNLOADED_PLACEHOLDER_PROVIDER) return false;
+
+        Optional<JsonProviderInfo> jsonProviderInfo = getJsonProviderInfoByCompleteId(completeProviderId);
+        if (jsonProviderInfo.isEmpty()) return false;
+
+        loadJsonProvider(jsonProviderInfo.get(), onLoaded);
+        return true;
+    }
+
     public void addOverrideProvider(JsonOverrideProvider provider) {
         jsonOverrideProviders.get().keySet().removeIf(i -> i.getProviderId().equals(provider.getProviderId()));
         jsonOverrideProviders.get().put(provider, true);
@@ -483,10 +498,14 @@ public class MapDataService extends Service {
             return;
         }
 
+        loadJsonProvider(providerInfo, null);
+    }
+
+    private void loadJsonProvider(JsonProviderInfo providerInfo, Runnable onLoaded) {
         switch (providerInfo.providerType()) {
             case BUNDLED -> createBundledProvider(providerInfo.providerId(), providerInfo.providerFilename());
             case LOCAL -> createLocalProvider(providerInfo.providerId(), providerInfo.providerFilePath());
-            case REMOTE -> createOnlineProvider(providerInfo.providerId(), providerInfo.providerUrl());
+            case REMOTE -> createOnlineProvider(providerInfo.providerId(), providerInfo.providerUrl(), onLoaded);
         }
     }
 
@@ -528,7 +547,7 @@ public class MapDataService extends Service {
         registerJsonProvider(completeId, provider);
     }
 
-    private void createOnlineProvider(String id, String url) {
+    private void createOnlineProvider(String id, String url, Runnable onLoaded) {
         String completeId = "online:" + id;
         // Register a dummy provider; this will be replaced once loading has finished
         registerJsonProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
@@ -537,6 +556,10 @@ public class MapDataService extends Service {
             if (!registeredProviders.containsKey(loadedId)) return;
 
             registerJsonProvider(loadedId, provider);
+
+            if (onLoaded != null) {
+                onLoaded.run();
+            }
         });
     }
 
