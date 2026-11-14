@@ -4,17 +4,25 @@
  */
 package com.wynntils.screens.guides.widgets;
 
+import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
+import com.wynntils.models.items.properties.NamedItemProperty;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.screens.favorites.FavoriteCategoryPopup;
+import com.wynntils.screens.favorites.LootFilterScreen;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
 import com.wynntils.screens.guides.widgets.filters.GuideFilterWidget;
+import com.wynntils.services.favorites.type.FavoriteCategory;
+import com.wynntils.services.favorites.type.LootFilter;
 import com.wynntils.services.itemfilter.type.ItemProviderType;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.services.itemfilter.type.SortInfo;
@@ -45,9 +53,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraft.world.item.ItemStack;
 
 public abstract class GuideContainerWidget<T> extends AbstractWidget implements TextboxScreen {
     private static final float SCROLL_FACTOR = 10f;
+    private static final String LOOT_FILTER_CLIPBOARD_PREFIX = "wynntilsLootFilter,";
     private static final int FILTER_PANEL_WIDTH = 150;
 
     private List<GuideButton> guideButtons;
@@ -58,6 +68,8 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
     private GuideActionButton favoriteFilterButton;
     private GuideActionButton clearFavoritesButton;
     private OptionalBoolean favoriteFilterState = OptionalBoolean.NULL;
+    private FavoriteCategory favoriteFilterCategory;
+    private FavoriteCategoryPopup categoryPopup;
     private GuideFilterPanel filterPanel;
     private GuideSearchWidget searchWidget;
     private TextInputBoxWidget focusedTextInput;
@@ -101,6 +113,11 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                     .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
                     .append(" ")
                     .append(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favoriteToggle")
+                            .withStyle(ChatFormatting.GREEN))
+                    .append("\n")
+                    .append(WynnFont.asFont("right_click", WynncraftKeybindsFont.class))
+                    .append(" ")
+                    .append(Component.translatable("screens.wynntils.wynntilsGuides.categoryFilter.tooltip")
                             .withStyle(ChatFormatting.GREEN));
 
             favoriteFilterButton = new GuideActionButton(
@@ -110,13 +127,18 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                     20,
                     getFavoriteFilterMessage(),
                     (button) -> {
-                        favoriteFilterState = switch (favoriteFilterState) {
-                            case NULL -> OptionalBoolean.TRUE;
-                            case TRUE -> OptionalBoolean.FALSE;
-                            case FALSE -> OptionalBoolean.NULL;
-                        };
-                        favoriteFilterButton.setMessage(getFavoriteFilterMessage());
-                        updateSearchFromQuickFilters();
+                        if (button == InputConstants.MOUSE_BUTTON_RIGHT) {
+                            categoryPopup = new FavoriteCategoryPopup(
+                                    favoriteFilterButton.getX(),
+                                    favoriteFilterButton.getY() + favoriteFilterButton.getHeight(),
+                                    favoriteFilterCategory,
+                                    I18n.get("screens.wynntils.wynntilsGuides.allItems"),
+                                    category -> setFavoriteFilter(
+                                            category == null ? OptionalBoolean.NULL : OptionalBoolean.TRUE, category));
+                            return;
+                        }
+
+                        cycleFavoriteFilter();
                     },
                     tooltip);
         }
@@ -200,6 +222,20 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                 (button) -> tryClearFavorites(),
                 getClearFavoritesTooltip());
         favoriteActionButtons.add(clearFavoritesButton);
+
+        MutableComponent lootFiltersTooltip = Component.empty()
+                .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class))
+                .append(" ")
+                .append(Component.translatable("screens.wynntils.wynntilsGuides.lootFilters.tooltip")
+                        .withStyle(ChatFormatting.GREEN));
+        favoriteActionButtons.add(new GuideActionButton(
+                getX() + 134,
+                getY() + 2,
+                40,
+                20,
+                Component.literal("Filters").withStyle(ChatFormatting.YELLOW),
+                (button) -> McUtils.setScreen(LootFilterScreen.create(McUtils.screen())),
+                lootFiltersTooltip));
     }
 
     @Override
@@ -241,7 +277,10 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                         TextShadow.OUTLINE);
 
         RenderUtils.enableScissor(guiGraphics, getX(), getY() + 42, getWidth(), getHeight());
-        guideButtons.forEach(guideButton -> guideButton.render(guiGraphics, mouseX, mouseY, partialTick));
+        // The items below the category popup must not show their tooltips over it
+        int itemMouseX = categoryPopup == null ? mouseX : -1;
+        int itemMouseY = categoryPopup == null ? mouseY : -1;
+        guideButtons.forEach(guideButton -> guideButton.render(guiGraphics, itemMouseX, itemMouseY, partialTick));
         RenderUtils.disableScissor(guiGraphics);
 
         renderScroll(guiGraphics, mouseX, mouseY);
@@ -263,6 +302,10 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
         }
 
         favoriteActionButtons.forEach(button -> button.render(guiGraphics, mouseX, mouseY, partialTick));
+
+        if (categoryPopup != null) {
+            categoryPopup.render(guiGraphics, mouseX, mouseY);
+        }
     }
 
     public void updateSearchFromQuickFilters() {
@@ -275,6 +318,13 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                 .map(GuideSortWidget::getSortInfo)
                 .flatMap(java.util.Optional::stream)
                 .toList();
+
+        // The category may have been deleted, or belong to another loot filter by now
+        if (favoriteFilterState == OptionalBoolean.TRUE
+                && !Services.Favorites.getCategories().contains(favoriteFilterCategory)) {
+            favoriteFilterState = OptionalBoolean.NULL;
+            favoriteFilterButton.setMessage(getFavoriteFilterMessage());
+        }
 
         if (favoriteFilterState != OptionalBoolean.NULL) {
             filters = (filters + " favorite:" + (favoriteFilterState == OptionalBoolean.TRUE)).trim();
@@ -322,6 +372,14 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (categoryPopup != null) {
+            FavoriteCategoryPopup clickedPopup = categoryPopup;
+            categoryPopup = null;
+            clickedPopup.mouseClicked(event.x(), event.y());
+            updateSearchFromQuickFilters();
+            return true;
+        }
+
         if (!draggingScroll && getMaxScrollOffset() > 0) {
             if (isOverScrollBar((int) event.x(), (int) event.y())) {
                 draggingScroll = true;
@@ -340,6 +398,14 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
 
         for (GuideButton guideButton : guideButtons) {
             if (guideButton.isMouseOver(event.x(), event.y())) {
+                if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT
+                        && event.hasShiftDown()
+                        && !guideButton.getItemName().isEmpty()) {
+                    categoryPopup =
+                            FavoriteCategoryPopup.forItem(guideButton.getItemName(), (int) event.x(), (int) event.y());
+                    return true;
+                }
+
                 boolean clicked = guideButton.mouseClicked(event, isDoubleClick);
                 // Refresh search in case of a favorite toggle
                 updateSearchFromQuickFilters();
@@ -550,6 +616,12 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
         if (searchQuery != cachedSearchQuery) {
             cachedSearchQuery = searchQuery;
             cachedGuideItems = filterAndSortGuideItems(searchQuery, getAllGuideItems());
+            if (favoriteFilterState == OptionalBoolean.TRUE) {
+                // The search query can only tell favorites apart, not their categories
+                cachedGuideItems = cachedGuideItems.stream()
+                        .filter(this::isInFavoriteFilterCategory)
+                        .toList();
+            }
         }
 
         return cachedGuideItems;
@@ -563,8 +635,38 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
         return true;
     }
 
+    private boolean isInFavoriteFilterCategory(T guideItem) {
+        if (!(guideItem instanceof ItemStack itemStack)) return false;
+
+        return Models.Item.asWynnItemProperty(itemStack, NamedItemProperty.class)
+                .map(namedItem -> Services.Favorites.getCategory(namedItem.getName()) == favoriteFilterCategory)
+                .orElse(false);
+    }
+
+    private void cycleFavoriteFilter() {
+        List<FavoriteCategory> categories = Services.Favorites.getCategories();
+        int nextIndex =
+                favoriteFilterState == OptionalBoolean.TRUE ? categories.indexOf(favoriteFilterCategory) + 1 : 0;
+
+        if (favoriteFilterState == OptionalBoolean.FALSE) {
+            setFavoriteFilter(OptionalBoolean.NULL, null);
+        } else if (nextIndex < categories.size()) {
+            setFavoriteFilter(OptionalBoolean.TRUE, categories.get(nextIndex));
+        } else {
+            setFavoriteFilter(OptionalBoolean.FALSE, null);
+        }
+    }
+
+    private void setFavoriteFilter(OptionalBoolean state, FavoriteCategory category) {
+        favoriteFilterState = state;
+        favoriteFilterCategory = category;
+        favoriteFilterButton.setMessage(getFavoriteFilterMessage());
+        updateSearchFromQuickFilters();
+    }
+
     private Component getFavoriteFilterMessage() {
-        MutableComponent message = Component.literal("Favorite ");
+        MutableComponent message = Component.literal(
+                favoriteFilterState == OptionalBoolean.TRUE ? favoriteFilterCategory.getName() + " " : "Favorite ");
         switch (favoriteFilterState) {
             case TRUE ->
                 message.append(Component.literal("★")
@@ -583,6 +685,12 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
     private void importFavorites() {
         String clipboard = McUtils.mc().keyboardHandler.getClipboard();
 
+        if (clipboard != null && clipboard.startsWith(LOOT_FILTER_CLIPBOARD_PREFIX)) {
+            importLootFilter(clipboard.substring(LOOT_FILTER_CLIPBOARD_PREFIX.length()));
+            return;
+        }
+
+        // A plain list of favorites, as exported by older versions, is added to the active loot filter
         if (clipboard == null || !clipboard.startsWith("wynntilsFavorites,")) {
             McUtils.sendErrorToClient(I18n.get("screens.wynntils.wynntilsGuides.invalidClipboard"));
             return;
@@ -604,14 +712,36 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
         updateSearchFromQuickFilters();
     }
 
+    private void importLootFilter(String json) {
+        LootFilter lootFilter;
+        try {
+            lootFilter = JsonManager.GSON.fromJson(json, LootFilter.class);
+        } catch (JsonSyntaxException e) {
+            lootFilter = null;
+        }
+
+        if (lootFilter == null || !lootFilter.isValid()) {
+            McUtils.sendErrorToClient(I18n.get("screens.wynntils.wynntilsGuides.invalidClipboard"));
+            return;
+        }
+
+        Services.Favorites.addLootFilter(lootFilter);
+
+        McUtils.sendWynntilsPrefixMessage(
+                Component.translatable("screens.wynntils.wynntilsGuides.importedLootFilter", lootFilter.getName())
+                        .withStyle(ChatFormatting.GREEN));
+
+        clearCount = 3;
+        clearFavoritesButton.setTooltip(Tooltip.create(getClearFavoritesTooltip()));
+        updateSearchFromQuickFilters();
+    }
+
     private void exportFavorites() {
-        McUtils.mc()
-                .keyboardHandler
-                .setClipboard("wynntilsFavorites," + String.join(",", Services.Favorites.getFavoriteItems()));
-        McUtils.sendWynntilsPrefixMessage(Component.translatable(
-                        "screens.wynntils.wynntilsGuides.exportedFavorites",
-                        Services.Favorites.getFavoriteItems().size())
-                .withStyle(ChatFormatting.GREEN));
+        LootFilter lootFilter = Services.Favorites.getActiveLootFilter();
+        McUtils.mc().keyboardHandler.setClipboard(LOOT_FILTER_CLIPBOARD_PREFIX + JsonManager.GSON.toJson(lootFilter));
+        McUtils.sendWynntilsPrefixMessage(
+                Component.translatable("screens.wynntils.wynntilsGuides.exportedLootFilter", lootFilter.getName())
+                        .withStyle(ChatFormatting.GREEN));
     }
 
     private void tryClearFavorites() {

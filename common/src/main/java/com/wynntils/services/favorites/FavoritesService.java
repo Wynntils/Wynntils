@@ -15,11 +15,17 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.NamedItemProperty;
+import com.wynntils.services.favorites.type.FavoriteCategory;
+import com.wynntils.services.favorites.type.LootFilter;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Set;
+import java.util.TreeSet;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.item.ItemStack;
 
 public final class FavoritesService extends Service {
@@ -29,8 +35,18 @@ public final class FavoritesService extends Service {
         super(List.of());
     }
 
+    public FavoriteCategory getCategory(String unformattedName) {
+        for (FavoriteCategory category : getCategories()) {
+            if (category.getItems().contains(unformattedName)) {
+                return category;
+            }
+        }
+
+        return null;
+    }
+
     public boolean isFavorite(String unformattedName) {
-        return getFavoriteItems().contains(unformattedName);
+        return getCategory(unformattedName) != null;
     }
 
     public boolean isFavorite(Component component) {
@@ -45,80 +61,136 @@ public final class FavoritesService extends Service {
         return isFavorite(itemStack.getHoverName());
     }
 
-    public boolean calculateFavorite(ItemStack itemStack, WynnItem wynnItem) {
-        String unformattedName = WynnUtils.stripItemNameMarkers(StyledText.fromComponent(itemStack.getHoverName())
+    public FavoriteCategory calculateCategory(ItemStack itemStack, WynnItem wynnItem) {
+        Set<String> names = new TreeSet<>();
+        names.add(WynnUtils.stripItemNameMarkers(StyledText.fromComponent(itemStack.getHoverName())
                 .getNormalized()
-                .getStringWithoutFormatting());
-
-        if (isFavorite(unformattedName)) {
-            return true;
-        }
+                .getStringWithoutFormatting()));
 
         if (wynnItem instanceof NamedItemProperty namedItemProperty) {
-            return isFavorite(namedItemProperty);
+            names.add(namedItemProperty.getName());
         }
 
         if (wynnItem instanceof IngredientPouchItem pouchItem) {
             for (Pair<IngredientInfo, Integer> ingredientPair : pouchItem.getIngredients()) {
-                IngredientInfo ingredientProfile = ingredientPair.a();
-                if (isFavorite(ingredientProfile.name())) {
-                    return true;
-                }
+                names.add(ingredientPair.a().name());
             }
         }
 
         if (wynnItem instanceof GearBoxItem gearBoxItem) {
             for (GearInfo possibleGear : Models.Gear.getPossibleGears(gearBoxItem)) {
-                if (isFavorite(possibleGear.name())) {
-                    return true;
-                }
+                names.add(possibleGear.name());
             }
         }
 
-        return false;
+        for (FavoriteCategory category : getCategories()) {
+            if (names.stream().anyMatch(category.getItems()::contains)) {
+                return category;
+            }
+        }
+
+        return null;
+    }
+
+    public void setCategory(String unformattedName, FavoriteCategory category) {
+        getCategories().forEach(c -> c.getItems().remove(unformattedName));
+        if (category != null) {
+            category.getItems().add(unformattedName);
+        }
+        touched();
     }
 
     public void addFavorite(String unformattedName) {
-        getFavoriteItems().add(unformattedName);
-        Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
-                .favoriteItems
-                .touched();
-        revision++;
-    }
-
-    public void removeFavorite(String unformattedName) {
-        getFavoriteItems().remove(unformattedName);
-        Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
-                .favoriteItems
-                .touched();
-        revision++;
+        setCategory(unformattedName, getCategories().getFirst());
     }
 
     public void clearFavorites() {
-        getFavoriteItems().clear();
+        getCategories().forEach(category -> category.getItems().clear());
+        touched();
+    }
+
+    public void toggleFavorite(String unformattedName) {
+        List<FavoriteCategory> categories = getCategories();
+        int nextIndex = categories.indexOf(getCategory(unformattedName)) + 1;
+        setCategory(unformattedName, nextIndex < categories.size() ? categories.get(nextIndex) : null);
+    }
+
+    public SoundEvent getSoundEvent(String sound) {
+        Identifier soundId = Identifier.tryParse(sound);
+        if (soundId == null || McUtils.mc().getSoundManager().getSoundEvent(soundId) == null) return null;
+
+        return SoundEvent.createVariableRangeEvent(soundId);
+    }
+
+    public void playSound(FavoriteCategory category) {
+        SoundEvent soundEvent = getSoundEvent(category.getSound());
+        if (soundEvent == null) return;
+
+        McUtils.playSoundAmbient(soundEvent, category.getSoundVolume(), category.getSoundPitch());
+    }
+
+    public void touched() {
         Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
-                .favoriteItems
+                .lootFilters
                 .touched();
         revision++;
     }
 
-    public void toggleFavorite(String unformattedName) {
-        if (isFavorite(unformattedName)) {
-            removeFavorite(unformattedName);
-        } else {
-            addFavorite(unformattedName);
-        }
-    }
-
-    // Used to track changes in the set of favorites
+    // Used to track changes in the favorites, including their categories
     public int getRevision() {
         return revision;
     }
 
     public Set<String> getFavoriteItems() {
+        Set<String> favoriteItems = new TreeSet<>();
+        getCategories().forEach(category -> favoriteItems.addAll(category.getItems()));
+        return favoriteItems;
+    }
+
+    public List<FavoriteCategory> getCategories() {
+        return getActiveLootFilter().getCategories();
+    }
+
+    public List<LootFilter> getLootFilters() {
         // This is a hack to allow saving of favorites in the config
         return Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
-                .favoriteItems
+                .lootFilters
                 .get();
+    }
+
+    public LootFilter getActiveLootFilter() {
+        List<LootFilter> lootFilters = getLootFilters();
+        String activeName = Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
+                .activeLootFilter
+                .get();
+
+        for (LootFilter lootFilter : lootFilters) {
+            if (lootFilter.getName().equals(activeName)) {
+                return lootFilter;
+            }
+        }
+
+        return lootFilters.getFirst();
+    }
+
+    public void addLootFilter(LootFilter lootFilter) {
+        List<LootFilter> lootFilters = getLootFilters();
+
+        List<String> existingNames =
+                lootFilters.stream().map(LootFilter::getName).toList();
+        String baseName = lootFilter.getName();
+        for (int i = 2; existingNames.contains(lootFilter.getName()); i++) {
+            lootFilter.setName(baseName + " " + i);
+        }
+
+        lootFilters.add(lootFilter);
+        setActiveLootFilter(lootFilter);
+        touched();
+    }
+
+    public void setActiveLootFilter(LootFilter lootFilter) {
+        Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
+                .activeLootFilter
+                .setValue(lootFilter.getName());
     }
 }
