@@ -108,6 +108,32 @@ public final class MapPathFiles {
         }
     }
 
+    public static boolean update(Path file, MapPathImpl path) {
+        JsonObject json = read(file);
+        if (json == null) return false;
+
+        try {
+            JsonArray paths = json.getAsJsonObject("features").getAsJsonArray("paths");
+            for (int i = 0; i < paths.size(); i++) {
+                if (paths.get(i)
+                        .getAsJsonObject()
+                        .get("featureId")
+                        .getAsString()
+                        .equals(path.getFeatureId())) {
+                    paths.set(i, pathJson(path));
+
+                    return write(file, json, true);
+                }
+            }
+
+            WynntilsMod.warn("Path '" + path.getFeatureId() + "' no longer exists in provider '" + file + "'");
+        } catch (RuntimeException e) {
+            WynntilsMod.warn("Could not update map path provider '" + file + "'", e);
+        }
+
+        return false;
+    }
+
     private static void removeNulls(JsonElement json) {
         if (json.isJsonObject()) {
             JsonObject object = json.getAsJsonObject();

@@ -8,8 +8,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.fonts.WynnFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
+import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.services.mapdata.attributes.impl.MapVisibilityImpl;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
@@ -57,7 +57,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
     private final Component maxSliderName;
     private final Component fadeSliderName;
 
-    private final CategoryManagementScreen parent;
+    private final Runnable updateLayout;
 
     private Mode currentMode = Mode.ALWAYS;
 
@@ -74,7 +74,8 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
             Component fadeSliderName,
             Component fadeSliderDescription,
             Function<MapAttributes, Optional<MapVisibility>> valueGetter,
-            CategoryManagementScreen parent) {
+            TextboxScreen parent,
+            Runnable updateLayout) {
         super(label, description, TOP_ROW_HEIGHT, category, valueGetter);
         this.neverVisibility = neverVisibility;
         this.alwaysVisibility = alwaysVisibility;
@@ -88,7 +89,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
         this.fadeSliderName = fadeSliderName;
 
         this.sliders = List.of(minSlider, maxSlider, fadeSlider);
-        this.parent = parent;
+        this.updateLayout = updateLayout;
 
         applyMode(currentMode);
     }
@@ -98,7 +99,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
             Component description,
             OptionCategory category,
             Function<MapVisibility, Optional<Float>> component,
-            CategoryManagementScreen parent) {
+            TextboxScreen parent) {
         return new FloatSliderOptionWidget(
                 label,
                 description,
@@ -245,9 +246,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
         updateSlidersFromValue();
         setHeight(isExtended() ? computeExtendedHeight() : TOP_ROW_HEIGHT);
 
-        if (parent.optionsScrollBar != null) {
-            parent.optionsScrollBar.updateWidgetPositions();
-        }
+        updateLayout.run();
     }
 
     private Mode determineMode(MapVisibility value) {
@@ -318,6 +317,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
         // and the sliders do resolve them.
         setValue(new MapVisibilityImpl(minSlider.getValue(), maxSlider.getValue(), fadeSlider.getValue()));
 
+        loadedValue = value;
         this.currentMode = determineMode(getValue());
         setHeight(isExtended() ? computeExtendedHeight() : TOP_ROW_HEIGHT);
         generateTooltip();
@@ -363,6 +363,7 @@ public class VisiblityOptionWidget extends AbstractOptionWidget<MapVisibility> {
 
         this.currentMode = determineMode(getValue());
         setHeight(isExtended() ? computeExtendedHeight() : TOP_ROW_HEIGHT);
+        updateLayout.run();
         generateTooltip();
     }
 

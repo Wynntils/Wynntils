@@ -14,6 +14,7 @@ import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.AbstractMapScreen;
+import com.wynntils.screens.maps.FeatureCategoryScreen;
 import com.wynntils.screens.maps.managers.IconCreationScreen;
 import com.wynntils.screens.maps.managers.IconSelectionScreen;
 import com.wynntils.screens.maps.waypoints.widgets.IconButton;
@@ -434,7 +435,19 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // region Category
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.changeCategory"),
-                        (button) -> McUtils.setScreen(WaypointCategoryScreen.create(this, category)))
+                        (button) -> McUtils.setScreen(new FeatureCategoryScreen(
+                                this,
+                                DEFAULT_CATEGORY,
+                                fullCategory,
+                                Services.Waypoints.getCategories().stream(),
+                                () -> Services.Waypoints.getWaypoints().stream(),
+                                parsedXInput == null || parsedYInput == null || parsedZInput == null
+                                        ? null
+                                        : new Location(parsedXInput, parsedYInput, parsedZInput),
+                                selected -> setCategory(
+                                        selected.equals(DEFAULT_CATEGORY)
+                                                ? ""
+                                                : selected.substring(DEFAULT_CATEGORY.length() + 1)))))
                 .pos((int) (dividedWidth * 18), (int) (dividedHeight * 48))
                 .size((int) (dividedWidth * 9), 20)
                 .build());

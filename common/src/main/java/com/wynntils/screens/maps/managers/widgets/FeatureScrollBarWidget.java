@@ -2,15 +2,14 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.maps.waypoints.widgets;
+package com.wynntils.screens.maps.managers.widgets;
 
-import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.maps.managers.widgets.ScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.FeatureEntryWidget;
-import com.wynntils.screens.maps.waypoints.WaypointCategoryScreen;
+import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -20,6 +19,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.function.Supplier;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
@@ -27,18 +28,26 @@ public class FeatureScrollBarWidget extends ScrollBarWidget implements TooltipPr
     private static final int WIDGET_HEIGHT_PADDING = 4;
     private static final int ENTRY_HEIGHT = 28;
 
-    private final WaypointCategoryScreen parent;
+    private final Supplier<Stream<? extends MapFeature<?>>> features;
+    private final Location referenceLocation;
     private List<FeatureEntryWidget> registeredWidgets = new ArrayList<>();
 
-    public FeatureScrollBarWidget(int x, int y, int width, int height, WaypointCategoryScreen parent) {
+    public FeatureScrollBarWidget(
+            int x,
+            int y,
+            int width,
+            int height,
+            Supplier<Stream<? extends MapFeature<?>>> features,
+            Location referenceLocation) {
         super(x, y, width, height);
-        this.parent = parent;
+        this.features = features;
+        this.referenceLocation = referenceLocation;
     }
 
     public void populateWidgets(String categoryId) {
-        registeredWidgets = Services.Waypoints.getWaypoints().stream()
-                .filter(waypoint -> waypoint.getCategoryId().equals(categoryId))
-                .map(waypoint -> new FeatureEntryWidget(0, 0, 0, ENTRY_HEIGHT, waypoint, parent))
+        registeredWidgets = features.get()
+                .filter(feature -> feature.getCategoryId().equals(categoryId))
+                .map(feature -> new FeatureEntryWidget(0, 0, 0, ENTRY_HEIGHT, feature, true, referenceLocation))
                 .toList();
         scrollOffsetY = 0;
 
@@ -77,7 +86,7 @@ public class FeatureScrollBarWidget extends ScrollBarWidget implements TooltipPr
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(Component.translatable("screens.wynntils.waypointCategory.features")),
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.featureCategory.features")),
                         headerX + 10,
                         headerY + Texture.MANAGER_SCROLL_BAR_HEADER.height() / 2f,
                         CommonColors.WHITE,
@@ -90,7 +99,7 @@ public class FeatureScrollBarWidget extends ScrollBarWidget implements TooltipPr
                     .renderText(
                             guiGraphics,
                             StyledText.fromComponent(
-                                    Component.translatable("screens.wynntils.waypointCategory.noFeatures")),
+                                    Component.translatable("screens.wynntils.featureCategory.noFeatures")),
                             getX() + this.width / 2f,
                             getY() + this.height / 2f,
                             CommonColors.WHITE,

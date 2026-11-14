@@ -43,6 +43,26 @@ public class ColorOptionWidget extends AbstractOptionWidget<CustomColor> {
     public ColorOptionWidget(
             Component label,
             Component description,
+            CustomColor initialValue,
+            CustomColor defaultValue,
+            TextboxScreen parent,
+            boolean showShaderColors) {
+        this(
+                label,
+                description,
+                OptionCategory.LABEL,
+                attributes -> Optional.of(defaultValue),
+                parent,
+                showShaderColors);
+        updateFromAttributes(Optional.empty(), Optional.empty());
+        setInherited(false);
+        setValue(initialValue);
+        generateTooltip();
+    }
+
+    public ColorOptionWidget(
+            Component label,
+            Component description,
             OptionCategory category,
             Function<MapAttributes, Optional<CustomColor>> valueGetter,
             TextboxScreen parent,

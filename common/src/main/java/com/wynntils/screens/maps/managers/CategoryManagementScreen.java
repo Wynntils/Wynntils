@@ -240,7 +240,12 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityFade"),
                 Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityFade.description"),
                 MapAttributes::getLabelVisibility,
-                this);
+                this,
+                () -> {
+                    if (optionsScrollBar != null) {
+                        optionsScrollBar.updateWidgetPositions();
+                    }
+                });
 
         // endregion
 
@@ -273,7 +278,12 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityFade"),
                 Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityFade.description"),
                 MapAttributes::getIconVisibility,
-                this);
+                this,
+                () -> {
+                    if (optionsScrollBar != null) {
+                        optionsScrollBar.updateWidgetPositions();
+                    }
+                });
 
         // endregion
 

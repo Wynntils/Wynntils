@@ -22,29 +22,51 @@ import net.minecraft.network.chat.Component;
 
 public final class StyledButton extends AbstractWidget {
     private final Texture backgroundTexture;
+    private final Texture inactiveBackgroundTexture;
     private final Runnable onClick;
 
     public StyledButton(
             int x, int y, int width, int height, Component message, Texture backgroundTexture, Runnable onClick) {
+        this(x, y, width, height, message, backgroundTexture, backgroundTexture, onClick);
+    }
+
+    public StyledButton(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component message,
+            Texture backgroundTexture,
+            Texture inactiveBackgroundTexture,
+            Runnable onClick) {
         super(x, y, width, height, message);
         this.backgroundTexture = backgroundTexture;
+        this.inactiveBackgroundTexture = inactiveBackgroundTexture;
         this.onClick = onClick;
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        handleCursor(guiGraphics);
+        if (active) {
+            handleCursor(guiGraphics);
+        }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                guiGraphics, backgroundTexture, getX(), getY(), getWidth(), getHeight());
+                guiGraphics,
+                active ? backgroundTexture : inactiveBackgroundTexture,
+                getX(),
+                getY(),
+                getWidth(),
+                getHeight());
 
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         guiGraphics,
                         StyledText.fromString(getMessage().getString()),
                         getX() + getWidth() / 2f,
                         getY() + getHeight() / 2f,
-                        CommonColors.WHITE,
+                        getWidth() - 12,
+                        active ? CommonColors.WHITE : CommonColors.GRAY,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
@@ -52,7 +74,8 @@ public final class StyledButton extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
+        if (!active || event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
+
         if (!this.isMouseOver(event.x(), event.y())) return false;
 
         this.playDownSound(McUtils.mc().getSoundManager());

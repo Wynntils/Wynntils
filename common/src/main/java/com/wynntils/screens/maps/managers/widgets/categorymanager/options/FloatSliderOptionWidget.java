@@ -7,8 +7,8 @@ package com.wynntils.screens.maps.managers.widgets.categorymanager.options;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
@@ -60,7 +60,7 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
             float minValue,
             float maxValue,
             Function<MapAttributes, Optional<Float>> valueGetter,
-            CategoryManagementScreen parent) {
+            TextboxScreen parent) {
         this(label, description, category, minValue, maxValue, 0.1f, 1, valueGetter, parent);
     }
 
@@ -73,7 +73,7 @@ public class FloatSliderOptionWidget extends AbstractOptionWidget<Float> {
             float step,
             int decimalPlaces,
             Function<MapAttributes, Optional<Float>> valueGetter,
-            CategoryManagementScreen parent) {
+            TextboxScreen parent) {
         super(label, description, 18, category, valueGetter);
         this.minValue = minValue;
         this.maxValue = maxValue;

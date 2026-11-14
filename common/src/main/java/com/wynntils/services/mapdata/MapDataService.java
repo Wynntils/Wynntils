@@ -259,13 +259,14 @@ public class MapDataService extends Service {
     // can be added just from disk, or downloaded from an url
     public void addJsonProvider(JsonProviderInfo providerInfo) {
         JsonProviderInfo oldInfo = jsonProviders.get().put(providerInfo.providerId(), providerInfo);
-        if (oldInfo != null && !oldInfo.completeId().equals(providerInfo.completeId())) {
+        boolean isNewProvider = oldInfo == null || !oldInfo.completeId().equals(providerInfo.completeId());
+        if (oldInfo != null && isNewProvider) {
             unregisterProvider(oldInfo.completeId());
         }
         jsonProviders.touched();
 
         // Newly added providers are always enabled
-        if (providerEnabledOverrides.get().remove(providerInfo.completeId()) != null) {
+        if (isNewProvider && providerEnabledOverrides.get().remove(providerInfo.completeId()) != null) {
             providerEnabledOverrides.touched();
         }
 

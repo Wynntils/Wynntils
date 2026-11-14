@@ -19,6 +19,7 @@ import net.minecraft.client.input.MouseButtonEvent;
 public class OptionsScrollBarWidget extends ScrollBarWidget {
     private static final int WIDGET_HEIGHT_PADDING = 4;
 
+    private AbstractOptionWidget<?> pressedWidget;
     private final List<AbstractOptionWidget<?>> registeredWidgets = new ArrayList<>();
     private final Map<OptionCategory, CategoryHeaderWidget> categoryHeaders = new EnumMap<>(OptionCategory.class);
 
@@ -101,6 +102,7 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        pressedWidget = null;
         if (super.mouseClicked(event, isDoubleClick)) {
             return true;
         }
@@ -109,6 +111,8 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
             if (isInsideViewport(event.x(), event.y())
                     && abstractOptionWidget.isHovered()
                     && abstractOptionWidget.mouseClicked(event, isDoubleClick)) {
+                pressedWidget = abstractOptionWidget;
+
                 return true;
             }
         }
@@ -118,30 +122,18 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
 
     @Override
     public boolean mouseReleased(MouseButtonEvent event) {
-        for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
-            if (isInsideViewport(event.x(), event.y())
-                    && abstractOptionWidget.isHovered()
-                    && abstractOptionWidget.mouseReleased(event)) {
-                return true;
-            }
-        }
-        return super.mouseReleased(event);
+        AbstractOptionWidget<?> pressed = pressedWidget;
+        pressedWidget = null;
+        boolean released = pressed != null && pressed.mouseReleased(event);
+
+        return super.mouseReleased(event) || released;
     }
 
     @Override
     public boolean mouseDragged(MouseButtonEvent event, double dragX, double dragY) {
-        if (super.mouseDragged(event, dragX, dragY)) {
-            return true;
-        }
+        if (super.mouseDragged(event, dragX, dragY)) return true;
 
-        for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
-            if (isInsideViewport(event.x(), event.y())
-                    && abstractOptionWidget.isHovered()
-                    && abstractOptionWidget.mouseDragged(event, dragX, dragY)) {
-                return true;
-            }
-        }
-        return false;
+        return pressedWidget != null && pressedWidget.mouseDragged(event, dragX, dragY);
     }
 
     @Override
