@@ -652,6 +652,13 @@ public class MapDataService extends Service {
         if (registeredInfo != null && registeredInfo.provider() == UNLOADED_PLACEHOLDER_PROVIDER) return;
 
         JsonProvider provider = JsonProvider.loadLocalFile(completeId, new File(providerInfo.providerFilePath()));
+        if (provider == null) {
+            // The file could not be read or parsed, so the previously loaded data is kept. Let the user know, as
+            // otherwise the reload would seem to have worked
+            McUtils.sendErrorToClient(I18n.get("service.wynntils.mapdata.localProviderReloadFailed", completeId));
+            return;
+        }
+
         registerJsonProvider(completeId, provider);
     }
 
