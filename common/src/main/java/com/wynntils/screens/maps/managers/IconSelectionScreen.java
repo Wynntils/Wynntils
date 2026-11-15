@@ -313,7 +313,7 @@ public class IconSelectionScreen extends WynntilsScreen {
 
         fontRenderer.renderText(
                 guiGraphics,
-                StyledText.fromString("base64"),
+                StyledText.fromComponent(Component.translatable("screens.wynntils.map.iconSelectionScreen.base64")),
                 cardX + 14,
                 cardY + 14 + 24 + 8 + 12,
                 CommonColors.WHITE,

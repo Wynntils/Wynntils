@@ -55,9 +55,11 @@ public class IconGridRowWidget extends AbstractWidget {
 
             if (selected) {
                 RenderUtils.drawRect(guiGraphics, SELECTED_COLOR, cellX, cellY, CELL_SIZE, CELL_SIZE);
-                handleCursor(guiGraphics);
             } else if (hovered) {
                 RenderUtils.drawRect(guiGraphics, HOVERED_COLOR, cellX, cellY, CELL_SIZE, CELL_SIZE);
+            }
+
+            if (hovered) {
                 handleCursor(guiGraphics);
             }
 

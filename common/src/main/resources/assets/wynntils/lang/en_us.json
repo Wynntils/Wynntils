@@ -3707,6 +3707,7 @@
   "screens.wynntils.map.help.description8": "Left click on the compass marker to remove it.",
   "screens.wynntils.map.help.description9": "Right click to center on player.",
   "screens.wynntils.map.help.name": "Quick Guide",
+  "screens.wynntils.map.iconSelectionScreen.base64": "Base64",
   "screens.wynntils.map.iconSelectionScreen.base64Tooltip": "Upload your custom icon to a base64 encoder and paste the result here",
   "screens.wynntils.map.iconSelectionScreen.cancel": "Cancel",
   "screens.wynntils.map.iconSelectionScreen.create": "Create",
