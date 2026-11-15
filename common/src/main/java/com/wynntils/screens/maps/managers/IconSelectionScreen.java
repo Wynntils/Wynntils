@@ -51,6 +51,7 @@ public class IconSelectionScreen extends WynntilsScreen {
     public static final String PROVIDER_BUILT_IN = "built-in:icons";
     public static final String PROVIDER_CUSTOM = "built-in:waypoints";
     public static final String CUSTOM_ICON_PREFIX = "wynntils:icon:personal:";
+    private static final String PREVIEW_ICON_ID = "wynntils:icon:preview";
 
     private final Screen previousScreen;
     private final Consumer<MapIcon> onIconSelect;
@@ -61,6 +62,8 @@ public class IconSelectionScreen extends WynntilsScreen {
     private Mode mode = Mode.BROWSE;
     private String selectedProviderId = PROVIDER_ALL;
     private String selectedIconId;
+    // Kept here rather than in the search widget, so it survives the widgets being rebuilt
+    private String providerFilter = "";
 
     private ManagerSearchWidget providerSearchWidget;
     private IconSelectionProviderScrollBarWidget providerListScrollWidget;
@@ -75,7 +78,12 @@ public class IconSelectionScreen extends WynntilsScreen {
     private TexturedTextInputBoxWidget iconBase64Input;
     private StyledButton createCancelButton;
     private StyledButton createSaveButton;
-    private MapIconImpl newIcon;
+    // The icon that is being created, under a fixed id so that every preview reuses the same texture
+    private MapIconImpl previewIcon;
+    // The texture input the preview was made from, so the texture is only decoded again when it changes
+    private String parsedBase64;
+    private Component textureError = Component.translatable("screens.wynntils.map.iconSelectionScreen.invalidBase64");
+    // Why the icon cannot be created, or null if it can
     private Component errorText = Component.translatable("screens.wynntils.map.iconSelectionScreen.invalidName");
 
     private IconSelectionScreen(Screen previousScreen, Consumer<MapIcon> onIconSelect, String currentIconId) {
@@ -124,11 +132,11 @@ public class IconSelectionScreen extends WynntilsScreen {
                 200 - 5 - Texture.BUILD_LOADOUTS_SEARCH_ICON.width(),
                 20,
                 text -> {
-                    if (providerListScrollWidget != null) {
-                        providerListScrollWidget.setFilter(text);
-                    }
+                    providerFilter = text;
+                    providerListScrollWidget.setFilter(text);
                 },
                 this);
+        providerSearchWidget.setTextBoxInput(providerFilter);
         this.addRenderableWidget(providerSearchWidget);
 
         newIconButton = new StyledButton(
@@ -233,15 +241,7 @@ public class IconSelectionScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.iconSelectionScreen.create"),
                 Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
                 Texture.MANAGER_WIDGET_BACKGROUND_DARKGREEN,
-                () -> {
-                    if (newIcon == null) {
-                        return;
-                    }
-                    Services.Waypoints.addCustomIcon(newIcon);
-                    onIconCreated(newIcon);
-                    resetCreateForm();
-                    setMode(Mode.BROWSE);
-                });
+                this::onCreateClicked);
         createSaveButton.active = false;
         this.addRenderableWidget(createSaveButton);
 
@@ -331,12 +331,17 @@ public class IconSelectionScreen extends WynntilsScreen {
         Component status;
         CustomColor statusColor;
 
-        if (newIcon == null) {
+        if (errorText != null) {
             status = errorText;
             statusColor = CustomColor.fromInt(0xbf3b46); // red
         } else {
-            int iconWidth = newIcon.getWidth();
-            int iconHeight = newIcon.getHeight();
+            status = Component.literal(previewIcon.getWidth() + "x" + previewIcon.getHeight());
+            statusColor = CustomColor.fromInt(0x6bc367); // green
+        }
+
+        if (previewIcon != null) {
+            int iconWidth = previewIcon.getWidth();
+            int iconHeight = previewIcon.getHeight();
             int largestSide = Math.max(iconWidth, iconHeight);
 
             float scale = largestSide >= 40 ? 40f / largestSide : Math.max(1, 40 / largestSide);
@@ -345,7 +350,7 @@ public class IconSelectionScreen extends WynntilsScreen {
 
             RenderUtils.drawScalingTexturedRect(
                     guiGraphics,
-                    newIcon.getIdentifier(),
+                    previewIcon.getIdentifier(),
                     CommonColors.WHITE,
                     tileX + (48 - drawWidth) / 2f,
                     tileY + (48 - drawHeight) / 2f,
@@ -353,9 +358,6 @@ public class IconSelectionScreen extends WynntilsScreen {
                     drawHeight,
                     iconWidth,
                     iconHeight);
-
-            status = Component.literal(iconWidth + "x" + iconHeight);
-            statusColor = CustomColor.fromInt(0x6bc367); // green
         }
 
         // Status and help text to the right of the tile, under the inputs
@@ -589,52 +591,71 @@ public class IconSelectionScreen extends WynntilsScreen {
         return isCustomIconId(selectedIconId);
     }
 
+    private void onCreateClicked() {
+        if (errorText != null || previewIcon == null) return;
+
+        MapIconImpl icon;
+        try {
+            icon = new MapIconImpl(
+                    CUSTOM_ICON_PREFIX + iconNameInput.getTextBoxInput().trim(), previewIcon.getTextureBytes());
+        } catch (IOException e) {
+            WynntilsMod.warn("Failed to create custom icon", e);
+            return;
+        }
+
+        Services.Waypoints.addCustomIcon(icon);
+        onIconCreated(icon);
+        resetCreateForm();
+        setMode(Mode.BROWSE);
+    }
+
     private void tryParseIcon() {
         if (createSaveButton == null) return;
 
         String name = iconNameInput.getTextBoxInput().trim();
         String base64 = iconBase64Input.getTextBoxInput().trim();
 
-        if (name.isEmpty() || base64.isEmpty()) {
-            newIcon = null;
-            createSaveButton.active = false;
-            errorText = Component.translatable(
-                    "screens.wynntils.map.iconSelectionScreen." + (name.isEmpty() ? "invalidName" : "invalidBase64"));
-            return;
+        // The name changes on every key press, but the texture only has to be decoded again when it has changed
+        if (!base64.equals(parsedBase64)) {
+            parsedBase64 = base64;
+            parseTexture(base64);
         }
 
-        String candidateId = CUSTOM_ICON_PREFIX + name;
-        boolean duplicate = Services.Waypoints.getCustomIcons().stream()
-                .anyMatch(i -> i.getIconId().equals(candidateId));
-        if (duplicate) {
-            newIcon = null;
-            createSaveButton.active = false;
+        if (name.isEmpty()) {
+            errorText = Component.translatable("screens.wynntils.map.iconSelectionScreen.invalidName");
+        } else if (isCustomIconNameTaken(name)) {
             errorText = Component.translatable("screens.wynntils.map.iconSelectionScreen.duplicateName");
-            return;
+        } else {
+            errorText = previewIcon == null ? textureError : null;
         }
+
+        createSaveButton.active = errorText == null;
+    }
+
+    private boolean isCustomIconNameTaken(String name) {
+        String candidateId = CUSTOM_ICON_PREFIX + name;
+        return Services.Waypoints.getCustomIcons().stream()
+                .anyMatch(icon -> icon.getIconId().equals(candidateId));
+    }
+
+    private void parseTexture(String base64) {
+        previewIcon = null;
+        textureError = Component.translatable("screens.wynntils.map.iconSelectionScreen.invalidBase64");
+
+        if (base64.isEmpty()) return;
 
         if (base64.length() > MapIconImpl.MAX_BASE64_LENGTH) {
             // Checked before decoding, so that a huge texture is never even decoded
-            newIcon = null;
-            createSaveButton.active = false;
-            errorText = getTooLargeText();
+            textureError = getTooLargeText();
             return;
         }
 
         try {
-            byte[] texture = Base64.getDecoder().decode(base64);
-            newIcon = new MapIconImpl(candidateId, texture);
-            createSaveButton.active = true;
+            previewIcon = new MapIconImpl(PREVIEW_ICON_ID, Base64.getDecoder().decode(base64));
         } catch (MapIconImpl.IconTooLargeException e) {
-            newIcon = null;
-            createSaveButton.active = false;
-            errorText = getTooLargeText();
+            textureError = getTooLargeText();
         } catch (IOException | IllegalArgumentException e) {
-            WynntilsMod.warn("Bad icon texture for " + name, e);
-
-            newIcon = null;
-            createSaveButton.active = false;
-            errorText = Component.translatable("screens.wynntils.map.iconSelectionScreen.invalidBase64");
+            // Expected while the texture is being typed, the error is shown on the screen
         }
     }
 
@@ -652,7 +673,8 @@ public class IconSelectionScreen extends WynntilsScreen {
         if (iconBase64Input != null) {
             iconBase64Input.setTextBoxInput("");
         }
-        newIcon = null;
+        previewIcon = null;
+        parsedBase64 = null;
         errorText = Component.translatable("screens.wynntils.map.iconSelectionScreen.invalidName");
         if (createSaveButton != null) {
             createSaveButton.active = false;
