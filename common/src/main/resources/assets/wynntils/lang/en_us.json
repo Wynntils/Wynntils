@@ -3720,6 +3720,7 @@
   "screens.wynntils.map.iconSelectionScreen.invalidBase64": "Invalid base64",
   "screens.wynntils.map.iconSelectionScreen.invalidName": "Invalid Icon Name",
   "screens.wynntils.map.iconSelectionScreen.newIcon": "New Icon",
+  "screens.wynntils.map.iconSelectionScreen.newIconDisabledTooltip": "Enable the Waypoints provider to create custom icons",
   "screens.wynntils.map.iconSelectionScreen.provider.all": "All",
   "screens.wynntils.map.iconSelectionScreen.provider.builtIn": "Built-in",
   "screens.wynntils.map.iconSelectionScreen.provider.custom": "Custom",

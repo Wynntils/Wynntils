@@ -138,7 +138,14 @@ public class IconSelectionScreen extends WynntilsScreen {
                 20,
                 Component.translatable("screens.wynntils.map.iconSelectionScreen.newIcon"),
                 Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
+                Texture.MANAGER_WIDGET_BACKGROUND_DARKGREEN,
                 () -> setMode(Mode.CREATE));
+        if (!Services.MapData.isProviderEnabled(PROVIDER_CUSTOM)) {
+            // Custom icons are provided by the waypoints provider, so a new icon could not be used while it is disabled
+            newIconButton.active = false;
+            newIconButton.setTooltip(Tooltip.create(
+                    Component.translatable("screens.wynntils.map.iconSelectionScreen.newIconDisabledTooltip")));
+        }
         this.addRenderableWidget(newIconButton);
 
         // Right column: icon grid + buttons

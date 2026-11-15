@@ -58,6 +58,8 @@ public class IconSelectionProviderScrollBarWidget extends ScrollBarWidget {
 
         Services.MapData.getJsonProviderInfos().values().stream()
                 .sorted()
+                // Icons of disabled providers cannot be used, so there is nothing to show for them
+                .filter(info -> Services.MapData.isProviderEnabled(info.completeId()))
                 .filter(info -> Services.MapData.getProviderFromId(info.completeId())
                         .map(provider -> provider.getIcons().findAny().isPresent())
                         .orElse(false))
