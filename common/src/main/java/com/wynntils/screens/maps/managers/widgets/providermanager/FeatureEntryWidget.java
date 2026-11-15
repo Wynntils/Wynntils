@@ -53,6 +53,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
     private final MapIcon icon;
 
     private final WaypointCategoryScreen waypointParent;
+    private final boolean interactive;
 
     private List<Component> generatedTooltip = new ArrayList<>();
 
@@ -76,6 +77,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
         super(x, y, width, height, Component.literal(mapFeature.getFeatureId()));
         this.mapFeature = mapFeature;
         this.waypointParent = waypointParent;
+        this.interactive = providerId == null || Services.MapData.isProviderEnabled(providerId);
 
         this.attributes = Services.MapData.resolveMapAttributes(mapFeature, providerId);
         this.featureId = mapFeature.getFeatureId();
@@ -90,7 +92,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (!isWaypointEntry()) {
+        if (!isWaypointEntry() && interactive) {
             handleCursor(guiGraphics);
         }
 
@@ -159,7 +161,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (isWaypointEntry()) return false;
+        if (isWaypointEntry() || !interactive) return false;
 
         if (!isMouseOver(event.x(), event.y())) return false;
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && mapFeature instanceof MapLocation mapLocation) {
@@ -275,6 +277,8 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
                     Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.location"),
                     "%d, %d, %d".formatted(location.x(), location.y(), location.z()));
         }
+
+        if (!interactive) return;
 
         this.generatedTooltip.add(Component.empty());
 

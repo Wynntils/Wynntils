@@ -352,6 +352,19 @@ public class MapDataService extends Service {
      * @return false if no such provider is registered, or it is not toggleable
      */
     public boolean toggleProvider(String providerId) {
+        return toggleProvider(providerId, null);
+    }
+
+    /**
+     * Toggles a provider's enabled state.
+     *
+     * @param providerId The complete provider id
+     * @param onLoaded Run once an enabled online provider has finished downloading, as until then it only has
+     *                 placeholder data.
+     *
+     * @return false if no such provider is registered, or it is not toggleable
+     */
+    public boolean toggleProvider(String providerId, Runnable onLoaded) {
         MapDataProviderInfo info = registeredProviders.get(providerId);
         if (info == null || !info.toggleable()) return false;
 
@@ -366,7 +379,7 @@ public class MapDataService extends Service {
         if (enabled && getJsonProviderInfoByCompleteId(providerId).isPresent()) {
             // Reload and validate JSON providers before enabling them, including previously failed providers as they
             // may have been fixed.
-            getJsonProviderInfoByCompleteId(providerId).ifPresent(this::registerJsonProvider);
+            getJsonProviderInfoByCompleteId(providerId).ifPresent(jsonInfo -> registerJsonProvider(jsonInfo, onLoaded));
         } else {
             invalidateCaches(info.provider());
         }
@@ -501,12 +514,16 @@ public class MapDataService extends Service {
     }
 
     private void registerJsonProvider(JsonProviderInfo providerInfo) {
+        registerJsonProvider(providerInfo, null);
+    }
+
+    private void registerJsonProvider(JsonProviderInfo providerInfo, Runnable onLoaded) {
         if (!providerEnabledOverrides.get().getOrDefault(providerInfo.completeId(), true)) {
             registerJsonProvider(providerInfo.completeId(), UNLOADED_PLACEHOLDER_PROVIDER);
             return;
         }
 
-        loadJsonProvider(providerInfo, null);
+        loadJsonProvider(providerInfo, onLoaded);
     }
 
     private void loadJsonProvider(JsonProviderInfo providerInfo, Runnable onLoaded) {

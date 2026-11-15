@@ -44,6 +44,7 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
     private final MapCategory mapCategory;
     private final String providerId;
+    private final boolean interactive;
     private final String categoryId;
     private final Optional<String> categoryName;
     private final MapIcon icon;
@@ -56,6 +57,7 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
         super(x, y, width, height, Component.literal(mapCategory.getCategoryId()));
         this.mapCategory = mapCategory;
         this.providerId = providerId;
+        this.interactive = providerId == null || Services.MapData.isProviderEnabled(providerId);
         this.categoryId = mapCategory.getCategoryId();
         this.categoryName = mapCategory.getName();
 
@@ -71,7 +73,9 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        handleCursor(guiGraphics);
+        if (interactive) {
+            handleCursor(guiGraphics);
+        }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, getX(), getY(), this.width, this.height);
@@ -142,6 +146,7 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!interactive) return false;
         if (!isMouseOver(event.x(), event.y())) return false;
 
         if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
@@ -197,6 +202,8 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
                     Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.iconId"),
                     iconValue);
         }
+
+        if (!interactive) return;
 
         this.generatedTooltip.add(Component.empty());
 

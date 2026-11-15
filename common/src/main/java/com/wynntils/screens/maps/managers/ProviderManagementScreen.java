@@ -296,8 +296,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         selectedCompleteProviderId = completeProviderId;
         selectedProviderType = providerType;
 
-        Services.MapData.ensureProviderLoaded(
-                completeProviderId, () -> McUtils.mc().execute(() -> refreshAfterProviderLoaded(completeProviderId)));
+        Services.MapData.ensureProviderLoaded(completeProviderId, () -> scheduleRefreshAfterLoad(completeProviderId));
 
         providerInfoScrollBarWidget.populateWidgets();
         infoWidget.generateTooltip();
@@ -331,6 +330,14 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         descriptionScrollBarWidget.updateContentHeight();
         setProviderManagerMode(ProviderManagerMode.DEFAULT);
         updateMenu();
+    }
+
+    /**
+     * Rebuilds what is shown for the provider once it has finished loading. Safe to call from any thread, the refresh
+     * itself is run on the main thread.
+     */
+    public void scheduleRefreshAfterLoad(String completeProviderId) {
+        McUtils.mc().execute(() -> refreshAfterProviderLoaded(completeProviderId));
     }
 
     private void refreshAfterProviderLoaded(String completeProviderId) {

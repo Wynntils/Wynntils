@@ -85,7 +85,8 @@ public class ProviderManagerEntryWidget extends ProviderEntryWidget {
         if (toggleable && isMouseInsideButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());
 
-            if (Services.MapData.toggleProvider(getProviderId())) {
+            String providerId = getProviderId();
+            if (Services.MapData.toggleProvider(providerId, () -> parent.scheduleRefreshAfterLoad(providerId))) {
                 enabled = Services.MapData.isProviderEnabled(getProviderId());
                 parent.setSelectedProvider(getProviderId(), providerType);
             }
