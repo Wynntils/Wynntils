@@ -6,16 +6,18 @@ package com.wynntils.models.gear;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonArray;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.net.Dependency;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.gear.type.GearEmblem;
+import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMetaInfo;
 import com.wynntils.models.gear.type.GearRequirements;
@@ -25,6 +27,7 @@ import com.wynntils.models.stats.type.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.AbstractItemInfoDeserializer;
+import com.wynntils.models.wynnitem.type.ItemEmblem;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
@@ -126,15 +129,33 @@ public class GearInfoRegistry {
 
             String emblemStr = JsonUtils.getNullableJsonString(json, "emblem");
 
-            GearEmblem emblem = emblemStr == null
-                    ? new GearEmblem(GearEmblem.GearEmblemShape.DIAMOND, 1)
-                    : GearEmblem.fromString(emblemStr);
+            ItemEmblem emblem = emblemStr == null
+                    ? new ItemEmblem(ItemEmblem.ItemEmblemShape.DIAMOND, 1)
+                    : ItemEmblem.fromString(emblemStr);
 
             int powderSlots = JsonUtils.getNullableJsonInt(json, "powderSlots");
 
             GearMetaInfo metaInfo = parseMetaInfo(json, internalName, type);
             GearRequirements requirements = parseRequirements(json, type);
             FixedStats fixedStats = parseFixedStats(json);
+
+            List<Element> elements = new ArrayList<>();
+            JsonArray elementsArray = JsonUtils.getNullableJsonArray(json, "elements");
+
+            if (elementsArray != null) {
+                for (JsonElement elementElement : elementsArray) {
+                    Element element = Element.fromApiName(elementElement.getAsString());
+
+                    if (element == null) {
+                        WynntilsMod.warn("Unknown element type from item " + internalName + " ("
+                                + elementElement.getAsString() + ")");
+                        continue;
+                    }
+
+                    elements.add(element);
+                }
+            }
+
             List<Pair<StatType, StatPossibleValues>> variableStats = parseVariableStats(json, "identifications");
 
             return new GearInfo(
@@ -146,6 +167,7 @@ public class GearInfoRegistry {
                     metaInfo,
                     requirements,
                     fixedStats,
+                    elements,
                     variableStats,
                     Optional.ofNullable(Models.Set.getSetInfoForItem(displayName)));
         }

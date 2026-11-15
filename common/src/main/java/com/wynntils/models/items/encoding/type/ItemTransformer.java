@@ -68,10 +68,9 @@ public abstract class ItemTransformer<T extends WynnItem> {
                         return new StatActualValue(
                                 actualValue.statType(),
                                 actualValue.value(),
-                                actualValue.perfectInternalRoll(),
                                 StatCalculator.calculateInternalRollRange(
                                         possibleValues, actualValue.value(), actualValue.perfectInternalRoll()),
-                                actualValue.hasIconPrefix(),
+                                actualValue.perfectInternalRoll(),
                                 actualValue.vanillaMeter());
                     })
                     .collect(Collectors.toMap(StatActualValue::statType, Function.identity()));
@@ -89,7 +88,7 @@ public abstract class ItemTransformer<T extends WynnItem> {
                 identifications.put(
                         possibleValues.statType(),
                         new StatActualValue(
-                                possibleValues.statType(), possibleValues.baseValue(), false, RangedValue.NONE));
+                                possibleValues.statType(), possibleValues.baseValue(), RangedValue.NONE, false));
             }
         }
 

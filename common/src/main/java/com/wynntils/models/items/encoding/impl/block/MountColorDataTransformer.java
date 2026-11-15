@@ -17,14 +17,14 @@ public class MountColorDataTransformer extends DataTransformer<MountColorData> {
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, MountColorData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> encodeColorData(data);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> encodeColorData(data);
         };
     }
 
     @Override
     public ErrorOr<MountColorData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> decodeColorData(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> decodeColorData(byteReader);
         };
     }
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2024.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
@@ -13,13 +13,11 @@ import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.UsesItemProperty;
 import com.wynntils.models.stats.type.StatActualValue;
-import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ConsumableEffect;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.models.wynnitem.type.NamedItemEffect;
 import com.wynntils.utils.type.CappedValue;
-import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 
 public class CraftedConsumableItem extends GameItem
@@ -36,6 +34,8 @@ public class CraftedConsumableItem extends GameItem
     private final List<NamedItemEffect> namedEffects;
     private final List<ItemEffect> effects;
     private final CappedValue uses;
+    private final String lore;
+    private final String creator;
 
     public CraftedConsumableItem(
             String name,
@@ -44,7 +44,9 @@ public class CraftedConsumableItem extends GameItem
             List<StatActualValue> identifications,
             List<NamedItemEffect> namedEffects,
             List<ItemEffect> effects,
-            CappedValue uses) {
+            CappedValue uses,
+            String lore,
+            String creator) {
         this.name = name;
         this.consumableType = consumableType;
         this.level = level;
@@ -52,6 +54,8 @@ public class CraftedConsumableItem extends GameItem
         this.namedEffects = namedEffects;
         this.effects = effects;
         this.uses = uses;
+        this.lore = lore;
+        this.creator = creator;
 
         this.duration = namedEffects.stream()
                 .filter(namedItemEffect -> namedItemEffect.type() == ConsumableEffect.DURATION)
@@ -89,15 +93,6 @@ public class CraftedConsumableItem extends GameItem
     }
 
     @Override
-    public List<StatPossibleValues> getPossibleValues() {
-        // We have to create fake possible values for the identifications, as they don't exist for crafted consumables.
-        return identifications.stream()
-                .map(stat -> new StatPossibleValues(
-                        stat.statType(), RangedValue.of(stat.value(), stat.value()), stat.value(), false))
-                .toList();
-    }
-
-    @Override
     public ClassType getRequiredClass() {
         // Crafted consumables can be used by any class
         return null;
@@ -119,6 +114,14 @@ public class CraftedConsumableItem extends GameItem
     @Override
     public GearTier getGearTier() {
         return GearTier.CRAFTED;
+    }
+
+    public String getLore() {
+        return lore;
+    }
+
+    public String getCreator() {
+        return creator;
     }
 
     public boolean isHealing() {

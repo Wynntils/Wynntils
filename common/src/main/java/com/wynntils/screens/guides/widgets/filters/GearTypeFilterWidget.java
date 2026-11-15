@@ -47,7 +47,7 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal("Gear Type")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         getX(),
                         getY(),
                         CommonColors.WHITE,
@@ -160,7 +160,7 @@ public class GearTypeFilterWidget extends GuideFilterWidget {
                     .renderScrollingText(
                             guiGraphics,
                             StyledText.fromComponent(Component.literal(EnumUtils.toNiceString(gearType))
-                                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                    .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                             getX() + 18,
                             getY() + 8,
                             getWidth() - 20,
