@@ -115,7 +115,7 @@
   },
   {
     "id": "dataStaticAbilitiesV2",
-    "md5": "31e210073841012dcad07fa24b24b2c0",
+    "md5": "feea28f5346d9e7dd13ade3f889a7401",
     "path": "Reference/abilities_v2.json",
     "url": "https://cdn.wynntils.com/static/Reference/abilities_v2.json"
   },
@@ -283,7 +283,7 @@
   },
   {
     "id": "dataStaticMountFood",
-    "md5": "829c4c7eacdc2d26bd5e54f7d5f922ed",
+    "md5": "936386397d95598240300d219f2d8d33",
     "path": "Data-Storage/mount_food.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/mount_food.json"
   },
