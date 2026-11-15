@@ -335,10 +335,15 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
     private void refreshAfterProviderLoaded(String completeProviderId) {
         if (McUtils.screen() != this) return;
-        if (providerManagerMode != ProviderManagerMode.DEFAULT) return;
         if (!completeProviderId.equals(selectedCompleteProviderId)) return;
 
-        setSelectedProvider(completeProviderId, selectedProviderType);
+        refreshSelectedProvider();
+    }
+
+    public void refreshSelectedProvider() {
+        if (providerManagerMode != ProviderManagerMode.DEFAULT) return;
+
+        setSelectedProvider(selectedCompleteProviderId, selectedProviderType);
     }
 
     public void clearSelectionIfProviderMissing() {

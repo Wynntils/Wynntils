@@ -477,11 +477,19 @@ public class MapDataService extends Service {
     }
 
     private void registerProvider(String providerId, MapDataProviderInfo providerInfo) {
-        // Add or update the provider
-        registeredProviders.putFirst(providerId, providerInfo);
+        MapDataProviderInfo oldInfo = registeredProviders.get(providerId);
+
+        if (oldInfo == null) {
+            registeredProviders.putFirst(providerId, providerInfo);
+        } else {
+            registeredProviders.put(providerId, providerInfo);
+        }
         providerInfo.provider().onChange(this::onProviderChange);
 
-        // Invalidate caches
+        // Invalidate caches.
+        if (oldInfo != null && oldInfo.provider() != providerInfo.provider()) {
+            invalidateCaches(oldInfo.provider());
+        }
         invalidateCaches(providerInfo.provider());
     }
 
@@ -567,18 +575,40 @@ public class MapDataService extends Service {
         jsonProviders.get().values().forEach(this::registerJsonProvider);
     }
 
+    /**
+     * Adds local providers for new files, and removes the ones whose file no longer exists. Providers that are
+     * already known are not read again
+     */
     public void refreshLocalJsonProviders() {
+        refreshLocalJsonProviders(false);
+    }
+
+    /**
+     * Does what {@link #refreshLocalJsonProviders()} does, and also reads every known local provider from its file
+     * again, so that changes made to the files take effect.
+     */
+    public void reloadLocalJsonProviders() {
+        refreshLocalJsonProviders(true);
+    }
+
+    private void refreshLocalJsonProviders(boolean reloadKnown) {
         File[] files = LOCAL_PROVIDERS.listFiles();
 
         if (files != null) {
             for (File file : files) {
                 if (!file.getName().endsWith(".json")) continue;
 
-                boolean alreadyKnown = jsonProviders.get().values().stream()
-                        .anyMatch(info -> info.providerType() == JsonProviderInfo.JsonProviderType.LOCAL
-                                && info.providerFilePath().equals(file.getAbsolutePath()));
+                Optional<JsonProviderInfo> knownInfo = jsonProviders.get().values().stream()
+                        .filter(info -> info.providerType() == JsonProviderInfo.JsonProviderType.LOCAL
+                                && info.providerFilePath().equals(file.getAbsolutePath()))
+                        .findFirst();
 
-                if (alreadyKnown) continue;
+                if (knownInfo.isPresent()) {
+                    if (reloadKnown) {
+                        reloadLocalProvider(knownInfo.get());
+                    }
+                    continue;
+                }
 
                 String providerId = file.getName().substring(0, file.getName().length() - ".json".length());
 
@@ -595,6 +625,17 @@ public class MapDataService extends Service {
                 .map(JsonProviderInfo::providerId)
                 .toList()
                 .forEach(this::removeJsonProvider);
+    }
+
+    private void reloadLocalProvider(JsonProviderInfo providerInfo) {
+        String completeId = providerInfo.completeId();
+
+        // A provider that is disabled and has not been loaded is loaded from its file when it is viewed or enabled
+        MapDataProviderInfo registeredInfo = registeredProviders.get(completeId);
+        if (registeredInfo != null && registeredInfo.provider() == UNLOADED_PLACEHOLDER_PROVIDER) return;
+
+        JsonProvider provider = JsonProvider.loadLocalFile(completeId, new File(providerInfo.providerFilePath()));
+        registerJsonProvider(completeId, provider);
     }
 
     private void reloadJsonOverrideProviders() {
