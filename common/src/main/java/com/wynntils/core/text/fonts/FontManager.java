@@ -167,7 +167,6 @@ public final class FontManager extends Manager {
 
     private void registerFontsForLookup() {
         registerWynnFont("minecraft:default", "d");
-        registerWynnFont("minecraft:banner/pill", "bp");
         registerWynnFont("minecraft:chat/prefix", "cp");
         registerWynnFont("minecraft:hud/gameplay/default/top_left", "gtl");
         registerWynnFont("minecraft:hud/gameplay/default/top_middle", "gtm");
