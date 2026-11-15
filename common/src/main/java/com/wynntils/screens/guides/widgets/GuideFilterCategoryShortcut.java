@@ -45,14 +45,14 @@ public class GuideFilterCategoryShortcut {
                 .limit(MAX_PROVIDER_NAMES)
                 .map(providerName -> Component.literal(providerName)
                         .withStyle(Style.EMPTY
-                                .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                                .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
                                 .withColor(ChatFormatting.GRAY)))
                 .forEach(tooltip::add);
 
         if (providerNames.size() > MAX_PROVIDER_NAMES) {
             tooltip.add(Component.literal("... and " + (providerNames.size() - MAX_PROVIDER_NAMES) + " more")
                     .withStyle(Style.EMPTY
-                            .withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)
+                            .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
                             .withColor(ChatFormatting.DARK_GRAY)));
         }
 

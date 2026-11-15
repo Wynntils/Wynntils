@@ -37,7 +37,7 @@ public class StartDataTransformer extends DataTransformer<StartData> {
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, StartData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 ->
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 ->
                 ErrorOr.of(new UnsignedByte[] {
                     UnsignedByte.of(data.version().getId()),
                 });

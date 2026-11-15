@@ -97,6 +97,9 @@ public class QuickCastFeature extends Feature {
     @Persisted
     private final Config<Boolean> adaptiveLagCorrection = new Config<>(true);
 
+    @Persisted
+    private final Config<Boolean> weaponSwing = new Config<>(true);
+
     public QuickCastFeature() {
         super(ProfileDefault.ENABLED);
     }
@@ -287,7 +290,8 @@ public class QuickCastFeature extends Feature {
                 leftClickDelayMs.get(),
                 rightClickDelayMs.get(),
                 spellCooldownMs.get(),
-                adaptiveLagCorrection.get());
+                adaptiveLagCorrection.get(),
+                weaponSwing.get());
     }
 
     private QueuedMeleeScheduler.MeleeQueueResult tryCastMelee(boolean notifyInvalidWeapon) {
@@ -300,7 +304,11 @@ public class QuickCastFeature extends Feature {
         if (!weaponContext.valid()) return QueuedMeleeScheduler.MeleeQueueResult.NOT_QUEUED;
 
         return QueuedMeleeScheduler.queueCurrentMelee(
-                weaponContext, leftClickDelayMs.get(), rightClickDelayMs.get(), adaptiveLagCorrection.get());
+                weaponContext,
+                leftClickDelayMs.get(),
+                rightClickDelayMs.get(),
+                adaptiveLagCorrection.get(),
+                weaponSwing.get());
     }
 
     private void discardBlockedPendingInputs() {

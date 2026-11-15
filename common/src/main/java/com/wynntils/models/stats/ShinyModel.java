@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.stats;
@@ -11,7 +11,6 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.ShinyStatType;
@@ -56,10 +55,7 @@ public final class ShinyModel extends Model {
         Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
         if (gearItemOpt.isEmpty()) return Optional.empty();
 
-        Optional<GearInstance> gearInstanceOpt = gearItemOpt.get().getItemInstance();
-        if (gearInstanceOpt.isEmpty()) return Optional.empty();
-
-        return gearInstanceOpt.get().shinyStat();
+        return gearItemOpt.get().getShinyStat();
     }
 
     public List<ShinyStat> getAllShinyStats() {

@@ -2,6 +2,8 @@ name: Spotless, Build and Test
 
 on:
   workflow_dispatch:
+  push:
+    branches: [main]
   pull_request:
     types: [opened, synchronize, reopened, ready_for_review]
   merge_group:
@@ -23,33 +25,27 @@ jobs:
           distribution: "temurin"
           java-version: 21
 
-      - name: Cache Gradle data
+      - name: Cache Loom project data
         uses: actions/cache@v5
         with:
-          path: .gradle
-          key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
+          path: |
+            .gradle/loom-cache
+            common/.gradle/loom-cache
+            fabric/.gradle/loom-cache
+            neoforge/.gradle/loom-cache
+          key: ${{ runner.os }}-loom-v2-${{ hashFiles('**/*.gradle', '**/gradle.properties', 'gradle/wrapper/gradle-wrapper.properties') }}-${{ github.sha }}
           restore-keys: |
-            ${{ runner.os }}-gradle--
-
-      - name: Cache Gradle shared data
-        uses: actions/cache@v5
-        with:
-          path: ${{ runner.home }}/.gradle/caches
-          key: ${{ runner.os }}-gradle-shared--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
-          restore-keys: |
-            ${{ runner.os }}-gradle-shared--
+            ${{ runner.os }}-loom-v2-${{ hashFiles('**/*.gradle', '**/gradle.properties', 'gradle/wrapper/gradle-wrapper.properties') }}-
+            ${{ runner.os }}-loom-v2-
 
       - name: Set up Gradle
         uses: gradle/actions/setup-gradle@v6
+        with:
+          # PR caches are scoped to the PR; main provides the shared warm cache.
+          cache-read-only: false
 
-      - name: Check formatting with Spotless
-        run: ./gradlew spotlessCheck
-
-      - name: Build with Gradle
-        run: ./gradlew buildDependents -x spotlessCheck -x test
-
-      - name: Test with Gradle
-        run: ./gradlew test -x spotlessCheck --stacktrace --info
+      - name: Check formatting, build and test with Gradle
+        run: ./gradlew spotlessCheck buildDependents --stacktrace
 
       - name: Upload test report
         if: ${{ always() }}

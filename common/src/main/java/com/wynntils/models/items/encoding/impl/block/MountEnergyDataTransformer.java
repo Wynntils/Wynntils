@@ -20,14 +20,14 @@ public class MountEnergyDataTransformer extends DataTransformer<MountEnergyData>
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, MountEnergyData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> encodeEnergyData(data);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> encodeEnergyData(data);
         };
     }
 
     @Override
     public ErrorOr<MountEnergyData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> decodeEnergyData(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> decodeEnergyData(byteReader);
         };
     }
 

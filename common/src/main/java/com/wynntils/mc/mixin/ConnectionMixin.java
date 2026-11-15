@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ConnectionEvent;
+import com.wynntils.mc.event.ContainerClickSentEvent;
 import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.utils.mc.McUtils;
 import io.netty.channel.ChannelFutureListener;
@@ -22,6 +23,7 @@ import net.minecraft.network.chat.contents.TranslatableContents;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBundlePacket;
+import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -105,6 +107,15 @@ public abstract class ConnectionMixin {
         MixinHelper.postAlways(event);
         if (event.isCanceled()) {
             ci.cancel();
+            return;
+        }
+
+        if (packet instanceof ServerboundContainerClickPacket clickPacket) {
+            MixinHelper.postAlways(new ContainerClickSentEvent(
+                    clickPacket.containerId(),
+                    clickPacket.slotNum(),
+                    clickPacket.buttonNum(),
+                    clickPacket.clickType()));
         }
     }
 }

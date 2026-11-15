@@ -7,7 +7,6 @@ package com.wynntils.models.items.encoding.impl.item;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearAttackSpeed;
-import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.encoding.data.CustomGearTypeData;
@@ -51,7 +50,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         List<StatPossibleValues> possibleValues = new ArrayList<>();
         List<StatActualValue> identifications = new ArrayList<>();
         int powderSlots = 0;
-        List<Powder> powders = new ArrayList<>();
+        List<Pair<Powder, Integer>> powders = new ArrayList<>();
 
         // Required blocks
         CustomGearTypeData gearTypeData = itemDataMap.get(CustomGearTypeData.class);
@@ -106,7 +105,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
                             int max = statPossibleValues.range().high();
                             int value = (max <= 0) ? max : Math.round(max * effectStrength / 100f);
 
-                            return new StatActualValue(statPossibleValues.statType(), value, false, RangedValue.NONE);
+                            return new StatActualValue(statPossibleValues.statType(), value, RangedValue.NONE, false);
                         })
                         .toList();
             }
@@ -115,25 +114,26 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         PowderData powderData = itemDataMap.get(PowderData.class);
         if (powderData != null) {
             powderSlots = powderData.powderSlots();
-            powders = powderData.powders().stream().map(Pair::a).toList();
+            powders = powderData.powders();
         }
 
-        return ErrorOr.of(new CraftedGearItem(
+        CraftedGearItem item = new CraftedGearItem(
                 name,
                 gearType,
-                attackSpeed,
                 dps,
                 health,
+                durability,
+                attackSpeed,
                 damages,
                 defences,
                 requirements,
-                possibleValues,
+                null,
                 identifications,
-                powders,
                 powderSlots,
-                GearInstanceRequirements.UNKNOWN,
-                durability,
-                0));
+                powders,
+                0);
+        if (powderData != null) item.setPowderSpecial(powderData.powderSpecial());
+        return ErrorOr.of(item);
     }
 
     @Override
@@ -149,7 +149,7 @@ public class CraftedGearItemTransformer extends ItemTransformer<CraftedGearItem>
         // chat text by ItemEncodingModel so Wynncraft's chat moderation can inspect them.
         dataList.add(new DamageData(item.getDps(), item.getAttackSpeed(), item.getDamages()));
         dataList.add(new DefenseData(item.getHealth(), item.getDefences()));
-        dataList.add(new CustomIdentificationsData(item.getPossibleValues(), item.getIdentifications()));
+        dataList.add(new CustomIdentificationsData(item.getIdentifications()));
         dataList.add(PowderData.from(item));
 
         return dataList;
