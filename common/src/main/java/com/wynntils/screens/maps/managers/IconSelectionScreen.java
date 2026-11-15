@@ -15,6 +15,7 @@ import com.wynntils.screens.maps.managers.widgets.StyledButton;
 import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.screens.maps.managers.widgets.iconselection.IconGridScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.iconselection.IconSelectionProviderScrollBarWidget;
+import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.impl.MapIconImpl;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
@@ -36,6 +37,7 @@ import java.util.function.Consumer;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.screens.ConfirmScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -471,15 +473,45 @@ public class IconSelectionScreen extends WynntilsScreen {
     private void onDeleteClicked() {
         if (selectedIconId == null || !isCustomIconId(selectedIconId)) return;
 
-        Services.MapData.getIcon(selectedIconId)
-                .filter(MapIconImpl.class::isInstance)
-                .map(MapIconImpl.class::cast)
+        // Deleting cannot be undone, and waypoints may still be using the icon, so ask first
+        String iconId = selectedIconId;
+        String iconName = iconId.substring(CUSTOM_ICON_PREFIX.length());
+        long waypointsUsingIcon = Services.Waypoints.getWaypoints().stream()
+                .filter(waypoint -> waypoint.getAttributes()
+                        .flatMap(MapAttributes::getIconId)
+                        .filter(iconId::equals)
+                        .isPresent())
+                .count();
+
+        Component message = waypointsUsingIcon > 0
+                ? Component.translatable(
+                        "screens.wynntils.map.iconSelectionScreen.deleteConfirm.messageInUse",
+                        iconName,
+                        waypointsUsingIcon)
+                : Component.translatable("screens.wynntils.map.iconSelectionScreen.deleteConfirm.message", iconName);
+
+        McUtils.setScreen(new ConfirmScreen(
+                confirmed -> {
+                    if (confirmed) {
+                        deleteCustomIcon(iconId);
+                    }
+
+                    // The widgets are rebuilt when this screen is shown again, which also updates the icon grid
+                    McUtils.setScreen(this);
+                },
+                Component.translatable("screens.wynntils.map.iconSelectionScreen.deleteConfirm.title"),
+                message));
+    }
+
+    private void deleteCustomIcon(String iconId) {
+        Services.Waypoints.getCustomIcons().stream()
+                .filter(icon -> icon.getIconId().equals(iconId))
+                .findFirst()
                 .ifPresent(Services.Waypoints::removeCustomIcon);
 
-        setSelectedIconId(null);
-        providerListScrollWidget.populateWidgets();
-        iconGridScrollWidget.refreshIcons(false);
-        updateBrowseButtons();
+        if (iconId.equals(selectedIconId)) {
+            selectedIconId = null;
+        }
     }
 
     private void onSelectClicked() {
