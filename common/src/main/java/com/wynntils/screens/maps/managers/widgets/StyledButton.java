@@ -71,6 +71,7 @@ public final class StyledButton extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!this.active || !this.visible) return false;
         if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
         if (!this.isMouseOver(event.x(), event.y())) return false;
 
