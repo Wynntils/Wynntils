@@ -51,7 +51,7 @@ public class LevelFilterWidget extends GuideFilterWidget {
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal("Level")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         getX(),
                         getY(),
                         CommonColors.WHITE,
@@ -166,7 +166,7 @@ public class LevelFilterWidget extends GuideFilterWidget {
                     128,
                     20,
                     Component.literal((minSlider ? "Min: " : "Max: ") + initalLevel)
-                            .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)),
+                            .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)),
                     (double) (initalLevel - MIN_LEVEL) / (maxLevel - MIN_LEVEL));
 
             level = initalLevel;
@@ -210,7 +210,7 @@ public class LevelFilterWidget extends GuideFilterWidget {
         @Override
         protected void updateMessage() {
             this.setMessage(Component.literal((minSlider ? "Min: " : "Max: ") + level)
-                    .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT)));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
         }
 
         @Override

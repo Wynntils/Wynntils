@@ -4,20 +4,22 @@
  */
 package com.wynntils.models.profession.type;
 
+import com.wynntils.handlers.tooltip.type.ItemEmblemSprite;
+
 public enum GatheringToolType {
-    AXE(ProfessionType.WOODCUTTING, "axe", "\uE010"),
-    PICKAXE(ProfessionType.MINING, "pickaxe", "\uE012"),
-    FISHING_ROD(ProfessionType.FISHING, "rod", "\uE013"),
-    SCYTHE(ProfessionType.FARMING, "scythe", "\uE011");
+    AXE(ProfessionType.WOODCUTTING, "axe", ItemEmblemSprite.AXE),
+    PICKAXE(ProfessionType.MINING, "pickaxe", ItemEmblemSprite.PICKAXE),
+    FISHING_ROD(ProfessionType.FISHING, "rod", ItemEmblemSprite.FISHING_ROD),
+    SCYTHE(ProfessionType.FARMING, "scythe", ItemEmblemSprite.SCYTHE);
 
     private final ProfessionType professionType;
     private final String apiName;
-    private final String emblemCharacter;
+    private final ItemEmblemSprite emblemSprite;
 
-    GatheringToolType(ProfessionType professionType, String apiName, String emblemCharacter) {
+    GatheringToolType(ProfessionType professionType, String apiName, ItemEmblemSprite emblemSprite) {
         this.professionType = professionType;
         this.apiName = apiName;
-        this.emblemCharacter = emblemCharacter;
+        this.emblemSprite = emblemSprite;
     }
 
     public static GatheringToolType fromApiName(String apiName) {
@@ -34,7 +36,7 @@ public enum GatheringToolType {
         return professionType;
     }
 
-    public String getEmblemCharacter() {
-        return emblemCharacter;
+    public ItemEmblemSprite getEmblemSprite() {
+        return emblemSprite;
     }
 }

@@ -8,6 +8,7 @@ import com.wynntils.models.abilities.AbilityModel;
 import com.wynntils.models.abilities.ArcherBeastModel;
 import com.wynntils.models.abilities.CastedAbilityModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
+import com.wynntils.models.abilities.ShamanRitualCircleModel;
 import com.wynntils.models.abilities.ShamanSummonModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
@@ -135,6 +136,7 @@ public final class Models {
     public static final ServerListModel ServerList = new ServerListModel();
     public static final SetModel Set = new SetModel();
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel();
+    public static final ShamanRitualCircleModel ShamanRitualCircle = new ShamanRitualCircleModel();
     public static final ShamanSummonModel ShamanSummon = new ShamanSummonModel();
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel();
     public static final CastedAbilityModel CastedAbility = new CastedAbilityModel();

@@ -23,7 +23,7 @@ public enum GearTier {
     LEGENDARY(ChatFormatting.AQUA, 12, 4.5f, CustomColor.fromInt(0xcff9f9)),
     FABLED(ChatFormatting.RED, 16, 8.0f, CustomColor.fromInt(0xf2c2c2)),
     MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f, CustomColor.fromInt(0xe0b3e6)),
-    CRAFTED(ChatFormatting.DARK_AQUA, 0, 0.0f, CustomColor.NONE);
+    CRAFTED(ChatFormatting.DARK_AQUA, 0, 0.0f, CustomColor.fromInt(0xaed4d4));
 
     private final ChatFormatting chatFormatting;
     private final int baseCost;

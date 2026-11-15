@@ -41,10 +41,10 @@ import java.util.Optional;
 import java.util.Set;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.neoforged.bus.api.SubscribeEvent;
-import org.joml.Matrix4f;
 
 @ConfigCategory(Category.COMBAT)
 public class RangeVisualizerFeature extends Feature {
@@ -93,10 +93,9 @@ public class RangeVisualizerFeature extends Feature {
             int color = circleType.a().asInt();
 
             e.getSubmitNodeCollector()
-                    .submitCustomGeometry(
-                            e.getPoseStack(), CustomRenderTypes.POSITION_COLOR_QUAD, (entry, vertices) -> {
-                                drawCircle(entry, vertices, player.isCrouching() ? 0.15f : 0.0f, radius, color);
-                            });
+                    .submitCustomGeometry(e.getPoseStack(), CustomRenderTypes.RANGE_QUAD, (entry, vertices) -> {
+                        drawCircle(entry, vertices, player.isCrouching() ? 0.15f : 0.0f, radius, color);
+                    });
         });
     }
 
@@ -134,7 +133,7 @@ public class RangeVisualizerFeature extends Feature {
             event.getSubmitNodeCollector()
                     .submitCustomGeometry(
                             poseStack,
-                            CustomRenderTypes.POSITION_COLOR_QUAD,
+                            CustomRenderTypes.RANGE_QUAD,
                             (entry, vertices) -> drawCircle(entry, vertices, 0f, radius, color));
         }
 
@@ -279,8 +278,6 @@ public class RangeVisualizerFeature extends Feature {
      */
     private static void drawCircle(
             PoseStack.Pose pose, VertexConsumer consumer, float yOffset, float radius, int color) {
-        Matrix4f matrix4f = pose.pose();
-
         double angleStep = 2 * Math.PI / SEGMENTS;
         double startingAngle = -(System.currentTimeMillis() % 40000) * 2 * Math.PI / 40000.0;
         double angle = startingAngle;
@@ -292,13 +289,53 @@ public class RangeVisualizerFeature extends Feature {
             }
             float x = (float) (Math.sin(angle) * radius);
             float z = (float) (Math.cos(angle) * radius);
-            consumer.addVertex(matrix4f, x, yOffset, z).setColor(color);
-            consumer.addVertex(matrix4f, x, yOffset + HEIGHT, z).setColor(color);
             angle += angleStep;
             float x2 = (float) (Math.sin(angle) * radius);
             float z2 = (float) (Math.cos(angle) * radius);
-            consumer.addVertex(matrix4f, x2, yOffset + HEIGHT, z2).setColor(color);
-            consumer.addVertex(matrix4f, x2, yOffset, z2).setColor(color);
+            float normalX = (float) -Math.sin(angle - angleStep / 2);
+            float normalZ = (float) -Math.cos(angle - angleStep / 2);
+            consumer.addVertex(pose.pose(), x, yOffset, z)
+                    .setColor(color)
+                    .setUv(0.5f, 0.5f)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(pose, normalX, 0, normalZ);
+            consumer.addVertex(pose.pose(), x, yOffset + HEIGHT, z)
+                    .setColor(color)
+                    .setUv(0.5f, 0.5f)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(pose, normalX, 0, normalZ);
+            consumer.addVertex(pose.pose(), x2, yOffset + HEIGHT, z2)
+                    .setColor(color)
+                    .setUv(0.5f, 0.5f)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(pose, normalX, 0, normalZ);
+            consumer.addVertex(pose.pose(), x2, yOffset, z2)
+                    .setColor(color)
+                    .setUv(0.5f, 0.5f)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(pose, normalX, 0, normalZ);
+
+            // The beacon pipeline culls back faces, so add the other side too
+            consumer.addVertex(pose.pose(), x2, yOffset, z2)
+                    .setColor(color)
+                    .setUv(0.5f, 0.5f)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(pose, -normalX, 0, -normalZ);
+            consumer.addVertex(pose.pose(), x2, yOffset + HEIGHT, z2)
+                    .setColor(color)
+                    .setUv(0.5f, 0.5f)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(pose, -normalX, 0, -normalZ);
+            consumer.addVertex(pose.pose(), x, yOffset + HEIGHT, z)
+                    .setColor(color)
+                    .setUv(0.5f, 0.5f)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(pose, -normalX, 0, -normalZ);
+            consumer.addVertex(pose.pose(), x, yOffset, z)
+                    .setColor(color)
+                    .setUv(0.5f, 0.5f)
+                    .setLight(LightTexture.FULL_BRIGHT)
+                    .setNormal(pose, -normalX, 0, -normalZ);
         }
     }
 }

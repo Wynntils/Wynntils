@@ -13,6 +13,7 @@ import com.wynntils.core.text.FontLookup;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.core.text.fonts.wynnfonts.BannerSymbolFont;
 import com.wynntils.core.text.fonts.wynnfonts.FancyFont;
+import com.wynntils.core.text.fonts.wynnfonts.TooltipBannerFont;
 import com.wynntils.core.text.fonts.wynnfonts.TooltipIdentificationMeterFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsCoordinatesFont;
@@ -50,6 +51,7 @@ public final class FontManager extends Manager {
         registerFont(new BannerBoxFont());
         registerFont(new BannerSymbolFont());
         registerFont(new FancyFont());
+        registerFont(new TooltipBannerFont());
         registerFont(new TooltipIdentificationMeterFont());
         registerFont(new WynncraftKeybindsFont());
         registerFont(new WynntilsCoordinatesFont());

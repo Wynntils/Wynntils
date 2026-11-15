@@ -1,0 +1,27 @@
+{
+  "fontId": "tooltip/banner",
+  "glyphs": {
+    "emerald_background": "\uE000",
+    "emerald_foreground": "\uF000",
+    "active_flame_background": "\uE001",
+    "active_flame_foreground": "\uF001",
+    "untradable_background": "\uE002",
+    "untradable_foreground": "\uF002",
+    "quest_background": "\uE003",
+    "quest_foreground": "\uF003",
+    "inactive_flame_background": "\uE004",
+    "inactive_flame_foreground": "\uF004",
+    "reroll_background": "\uE005",
+    "reroll_foreground": "\uF005",
+    "earth_background": "\uE006",
+    "earth_foreground": "\uF006",
+    "thunder_background": "\uE007",
+    "thunder_foreground": "\uF007",
+    "water_background": "\uE008",
+    "water_foreground": "\uF008",
+    "fire_background": "\uE009",
+    "fire_foreground": "\uF009",
+    "air_background": "\uE00A",
+    "air_foreground": "\uF00A"
+  }
+}

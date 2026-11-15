@@ -9,8 +9,6 @@ import java.util.Map;
 
 public record GearInstanceRequirements(
         boolean levelReqMet, boolean classReqMet, Map<Skill, Boolean> skillReqsMet, boolean questReqMet) {
-    public static final GearInstanceRequirements UNKNOWN = new GearInstanceRequirements(false, false, Map.of(), false);
-
     public boolean meetsAllRequirements() {
         return levelReqMet
                 && classReqMet

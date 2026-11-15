@@ -4,14 +4,12 @@
  */
 package com.wynntils.screens.guides.charm;
 
-import com.wynntils.core.components.Handlers;
-import com.wynntils.models.items.WynnItemData;
+import com.wynntils.core.components.Models;
+import com.wynntils.handlers.tooltip.builders.IdentifiableTooltipBuilder;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.items.items.game.CharmItem;
 import com.wynntils.models.rewards.type.CharmInfo;
 import com.wynntils.screens.guides.GuideItemStack;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.TooltipUtils;
-import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
@@ -37,9 +35,8 @@ public class GuideCharmItemStack extends GuideItemStack {
     @Override
     public List<Component> getTooltipLines(Item.TooltipContext context, Player player, TooltipFlag isAdvanced) {
         if (generatedTooltip == null) {
-            List<Component> tooltip = new ArrayList<>(buildTooltip());
-
-            generatedTooltip = tooltip;
+            generatedTooltip = IdentifiableTooltipBuilder.buildNewItem(charmItem, ItemSourceType.GUIDE, "", currentPage)
+                    .getTooltipLines(Models.Character.getClassType());
         }
 
         return generatedTooltip;
@@ -50,28 +47,8 @@ public class GuideCharmItemStack extends GuideItemStack {
     }
 
     public void changePage() {
-        if (currentPage == 0) {
-            currentPage = 2;
-        } else if (currentPage == 2) {
-            currentPage = 0;
-        }
+        currentPage = (currentPage + 1) % 3;
 
         generatedTooltip = null;
-    }
-
-    public List<Component> buildTooltip() {
-        if (currentPage == 0) {
-            charmItem.getData().getOrCalculate(WynnItemData.TOOLTIP_KEY, () -> Handlers.Tooltip.buildNew(charmItem));
-            return TooltipUtils.getWynnItemTooltip(this, charmItem);
-        } else {
-            List<Component> tooltipLines =
-                    buildObtainInfoPage(charmItem.getItemInfo().metaInfo().obtainInfo());
-            int widestLine = tooltipLines.stream()
-                    .mapToInt(McUtils.mc().font::width)
-                    .max()
-                    .orElse(0);
-            tooltipLines.addAll(buildPaginationLines(currentPage, 3, widestLine));
-            return tooltipLines;
-        }
     }
 }

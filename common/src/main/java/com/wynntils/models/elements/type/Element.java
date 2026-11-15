@@ -5,6 +5,7 @@
 package com.wynntils.models.elements.type;
 
 import com.wynntils.utils.StringUtils;
+import java.util.Locale;
 import net.minecraft.ChatFormatting;
 
 public enum Element {
@@ -49,6 +50,15 @@ public enum Element {
     public static Element fromEncodingId(int encodingId) {
         for (Element element : Element.values()) {
             if (element.encodingId == encodingId) {
+                return element;
+            }
+        }
+        return null;
+    }
+
+    public static Element fromApiName(String name) {
+        for (Element element : Element.values()) {
+            if (element.name().toLowerCase(Locale.ROOT).equals(name)) {
                 return element;
             }
         }

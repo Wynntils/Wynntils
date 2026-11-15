@@ -4,26 +4,12 @@
  */
 package com.wynntils.models.stats.type;
 
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.RangedValue;
-import java.util.Optional;
 
 public record StatActualValue(
-        StatType statType,
-        int value,
-        boolean perfectInternalRoll,
-        RangedValue internalRoll,
-        boolean hasIconPrefix,
-        Optional<Character> vanillaMeter) {
-    public StatActualValue(StatType statType, int value, boolean perfectInternalRoll, RangedValue internalRoll) {
-        this(statType, value, perfectInternalRoll, internalRoll, false, Optional.empty());
-    }
-
-    public StatActualValue(
-            StatType statType,
-            int value,
-            boolean perfectInternalRoll,
-            RangedValue internalRoll,
-            boolean hasIconPrefix) {
-        this(statType, value, perfectInternalRoll, internalRoll, hasIconPrefix, Optional.empty());
+        StatType statType, int value, RangedValue internalRoll, boolean perfectInternalRoll, CappedValue vanillaMeter) {
+    public StatActualValue(StatType statType, int value, RangedValue internalRoll, boolean perfectInternalRoll) {
+        this(statType, value, internalRoll, perfectInternalRoll, CappedValue.EMPTY);
     }
 }

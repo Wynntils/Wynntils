@@ -22,7 +22,7 @@ public class MountStatsMaxDataTransformer extends DataTransformer<MountStatsMaxD
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, MountStatsMaxData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> encodeMountStatsMaxData(data);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> encodeMountStatsMaxData(data);
         };
     }
 
@@ -30,7 +30,7 @@ public class MountStatsMaxDataTransformer extends DataTransformer<MountStatsMaxD
     public ErrorOr<MountStatsMaxData> decodeData(
             ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> decodeMountStatsMaxData(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> decodeMountStatsMaxData(byteReader);
         };
     }
 

@@ -246,6 +246,13 @@ public class CharacterFunctions {
         }
     }
 
+    public static class RitualCircleRadiusFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.ShamanRitualCircle.getRadius();
+        }
+    }
+
     public static class CommanderDurationFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
@@ -278,6 +285,27 @@ public class CharacterFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Ability.momentumBar.getMomentum();
+        }
+    }
+
+    public static class OnTheBrinkPercentFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Ability.onTheBrinkBar.isActive()
+                    ? Models.Ability.onTheBrinkBar.getBarProgress().value()
+                    : CappedValue.EMPTY;
+        }
+
+        @Override
+        protected List<String> getAliases() {
+            return List.of("on_the_brink_pct");
+        }
+    }
+
+    public static class OnTheBrinkFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ability.onTheBrinkBar.isActive() ? Models.Ability.onTheBrinkBar.getOnTheBrink() : 0;
         }
     }
 

@@ -152,7 +152,7 @@ public enum Texture {
     MINI_QUEST_ICON("icons/activities/mini_quest_icon.png", 22, 22),
     QUEST_ICON("icons/activities/quest_icon.png", 20, 19),
     STORYLINE_QUEST_ICON("icons/activities/storyline_quest_icon.png", 20, 19),
-    TIME_TRIAL("icons/activities/time_trial_icon.png", 15, 13),
+    TIME_TRIAL("icons/activities/time_trial_icon.png", 24, 24),
     WORLD_EVENT_ICON("icons/activities/world_event_icon.png", 22, 17),
 
     // Config Categories
@@ -451,6 +451,10 @@ public enum Texture {
 
     // region Players
     LEADERBOARD_BADGES("players/leaderboard_badges.png", 855, 54),
+    // endregion
+
+    // region Render
+    WHITE_PIXEL("render/white_pixel.png", 1, 1),
     // endregion
 
     // region Seaskipper

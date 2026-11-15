@@ -22,6 +22,7 @@ import com.wynntils.overlays.gamebars.MantraBarOverlay;
 import com.wynntils.overlays.gamebars.MirrorImageBarOverlay;
 import com.wynntils.overlays.gamebars.MomentumBarOverlay;
 import com.wynntils.overlays.gamebars.NightcloakKnivesBarOverlay;
+import com.wynntils.overlays.gamebars.OnTheBrinkBarOverlay;
 import com.wynntils.overlays.gamebars.OphanimBarOverlay;
 import com.wynntils.utils.type.RenderElementType;
 
@@ -62,6 +63,9 @@ public class GameBarsOverlayFeature extends Feature {
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final MomentumBarOverlay momentumBarOverlay = new MomentumBarOverlay();
+
+    @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
+    private final OnTheBrinkBarOverlay onTheBrinkBarOverlay = new OnTheBrinkBarOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.BOSS_BARS)
     private final OphanimBarOverlay ophanimBarOverlay = new OphanimBarOverlay();

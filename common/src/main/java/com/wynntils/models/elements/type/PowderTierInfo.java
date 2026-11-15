@@ -7,6 +7,7 @@ package com.wynntils.models.elements.type;
 public record PowderTierInfo(
         Powder element,
         int tier,
+        int levelRequirement,
         int min,
         int max,
         int convertedFromNeutral,
