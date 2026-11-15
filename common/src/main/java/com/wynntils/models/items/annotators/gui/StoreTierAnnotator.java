@@ -6,6 +6,7 @@ package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.gui.StoreItem;
@@ -29,7 +30,7 @@ public final class StoreTierAnnotator implements GuiItemAnnotator {
         StyledTextPart firstPart = firstLine.getFirstPart();
 
         if (firstPart == null) return null;
-        if (!firstPart.getPartStyle().getFont().equals(RARITY_FONT)) return null;
+        if (!firstPart.getPartStyle().getFont().equals(BannerBoxFont.BANNER_BOX_FONT)) return null;
 
         StoreTier tier = StoreTier.parseTier(firstLine.getStringWithoutFormatting());
         if (tier == null) return null;
