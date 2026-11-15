@@ -88,7 +88,12 @@ public class ProviderManagerEntryWidget extends ProviderEntryWidget {
             String providerId = getProviderId();
             if (Services.MapData.toggleProvider(providerId, () -> parent.scheduleRefreshAfterLoad(providerId))) {
                 enabled = Services.MapData.isProviderEnabled(getProviderId());
-                parent.setSelectedProvider(getProviderId(), providerType);
+
+                // Only what is shown for the selected provider depends on its enabled state, so toggling another
+                // provider must not change the selection
+                if (providerId.equals(parent.getSelectedCompleteProviderId())) {
+                    parent.refreshSelectedProvider();
+                }
             }
 
             return true;
