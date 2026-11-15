@@ -365,7 +365,10 @@ public class IconSelectionScreen extends WynntilsScreen {
 
         fontRenderer.renderAlignedTextInBox(
                 guiGraphics,
-                StyledText.fromComponent(Component.translatable("screens.wynntils.map.iconSelectionScreen.help")),
+                StyledText.fromComponent(Component.translatable(
+                        "screens.wynntils.map.iconSelectionScreen.help",
+                        MapIconImpl.MAX_ICON_SIZE,
+                        MapIconImpl.MAX_ICON_SIZE)),
                 cardX + 90,
                 cardX + 360 - 14,
                 tileY + 2 + fontRenderer.getFont().lineHeight + 4,
@@ -571,10 +574,22 @@ public class IconSelectionScreen extends WynntilsScreen {
             return;
         }
 
+        if (base64.length() > MapIconImpl.MAX_BASE64_LENGTH) {
+            // Checked before decoding, so that a huge texture is never even decoded
+            newIcon = null;
+            createSaveButton.active = false;
+            errorText = getTooLargeText();
+            return;
+        }
+
         try {
             byte[] texture = Base64.getDecoder().decode(base64);
             newIcon = new MapIconImpl(candidateId, texture);
             createSaveButton.active = true;
+        } catch (MapIconImpl.IconTooLargeException e) {
+            newIcon = null;
+            createSaveButton.active = false;
+            errorText = getTooLargeText();
         } catch (IOException | IllegalArgumentException e) {
             WynntilsMod.warn("Bad icon texture for " + name, e);
 
@@ -582,6 +597,13 @@ public class IconSelectionScreen extends WynntilsScreen {
             createSaveButton.active = false;
             errorText = Component.translatable("screens.wynntils.map.iconSelectionScreen.invalidBase64");
         }
+    }
+
+    private static Component getTooLargeText() {
+        return Component.translatable(
+                "screens.wynntils.map.iconSelectionScreen.tooLarge",
+                MapIconImpl.MAX_ICON_SIZE,
+                MapIconImpl.MAX_ICON_SIZE);
     }
 
     private void resetCreateForm() {
