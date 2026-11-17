@@ -17,14 +17,15 @@ public enum LootrunBeaconKind implements BeaconKind, NullableConfig {
     GREEN(CustomColor.fromInt(0x00FF80), CommonColors.GREEN),
     YELLOW(CustomColor.fromInt(0xFFFF33), CommonColors.YELLOW),
     BLUE(CustomColor.fromInt(0x5C5CE6), CommonColors.BLUE),
-    PURPLE(CustomColor.fromInt(0xFF00FF), CommonColors.PURPLE),
+    PURPLE(CustomColor.fromInt(0xA020F0), CommonColors.PURPLE),
     GRAY(CustomColor.fromInt(0xBFBFBF), CommonColors.LIGHT_GRAY),
     ORANGE(CustomColor.fromInt(0xFF9500), CommonColors.ORANGE),
     RED(CustomColor.fromInt(0xFF0000), CommonColors.RED),
     DARK_GRAY(CustomColor.fromInt(0x808080), CommonColors.GRAY),
     WHITE(CommonColors.WHITE, CommonColors.WHITE),
     AQUA(CustomColor.fromInt(0x55FFFF), CommonColors.AQUA),
-    PINK(CustomColor.fromInt(0xFD72B1), CustomColor.fromInt(0xFD72B1)),
+    PINK(CustomColor.fromInt(0xFF3892), CustomColor.fromInt(0xFF3892)),
+    VIOLET(CustomColor.fromInt(0xE08AFF), CustomColor.fromInt(0xE08AFF)),
     CRIMSON(CustomColor.fromInt(0xF010), WynncraftShaderColor.GRADIENT_2.color),
     RAINBOW(CustomColor.fromInt(0x00F000), WynncraftShaderColor.RAINBOW.color);
 

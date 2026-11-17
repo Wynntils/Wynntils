@@ -16,15 +16,16 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
             {concat(
             "§eYellow: ";string(lootrun_beacon_count("YELLOW"));"
             §9Blue: ";string(lootrun_beacon_count("BLUE"));"/30";"
-            §5Purple: ";string(lootrun_beacon_count("PURPLE"));"
+            §#a020f0ffPurple: ";string(lootrun_beacon_count("PURPLE"));"
             §7Gray: ";string(lootrun_beacon_count("GRAY"));"/3";"
             §6Orange: ";string(lootrun_beacon_count("ORANGE"));" (+";string(lootrun_orange_beacon_count);") (";string(lootrun_next_orange_expire);")";"
             §bAqua: ";string(lootrun_beacon_count("AQUA"));"
             §8Dark Gray: ";string(lootrun_beacon_count("DARK_GRAY"));"/2";"
+            §#e08affffViolet: ";string(lootrun_beacon_count("VIOLET"));"
             §aGreen: ";string(lootrun_beacon_count("GREEN"));"
             §cRed: ";string(lootrun_beacon_count("RED"));" (";string(lootrun_red_beacon_challenge_count);")";"
             §fWhite: ";string(lootrun_beacon_count("WHITE"));"/1";"
-            §#fd72b1ffPink: ";string(lootrun_beacon_count("PINK"));"
+            §#ff3892ffPink: ";string(lootrun_beacon_count("PINK"));"
             §#00f010ffCrimson: ";string(lootrun_beacon_count("CRIMSON"));"/2";"
             §#00f000ffRainbow: ";string(lootrun_beacon_count("RAINBOW"));" (";string(lootrun_rainbow_beacon_count);")")}
             """;
@@ -32,15 +33,16 @@ public class LootrunBeaconCountOverlay extends TextOverlay {
     private static final String PREVIEW_TEMPLATE = """
             §eYellow: 0
             §9Blue: 0/30
-            §5Purple: 0
+            §#a020f0ffPurple: 0
             §7Gray: 0/3
             §6Orange: 0 (+1) (5)
             §bAqua: 0
             §8Dark Gray: 0/2
+            §#e08affffViolet: 0
             §aGreen: 0
             §cRed: 0 (0)
             §fWhite: 0/1
-            §#fd72b1ffPink: 0
+            §#ff3892ffPink: 0
             §#00f010ffCrimson: 0/2
             §#00f000ffRainbow: 0 (10)
             """;
