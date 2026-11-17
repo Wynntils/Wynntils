@@ -318,13 +318,12 @@ public class CraftedGearTooltipBuilder extends TooltipBuilder {
 
     @Override
     protected void buildTooltip() {
-        List<TooltipElement> lines =
-                switch (page) {
-                    case 0 -> buildStatsPage();
-                    case 1 -> buildMiscStatsPage();
-                    case 2 -> buildLorePage();
-                    default -> List.of();
-                };
+        List<TooltipElement> lines = switch (page) {
+            case 0 -> buildStatsPage();
+            case 1 -> buildMiscStatsPage();
+            case 2 -> buildLorePage();
+            default -> List.of();
+        };
 
         this.tooltipLines = Handlers.Tooltip.alignTooltip(lines);
     }

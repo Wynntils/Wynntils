@@ -36,12 +36,11 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        Texture sortTexture =
-                switch (sortableActivityScreen.getActivitySortOrder()) {
-                    case LEVEL -> Texture.SORT_LEVEL_OFFSET;
-                    case DISTANCE -> Texture.SORT_DISTANCE_OFFSET;
-                    case ALPHABETIC -> Texture.SORT_ALPHABETICALLY_OFFSET;
-                };
+        Texture sortTexture = switch (sortableActivityScreen.getActivitySortOrder()) {
+            case LEVEL -> Texture.SORT_LEVEL_OFFSET;
+            case DISTANCE -> Texture.SORT_DISTANCE_OFFSET;
+            case ALPHABETIC -> Texture.SORT_ALPHABETICALLY_OFFSET;
+        };
 
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics, sortTexture, getX(), getY(), this.isHovered, RenderDirection.VERTICAL);

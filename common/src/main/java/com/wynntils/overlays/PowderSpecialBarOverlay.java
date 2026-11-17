@@ -93,12 +93,11 @@ public class PowderSpecialBarOverlay extends Overlay {
 
         final float renderedHeight = barTexture.get().getHeight() * (this.getWidth() / 81);
 
-        float renderY =
-                switch (this.getRenderVerticalAlignment()) {
-                    case TOP -> this.getRenderY();
-                    case MIDDLE -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
-                    case BOTTOM -> this.getRenderY() + this.getHeight() - renderedHeight;
-                };
+        float renderY = switch (this.getRenderVerticalAlignment()) {
+            case TOP -> this.getRenderY();
+            case MIDDLE -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+            case BOTTOM -> this.getRenderY() + this.getHeight() - renderedHeight;
+        };
 
         CustomColor color;
         StyledText text;

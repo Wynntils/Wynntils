@@ -275,13 +275,12 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public TextOverlay getTextOverlay() {
-            CustomColor highlightColor =
-                    switch (item.getTier()) {
-                        case 2 -> TIER_2_HIGHLIGHT_COLOR;
-                        case 3 -> TIER_3_HIGHLIGHT_COLOR;
-                        case 4 -> TIER_4_HIGHLIGHT_COLOR;
-                        default -> TIER_1_HIGHLIGHT_COLOR;
-                    };
+            CustomColor highlightColor = switch (item.getTier()) {
+                case 2 -> TIER_2_HIGHLIGHT_COLOR;
+                case 3 -> TIER_3_HIGHLIGHT_COLOR;
+                case 4 -> TIER_4_HIGHLIGHT_COLOR;
+                default -> TIER_1_HIGHLIGHT_COLOR;
+            };
             String text = valueToString(item.getTier(), aspectTierRomanNumerals.get());
 
             TextRenderSetting style =

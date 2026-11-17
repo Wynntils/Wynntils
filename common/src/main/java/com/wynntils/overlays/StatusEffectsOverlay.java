@@ -204,12 +204,11 @@ public class StatusEffectsOverlay extends Overlay {
                 return this.effect.asString();
             }
 
-            StyledText modifierText =
-                    switch (stackingBehaviour.get()) {
-                        case SUM -> getStackedSum();
-                        case GROUP -> getStackedGroup();
-                        case NONE -> StyledText.EMPTY; // This shouldn't be reached
-                    };
+            StyledText modifierText = switch (stackingBehaviour.get()) {
+                case SUM -> getStackedSum();
+                case GROUP -> getStackedGroup();
+                case NONE -> StyledText.EMPTY; // This shouldn't be reached
+            };
 
             return this.effect
                     .getPrefix()

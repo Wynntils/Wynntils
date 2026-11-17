@@ -81,12 +81,11 @@ public class LabelPoi implements Poi {
     }
 
     private CustomColor getRenderedColor(float alpha) {
-        CustomColor color =
-                switch (label.getLayer()) {
-                    case PROVINCE -> AQUA;
-                    case CITY -> YELLOW;
-                    case TOWN_OR_PLACE -> WHITE;
-                };
+        CustomColor color = switch (label.getLayer()) {
+            case PROVINCE -> AQUA;
+            case CITY -> YELLOW;
+            case TOWN_OR_PLACE -> WHITE;
+        };
 
         return color.withAlpha(alpha);
     }

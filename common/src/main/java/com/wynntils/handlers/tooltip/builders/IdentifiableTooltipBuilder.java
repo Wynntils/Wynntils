@@ -665,13 +665,12 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
         // Tomes don't have lore
         if (item.getItemInfo() instanceof TomeInfo) return lines;
 
-        Optional<StyledText> knownLore =
-                switch (item.getItemInfo()) {
-                    case GearInfo info -> info.metaInfo().lore();
-                    case TomeInfo info -> info.metaInfo().lore();
-                    case CharmInfo info -> info.metaInfo().lore();
-                    default -> Optional.empty();
-                };
+        Optional<StyledText> knownLore = switch (item.getItemInfo()) {
+            case GearInfo info -> info.metaInfo().lore();
+            case TomeInfo info -> info.metaInfo().lore();
+            case CharmInfo info -> info.metaInfo().lore();
+            default -> Optional.empty();
+        };
         StyledText parsedLore = item instanceof PagedItemProperty paged ? paged.getLore() : StyledText.EMPTY;
 
         lines.add(divider(getGearTier()));
@@ -978,13 +977,12 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
 
     @Override
     protected void buildTooltip() {
-        List<TooltipElement> lines =
-                switch (page) {
-                    case 0 -> buildStatsPage();
-                    case 1 -> buildMiscStatsPage();
-                    case 2 -> buildLorePage();
-                    default -> List.of();
-                };
+        List<TooltipElement> lines = switch (page) {
+            case 0 -> buildStatsPage();
+            case 1 -> buildMiscStatsPage();
+            case 2 -> buildLorePage();
+            default -> List.of();
+        };
 
         this.tooltipLines = Handlers.Tooltip.alignTooltip(lines);
     }
