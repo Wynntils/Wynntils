@@ -572,12 +572,11 @@ public class TextInputBoxWidget extends AbstractWidget {
         if (isFocused() || forceUnfocusedCursor) {
             Font font = FontRenderer.getInstance().getFont();
 
-            float cursorRenderY =
-                    switch (verticalAlignment) {
-                        case TOP -> y - (CURSOR_PADDING - 1);
-                        case MIDDLE -> y - font.lineHeight + (CURSOR_PADDING - 1);
-                        case BOTTOM -> y - font.lineHeight - (CURSOR_PADDING - 1);
-                    };
+            float cursorRenderY = switch (verticalAlignment) {
+                case TOP -> y - (CURSOR_PADDING - 1);
+                case MIDDLE -> y - font.lineHeight + (CURSOR_PADDING - 1);
+                case BOTTOM -> y - font.lineHeight - (CURSOR_PADDING - 1);
+            };
 
             RenderUtils.drawRect(guiGraphics, CommonColors.WHITE, x + 1, cursorRenderY, 1, font.lineHeight + 3);
         }

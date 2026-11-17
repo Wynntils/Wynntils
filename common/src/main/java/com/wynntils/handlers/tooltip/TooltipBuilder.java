@@ -131,14 +131,13 @@ public abstract class TooltipBuilder {
     }
 
     public static Component getNonContributingSkillPrefix(Skill skill) {
-        String prefix =
-                switch (skill) {
-                    case STRENGTH -> "\uDAFF\uDFFF\uE010\uDB00\uDC02";
-                    case DEXTERITY -> "\uE011\uDB00\uDC02";
-                    case INTELLIGENCE -> "\uDAFF\uDFFF\uE012\uDB00\uDC02";
-                    case DEFENCE -> "\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02";
-                    case AGILITY -> "\uE014\uDB00\uDC02";
-                };
+        String prefix = switch (skill) {
+            case STRENGTH -> "\uDAFF\uDFFF\uE010\uDB00\uDC02";
+            case DEXTERITY -> "\uE011\uDB00\uDC02";
+            case INTELLIGENCE -> "\uDAFF\uDFFF\uE012\uDB00\uDC02";
+            case DEFENCE -> "\uDAFF\uDFFF\uE013\uDB00\uDC01\uDB00\uDC02";
+            case AGILITY -> "\uE014\uDB00\uDC02";
+        };
 
         return Component.literal(prefix)
                 .withStyle(Style.EMPTY

@@ -72,12 +72,11 @@ public class CrowdSourcedDataWidget extends WynntilsButton implements TooltipPro
                         TextShadow.NONE,
                         1f);
 
-        Texture stateTexture =
-                switch (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType)) {
-                    case FALSE -> Texture.ACTIVITY_CANNOT_START;
-                    case TRUE -> Texture.ACTIVITY_FINISHED;
-                    case NULL -> Texture.QUESTION_MARK;
-                };
+        Texture stateTexture = switch (Managers.CrowdSourcedData.getDataCollectionState(crowdSourcedDataType)) {
+            case FALSE -> Texture.ACTIVITY_CANNOT_START;
+            case TRUE -> Texture.ACTIVITY_FINISHED;
+            case NULL -> Texture.QUESTION_MARK;
+        };
 
         RenderUtils.drawTexturedRect(guiGraphics, stateTexture, this.getX() + 1, this.getY() + 1);
     }

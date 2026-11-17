@@ -75,19 +75,17 @@ public class TimeTrialOverlay extends Overlay {
                 (lines.size() - 1) * lineSpacing + FontRenderer.getInstance().getFont().lineHeight * scale;
 
         HorizontalAlignment horizontalAlignment = this.getRenderHorizontalAlignment();
-        float renderX =
-                switch (horizontalAlignment) {
-                    case LEFT -> this.getRenderX();
-                    case CENTER -> this.getRenderX() + this.getWidth() / 2f;
-                    case RIGHT -> this.getRenderX() + this.getWidth();
-                };
+        float renderX = switch (horizontalAlignment) {
+            case LEFT -> this.getRenderX();
+            case CENTER -> this.getRenderX() + this.getWidth() / 2f;
+            case RIGHT -> this.getRenderX() + this.getWidth();
+        };
 
-        float renderY =
-                switch (this.getRenderVerticalAlignment()) {
-                    case TOP -> this.getRenderY();
-                    case MIDDLE -> this.getRenderY() + (this.getHeight() - totalHeight) / 2f;
-                    case BOTTOM -> this.getRenderY() + this.getHeight() - totalHeight;
-                };
+        float renderY = switch (this.getRenderVerticalAlignment()) {
+            case TOP -> this.getRenderY();
+            case MIDDLE -> this.getRenderY() + (this.getHeight() - totalHeight) / 2f;
+            case BOTTOM -> this.getRenderY() + this.getHeight() - totalHeight;
+        };
 
         for (StyledText line : lines) {
             FontRenderer.getInstance()
@@ -137,19 +135,17 @@ public class TimeTrialOverlay extends Overlay {
                 + FontRenderer.getInstance().getFont().lineHeight * scale;
 
         HorizontalAlignment horizontalAlignment = this.getRenderHorizontalAlignment();
-        float renderX =
-                switch (horizontalAlignment) {
-                    case LEFT -> this.getRenderX();
-                    case CENTER -> this.getRenderX() + this.getWidth() / 2f;
-                    case RIGHT -> this.getRenderX() + this.getWidth();
-                };
+        float renderX = switch (horizontalAlignment) {
+            case LEFT -> this.getRenderX();
+            case CENTER -> this.getRenderX() + this.getWidth() / 2f;
+            case RIGHT -> this.getRenderX() + this.getWidth();
+        };
 
-        float renderY =
-                switch (this.getRenderVerticalAlignment()) {
-                    case TOP -> this.getRenderY();
-                    case MIDDLE -> this.getRenderY() + (this.getHeight() - totalHeight) / 2f;
-                    case BOTTOM -> this.getRenderY() + this.getHeight() - totalHeight;
-                };
+        float renderY = switch (this.getRenderVerticalAlignment()) {
+            case TOP -> this.getRenderY();
+            case MIDDLE -> this.getRenderY() + (this.getHeight() - totalHeight) / 2f;
+            case BOTTOM -> this.getRenderY() + this.getHeight() - totalHeight;
+        };
 
         for (StyledText line : previewLines) {
             FontRenderer.getInstance()

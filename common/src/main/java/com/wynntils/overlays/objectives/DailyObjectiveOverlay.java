@@ -78,12 +78,11 @@ public class DailyObjectiveOverlay extends ObjectiveOverlayBase {
 
         final float fullHeight = renderedHeightWithoutTextHeight * objectives.size() - SPACE_BETWEEN + tempHeight;
 
-        float offsetY =
-                switch (this.getRenderVerticalAlignment()) {
-                    case TOP -> 0;
-                    case MIDDLE -> (this.getHeight() - fullHeight) / 2f;
-                    case BOTTOM -> this.getHeight() - fullHeight;
-                };
+        float offsetY = switch (this.getRenderVerticalAlignment()) {
+            case TOP -> 0;
+            case MIDDLE -> (this.getHeight() - fullHeight) / 2f;
+            case BOTTOM -> this.getHeight() - fullHeight;
+        };
 
         for (WynnObjective objective : objectives) {
             if (this.hideOnInactivity.get()) {

@@ -218,19 +218,17 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             // Only display overlay name when not rendering preview of the overlay
             if (!showPreview) {
-                float yOffset =
-                        switch (overlay.getRenderVerticalAlignment()) {
-                            case TOP -> 1.8f;
-                            case MIDDLE -> 0f;
-                            case BOTTOM -> -1.8f;
-                        };
+                float yOffset = switch (overlay.getRenderVerticalAlignment()) {
+                    case TOP -> 1.8f;
+                    case MIDDLE -> 0f;
+                    case BOTTOM -> -1.8f;
+                };
 
-                float xOffset =
-                        switch (overlay.getRenderHorizontalAlignment()) {
-                            case LEFT -> 1.8f;
-                            case CENTER -> 0f;
-                            case RIGHT -> -1.8f;
-                        };
+                float xOffset = switch (overlay.getRenderHorizontalAlignment()) {
+                    case LEFT -> 1.8f;
+                    case CENTER -> 0f;
+                    case RIGHT -> -1.8f;
+                };
 
                 float renderX = overlay.getRenderX() + xOffset;
                 float renderY = overlay.getRenderY() + yOffset;
@@ -886,13 +884,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             return new Pair<>(dragX, dragY);
         }
 
-        List<Edge> edges =
-                switch (selectionMode) {
-                    case NONE -> List.of();
-                    case CORNER -> selectedCorner.getEdges();
-                    case EDGE -> List.of(selectedEdge);
-                    case AREA -> Arrays.stream(Edge.values()).toList();
-                };
+        List<Edge> edges = switch (selectionMode) {
+            case NONE -> List.of();
+            case CORNER -> selectedCorner.getEdges();
+            case EDGE -> List.of(selectedEdge);
+            case AREA -> Arrays.stream(Edge.values()).toList();
+        };
 
         double minX = Double.NEGATIVE_INFINITY;
         double maxX = Double.POSITIVE_INFINITY;

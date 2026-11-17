@@ -90,19 +90,17 @@ public class ScoreboardOverlay extends Overlay {
         float y1 = getRenderY();
         float y2 = y1 + getHeight();
 
-        float bgX =
-                switch (getRenderHorizontalAlignment()) {
-                    case RIGHT -> x2 - scaledContentWidth;
-                    case CENTER -> (x1 + x2) * 0.5f - scaledContentWidth * 0.5f;
-                    case LEFT -> x1;
-                };
+        float bgX = switch (getRenderHorizontalAlignment()) {
+            case RIGHT -> x2 - scaledContentWidth;
+            case CENTER -> (x1 + x2) * 0.5f - scaledContentWidth * 0.5f;
+            case LEFT -> x1;
+        };
 
-        float bgY =
-                switch (getRenderVerticalAlignment()) {
-                    case TOP -> y1;
-                    case MIDDLE -> (y1 + y2) * 0.5f + (scaledTotalHeight / 3f) - scaledTotalHeight;
-                    case BOTTOM -> y2 - scaledTotalHeight;
-                };
+        float bgY = switch (getRenderVerticalAlignment()) {
+            case TOP -> y1;
+            case MIDDLE -> (y1 + y2) * 0.5f + (scaledTotalHeight / 3f) - scaledTotalHeight;
+            case BOTTOM -> y2 - scaledTotalHeight;
+        };
 
         float headerBoxHeight = fontRenderer.getFont().lineHeight * fontScale.get();
         if (renderHeader.get()) {

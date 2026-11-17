@@ -228,13 +228,12 @@ public class IntegerStatFilterWidget<T extends ItemStatProvider<?>> extends Guid
     protected List<StatProviderAndFilterPair> getFilters() {
         if (!enabledCheckbox.selected) return List.of();
 
-        Optional<? extends StatFilter<?>> statFilter =
-                switch (filterMode) {
-                    case ANY -> Optional.of(anyFilterSupplier.get());
-                    case POSITIVE -> rangedFilterFactory.apply(">=1");
-                    case NEGATIVE -> rangedFilterFactory.apply("<=-1");
-                    case CUSTOM -> rangedFilterFactory.apply(minSlider.getValue() + "-" + maxSlider.getValue());
-                };
+        Optional<? extends StatFilter<?>> statFilter = switch (filterMode) {
+            case ANY -> Optional.of(anyFilterSupplier.get());
+            case POSITIVE -> rangedFilterFactory.apply(">=1");
+            case NEGATIVE -> rangedFilterFactory.apply("<=-1");
+            case CUSTOM -> rangedFilterFactory.apply(minSlider.getValue() + "-" + maxSlider.getValue());
+        };
 
         return statFilter
                 .map(filter -> List.of(new StatProviderAndFilterPair(provider, filter)))
