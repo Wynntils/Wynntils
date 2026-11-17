@@ -275,7 +275,7 @@ jobs:
           name: Wynntils (${{ matrix.modloader }}) ${{ needs.set-version.outputs.tag }}
           version: ${{ needs.set-version.outputs.tag }}
           version-type: release
-          game-versions: 26.3
+          game-versions: 26.4
           environment: client
           changelog: ${{ steps.changelog.outputs.raw }}
 
