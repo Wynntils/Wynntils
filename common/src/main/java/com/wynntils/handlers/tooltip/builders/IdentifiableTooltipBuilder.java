@@ -430,7 +430,7 @@ public class IdentifiableTooltipBuilder<T, U> extends TooltipBuilder {
             MutableComponent shinyStatValue = Component.literal(String.format("%,d", shinyStat.value()))
                     .withStyle(CommonStyles.WHITE_LANGUAGE_WYNNCRAFT);
 
-            if (shinyStat.shinyRerolls() > 1) {
+            if (shinyStat.shinyRerolls() >= 1) {
                 shinyStatValue
                         .append(Component.literal(" "))
                         .append(BannerBoxFont.buildMessage(
