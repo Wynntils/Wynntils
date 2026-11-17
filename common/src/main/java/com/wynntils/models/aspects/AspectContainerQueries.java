@@ -48,11 +48,14 @@ public class AspectContainerQueries {
     private int checkAspectSlotIdx;
     private boolean hasAlreadyEquippedAspects;
 
+    private boolean reachedLastPage;
+    private boolean currentPageWasFull;
+    private List<String> currentPageSignature = List.of();
+
     // Ordered from first equippable to last equippable slot
     private static final List<Integer> EQUIPPED_SLOTS = List.of(18, 11, 4, 15, 26);
-    // Inventory slots where owned/aspect items appear (35-53)
     private static final List<Integer> ASPECT_INVENTORY_SLOTS =
-            IntStream.rangeClosed(35, 53).boxed().toList();
+            IntStream.rangeClosed(36, 53).boxed().toList();
 
     private static final int LAST_POSSIBLE_ASPECT_SLOT = 53;
 
@@ -148,10 +151,8 @@ public class AspectContainerQueries {
 
                 // Process page 1
                 .reprocess(scanner::processPage)
-
-                // Click through every page to the last
                 .repeat(
-                        c -> !c.items().get(LAST_POSSIBLE_ASPECT_SLOT).isEmpty(),
+                        c -> !scanner.hasReachedLastPage() && scanner.isCurrentPageFull(),
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
                                 .expectContainer(AspectsContainer.class)
                                 .accumulateSetSlotChanges(2)
@@ -177,6 +178,9 @@ public class AspectContainerQueries {
 
         hasAlreadyEquippedAspects = false;
         checkAspectSlotIdx = 0;
+        reachedLastPage = false;
+        currentPageWasFull = false;
+        currentPageSignature = List.of();
 
         QueryBuilder builder = ScriptedContainerQuery.builder("Aspect Unlock")
                 .onError(msg -> {
@@ -253,6 +257,8 @@ public class AspectContainerQueries {
                 // Scan page 1 for desired aspects
                 .reprocess(container -> {
                     if (hasAlreadyEquippedAspects) return;
+                    currentPageSignature = getPageSignature(container);
+                    currentPageWasFull = isPageFull(container);
                     scanPageForAspects(container, aspectsToEquip, aspectLocations, currentPage);
                 })
 
@@ -260,15 +266,14 @@ public class AspectContainerQueries {
                 .repeat(
                         c -> {
                             if (hasAlreadyEquippedAspects) return false;
-                            // Stop early if all 5 aspect slots are already filled
-                            if (checkAspectSlotIdx >= EQUIPPED_SLOTS.size()) return false;
+                            if (checkAspectSlotIdx >= Math.min(EQUIPPED_SLOTS.size(), aspectsToEquip.size()))
+                                return false;
 
                             // Continue if there are still aspects to equip on this page
                             Deque<Pair<String, Integer>> pageAspects = aspectLocations.get(currentPage);
                             if (pageAspects != null && !pageAspects.isEmpty()) return true;
 
-                            // Otherwise continue only if there is another page
-                            return !c.items().get(LAST_POSSIBLE_ASPECT_SLOT).isEmpty();
+                            return currentPageWasFull && !reachedLastPage;
                         },
                         QueryStep.clickOnSlot(() -> {
                                     Deque<Pair<String, Integer>> pageAspects = aspectLocations.get(currentPage);
@@ -317,9 +322,21 @@ public class AspectContainerQueries {
                                             pageAspects.clear();
                                         }
                                         scanPageForAspects(container, aspectsToEquip, aspectLocations, currentPage);
+
+                                        currentPageSignature = getPageSignature(container);
                                     } else {
-                                        // We just turned the page
+                                        // We just clicked "Next Page". If the page is unchanged, we were already on
+                                        // the last page
+                                        List<String> newSignature = getPageSignature(container);
+                                        if (newSignature.equals(currentPageSignature)) {
+                                            reachedLastPage = true;
+                                            onStatus.accept("Reached last page");
+                                            return;
+                                        }
+
                                         currentPage++;
+                                        currentPageSignature = newSignature;
+                                        currentPageWasFull = isPageFull(container);
                                         onStatus.accept("Scanning page " + currentPage);
 
                                         // Scan the new page for desired aspects
@@ -362,6 +379,36 @@ public class AspectContainerQueries {
                         .addLast(Pair.of(name, slot));
             }
         }
+    }
+
+    private static boolean isPageFull(ContainerContent container) {
+        List<ItemStack> items = container.items();
+        return LAST_POSSIBLE_ASPECT_SLOT < items.size()
+                && !items.get(LAST_POSSIBLE_ASPECT_SLOT).isEmpty();
+    }
+
+    private static List<String> getPageSignature(ContainerContent container) {
+        List<ItemStack> items = container.items();
+        List<String> signature = new ArrayList<>();
+
+        for (int slot : ASPECT_INVENTORY_SLOTS) {
+            if (slot >= items.size()) continue;
+
+            ItemStack stack = items.get(slot);
+            if (stack.isEmpty()) {
+                signature.add("");
+                continue;
+            }
+
+            Optional<AspectItem> aspectOpt = Models.Item.asWynnItem(stack, AspectItem.class);
+            if (aspectOpt.isPresent()) {
+                signature.add(aspectOpt.get().getName() + ":" + aspectOpt.get().getTier());
+            } else {
+                signature.add(stack.getHoverName().getString());
+            }
+        }
+
+        return signature;
     }
 
     private static List<String> getEquippedAspectNames(ContainerContent container) {
@@ -433,18 +480,35 @@ public class AspectContainerQueries {
     private static class AspectPageScanner {
         private final Map<String, Integer> ownedAspects = new TreeMap<>();
         private List<String> equippedAspects = null;
+        private List<String> lastPageSignature = null;
+        private boolean reachedLastPage = false;
+        private boolean currentPageFull = false;
+
+        public boolean hasReachedLastPage() {
+            return reachedLastPage;
+        }
+
+        public boolean isCurrentPageFull() {
+            return currentPageFull;
+        }
 
         public void processPage(ContainerContent content) {
             List<ItemStack> items = content.items();
 
+            // If the page is identical to the previous one, "Next Page" did nothing, so we were on the last page
+            List<String> signature = getPageSignature(content);
+            if (signature.equals(lastPageSignature)) {
+                reachedLastPage = true;
+                return;
+            }
+
+            lastPageSignature = signature;
+            currentPageFull = isPageFull(content);
+
             if (equippedAspects == null) {
                 List<String> equipped = new ArrayList<>();
 
-                List<Integer> equippedSlots = Models.Container.getCurrentContainer() instanceof AspectsContainer c
-                        ? c.getEquippedSlots()
-                        : EQUIPPED_SLOTS;
-
-                for (int slot : equippedSlots) {
+                for (int slot : EQUIPPED_SLOTS) {
                     if (slot >= items.size()) continue;
                     ItemStack stack = items.get(slot);
                     if (stack.isEmpty()) continue;
@@ -452,7 +516,13 @@ public class AspectContainerQueries {
                     StyledText itemName = StyledText.fromComponent(stack.getHoverName());
                     if (itemName.matches(NO_ASPECT_PATTERN)) continue;
 
-                    Models.Item.asWynnItem(stack, AspectItem.class).ifPresent(aspect -> equipped.add(aspect.getName()));
+                    Optional<AspectItem> aspectOpt = Models.Item.asWynnItem(stack, AspectItem.class);
+                    if (aspectOpt.isEmpty()) continue;
+
+                    AspectItem aspect = aspectOpt.get();
+
+                    equipped.add(aspect.getName());
+                    ownedAspects.put(aspect.getName(), aspect.getTier());
                 }
 
                 if (!equipped.isEmpty()) {
