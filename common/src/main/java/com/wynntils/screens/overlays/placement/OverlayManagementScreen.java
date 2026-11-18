@@ -1082,7 +1082,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                         List.of(Component.translatable("screens.wynntils.overlayManagement.showPreviewTooltip")),
                         150)));
 
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.overlayManagement.close"), button -> {
                             onClose();
                             McUtils.setScreen(previousScreen);
@@ -1092,7 +1092,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.closeTooltip")))
                 .build());
 
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         buttonsAtBottom ? Component.literal("🠝") : Component.literal("🠟"), button -> {
                             buttonsAtBottom = !buttonsAtBottom;
                             setupButtons();
@@ -1105,7 +1105,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                 : Component.translatable("screens.wynntils.overlayManagement.moveButtonsDownTooltip")))
                 .build());
 
-        this.addRenderableWidget(new Button.Builder(Component.literal("☰"), button -> {
+        this.addRenderableWidget(Button.builder(Component.literal("☰"), button -> {
                     Managers.Config.saveConfig();
                     onClose();
                     McUtils.setScreen(OverlayOrderingScreen.create(this));
@@ -1115,7 +1115,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.overlayManagement.orderTooltip")))
                 .build());
 
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.overlayManagement.apply"), button -> {
                             Managers.Config.saveConfig();
                             onClose();

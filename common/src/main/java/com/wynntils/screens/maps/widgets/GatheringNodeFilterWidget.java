@@ -51,7 +51,7 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
         this.gatheringNodeType = gatheringNodeType;
         this.icon = gatheringNodeType.materialType().getMaterialTexture();
 
-        toggleButton = new Button.Builder(
+        toggleButton = Button.builder(
                         getToggleText(), (button) -> filterScreen.toggleGatheringNodeType(gatheringNodeType))
                 .pos(x + width - 60, y)
                 .size(55, 20)

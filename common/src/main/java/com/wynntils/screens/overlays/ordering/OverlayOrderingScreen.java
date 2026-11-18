@@ -70,8 +70,7 @@ public class OverlayOrderingScreen extends WynntilsScreen {
         offsetX = (int) ((this.width - Texture.OVERLAY_ORDERING_BACKGROUND.width()) / 2f);
         offsetY = (int) ((this.height - Texture.OVERLAY_ORDERING_BACKGROUND.height()) / 2f);
 
-        saveButton = new Button.Builder(
-                        Component.translatable("screens.wynntils.overlayOrdering.save"), (b) -> onClose())
+        saveButton = Button.builder(Component.translatable("screens.wynntils.overlayOrdering.save"), (b) -> onClose())
                 .size(80, 20)
                 .pos(
                         offsetX + Texture.OVERLAY_ORDERING_BACKGROUND.width() / 2 - 40,

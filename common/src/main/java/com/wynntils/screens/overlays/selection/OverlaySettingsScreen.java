@@ -132,7 +132,7 @@ public final class OverlaySettingsScreen extends WynntilsScreen {
         addOptionButtons();
 
         // region Preview renderables
-        exitPreviewButton = this.addRenderableWidget(new Button.Builder(
+        exitPreviewButton = this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.overlaySettings.exitPreview"),
                         (button) -> togglePreview(false))
                 .pos((int) ((Texture.OVERLAY_SELECTION_GUI.width() / 2f) - 40) + offsetX, this.height - 25)

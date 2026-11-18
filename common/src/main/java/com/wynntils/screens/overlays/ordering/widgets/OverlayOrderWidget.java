@@ -57,12 +57,12 @@ public class OverlayOrderWidget extends AbstractWidget {
             textToRender = overlay.getTranslatedName();
         }
 
-        downButton = new Button.Builder(Component.literal("🠟"), (button) -> orderingScreen.reorderOverlay(overlay, -1))
+        downButton = Button.builder(Component.literal("🠟"), (button) -> orderingScreen.reorderOverlay(overlay, -1))
                 .pos(x + width - 40, y)
                 .size(20, 20)
                 .build();
 
-        upButton = new Button.Builder(Component.literal("🠝"), (button) -> orderingScreen.reorderOverlay(overlay, 1))
+        upButton = Button.builder(Component.literal("🠝"), (button) -> orderingScreen.reorderOverlay(overlay, 1))
                 .pos(x + width - 20, y)
                 .size(20, 20)
                 .build();

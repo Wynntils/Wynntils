@@ -198,8 +198,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         // region State buttons
         if (this.supportsSorting) {
-            toggleSortButton = new Button.Builder(
-                            Component.literal(sortMode ? "🔍" : "⇅"), (button -> toggleSortMode()))
+            toggleSortButton = Button.builder(Component.literal(sortMode ? "🔍" : "⇅"), (button -> toggleSortMode()))
                     .pos(108 + offsetX, 5 + offsetY)
                     .size(20, 20)
                     .tooltip(Tooltip.create(Component.translatable(
@@ -211,7 +210,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             this.addRenderableWidget(toggleSortButton);
         }
 
-        Button returnButton = new Button.Builder(Component.literal("⏎"), (button -> onClose()))
+        Button returnButton = Button.builder(Component.literal("⏎"), (button -> onClose()))
                 .pos(Texture.ITEM_FILTER_BACKGROUND.width() - 18 + offsetX, -22 + offsetY)
                 .size(20, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.itemFilter.return")))
@@ -221,7 +220,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
 
         boolean activeApply = applyButton != null && applyButton.active;
 
-        applyButton = new Button.Builder(Component.literal("✔").withStyle(ChatFormatting.GREEN), (button -> {
+        applyButton = Button.builder(Component.literal("✔").withStyle(ChatFormatting.GREEN), (button -> {
                     providersScrollOffset = 0;
                     sortScrollOffset = 0;
                     updateStateFromItemSearchWidget();
@@ -237,7 +236,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
         // endregion
 
         // region Preset buttons
-        savePresetButton = new Button.Builder(Component.literal("💾"), (button -> savePreset()))
+        savePresetButton = Button.builder(Component.literal("💾"), (button -> savePreset()))
                 .pos(330 + offsetX, 180 + offsetY)
                 .size(20, 20)
                 .build();

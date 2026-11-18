@@ -47,7 +47,7 @@ public class ChatTabsWidget extends AbstractWidget {
         this.gridDivisions = gridDivisions;
         this.parent = parent;
 
-        this.deleteButton = new Button.Builder(
+        this.deleteButton = Button.builder(
                         Component.translatable("screens.wynntils.chatTabsGui.delete")
                                 .withStyle(ChatFormatting.RED),
                         (button) -> {
@@ -57,11 +57,11 @@ public class ChatTabsWidget extends AbstractWidget {
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 17)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 5) - 3, 20)
                 .build();
-        this.moveUpButton = new Button.Builder(Component.literal("🠝"), (button) -> setChatTabIndex(-1))
+        this.moveUpButton = Button.builder(Component.literal("🠝"), (button) -> setChatTabIndex(-1))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 22)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 2) - 2, 20)
                 .build();
-        this.moveDownButton = new Button.Builder(Component.literal("🠟"), (button) -> setChatTabIndex(1))
+        this.moveDownButton = Button.builder(Component.literal("🠟"), (button) -> setChatTabIndex(1))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 24)), this.getY() + (this.height / 2) - 10)
                 .size((int) (this.width / gridDivisions * 2) - 2, 20)
                 .build();
