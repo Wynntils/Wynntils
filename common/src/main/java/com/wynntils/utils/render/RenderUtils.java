@@ -411,7 +411,9 @@ public final class RenderUtils {
         TextureAtlasSprite sprite = textureAtlas.getSprite(identifier);
         guiGraphics.guiRenderState.addGuiElement(new FloatBlitRenderState(
                 pipeline,
-                TextureSetup.singleTexture(textureAtlas.getTextureView(), textureAtlas.getSampler()),
+                TextureSetup.singleTexture(
+                        textureAtlas.getTexture().textureView(),
+                        textureAtlas.getTexture().sampler()),
                 new Matrix3x2f(guiGraphics.pose()),
                 x,
                 y,
