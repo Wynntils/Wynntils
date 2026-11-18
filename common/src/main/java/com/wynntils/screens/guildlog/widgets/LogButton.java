@@ -30,8 +30,8 @@ public class LogButton extends BasicTexturedButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractContents(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
+        super.extractContents(guiGraphics);
 
         RenderUtils.drawTexturedRect(guiGraphics, logType.getIcon(), getX() + 3, getY() + 3);
 
@@ -48,7 +48,9 @@ public class LogButton extends BasicTexturedButton {
 
         if (isHovered) {
             guiGraphics.setTooltipForNextFrame(
-                    Lists.transform(getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
+                    Lists.transform(getTooltipLines(), Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 }

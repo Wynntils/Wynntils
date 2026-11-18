@@ -54,12 +54,11 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND, x - 5, y - 5, this.width + 10, this.height + 10);
 
-        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        super.extractWidgetRenderState(guiGraphics);
     }
 
     @Override
@@ -73,10 +72,11 @@ public class LoadoutMenuScrollListWidget extends ScrollListWidget implements Ite
     }
 
     @Override
-    public void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    public void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics) {
         for (AbstractWidget widget : getWidgets()) {
-            if (widget instanceof ItemTooltipProvider itemTooltipProvider && widget.isMouseOver(mouseX, mouseY)) {
-                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics, mouseX, mouseY);
+            if (widget instanceof ItemTooltipProvider itemTooltipProvider
+                    && widget.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
+                itemTooltipProvider.renderHoveredItemTooltip(guiGraphics);
                 return;
             }
         }

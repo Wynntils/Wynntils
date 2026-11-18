@@ -166,8 +166,7 @@ public class TradeMarketQuickSearchFeature extends Feature {
         if (guessedGearList.isEmpty()) return;
 
         for (AbstractButton button : guessedGearList) {
-            button.extractRenderState(
-                    event.getGuiGraphics(), event.getMouseX(), event.getMouseY(), event.getPartialTicks());
+            button.extractRenderState(event.getGuiGraphics());
         }
     }
 

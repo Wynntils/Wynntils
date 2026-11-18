@@ -221,7 +221,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(GuildMapFeature.class)
                         .openGuildMapKeybind
@@ -240,7 +240,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(guiGraphics, mouseX, mouseY);
+        renderPois(guiGraphics);
 
         renderCursor(
                 guiGraphics,
@@ -256,11 +256,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderMapBorder(guiGraphics);
 
-        renderCoordinates(guiGraphics, mouseX, mouseY);
+        renderCoordinates(guiGraphics);
 
-        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapButtons(guiGraphics);
 
-        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        renderZoomWidgets(guiGraphics);
 
         renderHoveredTerritoryInfo(guiGraphics);
 
@@ -269,11 +269,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
         } else if (holdingZoomHandle) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if ((this.hovered != null && !(this.hovered instanceof TerritoryPoi))
-                || isMouseOverZoomHandle(mouseX, mouseY)) {
+                || isMouseOverZoomHandle(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics);
     }
 
     public void changeToMainMap() {
@@ -282,15 +282,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
     @Override
     protected void renderPois(
-            List<Poi> pois,
-            GuiGraphicsExtractor guiGraphics,
-            BoundingBox textureBoundingBox,
-            float poiScale,
-            int mouseX,
-            int mouseY) {
+            List<Poi> pois, GuiGraphicsExtractor guiGraphics, BoundingBox textureBoundingBox, float poiScale) {
         hovered = null;
 
-        List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
+        List<Poi> filteredPois =
+                getRenderedPois(pois, textureBoundingBox, poiScale, guiGraphics.mouseX(), guiGraphics.mouseY());
 
         // Render trading routes
         // We render them in both directions because optimizing it is not cheap either
@@ -369,7 +365,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         }
     }
 
-    private void renderPois(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphicsExtractor guiGraphics) {
         List<TerritoryPoi> advancementPois = Models.Territory.getTerritoryPoisFromAdvancement().stream()
                 .filter(this::filterDefense)
                 .filter(this::filterTreasury)
@@ -403,9 +399,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 renderedPois,
                 guiGraphics,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
-                1,
-                mouseX,
-                mouseY);
+                1);
     }
 
     public boolean isResourceMode() {

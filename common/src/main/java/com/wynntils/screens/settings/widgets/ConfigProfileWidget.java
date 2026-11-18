@@ -37,7 +37,7 @@ public class ConfigProfileWidget extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         if (this.isHovered) {
             currentScale += 0.01f;
         } else {
@@ -101,7 +101,8 @@ public class ConfigProfileWidget extends WynntilsButton {
         guiGraphics.pose().popMatrix();
 
         if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(Component.translatable(profile.getDescription()), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Component.translatable(profile.getDescription()), guiGraphics.mouseX(), guiGraphics.mouseY());
         }
     }
 

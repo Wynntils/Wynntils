@@ -41,7 +41,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRoundedRectWithBorder(
                 guiGraphics,
                 CommonColors.BLACK,
@@ -70,12 +70,15 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                         TextShadow.OUTLINE);
 
         // Don't want to display tooltip when the tile is outside the mask from the screen
-        if (isHovered && (mouseY <= maskTopY || mouseY >= maskBottomY)) {
+        if (isHovered && (guiGraphics.mouseY() <= maskTopY || guiGraphics.mouseY() >= maskBottomY)) {
             isHovered = false;
         }
 
         if (isHovered && !tooltip.isEmpty()) {
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltip, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 

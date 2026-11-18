@@ -35,7 +35,7 @@ public class AspectGuideButton extends GuideButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         renderBaseItem(guiGraphics, getColor());
 
         renderTextOverlay(
@@ -50,7 +50,7 @@ public class AspectGuideButton extends GuideButton {
         renderFavoriteIcon(guiGraphics);
 
         if (isHovered) {
-            renderTooltip(guiGraphics, mouseX, mouseY);
+            renderTooltip(guiGraphics);
         }
     }
 

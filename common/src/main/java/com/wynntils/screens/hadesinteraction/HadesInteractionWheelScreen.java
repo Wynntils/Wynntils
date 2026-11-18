@@ -99,7 +99,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         MutableComponent selectMessage = Component.empty()
                 .append(WynnFont.asFont("left_click", WynncraftKeybindsFont.class)
                         .withStyle(Style::withoutShadow))
@@ -136,7 +136,7 @@ public class HadesInteractionWheelScreen extends WynntilsScreen {
                         TextShadow.NORMAL,
                         1.5f);
 
-        hoveredOption = getHoveredOption(mouseX, mouseY);
+        hoveredOption = getHoveredOption(guiGraphics.mouseX(), guiGraphics.mouseY());
         for (int i = 0; i < options.size(); i++) {
             WheelOption option = options.get(i);
             Pair<Integer, Integer> centerPos = buttonPositions.get(i);

@@ -55,11 +55,10 @@ public abstract class InequalityNumericFilterWidget<T> extends GeneralFilterWidg
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        entryInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        inequalityButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        removeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        entryInput.extractRenderState(guiGraphics);
+        inequalityButton.extractRenderState(guiGraphics);
+        removeButton.extractRenderState(guiGraphics);
     }
 
     @Override

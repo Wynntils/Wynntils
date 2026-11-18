@@ -32,7 +32,7 @@ public class WynntilsMenuTag extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         if (isHovered) {
             offset = Math.min(2, offset + 1);
         } else {

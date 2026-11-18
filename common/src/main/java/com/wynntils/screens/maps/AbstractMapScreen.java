@@ -172,15 +172,16 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         // endregion
     }
 
-    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics) {
         List<GuiEventListener> widgets =
                 Streams.concat(children.stream(), mapButtons.stream()).toList();
         for (GuiEventListener child : widgets) {
-            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+            if (child instanceof TooltipProvider tooltipProvider
+                    && child.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 guiGraphics.setTooltipForNextFrame(
                         Lists.transform(tooltipProvider.getTooltipLines(), Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
                 return;
             }
         }
@@ -199,15 +200,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void renderPois(
-            List<Poi> pois,
-            GuiGraphicsExtractor guiGraphics,
-            BoundingBox textureBoundingBox,
-            float poiScale,
-            int mouseX,
-            int mouseY) {
+            List<Poi> pois, GuiGraphicsExtractor guiGraphics, BoundingBox textureBoundingBox, float poiScale) {
         hovered = null;
 
-        List<Poi> filteredPois = getRenderedPois(pois, textureBoundingBox, poiScale, mouseX, mouseY);
+        List<Poi> filteredPois =
+                getRenderedPois(pois, textureBoundingBox, poiScale, guiGraphics.mouseX(), guiGraphics.mouseY());
 
         // Reverse and Render
         for (int i = filteredPois.size() - 1; i >= 0; i--) {
@@ -373,9 +370,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         return super.keyPressed(event);
     }
 
-    protected void renderCoordinates(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        int gameX = (int) ((mouseX - centerX) / zoomRenderScale + mapCenterX);
-        int gameZ = (int) ((mouseY - centerZ) / zoomRenderScale + mapCenterZ);
+    protected void renderCoordinates(GuiGraphicsExtractor guiGraphics) {
+        int gameX = (int) ((guiGraphics.mouseX() - centerX) / zoomRenderScale + mapCenterX);
+        int gameZ = (int) ((guiGraphics.mouseY() - centerZ) / zoomRenderScale + mapCenterZ);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -404,7 +401,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderZoomWidgets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderZoomWidgets(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.ZOOM_BAR,
@@ -422,7 +419,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ZOOM_HANDLE, zoomHandleRenderX, zoomHandleRenderY);
 
         for (Renderable renderable : this.renderables) {
-            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
+            renderable.extractRenderState(guiGraphics);
         }
     }
 
@@ -446,7 +443,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         }
     }
 
-    protected void renderMapButtons(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
+    protected void renderMapButtons(GuiGraphicsExtractor guiGraphics) {
         int buttonBackgroundX;
         int buttonBackgroundY =
                 (int) (this.renderHeight - this.renderedBorderYOffset - Texture.MAP_BUTTONS_BACKGROUND_MIDDLE.height());
@@ -477,7 +474,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             RenderUtils.drawTexturedRect(
                     guiGraphics, Texture.MAP_BUTTONS_BACKGROUND_MIDDLE, buttonBackgroundX, buttonBackgroundY);
 
-            mapButtons.get(i).extractRenderState(guiGraphics, mouseX, mouseY, partialTicks);
+            mapButtons.get(i).extractRenderState(guiGraphics);
 
             buttonBackgroundX += Texture.MAP_BUTTONS_BACKGROUND_MIDDLE.width();
         }

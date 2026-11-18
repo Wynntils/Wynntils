@@ -61,8 +61,8 @@ public class SecretsScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SECRETS_BACKGROUND, offsetX, offsetY);
 
@@ -80,15 +80,19 @@ public class SecretsScreen extends WynntilsScreen {
                         VerticalAlignment.BOTTOM,
                         TextShadow.OUTLINE);
 
-        renderSecrets(guiGraphics, mouseX, mouseY, partialTick);
+        renderSecrets(guiGraphics);
 
         renderScroll(guiGraphics);
 
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX, mouseY, offsetX + 336, offsetX + 336 + Texture.SCROLL_BUTTON.width(), (int) scrollY, (int)
-                        (scrollY + Texture.SCROLL_BUTTON.height()))) {
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
+                offsetX + 336,
+                offsetX + 336 + Texture.SCROLL_BUTTON.width(),
+                (int) scrollY,
+                (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
@@ -196,9 +200,9 @@ public class SecretsScreen extends WynntilsScreen {
         return (secretInputs.size() - WIDGETS_PER_PAGE) * 22;
     }
 
-    private void renderSecrets(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderSecrets(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.enableScissor(guiGraphics, offsetX + 9, offsetY + 8, 322, 134);
-        secretInputs.forEach(secretInput -> secretInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        secretInputs.forEach(secretInput -> secretInput.extractRenderState(guiGraphics));
         RenderUtils.disableScissor(guiGraphics);
     }
 

@@ -59,10 +59,10 @@ public class ItemSearchWidget extends SearchWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.extractWidgetRenderState(guiGraphics);
 
-        helperWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        helperWidget.extractRenderState(guiGraphics);
     }
 
     @Override

@@ -53,8 +53,7 @@ public abstract class ScrollListWidget extends AbstractWidget {
     protected abstract List<AbstractWidget> getWidgets();
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.BUILD_LOADOUTS_WIDGET_BACKGROUND_LIGHT, x, y, this.width, this.height);
 
@@ -72,14 +71,14 @@ public abstract class ScrollListWidget extends AbstractWidget {
                 this.y + widgetHeightEdgePadding,
                 this.width,
                 this.height - widgetHeightEdgePadding * 2);
-        getWidgets().forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        getWidgets().forEach(widget -> widget.extractRenderState(guiGraphics));
         RenderUtils.disableScissor(guiGraphics);
 
         renderScroll(guiGraphics);
 
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
-        } else if (isOntopOfScrollDragButton(mouseX, mouseY)) {
+        } else if (isOntopOfScrollDragButton(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }

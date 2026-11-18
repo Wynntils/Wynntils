@@ -1289,7 +1289,12 @@ public final class RenderUtils {
     public static void renderTooltip(
             GuiGraphicsExtractor guiGraphics, List<Component> tooltipLines, int mouseX, int mouseY) {
         renderTooltip(
-                guiGraphics, FontRenderer.getInstance().getFont(), tooltipLines, Optional.empty(), mouseX, mouseY);
+                guiGraphics,
+                FontRenderer.getInstance().getFont(),
+                tooltipLines,
+                Optional.empty(),
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY());
     }
 
     public static void renderTooltip(GuiGraphicsExtractor guiGraphics, ItemStack itemStack, int mouseX, int mouseY) {

@@ -68,7 +68,7 @@ public class SetGuideButton extends GuideButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRect(
                 guiGraphics,
                 isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR,
@@ -93,7 +93,7 @@ public class SetGuideButton extends GuideButton {
                         TextShadow.NONE);
 
         if (isHovered) {
-            renderTooltip(guiGraphics, mouseX, mouseY);
+            renderTooltip(guiGraphics);
         }
     }
 
@@ -128,7 +128,7 @@ public class SetGuideButton extends GuideButton {
     }
 
     @Override
-    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics) {
         if (generatedTooltip == null) {
             generatedTooltip = buildTooltip();
         }
@@ -136,8 +136,8 @@ public class SetGuideButton extends GuideButton {
         guiGraphics.setTooltipForNextFrame(
                 FontRenderer.getInstance().getFont(),
                 Lists.transform(generatedTooltip, Component::getVisualOrderText),
-                mouseX,
-                mouseY,
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
                 Identifier.withDefaultNamespace(setTier.getApiName()));
     }
 

@@ -213,8 +213,8 @@ public class WynncraftButtonFeature extends Feature {
         }
 
         @Override
-        public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks) {
-            super.extractContents(guiGraphics, mouseX, mouseY, partialTicks);
+        public void extractContents(GuiGraphicsExtractor guiGraphics) {
+            super.extractContents(guiGraphics);
             RenderUtils.drawScalingTexturedRect(
                     guiGraphics,
                     BUTTON_ICON,
@@ -253,7 +253,9 @@ public class WynncraftButtonFeature extends Feature {
 
             if (isHovered) {
                 guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+                        Lists.transform(tooltip, Component::getVisualOrderText),
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             }
         }
     }

@@ -299,20 +299,20 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.wynntilsMenu.userProfile"));
 
         renderVersion(guiGraphics);
 
-        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics);
 
-        renderPlayerInfo(guiGraphics, mouseX, mouseY);
+        renderPlayerInfo(guiGraphics);
 
-        renderPlayer(guiGraphics, mouseX, mouseY);
+        renderPlayer(guiGraphics);
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics);
     }
 
     @Override
@@ -332,7 +332,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         2f);
     }
 
-    private void renderPlayerInfo(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    private void renderPlayerInfo(GuiGraphicsExtractor guiGraphics) {
         if (!Models.Guild.getGuildName().isEmpty()) {
             String rank = Models.Guild.getGuildRank().getGuildDescription();
 
@@ -428,7 +428,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
-    private void renderPlayer(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    private void renderPlayer(GuiGraphicsExtractor guiGraphics) {
         int posX = (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 50 + offsetX);
         int posY = (int) (Texture.CONTENT_BOOK_BACKGROUND.height() / 2f - 40 + offsetY);
 
@@ -443,8 +443,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                 posY + renderHeight,
                 25,
                 0.4f,
-                mouseX,
-                mouseY,
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
                 McUtils.player());
     }
 
@@ -459,25 +459,24 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         return true;
     }
 
-    private void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltip(GuiGraphicsExtractor guiGraphics) {
         if (this.hovered != null) {
             guiGraphics.setTooltipForNextFrame(
                     Lists.transform(
                             ComponentUtils.wrapTooltips(this.hovered.getTooltipList(), 250),
                             Component::getVisualOrderText),
-                    mouseX,
-                    mouseY);
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 
-    private void extractWidgetRenderStates(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void extractWidgetRenderStates(GuiGraphicsExtractor guiGraphics) {
         this.hovered = null;
 
         for (WynntilsMenuButton button : buttons.stream().flatMap(List::stream).toList()) {
-            button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            button.extractRenderState(guiGraphics);
 
-            if (button.isMouseOver(mouseX, mouseY)) {
+            if (button.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 this.hovered = button;
             }
         }

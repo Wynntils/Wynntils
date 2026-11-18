@@ -64,11 +64,10 @@ public abstract class RangedNumericFilterWidget<T> extends GeneralFilterWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        minInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        maxInput.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        removeButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        minInput.extractRenderState(guiGraphics);
+        maxInput.extractRenderState(guiGraphics);
+        removeButton.extractRenderState(guiGraphics);
 
         FontRenderer.getInstance()
                 .renderText(

@@ -214,8 +214,8 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -238,7 +238,7 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
                 WIDGETS_PER_PAGE * widgetHeight);
 
         for (Renderable renderable : downloadWidgets) {
-            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics);
         }
 
         RenderUtils.disableScissor(guiGraphics);
@@ -315,7 +315,12 @@ public final class DownloadScreen extends WynntilsGridLayoutScreen {
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX, mouseY, (int) (dividedWidth * 48), (int) ((dividedWidth * 48) + 6), scrollY, scrollY + 20)) {
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
+                (int) (dividedWidth * 48),
+                (int) ((dividedWidth * 48) + 6),
+                scrollY,
+                scrollY + 20)) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }

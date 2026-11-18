@@ -7,5 +7,5 @@ package com.wynntils.screens.buildloadouts.widgets;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public interface ItemTooltipProvider {
-    void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY);
+    void renderHoveredItemTooltip(GuiGraphicsExtractor guiGraphics);
 }

@@ -13,23 +13,11 @@ import net.neoforged.bus.api.Event;
 public class ContainerRenderEvent extends Event {
     private final AbstractContainerScreen<?> screen;
     private final GuiGraphicsExtractor guiGraphics;
-    private final int mouseX;
-    private final int mouseY;
-    private final float partialTicks;
     private final Slot hoveredSlot;
 
-    public ContainerRenderEvent(
-            AbstractContainerScreen<?> screen,
-            GuiGraphicsExtractor guiGraphics,
-            int mouseX,
-            int mouseY,
-            float partialTicks,
-            Slot hoveredSlot) {
+    public ContainerRenderEvent(AbstractContainerScreen<?> screen, GuiGraphicsExtractor guiGraphics, Slot hoveredSlot) {
         this.screen = screen;
         this.guiGraphics = guiGraphics;
-        this.mouseX = mouseX;
-        this.mouseY = mouseY;
-        this.partialTicks = partialTicks;
         this.hoveredSlot = hoveredSlot;
     }
 
@@ -42,15 +30,11 @@ public class ContainerRenderEvent extends Event {
     }
 
     public int getMouseX() {
-        return mouseX;
+        return guiGraphics.mouseX();
     }
 
     public int getMouseY() {
-        return mouseY;
-    }
-
-    public float getPartialTicks() {
-        return partialTicks;
+        return guiGraphics.mouseY();
     }
 
     public Slot getHoveredSlot() {

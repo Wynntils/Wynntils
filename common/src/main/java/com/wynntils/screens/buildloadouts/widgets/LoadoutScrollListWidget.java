@@ -57,9 +57,8 @@ public class LoadoutScrollListWidget extends ScrollListWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.extractWidgetRenderState(guiGraphics);
 
         StyledText text = null;
         if (searchEmpty) {

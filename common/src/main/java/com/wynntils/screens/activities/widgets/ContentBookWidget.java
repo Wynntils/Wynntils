@@ -108,8 +108,7 @@ public class ContentBookWidget extends AbstractWidget implements TooltipProvider
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         final CustomColor gradientColor = activityInfo.status() == ActivityStatus.UNAVAILABLE
                 ? UNAVAILABLE_COLOR
                 : activityInfo.type().getColor();

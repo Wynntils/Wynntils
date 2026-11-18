@@ -64,7 +64,7 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawScalingTexturedRect(guiGraphics, icon, getX() + 2, iconRenderY, iconWidth, iconHeight);
 
         CustomColor color =
@@ -95,7 +95,7 @@ public class GatheringNodeFilterWidget extends AbstractWidget {
                         TextShadow.NORMAL);
 
         toggleButton.setMessage(getToggleText());
-        toggleButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        toggleButton.extractRenderState(guiGraphics);
 
         if (this.isHovered) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);

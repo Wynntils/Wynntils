@@ -46,9 +46,7 @@ public class SearchWidget extends TextInputBoxWidget {
             Font font,
             int firstWidth,
             int highlightedWidth,
-            int lastWidth,
-            int mouseX,
-            int mouseY) {
+            int lastWidth) {
         boolean defaultText = Objects.equals(textBoxInput, "");
 
         if (this.isHovered) {

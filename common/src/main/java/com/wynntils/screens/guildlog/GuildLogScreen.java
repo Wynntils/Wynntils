@@ -101,7 +101,7 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, Texture.GUILD_LOG_BACKGROUND, offsetX, offsetY);
         FontRenderer.getInstance()
                 .renderText(
@@ -114,19 +114,23 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
 
-        renderLogs(guiGraphics, mouseX, mouseY, partialTick);
+        renderLogs(guiGraphics);
 
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX, mouseY, offsetX + 393, offsetX + 393 + Texture.SCROLL_BUTTON.width(), (int) scrollY, (int)
-                        (scrollY + Texture.SCROLL_BUTTON.height()))) {
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
+                offsetX + 393,
+                offsetX + 393 + Texture.SCROLL_BUTTON.width(),
+                (int) scrollY,
+                (int) (scrollY + Texture.SCROLL_BUTTON.height()))) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
         renderScroll(guiGraphics);
 
-        renderables.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        renderables.forEach(widget -> widget.extractRenderState(guiGraphics));
     }
 
     @Override
@@ -236,9 +240,9 @@ public class GuildLogScreen extends WynntilsScreen implements WrappedScreen {
         }
     }
 
-    private void renderLogs(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderLogs(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.enableScissor(guiGraphics, offsetX + 108, offsetY + 16, Texture.LOG_ENTRY_MIDDLE.width(), 139);
-        logs.forEach(log -> log.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        logs.forEach(log -> log.extractRenderState(guiGraphics));
         RenderUtils.disableScissor(guiGraphics);
     }
 

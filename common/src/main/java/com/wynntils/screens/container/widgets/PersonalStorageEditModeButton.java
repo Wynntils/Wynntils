@@ -37,7 +37,7 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
                 Texture.EDIT_NAME_ICON.identifier(),
@@ -52,7 +52,9 @@ public class PersonalStorageEditModeButton extends WynntilsButton {
             List<Component> tooltipToUse = Models.Bank.isEditingMode() ? CONFIRM_TOOLTIP : EDIT_TOOLTIP;
 
             guiGraphics.setTooltipForNextFrame(
-                    Lists.transform(tooltipToUse, Component::getVisualOrderText), mouseX, mouseY);
+                    Lists.transform(tooltipToUse, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 

@@ -47,19 +47,18 @@ public class GuideFilterPanel extends AbstractWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.GUIDE_BACKGROUND, getX(), getY(), getWidth(), getHeight());
 
         RenderUtils.enableScissor(guiGraphics, getX(), getScrollAreaStartY() + 2, 135, getScrollAreaHeight());
         for (AbstractWidget filterWidget : filterWidgets) {
-            filterWidget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            filterWidget.extractRenderState(guiGraphics);
         }
         RenderUtils.disableScissor(guiGraphics);
 
-        renderCategoryShortcuts(guiGraphics, mouseX, mouseY);
-        renderScroll(guiGraphics, mouseX, mouseY);
+        renderCategoryShortcuts(guiGraphics);
+        renderScroll(guiGraphics);
     }
 
     public void updateLayout() {
@@ -112,7 +111,7 @@ public class GuideFilterPanel extends AbstractWidget {
                         getScrollAreaHeight() - Texture.SCROLL_BUTTON.height());
     }
 
-    private void renderScroll(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    private void renderScroll(GuiGraphicsExtractor guiGraphics) {
         if (getMaxScrollOffset() <= 0) return;
 
         updateScrollY();
@@ -121,30 +120,33 @@ public class GuideFilterPanel extends AbstractWidget {
 
         if (draggingScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
-        } else if (isOverScrollBar(mouseX, mouseY)) {
+        } else if (isOverScrollBar(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
 
-    private void renderCategoryShortcuts(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    private void renderCategoryShortcuts(GuiGraphicsExtractor guiGraphics) {
         if (getMaxScrollOffset() <= 0) return;
 
-        boolean overScrollBar = isOverScrollBar(mouseX, mouseY);
+        boolean overScrollBar = isOverScrollBar(guiGraphics.mouseX(), guiGraphics.mouseY());
 
         for (GuideFilterCategoryShortcut shortcut : categoryShortcuts) {
             int shortcutY = getShortcutY(shortcut.getContentOffset());
             RenderUtils.drawRect(
                     guiGraphics,
                     CommonColors.WHITE.withAlpha(
-                            !overScrollBar && isOverShortcut(shortcut, mouseX, mouseY) ? 0.9f : 0.55f),
+                            !overScrollBar && isOverShortcut(shortcut, guiGraphics.mouseX(), guiGraphics.mouseY())
+                                    ? 0.9f
+                                    : 0.55f),
                     getScrollBarX(),
                     shortcutY,
                     Texture.SCROLL_BUTTON.width(),
                     2);
 
-            if (!overScrollBar && isOverShortcut(shortcut, mouseX, mouseY)) {
+            if (!overScrollBar && isOverShortcut(shortcut, guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
-                RenderUtils.renderTooltip(guiGraphics, shortcut.getTooltip(), mouseX, mouseY);
+                RenderUtils.renderTooltip(
+                        guiGraphics, shortcut.getTooltip(), guiGraphics.mouseX(), guiGraphics.mouseY());
             }
         }
     }

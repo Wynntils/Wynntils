@@ -93,7 +93,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
         int renderedTextStart = renderedTextDetails.b();
@@ -123,9 +123,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                 font,
                 firstWidth,
                 highlightedWidth,
-                lastWidth,
-                mouseX,
-                mouseY);
+                lastWidth);
     }
 
     protected void doExtractWidgetRenderState(
@@ -138,9 +136,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             Font font,
             int firstWidth,
             int highlightedWidth,
-            int lastWidth,
-            int mouseX,
-            int mouseY) {
+            int lastWidth) {
         if (this.isHovered) {
             guiGraphics.requestCursor(CursorTypes.IBEAM);
         }
@@ -207,7 +203,10 @@ public class TextInputBoxWidget extends AbstractWidget {
                 false);
 
         if (isHovered && tooltip != null && !tooltip.isEmpty()) {
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltip, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
 
         guiGraphics.pose().popMatrix();

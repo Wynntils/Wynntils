@@ -20,7 +20,7 @@ public class PowderGuideButton extends GuideButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         CustomColor color = getColor();
         renderBaseItem(guiGraphics, color);
 
@@ -36,7 +36,7 @@ public class PowderGuideButton extends GuideButton {
         renderFavoriteIcon(guiGraphics);
 
         if (isHovered) {
-            renderTooltip(guiGraphics, mouseX, mouseY);
+            renderTooltip(guiGraphics);
         }
     }
 

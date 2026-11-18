@@ -26,7 +26,7 @@ public class ColorPickerWidget extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRectBorders(
                 guiGraphics,
                 isHovered ? CommonColors.LIGHT_GRAY : CommonColors.GRAY,
@@ -39,7 +39,7 @@ public class ColorPickerWidget extends WynntilsButton {
         RenderUtils.drawRect(guiGraphics, value, getX(), getY(), width, height);
 
         if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(TOOLTIP, mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(TOOLTIP, guiGraphics.mouseX(), guiGraphics.mouseY());
         }
     }
 
