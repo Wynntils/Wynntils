@@ -8,9 +8,11 @@ import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.renderpearl.api.textures.AddressMode;
 import com.mojang.renderpearl.api.textures.FilterMode;
+import com.mojang.renderpearl.api.textures.GpuSampler;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.BoundingBox;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.ExternalTextureProvider;
+import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.resources.Identifier;
 
 public class MapTexture {
@@ -48,15 +50,15 @@ public class MapTexture {
     public Identifier identifier() {
         if (!registered) {
             registered = true;
-            DynamicTexture tex = new DynamicTexture(() -> name, texture);
-            tex.sampler = RenderSystem.getSamplerCache()
+            GpuSampler sampler = RenderSystem.getSamplerCache()
                     .getSampler(
                             AddressMode.CLAMP_TO_EDGE,
                             AddressMode.CLAMP_TO_EDGE,
                             FilterMode.NEAREST,
                             FilterMode.NEAREST,
                             false);
-            McUtils.mc().getTextureManager().register(mapIdentifier, tex);
+            TextureResources tex = TextureResources.from2dImage(() -> name, texture, sampler);
+            McUtils.mc().getTextureManager().registerProvider(mapIdentifier, new ExternalTextureProvider(tex));
         }
 
         return mapIdentifier;
