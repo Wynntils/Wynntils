@@ -13,7 +13,6 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 
 public class HueSlider extends AbstractSliderButton {
     private final ColorPickerScreen colorPickerScreen;
@@ -69,7 +68,7 @@ public class HueSlider extends AbstractSliderButton {
     private void updateValue(double mouseX) {
         float newHue = (float) (mouseX - getX()) / getWidth();
 
-        colorPickerScreen.setHue(Mth.clamp(newHue, 0f, 1f));
+        colorPickerScreen.setHue(Math.clamp(newHue, 0f, 1f));
         setValue((mouseX - (this.getX() + 0.5)) / (double) (this.width - 1));
     }
 }

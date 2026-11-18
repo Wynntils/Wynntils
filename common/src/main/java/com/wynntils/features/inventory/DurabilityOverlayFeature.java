@@ -129,7 +129,7 @@ public class DurabilityOverlayFeature extends Feature {
                 getColor(durability),
                 x,
                 y,
-                Mth.clamp(Math.round(13 * (float) durability.getProgress()), 0, 13),
+                Math.clamp(Math.round(13 * (float) durability.getProgress()), 0, 13),
                 1);
     }
 
