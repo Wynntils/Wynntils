@@ -40,9 +40,9 @@ import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
 import net.minecraft.client.renderer.state.gui.GuiItemRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
-import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureHandle;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -237,10 +237,10 @@ public final class RenderUtils {
             float v,
             int textureWidth,
             int textureHeight) {
-        AbstractTexture abstractTexture = McUtils.mc().getTextureManager().getTexture(identifier);
+        TextureHandle textureHandle = McUtils.mc().getTextureManager().getTexture(identifier);
         guiGraphics.guiRenderState.addGuiElement(new FloatBlitRenderState(
                 pipeline,
-                TextureSetup.singleTexture(abstractTexture.getTextureView(), abstractTexture.getSampler()),
+                TextureSetup.singleTexture(textureHandle.textureView(), textureHandle.sampler()),
                 new Matrix3x2f(guiGraphics.pose()),
                 x,
                 y,
