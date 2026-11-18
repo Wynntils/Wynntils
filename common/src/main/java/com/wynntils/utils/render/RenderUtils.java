@@ -1444,9 +1444,9 @@ public final class RenderUtils {
 
         for (int i = 0; i < colors.size(); i++) {
             CustomColor color = colors.get(i);
-            float leftX = Mth.clamp(x + splitX * (i - 1), x, x + width);
-            float centerX = Mth.clamp(x + splitX * i, x, x + width);
-            float rightX = Mth.clamp(x + splitX * (i + 1), x, x + width);
+            float leftX = Math.clamp(x + splitX * (i - 1), x, x + width);
+            float centerX = Math.clamp(x + splitX * i, x, x + width);
+            float rightX = Math.clamp(x + splitX * (i + 1), x, x + width);
 
             // bottom left to bottom center (always drawn)
             drawLine(guiGraphics, color, leftX, y + height, centerX, y + height, externalLineWidth);

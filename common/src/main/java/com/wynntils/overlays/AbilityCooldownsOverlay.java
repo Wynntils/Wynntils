@@ -28,7 +28,6 @@ import java.util.Arrays;
 import java.util.List;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.util.Mth;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOverlay.AbilityCooldownOverlay> {
@@ -132,7 +131,8 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
             float maxSeconds = cooldown.getMaxSeconds();
             float ratio = maxSeconds > 0 ? remainingSeconds / maxSeconds : 0;
 
-            int stage = Mth.clamp((int) ((1f - ratio) * (COOLDOWN_TEXTURE_STAGES - 1)), 0, COOLDOWN_TEXTURE_STAGES - 1);
+            int stage =
+                    Math.clamp((int) ((1f - ratio) * (COOLDOWN_TEXTURE_STAGES - 1)), 0, COOLDOWN_TEXTURE_STAGES - 1);
 
             int texX = stage % TEXTURES_PER_ROW * 22;
             int texY = stage / TEXTURES_PER_ROW * 22;
