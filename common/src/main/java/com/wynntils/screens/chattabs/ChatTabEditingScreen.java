@@ -224,11 +224,10 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         // region Screen Interactions
         String saveButtonKey =
                 edited == null ? "screens.wynntils.chatTabsGui.add" : "screens.wynntils.chatTabsGui.save";
-        saveButton = new Button.Builder(
-                        Component.translatable(saveButtonKey).withStyle(ChatFormatting.GREEN), (button) -> {
-                            saveChatTab();
-                            reloadChatTabsWidgets();
-                        })
+        saveButton = Button.builder(Component.translatable(saveButtonKey).withStyle(ChatFormatting.GREEN), (button) -> {
+                    saveChatTab();
+                    reloadChatTabsWidgets();
+                })
                 .pos((int) (dividedWidth * 35), (int) (dividedHeight * FIFTH_ROW_Y))
                 .size((int) (dividedWidth * 8), BUTTON_SIZE)
                 .build();
@@ -237,7 +236,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
         String saveAndCloseButtonKey = edited == null
                 ? "screens.wynntils.chatTabsGui.addAndClose"
                 : "screens.wynntils.chatTabsGui.saveAndClose";
-        saveAndCloseButton = new Button.Builder(
+        saveAndCloseButton = Button.builder(
                         Component.translatable(saveAndCloseButtonKey).withStyle(ChatFormatting.GREEN), (button) -> {
                             saveChatTab();
                             this.onClose();
@@ -247,7 +246,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
                 .build();
         this.addRenderableWidget(saveAndCloseButton);
 
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.chatTabsGui.cancel"), (button) -> this.onClose())
                 .pos((int) (dividedWidth * 53), (int) (dividedHeight * FIFTH_ROW_Y))
                 .size((int) (dividedWidth * 8), BUTTON_SIZE)
@@ -476,7 +475,7 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
 
         ChatFormatting color = edited == null ? ChatFormatting.GREEN : ChatFormatting.WHITE;
 
-        chatTabsWidgets.add(new Button.Builder(
+        chatTabsWidgets.add(Button.builder(
                         Component.translatable("screens.wynntils.chatTabsGui.new")
                                 .withStyle(color),
                         (button) -> McUtils.setScreen(ChatTabEditingScreen.create(previousScreen)))

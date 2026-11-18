@@ -41,7 +41,7 @@ public class SecretInputWidget extends AbstractWidget {
                 (s) -> Services.Secrets.setSecret(wynntilsSecret, s),
                 textboxScreen,
                 Services.Secrets.getSecret(wynntilsSecret));
-        this.openLinkButton = new Button.Builder(Component.literal("🌐"), (b) -> {
+        this.openLinkButton = Button.builder(Component.literal("🌐"), (b) -> {
                     Managers.Net.openLink(wynntilsSecret.getUrl());
                 })
                 .size(20, 20)

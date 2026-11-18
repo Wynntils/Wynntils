@@ -65,7 +65,7 @@ public class ProviderFilterListWidget extends AbstractWidget {
         this.filterPairs = new ArrayList<>(filterPairs);
 
         if (provider.getType().equals(String.class) && provider.getValidInputs().isEmpty()) {
-            addStringFilterButton = new Button.Builder(
+            addStringFilterButton = Button.builder(
                             Component.translatable("screens.wynntils.itemFilter.addNewFilter"), (button -> {
                                 int renderY;
 
@@ -89,12 +89,12 @@ public class ProviderFilterListWidget extends AbstractWidget {
                     .build();
         } else if (!provider.getType().equals(Boolean.class)
                 && !provider.getType().equals(String.class)) {
-            numericChoiceButton = new Button.Builder(Component.literal(EnumUtils.toNiceString(numericChoice)), null)
+            numericChoiceButton = Button.builder(Component.literal(EnumUtils.toNiceString(numericChoice)), null)
                     .pos(getX(), getY() + 125)
                     .size(85, 20)
                     .build();
 
-            addNumericFilterButton = new Button.Builder(
+            addNumericFilterButton = Button.builder(
                             Component.translatable("screens.wynntils.itemFilter.addNewFilter"), (button -> {
                                 int renderY;
 

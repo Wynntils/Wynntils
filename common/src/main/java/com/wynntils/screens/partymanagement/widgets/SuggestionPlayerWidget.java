@@ -31,7 +31,7 @@ public class SuggestionPlayerWidget extends AbstractPlayerListEntryWidget {
             float gridDivisions) {
         super((int) x, (int) y, width, height, suggestedPlayer.username(), isOffline, gridDivisions);
         this.suggestedPlayer = suggestedPlayer;
-        this.inviteButton = new Button.Builder(
+        this.inviteButton = Button.builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> Models.Party.partyInvite(playerName))
                 .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())

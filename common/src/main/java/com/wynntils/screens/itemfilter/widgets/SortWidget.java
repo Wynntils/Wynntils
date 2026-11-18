@@ -39,21 +39,19 @@ public class SortWidget extends AbstractWidget {
 
         this.sortInfo = sortInfo;
 
-        Button sortButton = new Button.Builder(
+        Button sortButton = Button.builder(
                         Component.literal(sortInfo.direction() == SortDirection.DESCENDING ? "v" : "ʌ"),
                         (button) -> toggleSortDirection())
                 .pos(x + width - 50, y)
                 .size(30, 20)
                 .build();
 
-        Button upButton = new Button.Builder(
-                        Component.literal("🠝"), (button) -> filterScreen.reorderSort(sortInfo, -1))
+        Button upButton = Button.builder(Component.literal("🠝"), (button) -> filterScreen.reorderSort(sortInfo, -1))
                 .pos(x + width - 20, y)
                 .size(10, 20)
                 .build();
 
-        Button downButton = new Button.Builder(
-                        Component.literal("🠟"), (button) -> filterScreen.reorderSort(sortInfo, 1))
+        Button downButton = Button.builder(Component.literal("🠟"), (button) -> filterScreen.reorderSort(sortInfo, 1))
                 .pos(x + width - 10, y)
                 .size(10, 20)
                 .build();

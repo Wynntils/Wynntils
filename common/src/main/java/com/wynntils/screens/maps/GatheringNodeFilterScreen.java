@@ -64,12 +64,11 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        addRenderableWidget(
-                new Button.Builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> onClose())
-                        .pos((int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10), (int)
-                                (getTranslationY() - 25))
-                        .size(20, 20)
-                        .build());
+        addRenderableWidget(Button.builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> onClose())
+                .pos((int) (getTranslationX() + Texture.WAYPOINT_MANAGER_BACKGROUND.width() + 10), (int)
+                        (getTranslationY() - 25))
+                .size(20, 20)
+                .build());
 
         addRenderableWidget(new InfoButton(
                 (int) (getTranslationX() - 30),
@@ -102,14 +101,14 @@ public final class GatheringNodeFilterScreen extends WynntilsScreen {
         addRenderableWidget(searchInput);
         setFocusedTextInput(searchInput);
 
-        addRenderableWidget(new Button.Builder(
+        addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.gatheringNodeFilterGui.showAll"),
                         (button) -> toggleAllGatheringNodeTypes(true))
                 .pos((width / 2) - 102, (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))
                 .size(60, 20)
                 .build());
 
-        addRenderableWidget(new Button.Builder(
+        addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.gatheringNodeFilterGui.hideAll"),
                         (button) -> toggleAllGatheringNodeTypes(false))
                 .pos((width / 2) + 42, (int) (getTranslationY() + Texture.WAYPOINT_MANAGER_BACKGROUND.height() + 10))

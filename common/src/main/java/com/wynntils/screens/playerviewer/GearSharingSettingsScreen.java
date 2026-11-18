@@ -73,7 +73,7 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
     private void buildWidgets() {
         this.clearWidgets();
 
-        this.addRenderableWidget(new Button.Builder(
+        this.addRenderableWidget(Button.builder(
                         Component.translatable("screens.wynntils.gearSharingSettings.back"), (button -> onClose()))
                 .pos(offsetX + 1, offsetY - 21)
                 .size(Texture.PLAYER_VIEWER_BACKGROUND.width() - 2, 20)

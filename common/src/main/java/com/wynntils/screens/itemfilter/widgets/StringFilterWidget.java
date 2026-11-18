@@ -70,7 +70,7 @@ public class StringFilterWidget extends GeneralFilterWidget {
                 },
                 List.of(Component.translatable("screens.wynntils.itemFilter.strictTooltip")));
 
-        this.removeButton = new Button.Builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
+        this.removeButton = Button.builder(Component.literal("🗑"), (button -> parent.removeWidget(this)))
                 .pos(getX() + inputWidth + 54, getY())
                 .size(20, 20)
                 .build();

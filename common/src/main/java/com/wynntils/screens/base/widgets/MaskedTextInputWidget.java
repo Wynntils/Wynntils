@@ -33,7 +33,7 @@ public class MaskedTextInputWidget extends AbstractWidget {
                 new MaskedTextInputBoxWidget(x, y, width - 42, height, onUpdateConsumer, textboxScreen);
         this.maskedTextInputBoxWidget.setTextBoxInput(initialText);
 
-        this.toggleMaskButton = new Button.Builder(
+        this.toggleMaskButton = Button.builder(
                         masked
                                 ? Component.translatable("screens.wynntils.widget.show")
                                 : Component.translatable("screens.wynntils.widget.hide"),

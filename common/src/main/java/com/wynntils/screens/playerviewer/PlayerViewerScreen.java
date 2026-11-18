@@ -214,7 +214,7 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
                     McUtils.openChatScreen("/msg " + playerName + " ");
                 }));
 
-        settingsButton = new Button.Builder(
+        settingsButton = Button.builder(
                         Component.translatable("screens.wynntils.playerViewer.sharingSettings"), (b) -> {
                             McUtils.setScreen(GearSharingSettingsScreen.create(this));
                         })
