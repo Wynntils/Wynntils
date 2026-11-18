@@ -4,9 +4,10 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.google.common.collect.Maps;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
+import java.util.Collections;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.client.gui.components.BossHealthOverlay;
@@ -27,7 +28,7 @@ public abstract class BossHealthOverlayMixin {
 
     @Inject(method = "<init>(Lnet/minecraft/client/Minecraft;)V", at = @At("RETURN"))
     private void onCtor(CallbackInfo ci) {
-        events = Maps.newConcurrentMap();
+        events = Collections.synchronizedMap(new LinkedHashMap<>());
     }
 
     @Inject(
