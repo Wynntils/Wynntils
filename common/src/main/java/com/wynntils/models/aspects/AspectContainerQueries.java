@@ -266,8 +266,9 @@ public class AspectContainerQueries {
                 .repeat(
                         c -> {
                             if (hasAlreadyEquippedAspects) return false;
-                            if (checkAspectSlotIdx >= Math.min(EQUIPPED_SLOTS.size(), aspectsToEquip.size()))
+                            if (checkAspectSlotIdx >= Math.min(EQUIPPED_SLOTS.size(), aspectsToEquip.size())) {
                                 return false;
+                            }
 
                             // Continue if there are still aspects to equip on this page
                             Deque<Pair<String, Integer>> pageAspects = aspectLocations.get(currentPage);
