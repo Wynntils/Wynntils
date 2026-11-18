@@ -204,7 +204,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                     Managers.Config.saveConfig();
                     unsavedChanges = false;
                     displayWarning = false;
-                    unsavedChangesWidget.visible = false;
+                    unsavedChangesWidget.setVisible(false);
                     onClose();
                 },
                 ComponentUtils.wrapTooltips(
@@ -230,7 +230,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                     // This button is specifically for closing without saving so ignore unsaved changes
                     unsavedChanges = false;
                     displayWarning = false;
-                    unsavedChangesWidget.visible = false;
+                    unsavedChangesWidget.setVisible(false);
                     onClose();
                 },
                 ComponentUtils.wrapTooltips(
@@ -350,7 +350,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
                 (int) ((this.width - Texture.SETTINGS_WARNING_BACKGROUND.width()) / 2f),
                 (int) ((this.height - Texture.SETTINGS_WARNING_BACKGROUND.height()) / 2f),
                 this);
-        unsavedChangesWidget.visible = displayWarning;
+        unsavedChangesWidget.setVisible(displayWarning);
 
         this.addRenderableWidget(unsavedChangesWidget);
     }
@@ -516,7 +516,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     public void onClose() {
         if (unsavedChanges) {
             displayWarning = true;
-            unsavedChangesWidget.visible = true;
+            unsavedChangesWidget.setVisible(true);
             return;
         }
 
@@ -716,20 +716,20 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
 
     protected void addComponentTypeButton(List<WynntilsButton> configurables, int renderY, String coreType) {
         ComponentTypeButton categoryButton = new ComponentTypeButton(12 + offsetX, renderY, 170, 12, coreType);
-        categoryButton.visible = isConfigurableEntryVisible(renderY);
+        categoryButton.setVisible(isConfigurableEntryVisible(renderY));
         configurables.add(categoryButton);
     }
 
     protected void addCategoryButton(List<WynntilsButton> configurables, int renderY, Category category) {
         CategoryButton categoryButton = new CategoryButton(12 + offsetX, renderY, 170, 12, category);
-        categoryButton.visible = isConfigurableEntryVisible(renderY);
+        categoryButton.setVisible(isConfigurableEntryVisible(renderY));
         configurables.add(categoryButton);
     }
 
     protected void addConfigurableButton(List<WynntilsButton> configurables, int renderY, Configurable configurable) {
         ConfigurableButton configurableButton = new ConfigurableButton(
                 12 + offsetX, renderY, 170, 12, configurable, this, countMatchingConfigs(configurable));
-        configurableButton.visible = isConfigurableEntryVisible(renderY);
+        configurableButton.setVisible(isConfigurableEntryVisible(renderY));
         configurables.add(configurableButton);
     }
 
@@ -799,7 +799,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
 
         unsavedChanges = false;
         displayWarning = false;
-        unsavedChangesWidget.visible = false;
+        unsavedChangesWidget.setVisible(false);
         this.onClose();
     }
 
@@ -826,35 +826,35 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     private void populateCategories() {
         if (!shouldShowCategoryControls()) {
             if (allCategoriesButton != null) {
-                allCategoriesButton.visible = false;
+                allCategoriesButton.setVisible(false);
             }
             if (enabledStateTabButton != null) {
-                enabledStateTabButton.visible = false;
+                enabledStateTabButton.setVisible(false);
             }
             if (previousCategoryButton != null) {
-                previousCategoryButton.visible = false;
+                previousCategoryButton.setVisible(false);
             }
             if (nextCategoryButton != null) {
-                nextCategoryButton.visible = false;
+                nextCategoryButton.setVisible(false);
             }
 
             for (AbstractWidget widget : categoryButtons) {
-                widget.visible = false;
+                widget.setVisible(false);
             }
             return;
         }
 
         if (allCategoriesButton != null) {
-            allCategoriesButton.visible = true;
+            allCategoriesButton.setVisible(true);
         }
         if (enabledStateTabButton != null) {
-            enabledStateTabButton.visible = true;
+            enabledStateTabButton.setVisible(true);
         }
         if (previousCategoryButton != null) {
-            previousCategoryButton.visible = true;
+            previousCategoryButton.setVisible(true);
         }
         if (nextCategoryButton != null) {
-            nextCategoryButton.visible = true;
+            nextCategoryButton.setVisible(true);
         }
 
         for (AbstractWidget widget : categoryButtons) {
@@ -912,7 +912,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
             ConfigTile configTile = new ConfigTile(
                     Texture.CONFIG_BOOK_BACKGROUND.width() / 2 + 10 + offsetX, renderY, 160, 45, this, config, overlay);
 
-            configTile.visible = renderY >= (21 + offsetY - 46) && renderY <= (21 + offsetY + CONFIGS_PER_PAGE * 45);
+            configTile.setVisible(renderY >= (21 + offsetY - 46) && renderY <= (21 + offsetY + CONFIGS_PER_PAGE * 45));
 
             configTiles.add(configTile);
             renderY += 46;
@@ -932,8 +932,8 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
             int newY = 21 + offsetY + (configurables.indexOf(configurable) * 12) - configurablesScrollOffset;
 
             configurable.setY(newY);
-            configurable.visible =
-                    newY >= (21 + offsetY - 12) && newY <= (21 + offsetY + (CONFIGURABLES_PER_PAGE + 1) * 11);
+            configurable.setVisible(
+                    newY >= (21 + offsetY - 12) && newY <= (21 + offsetY + (CONFIGURABLES_PER_PAGE + 1) * 11));
         }
     }
 
@@ -948,7 +948,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
             int newY = 21 + offsetY + (configs.indexOf(config) * 46) - configScrollOffset;
 
             config.setY(newY);
-            config.visible = newY >= (21 + offsetY - 46) && newY <= (21 + offsetY + CONFIGS_PER_PAGE * 45);
+            config.setVisible(newY >= (21 + offsetY - 46) && newY <= (21 + offsetY + CONFIGS_PER_PAGE * 45));
         }
     }
 

@@ -64,7 +64,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
                 (ScreenExtension) screen);
         editInput.setTextBoxInput(
                 Models.Bank.getPageCustomization(Models.Bank.getCurrentPage()).getName());
-        editInput.visible = false;
+        editInput.setVisible(false);
         screen.addRenderableWidget(editInput);
 
         updatePageName();
@@ -118,7 +118,7 @@ public class PersonalStorageUtilitiesWidget extends AbstractWidget {
     }
 
     public void toggleEditMode(boolean on) {
-        editInput.visible = on;
+        editInput.setVisible(on);
         editInput.setTextBoxInput(
                 Models.Bank.getPageCustomization(Models.Bank.getCurrentPage()).getName());
 
