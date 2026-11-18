@@ -29,7 +29,8 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.client.renderer.entity.state.AvatarRenderState;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.ExternalTextureProvider;
+import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
@@ -120,9 +121,8 @@ public class CosmeticsService extends Service {
 
             if (frames == 1) { // not animated
                 locations[0] = Identifier.parse(baseLocation);
-                McUtils.mc()
-                        .getTextureManager()
-                        .register(locations[0], new DynamicTexture(() -> uuid + " Wynntils Cape", image));
+                TextureResources texture = TextureResources.from2dImage(() -> uuid + " Wynntils Cape", image);
+                McUtils.mc().getTextureManager().registerProvider(locations[0], new ExternalTextureProvider(texture));
             } else { // animated
                 for (int i = 0; i < frames; i++) {
                     NativeImage frame = new NativeImage(frameHeight * 2, frameHeight, false);
@@ -130,7 +130,10 @@ public class CosmeticsService extends Service {
 
                     locations[i] = Identifier.parse(baseLocation + "/" + i);
                     String label = uuid + " Wynntils Cape frame " + i;
-                    McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(() -> label, frame));
+                    TextureResources texture = TextureResources.from2dImage(() -> label, frame);
+                    McUtils.mc()
+                            .getTextureManager()
+                            .registerProvider(locations[i], new ExternalTextureProvider(texture));
                 }
             }
 
