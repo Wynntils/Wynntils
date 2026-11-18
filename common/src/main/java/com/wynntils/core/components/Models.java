@@ -60,6 +60,7 @@ import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.profession.ProfessionModel;
 import com.wynntils.models.raid.RaidModel;
+import com.wynntils.models.resourcepack.ResourcePackModel;
 import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.seaskipper.SeaskipperModel;
 import com.wynntils.models.spells.SpellCasterModel;
@@ -131,6 +132,7 @@ public final class Models {
     public static final ProfessionModel Profession = new ProfessionModel();
     public static final QuestModel Quest = new QuestModel();
     public static final RaidModel Raid = new RaidModel();
+    public static final ResourcePackModel ResourcePack = new ResourcePackModel();
     public static final RewardsModel Rewards = new RewardsModel();
     public static final SeaskipperModel Seaskipper = new SeaskipperModel();
     public static final ServerListModel ServerList = new ServerListModel();

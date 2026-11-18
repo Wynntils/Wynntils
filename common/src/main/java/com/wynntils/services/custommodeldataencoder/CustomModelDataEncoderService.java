@@ -12,7 +12,6 @@ import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.net.DownloadRegistry;
-import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -68,8 +67,8 @@ public class CustomModelDataEncoderService extends Service {
 
     @Override
     public void registerDownloads(DownloadRegistry registry) {
-        registry.registerDownload(UrlId.DATA_STATIC_TEXTURE_AND_FINGERPRINT_HASHES)
-                .handleJsonObject(this::handleJson);
+        // registry.registerDownload(UrlId.DATA_STATIC_TEXTURE_AND_FINGERPRINT_HASHES)
+        //        .handleJsonObject(this::handleJson);
     }
 
     private void handleJson(JsonObject jsonObject) {

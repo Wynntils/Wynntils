@@ -1,10 +1,11 @@
 /*
- * Copyright © Wynntils 2022-2023.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Services;
 import net.minecraft.client.ResourceLoadStateTracker;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -18,5 +19,8 @@ public abstract class ResourceLoadStateTrackerMixin {
         // This is the signal that Minecraft has finished loading the initial resources,
         // or a resource pack has been reloaded
         WynntilsMod.onResourcesFinishedLoading();
+
+        // Must come after the call above, so features (registered by it) can receive the event on the first load
+        Services.ResourcePack.onResourceReloadFinished();
     }
 }
