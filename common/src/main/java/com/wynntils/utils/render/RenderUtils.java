@@ -6,14 +6,13 @@ package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.renderpearl.api.pipeline.RenderPipeline;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
+import com.wynntils.utils.render.pipelines.CustomGuiPipelines;
 import com.wynntils.utils.render.state.ArcRenderState;
 import com.wynntils.utils.render.state.CustomRectangleRenderState;
 import com.wynntils.utils.render.state.DiagonalColoredRectangleRenderState;
@@ -29,12 +28,12 @@ import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.DefaultTooltipPositioner;
 import net.minecraft.client.renderer.OrderedSubmitNodeCollector;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.item.TrackingItemStackRenderState;
 import net.minecraft.client.renderer.rendertype.RenderTypes;
@@ -78,7 +77,7 @@ public final class RenderUtils {
 
         // Diagonal line
         guiGraphics.guiRenderState.addGuiElement(new DiagonalColoredRectangleRenderState(
-                RenderPipelines.GUI,
+                GuiPipeline.DEFAULT,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
                 x1,
@@ -210,7 +209,7 @@ public final class RenderUtils {
         }
 
         guiGraphics.guiRenderState.addGuiElement(new FloatColoredRectangleRenderState(
-                RenderPipelines.GUI,
+                GuiPipeline.DEFAULT,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
                 x1,
@@ -224,7 +223,7 @@ public final class RenderUtils {
 
     public static void drawTexturedRect(
             GuiGraphicsExtractor guiGraphics,
-            RenderPipeline pipeline,
+            GuiPipeline pipeline,
             Identifier identifier,
             CustomColor color,
             float x,
@@ -270,7 +269,7 @@ public final class RenderUtils {
             int textureHeight) {
         drawTexturedRect(
                 guiGraphics,
-                RenderPipelines.GUI_TEXTURED,
+                GuiPipeline.TEXTURED,
                 identifier,
                 color,
                 x,
@@ -347,7 +346,7 @@ public final class RenderUtils {
     public static void drawSprite(GuiGraphicsExtractor guiGraphics, Texture texture, float x, float y) {
         drawSprite(
                 guiGraphics,
-                RenderPipelines.GUI_TEXTURED,
+                GuiPipeline.TEXTURED,
                 texture.identifier(),
                 texture.atlas(),
                 CustomColor.NONE,
@@ -361,7 +360,7 @@ public final class RenderUtils {
             GuiGraphicsExtractor guiGraphics, Texture texture, CustomColor color, float x, float y) {
         drawSprite(
                 guiGraphics,
-                RenderPipelines.GUI_TEXTURED,
+                GuiPipeline.TEXTURED,
                 texture.identifier(),
                 texture.atlas(),
                 color,
@@ -375,7 +374,7 @@ public final class RenderUtils {
             GuiGraphicsExtractor guiGraphics, Texture texture, float x, float y, float width, float height) {
         drawSprite(
                 guiGraphics,
-                RenderPipelines.GUI_TEXTURED,
+                GuiPipeline.TEXTURED,
                 texture.identifier(),
                 texture.atlas(),
                 CustomColor.NONE,
@@ -394,20 +393,12 @@ public final class RenderUtils {
             float width,
             float height) {
         drawSprite(
-                guiGraphics,
-                RenderPipelines.GUI_TEXTURED,
-                texture.identifier(),
-                texture.atlas(),
-                color,
-                x,
-                y,
-                width,
-                height);
+                guiGraphics, GuiPipeline.TEXTURED, texture.identifier(), texture.atlas(), color, x, y, width, height);
     }
 
     public static void drawSprite(
             GuiGraphicsExtractor guiGraphics,
-            RenderPipeline pipeline,
+            GuiPipeline pipeline,
             Identifier identifier,
             Identifier atlas,
             CustomColor color,
@@ -833,7 +824,7 @@ public final class RenderUtils {
             CustomColor colorB,
             RenderDirection direction) {
         guiGraphics.guiRenderState.addGuiElement(new CustomRectangleRenderState(
-                RenderPipelines.GUI,
+                GuiPipeline.DEFAULT,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
                 x1,
@@ -867,7 +858,7 @@ public final class RenderUtils {
             int outerRadius,
             float angleOffset) {
         guiGraphics.guiRenderState.addGuiElement(new ArcRenderState(
-                RenderPipelines.GUI,
+                GuiPipeline.DEFAULT,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
                 x,
@@ -892,7 +883,7 @@ public final class RenderUtils {
             float angleOffset,
             float maxSteps) {
         guiGraphics.guiRenderState.addGuiElement(new ArcRenderState(
-                RenderPipelines.GUI,
+                GuiPipeline.DEFAULT,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
                 x,
@@ -1137,7 +1128,7 @@ public final class RenderUtils {
 
         drawTexturedRect(
                 guiGraphics,
-                CustomRenderPipelines.PROGRESS_BAR_PIPELINE,
+                CustomGuiPipelines.PROGRESS_BAR_PIPELINE,
                 texture.identifier(),
                 CommonColors.WHITE,
                 pxMin,
@@ -1195,7 +1186,7 @@ public final class RenderUtils {
 
         drawTexturedRect(
                 guiGraphics,
-                CustomRenderPipelines.PROGRESS_BAR_PIPELINE,
+                CustomGuiPipelines.PROGRESS_BAR_PIPELINE,
                 texture.identifier(),
                 customColor,
                 pxMin,
@@ -1223,7 +1214,7 @@ public final class RenderUtils {
             int textureY2) {
         drawTexturedRect(
                 guiGraphics,
-                CustomRenderPipelines.PROGRESS_BAR_PIPELINE,
+                CustomGuiPipelines.PROGRESS_BAR_PIPELINE,
                 texture.identifier(),
                 CommonColors.WHITE,
                 x1,
@@ -1481,7 +1472,7 @@ public final class RenderUtils {
         }
 
         guiGraphics.guiRenderState.addGuiElement(new MulticoloredRectangleRenderState(
-                RenderPipelines.GUI,
+                GuiPipeline.DEFAULT,
                 TextureSetup.noTexture(),
                 new Matrix3x2f(guiGraphics.pose()),
                 x,
