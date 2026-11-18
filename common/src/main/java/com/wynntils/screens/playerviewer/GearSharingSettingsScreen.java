@@ -18,7 +18,7 @@ import java.util.List;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.social.EntityPortraitWidget;
 import net.minecraft.network.chat.Component;
 
 public class GearSharingSettingsScreen extends WynntilsScreen {
@@ -57,7 +57,7 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.PLAYER_VIEWER_BACKGROUND, offsetX, offsetY);
 
-        InventoryScreen.extractEntityInInventoryFollowsMouse(
+        EntityPortraitWidget.extractEntityInInventoryFollowsMouse(
                 guiGraphics,
                 offsetX + 13,
                 offsetY - 4,
@@ -65,8 +65,6 @@ public class GearSharingSettingsScreen extends WynntilsScreen {
                 offsetY - 4 + Texture.PLAYER_VIEWER_BACKGROUND.height(),
                 30,
                 0.2f,
-                guiGraphics.mouseX(),
-                guiGraphics.mouseY(),
                 McUtils.player());
     }
 

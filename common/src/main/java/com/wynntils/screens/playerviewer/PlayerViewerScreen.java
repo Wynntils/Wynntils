@@ -36,7 +36,7 @@ import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.social.EntityPortraitWidget;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.core.component.DataComponentMap;
@@ -259,17 +259,8 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
         int renderWidth = Texture.PLAYER_VIEWER_BACKGROUND.width();
         int renderHeight = Texture.PLAYER_VIEWER_BACKGROUND.height();
 
-        InventoryScreen.extractEntityInInventoryFollowsMouse(
-                guiGraphics,
-                renderX,
-                renderY,
-                renderX + renderWidth,
-                renderY + renderHeight,
-                30,
-                0.2f,
-                guiGraphics.mouseX(),
-                guiGraphics.mouseY(),
-                player);
+        EntityPortraitWidget.extractEntityInInventoryFollowsMouse(
+                guiGraphics, renderX, renderY, renderX + renderWidth, renderY + renderHeight, 30, 0.2f, player);
     }
 
     @Override
