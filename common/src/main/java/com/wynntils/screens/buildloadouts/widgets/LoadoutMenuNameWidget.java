@@ -59,10 +59,10 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         renderBackground(guiGraphics);
 
-        editButtonHovered = isEditButtonHovered(mouseX, mouseY);
+        editButtonHovered = isEditButtonHovered(guiGraphics.mouseX(), guiGraphics.mouseY());
         if (editButtonHovered) {
             handleCursor(guiGraphics);
         }
@@ -87,10 +87,10 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
         } else {
             // Let TextInputBoxWidget calculate scrolling / highlighting,
             // but it will invoke our overridden doExtractWidgetRenderState (no background).
-            super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            super.extractWidgetRenderState(guiGraphics);
         }
 
-        renderEditButton(guiGraphics, mouseX, mouseY, partialTick);
+        renderEditButton(guiGraphics);
     }
 
     @Override
@@ -104,10 +104,8 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
             Font font,
             int firstWidth,
             int highlightedWidth,
-            int lastWidth,
-            int mouseX,
-            int mouseY) {
-        if (this.isHovered && !isEditButtonHovered(mouseX, mouseY)) {
+            int lastWidth) {
+        if (this.isHovered && !isEditButtonHovered(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             guiGraphics.requestCursor(CursorTypes.IBEAM);
         }
 
@@ -168,7 +166,7 @@ public class LoadoutMenuNameWidget extends TextInputBoxWidget implements Tooltip
                 false);
     }
 
-    private void renderEditButton(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    private void renderEditButton(GuiGraphicsExtractor guiGraphics) {
         int btnX = this.getX() + this.width - EDIT_BUTTON_WIDTH;
         int btnY = this.getY() + (this.height - EDIT_BUTTON_HEIGHT) / 2;
 

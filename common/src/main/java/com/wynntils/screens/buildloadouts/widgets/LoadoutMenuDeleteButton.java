@@ -37,7 +37,7 @@ public class LoadoutMenuDeleteButton extends AbstractButton {
     }
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(GuiGraphicsExtractor guiGraphics) {
         handleCursor(guiGraphics);
 
         RenderUtils.drawNineSliceScalingTexturedRect(

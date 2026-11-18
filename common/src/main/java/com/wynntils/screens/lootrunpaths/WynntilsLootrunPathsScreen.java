@@ -104,7 +104,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
     }
 
     @Override
-    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics) {
         if (hovered instanceof LootrunPathButton lootrunPathButton) {
             List<Component> tooltipLines;
 
@@ -135,22 +135,24 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
             }
 
             guiGraphics.setTooltipForNextFrame(
-                    Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
+                    Lists.transform(tooltipLines, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
             return;
         }
 
-        super.renderTooltip(guiGraphics, mouseX, mouseY);
+        super.renderTooltip(guiGraphics);
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         renderBackgroundTexture(guiGraphics);
 
         renderTitle(guiGraphics, I18n.get("screens.wynntils.lootruns.name"));
 
         renderVersion(guiGraphics);
 
-        extractWidgetRenderStates(guiGraphics, mouseX, mouseY, partialTick);
+        extractWidgetRenderStates(guiGraphics);
 
         if (elements.isEmpty()) {
             renderNoElementsHelper(guiGraphics, I18n.get("screens.wynntils.lootruns.noLootruns"));
@@ -160,7 +162,7 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
 
         renderPageInfo(guiGraphics, currentPage + 1, maxPage + 1);
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics);
     }
 
     private void renderDescription(GuiGraphicsExtractor guiGraphics) {

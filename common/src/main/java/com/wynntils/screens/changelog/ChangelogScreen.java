@@ -102,8 +102,8 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.SCROLL_BACKGROUND, offsetX, offsetY);
 
@@ -119,7 +119,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         renderPageInfo(guiGraphics, getCurrentPage() + 1, getMaxPage() + 1);
 
         for (Renderable renderable : this.renderables) {
-            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics);
         }
     }
 

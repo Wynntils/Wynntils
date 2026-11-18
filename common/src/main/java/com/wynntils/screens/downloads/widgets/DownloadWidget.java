@@ -41,7 +41,7 @@ public class DownloadWidget extends AbstractWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         DownloadDependencyGraph.DownloadDependencyGraphState managerState = Managers.Download.graphState();
 
         RenderUtils.drawRect(
@@ -84,7 +84,7 @@ public class DownloadWidget extends AbstractWidget {
         }
 
         if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(DOWNLOAD_TOOLTIP, mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(DOWNLOAD_TOOLTIP, guiGraphics.mouseX(), guiGraphics.mouseY());
         }
     }
 

@@ -55,8 +55,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
@@ -69,7 +68,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        professionTypeButtons.forEach(widget -> widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick));
+        professionTypeButtons.forEach(widget -> widget.extractRenderState(guiGraphics));
     }
 
     @Override
@@ -194,8 +193,7 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
         }
 
         @Override
-        protected void extractWidgetRenderState(
-                GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
             RenderUtils.drawTexturedRect(guiGraphics, texture, getX(), getY());
 
             FontRenderer.getInstance()
@@ -247,8 +245,8 @@ public class ProfessionTypeFilterWidget extends GuideFilterWidget {
                         Lists.transform(
                                 ComponentUtils.wrapTooltips(List.of(toggleComponent, removeComponent), 250),
                                 Component::getVisualOrderText),
-                        mouseX,
-                        mouseY);
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             }
         }
 

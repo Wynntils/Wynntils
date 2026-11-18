@@ -30,12 +30,15 @@ public class SavedItemsButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawHoverableTexturedRect(
                 guiGraphics, buttonTexture, this.getX(), this.getY(), this.isHovered, RenderDirection.VERTICAL);
 
         if (this.isHovered) {
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltip, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 

@@ -162,7 +162,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         renderMap(guiGraphics);
 
         RenderUtils.enableScissor(
@@ -172,7 +172,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(guiGraphics, mouseX, mouseY);
+        renderPois(guiGraphics);
 
         renderCursor(
                 guiGraphics,
@@ -188,15 +188,15 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
 
         renderMapBorder(guiGraphics);
 
-        renderCoordinates(guiGraphics, mouseX, mouseY);
+        renderCoordinates(guiGraphics);
 
-        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapButtons(guiGraphics);
 
-        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        renderZoomWidgets(guiGraphics);
 
         renderHoveredSeaskipperDestination(guiGraphics);
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics);
 
         RenderUtils.drawScalingTexturedRect(
                 guiGraphics,
@@ -211,7 +211,7 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         renderScrollButton(guiGraphics);
 
         for (SeaskipperDestinationButton destinationButton : destinationButtons) {
-            destinationButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            destinationButton.extractRenderState(guiGraphics);
         }
 
         if (isPanning) {
@@ -219,8 +219,8 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         } else if (draggingScroll || holdingZoomHandle) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (this.hoveredPoi != null
-                || isMouseOverScrollButton(mouseX, mouseY)
-                || isMouseOverZoomHandle(mouseX, mouseY)) {
+                || isMouseOverScrollButton(guiGraphics.mouseX(), guiGraphics.mouseY())
+                || isMouseOverZoomHandle(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
     }
@@ -356,27 +356,23 @@ public final class CustomSeaskipperScreen extends AbstractMapScreen {
         return selectedPoi;
     }
 
-    private void renderPois(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphicsExtractor guiGraphics) {
         renderDestinations(
                 destinationPois,
                 guiGraphics,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
-                1,
-                mouseX,
-                mouseY);
+                1);
     }
 
     private void renderDestinations(
             List<SeaskipperDestinationPoi> pois,
             GuiGraphicsExtractor guiGraphics,
             BoundingBox textureBoundingBox,
-            float poiScale,
-            int mouseX,
-            int mouseY) {
+            float poiScale) {
         hoveredPoi = null;
 
         List<SeaskipperDestinationPoi> filteredPois =
-                getRenderedDestinations(pois, textureBoundingBox, poiScale, mouseX, mouseY);
+                getRenderedDestinations(pois, textureBoundingBox, poiScale, guiGraphics.mouseX(), guiGraphics.mouseY());
 
         if (renderRoutes) {
             float poiRenderX = MapRenderer.getRenderX(currentLocationPoi, mapCenterX, centerX, zoomRenderScale);

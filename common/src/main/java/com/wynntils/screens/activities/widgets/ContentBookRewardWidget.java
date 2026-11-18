@@ -35,8 +35,7 @@ public class ContentBookRewardWidget extends AbstractWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawTexturedRect(guiGraphics, texture, getX() + width - 10, getY() - 1);
 
         if (text != null) {
@@ -54,7 +53,10 @@ public class ContentBookRewardWidget extends AbstractWidget {
         }
 
         if (isHovered) {
-            guiGraphics.setTooltipForNextFrame(Lists.transform(tooltip, Component::getVisualOrderText), mouseX, mouseY);
+            guiGraphics.setTooltipForNextFrame(
+                    Lists.transform(tooltip, Component::getVisualOrderText),
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY());
         }
     }
 

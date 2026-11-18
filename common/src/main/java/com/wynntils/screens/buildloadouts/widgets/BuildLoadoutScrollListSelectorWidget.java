@@ -46,8 +46,7 @@ public class BuildLoadoutScrollListSelectorWidget extends AbstractWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         handleCursor(guiGraphics);
         if (parent.buildLoadoutScrollListWidget.getSelectedScrollListCategory() == scrollListCategory) {
             RenderUtils.drawNineSliceScalingTexturedRect(

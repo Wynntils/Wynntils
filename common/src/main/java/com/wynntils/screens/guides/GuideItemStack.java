@@ -23,15 +23,15 @@ public abstract class GuideItemStack extends ItemStack {
         Handlers.Item.updateItem(this, annotation, StyledText.fromString(baseName));
     }
 
-    public void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    public void renderTooltip(GuiGraphicsExtractor guiGraphics) {
         List<Component> tooltipLines = new ArrayList<>(LoreUtils.getTooltipLines(this));
 
         guiGraphics.setTooltipForNextFrame(
                 FontRenderer.getInstance().getFont(),
                 tooltipLines,
                 this.getTooltipImage(),
-                mouseX,
-                mouseY,
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
                 this.get(DataComponents.TOOLTIP_STYLE));
     }
 }

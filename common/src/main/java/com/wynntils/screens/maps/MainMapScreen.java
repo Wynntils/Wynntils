@@ -239,7 +239,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .openMapKeybind
@@ -258,7 +258,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 (int) mapWidth,
                 (int) mapHeight);
 
-        renderPois(guiGraphics, mouseX, mouseY);
+        renderPois(guiGraphics);
 
         if (Models.WorldState.onWorld()
                 && Managers.Feature.getFeatureInstance(MappingProgressFeature.class)
@@ -300,30 +300,30 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         renderMapBorder(guiGraphics);
 
-        renderCoordinates(guiGraphics, mouseX, mouseY);
+        renderCoordinates(guiGraphics);
 
         renderZoomText(guiGraphics);
 
-        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
+        renderMapButtons(guiGraphics);
 
-        renderZoomWidgets(guiGraphics, mouseX, mouseY, partialTick);
+        renderZoomWidgets(guiGraphics);
 
         if (isPanning) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_ALL);
         } else if (holdingZoomHandle) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
-        } else if (this.hovered != null || isMouseOverZoomHandle(mouseX, mouseY)) {
+        } else if (this.hovered != null || isMouseOverZoomHandle(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
-        renderTooltip(guiGraphics, mouseX, mouseY);
+        renderTooltip(guiGraphics);
     }
 
     public void changeToGuildMap() {
         McUtils.setScreen(GuildMapScreen.create(mapCenterX, mapCenterZ, zoomLevel));
     }
 
-    private void renderPois(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    private void renderPois(GuiGraphicsExtractor guiGraphics) {
         Stream<? extends Poi> pois = Services.Poi.getServicePois();
 
         pois = Stream.concat(pois, Services.Poi.getCombatPois());
@@ -355,9 +355,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / zoomRenderScale, height / zoomRenderScale),
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .poiScale
-                        .get(),
-                mouseX,
-                mouseY);
+                        .get());
     }
 
     private Stream<PlayerMainMapPoi> getPlayerPois(

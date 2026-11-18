@@ -114,8 +114,8 @@ public class ConfigProfileScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
 
         if (showWelcomePrompt) {
             int logoX = (int) (this.width / 2f);
@@ -227,7 +227,7 @@ public class ConfigProfileScreen extends WynntilsScreen {
             int newX = (int) (startX + (targetX - startX) * cardAnimationPercentage.getAnimation());
             widget.setX(newX);
 
-            widget.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            widget.extractRenderState(guiGraphics);
         }
     }
 

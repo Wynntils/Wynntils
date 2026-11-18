@@ -44,7 +44,7 @@ public class MakeNewLoadoutButton extends AbstractButton {
     }
 
     @Override
-    protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractContents(GuiGraphicsExtractor guiGraphics) {
         handleCursor(guiGraphics);
 
         Texture background;

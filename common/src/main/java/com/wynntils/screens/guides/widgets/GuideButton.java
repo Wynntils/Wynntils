@@ -48,12 +48,12 @@ public abstract class GuideButton extends WynntilsButton {
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         renderBaseItem(guiGraphics, getColor());
         renderFavoriteIcon(guiGraphics);
 
         if (isHovered) {
-            renderTooltip(guiGraphics, mouseX, mouseY);
+            renderTooltip(guiGraphics);
         }
     }
 
@@ -97,8 +97,8 @@ public abstract class GuideButton extends WynntilsButton {
                         TextShadow.OUTLINE);
     }
 
-    protected void renderTooltip(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
-        itemStack.renderTooltip(guiGraphics, mouseX, mouseY);
+    protected void renderTooltip(GuiGraphicsExtractor guiGraphics) {
+        itemStack.renderTooltip(guiGraphics);
     }
 
     protected abstract CustomColor getColor();

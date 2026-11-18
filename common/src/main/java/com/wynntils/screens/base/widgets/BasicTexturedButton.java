@@ -47,7 +47,7 @@ public class BasicTexturedButton extends WynntilsButton implements TooltipProvid
     }
 
     @Override
-    public void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void extractContents(GuiGraphicsExtractor guiGraphics) {
         if (scaleTexture) {
             RenderUtils.drawScalingTexturedRect(
                     guiGraphics,

@@ -68,9 +68,8 @@ public class ChatTabsWidget extends AbstractWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (this.isMouseOver(mouseX, mouseY)) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        if (this.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
             RenderUtils.drawRect(
                     guiGraphics, CommonColors.GRAY.withAlpha(70), this.getX(), this.getY(), this.width, this.height);
         }
@@ -90,9 +89,9 @@ public class ChatTabsWidget extends AbstractWidget {
 
         handleCursor(guiGraphics);
 
-        deleteButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        moveUpButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
-        moveDownButton.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        deleteButton.extractRenderState(guiGraphics);
+        moveUpButton.extractRenderState(guiGraphics);
+        moveDownButton.extractRenderState(guiGraphics);
     }
 
     @Override

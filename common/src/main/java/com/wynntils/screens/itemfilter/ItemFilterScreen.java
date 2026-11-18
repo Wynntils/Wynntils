@@ -331,7 +331,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
         hovered = null;
 
         RenderUtils.drawTexturedRect(guiGraphics, Texture.ITEM_FILTER_BACKGROUND, offsetX, offsetY);
@@ -392,10 +392,10 @@ public final class ItemFilterScreen extends WynntilsScreen {
                         TextShadow.NORMAL);
 
         for (Renderable renderable : renderables) {
-            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics);
 
             if (renderable instanceof WynntilsButton wynntilsButton) {
-                if (wynntilsButton.isMouseOver(mouseX, mouseY)) {
+                if (wynntilsButton.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                     hovered = renderable;
                 }
             }
@@ -419,7 +419,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             RenderUtils.enableScissor(guiGraphics, 6 + offsetX, 28 + offsetY, 122, MAX_PROVIDERS_PER_PAGE * 21 + 2);
 
             for (Renderable renderable : providerButtons) {
-                renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+                renderable.extractRenderState(guiGraphics);
             }
 
             RenderUtils.disableScissor(guiGraphics);
@@ -428,16 +428,16 @@ public final class ItemFilterScreen extends WynntilsScreen {
         RenderUtils.enableScissor(guiGraphics, 149 + offsetX, 28 + offsetY, 172, MAX_SORTS_PER_PAGE * 21 + 2);
 
         for (Renderable renderable : sortButtons) {
-            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics);
         }
 
         RenderUtils.disableScissor(guiGraphics);
 
         for (Renderable renderable : presetButtons) {
-            renderable.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            renderable.extractRenderState(guiGraphics);
 
             if (renderable instanceof WynntilsButton wynntilsButton) {
-                if (wynntilsButton.isMouseOver(mouseX, mouseY)) {
+                if (wynntilsButton.isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                     hovered = renderable;
                 }
             }
@@ -454,8 +454,8 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (draggingProviderScroll || draggingSortScroll) {
             guiGraphics.requestCursor(CursorTypes.RESIZE_NS);
         } else if (MathUtils.isInside(
-                mouseX,
-                mouseY,
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY(),
                 133 + offsetX,
                 133 + Texture.SCROLL_BUTTON.width() + offsetX,
                 (int) providerScrollY,
@@ -463,7 +463,7 @@ public final class ItemFilterScreen extends WynntilsScreen {
             guiGraphics.requestCursor(CursorTypes.POINTING_HAND);
         }
 
-        renderTooltips(guiGraphics, mouseX, mouseY);
+        renderTooltips(guiGraphics);
     }
 
     @Override
@@ -1082,12 +1082,12 @@ public final class ItemFilterScreen extends WynntilsScreen {
                 && !itemSearchWidget.getTextBoxInput().isEmpty();
     }
 
-    private void renderTooltips(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY) {
+    private void renderTooltips(GuiGraphicsExtractor guiGraphics) {
         // Preset and filter buttons have a small bit rendered underneath the background, that shouldn't show tooltip
         if (hovered instanceof PresetButton || hovered instanceof FilterOptionsButton) {
             if (MathUtils.isInside(
-                    mouseX,
-                    mouseY,
+                    guiGraphics.mouseX(),
+                    guiGraphics.mouseY(),
                     offsetX,
                     Texture.ITEM_FILTER_BACKGROUND.width() + offsetX,
                     offsetY,
@@ -1105,7 +1105,9 @@ public final class ItemFilterScreen extends WynntilsScreen {
         if (tooltipLines.isEmpty()) return;
 
         guiGraphics.setTooltipForNextFrame(
-                Lists.transform(tooltipLines, Component::getVisualOrderText), mouseX, mouseY);
+                Lists.transform(tooltipLines, Component::getVisualOrderText),
+                guiGraphics.mouseX(),
+                guiGraphics.mouseY());
     }
 
     private void renderProvidersScroll(GuiGraphicsExtractor guiGraphics) {

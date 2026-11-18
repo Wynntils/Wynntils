@@ -68,8 +68,7 @@ public class SortWidget extends AbstractWidget {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         RenderUtils.drawRectBorders(
                 guiGraphics,
                 sortInfo.direction() == SortDirection.DESCENDING ? CommonColors.WHITE : CommonColors.BLACK,
@@ -93,7 +92,7 @@ public class SortWidget extends AbstractWidget {
                         1.0f);
 
         for (Button button : buttons) {
-            button.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+            button.extractRenderState(guiGraphics);
         }
     }
 

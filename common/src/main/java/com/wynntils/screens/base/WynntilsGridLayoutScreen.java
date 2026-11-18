@@ -45,8 +45,8 @@ public abstract class WynntilsGridLayoutScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.doExtractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    public void doExtractRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.doExtractRenderState(guiGraphics);
         //        RenderUtils.renderDebugGrid(guiGraphics, GRID_DIVISIONS, dividedWidth, dividedHeight);
     }
 }

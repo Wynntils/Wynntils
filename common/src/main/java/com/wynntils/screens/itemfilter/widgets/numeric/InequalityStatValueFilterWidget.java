@@ -97,11 +97,10 @@ public class InequalityStatValueFilterWidget extends InequalityNumericFilterWidg
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.extractWidgetRenderState(guiGraphics, mouseX, mouseY, partialTick);
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
+        super.extractWidgetRenderState(guiGraphics);
 
-        percentageCheckbox.extractRenderState(guiGraphics, mouseX, mouseY, partialTick);
+        percentageCheckbox.extractRenderState(guiGraphics);
     }
 
     @Override

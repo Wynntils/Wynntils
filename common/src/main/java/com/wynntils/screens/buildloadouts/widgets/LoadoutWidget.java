@@ -54,8 +54,7 @@ public class LoadoutWidget extends AbstractWidget implements IconRenderer {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         handleCursor(guiGraphics);
 
         if (parent.getSelectedLoadout() != loadout) {

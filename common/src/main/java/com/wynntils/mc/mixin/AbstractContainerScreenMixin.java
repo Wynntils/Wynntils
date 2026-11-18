@@ -35,16 +35,10 @@ public abstract class AbstractContainerScreenMixin {
     @Shadow
     public Slot hoveredSlot;
 
-    @Inject(method = "extractContents(Lnet/minecraft/client/gui/GuiGraphicsExtractor;IIF)V", at = @At("RETURN"))
-    private void extractContentsPost(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
-        MixinHelper.post(new ContainerRenderEvent(
-                (AbstractContainerScreen<?>) (Object) this,
-                guiGraphics,
-                mouseX,
-                mouseY,
-                partialTicks,
-                this.hoveredSlot));
+    @Inject(method = "extractContents(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("RETURN"))
+    private void extractContentsPost(GuiGraphicsExtractor guiGraphics, CallbackInfo info) {
+        MixinHelper.post(
+                new ContainerRenderEvent((AbstractContainerScreen<?>) (Object) this, guiGraphics, this.hoveredSlot));
     }
 
     @WrapOperation(

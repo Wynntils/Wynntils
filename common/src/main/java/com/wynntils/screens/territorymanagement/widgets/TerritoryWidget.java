@@ -55,8 +55,7 @@ public class TerritoryWidget extends AbstractWidget implements TooltipProvider {
     }
 
     @Override
-    protected void extractWidgetRenderState(
-            GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+    protected void extractWidgetRenderState(GuiGraphicsExtractor guiGraphics) {
         if (!territoryColor.backgroundColors().isEmpty()) {
             RenderUtils.drawMulticoloredRect(
                     guiGraphics,

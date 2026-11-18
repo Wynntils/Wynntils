@@ -104,7 +104,7 @@ public class CharacterInfoIndicatorFeature extends Feature {
         public void onPress(InputWithModifiers input) {}
 
         @Override
-        protected void extractContents(GuiGraphicsExtractor guiGraphics, int mouseX, int mouseY, float partialTick) {
+        protected void extractContents(GuiGraphicsExtractor guiGraphics) {
             extractDefaultSprite(guiGraphics);
 
             FontRenderer.getInstance()
@@ -119,9 +119,11 @@ public class CharacterInfoIndicatorFeature extends Feature {
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
 
-            if (isMouseOver(mouseX, mouseY)) {
+            if (isMouseOver(guiGraphics.mouseX(), guiGraphics.mouseY())) {
                 guiGraphics.setTooltipForNextFrame(
-                        Lists.transform(getTooltipLines(), Component::getVisualOrderText), mouseX, mouseY);
+                        Lists.transform(getTooltipLines(), Component::getVisualOrderText),
+                        guiGraphics.mouseX(),
+                        guiGraphics.mouseY());
             }
         }
 
