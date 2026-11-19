@@ -60,6 +60,12 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
     }
 
     @Override
+    public void added() {
+        // Request guild member list on screen open in case online guild member list is stale.
+        Models.Guild.requestGuildMembers();
+    }
+
+    @Override
     public void doInit() {
         super.doInit();
         mgmtButtonWidth = (int) (dividedWidth * 8) - 2; // -2 for spacing
@@ -364,12 +370,9 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         List<SuggestedPlayer> suggestedPlayers = Models.Friends.getOnlineFriends().keySet().stream()
                 .map(username -> new SuggestedPlayer(username, SuggestedPlayerType.FRIEND))
                 .collect(Collectors.toList());
-        Models.Guild.requestGuildMembers();
-        if (!Models.Guild.getOnlineGuildMembers().isEmpty()) {
-            suggestedPlayers.addAll(Models.Guild.getOnlineGuildMembers().stream()
-                    .map(username -> new SuggestedPlayer(username, SuggestedPlayerType.GUILD))
-                    .toList());
-        }
+        suggestedPlayers.addAll(Models.Guild.getOnlineGuildMembers().stream()
+                .map(username -> new SuggestedPlayer(username, SuggestedPlayerType.GUILD))
+                .toList());
 
         suggestedPlayers = suggestedPlayers.stream()
                 .filter(suggestedPlayer -> !Models.Party.getPartyMembers().contains(suggestedPlayer.username())
