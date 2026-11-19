@@ -33,6 +33,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
@@ -215,13 +216,13 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        Slot slot = getHoveredSlot(event.x(), event.y());
-        if (slot != null && slot.getItem() instanceof FakeItemStack fakeItemStack) {
+        SlotWidget slotWidget = getHoveredSlot();
+        if (slotWidget != null && slotWidget.slot().getItem() instanceof FakeItemStack fakeItemStack) {
             if (event.button() == InputConstants.MOUSE_BUTTON_LEFT) {
                 fakeItemStack.cyclePage();
                 return true;
             } else if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
-                int index = slot.index + ITEMS_PER_ROW * itemScrollOffset;
+                int index = slotWidget.slot().index + ITEMS_PER_ROW * itemScrollOffset;
                 if (KeyboardUtils.isShiftDown()) {
                     String base64 = encodedItems.get(index).base64();
                     selectedItems.removeIf(selectedItem -> selectedItem.b().equals(base64));
@@ -289,8 +290,9 @@ public final class SavedItemsScreen extends WynntilsContainerScreen<SavedItemsMe
         draggingScroll = false;
 
         if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT && dragSelectionStartIndex != -1) {
-            Slot endSlot = getHoveredSlot(event.x(), event.y());
-            int endIndex = endSlot == null ? dragSelectionStartIndex : endSlot.index + ITEMS_PER_ROW * itemScrollOffset;
+            SlotWidget endSlot = getHoveredSlot();
+            int endIndex =
+                    endSlot == null ? dragSelectionStartIndex : endSlot.slot().index + ITEMS_PER_ROW * itemScrollOffset;
 
             for (int i = Math.min(dragSelectionStartIndex, endIndex);
                     i <= Math.max(dragSelectionStartIndex, endIndex) && i < encodedItems.size();
