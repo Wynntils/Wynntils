@@ -45,7 +45,6 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ContainerInput;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.component.CustomModelData;
@@ -293,11 +292,11 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     }
 
     @Override
-    protected void slotClicked(Slot slot, int slotId, int mouseButton, ContainerInput containerInput) {
+    protected void slotClicked(SlotWidget slotWidget, int slotId, int mouseButton, ContainerInput containerInput) {
         if (containerInput == ContainerInput.SWAP
                 && mouseButton == 40
-                && slot != null
-                && slot.getItem() instanceof FakeItemStack fakeItemStack) {
+                && slotWidget != null
+                && slotWidget.slot().getItem() instanceof FakeItemStack fakeItemStack) {
             fakeItemStack.cyclePage();
         }
     }
