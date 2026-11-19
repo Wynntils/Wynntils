@@ -10,14 +10,14 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.CommandSuggestionFillEvent;
 import java.util.concurrent.CompletableFuture;
-import net.minecraft.client.multiplayer.ClientSuggestionProvider;
+import net.minecraft.client.multiplayer.ClientSuggestionContext;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-@Mixin(ClientSuggestionProvider.class)
-public class ClientSuggestionProviderMixin {
+@Mixin(ClientSuggestionContext.class)
+public class ClientSuggestionContextMixin {
     @Inject(
             method =
                     "customSuggestion(Lcom/mojang/brigadier/context/CommandContext;)Ljava/util/concurrent/CompletableFuture;",

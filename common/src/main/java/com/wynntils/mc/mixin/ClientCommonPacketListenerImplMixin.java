@@ -1,18 +1,24 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.mixin;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ServerResourcePackEvent;
+import com.wynntils.mc.mixin.accessors.CommandBoxAccessor;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
+import net.minecraft.client.multiplayer.ClientPacketListener;
+import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.common.ClientboundDisconnectPacket;
 import net.minecraft.network.protocol.common.ClientboundResourcePackPushPacket;
 import net.minecraft.network.protocol.common.ServerboundResourcePackPacket;
+import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -25,6 +31,22 @@ public abstract class ClientCommonPacketListenerImplMixin {
     @Shadow
     @Final
     protected Connection connection;
+
+    @Inject(
+            method = "handleCommands(Lnet/minecraft/network/protocol/game/ClientboundCommandsPacket;)V",
+            at = @At("RETURN"))
+    private void handleCommandsPost(ClientboundCommandsPacket packet, CallbackInfo ci) {
+        if (!McUtils.mc().isSameThread()) return;
+        if (!((Object) this instanceof ClientPacketListener listener)) return;
+
+        // Use the installed tree so commands added by other mods are preserved.
+        var root = ((CommandBoxAccessor) listener.commandSuggestions())
+                .getDispatcher()
+                .getRoot();
+        MixinHelper.post(new CommandsAddedEvent(
+                root,
+                CommandBuildContext.simple(listener.getSuggestionsProvider().enabledFeatures())));
+    }
 
     @Inject(
             method =

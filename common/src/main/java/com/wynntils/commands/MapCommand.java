@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -18,13 +18,13 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class MapCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> POI_PROVIDER_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     Services.Poi.getCustomPoiProviders().stream()
                             .map(CustomPoiProvider::getName)
                             .toArray(String[]::new),

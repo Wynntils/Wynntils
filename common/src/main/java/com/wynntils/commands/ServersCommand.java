@@ -20,7 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -30,7 +30,7 @@ public class ServersCommand extends Command {
     private static final int UPDATE_TIME_OUT_MS = 3000;
 
     private static final SuggestionProvider<CommandSourceStack> SERVERS_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(Models.ServerList.getServers(), builder);
+            (context, builder) -> SuggestionContext.suggest(Models.ServerList.getServers(), builder);
 
     @Override
     public String getCommandName() {

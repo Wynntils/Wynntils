@@ -30,7 +30,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -38,12 +38,11 @@ import net.minecraft.network.chat.MutableComponent;
 import org.apache.commons.lang3.StringUtils;
 
 public class ConfigCommand extends Command {
-    private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
-                    Managers.Feature.getFeatures().stream().map(Feature::getShortName), builder);
+    private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTION_PROVIDER = (context, builder) ->
+            SuggestionContext.suggest(Managers.Feature.getFeatures().stream().map(Feature::getShortName), builder);
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
 
@@ -58,7 +57,7 @@ public class ConfigCommand extends Command {
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> FEATURE_CONFIG_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
 
@@ -73,7 +72,7 @@ public class ConfigCommand extends Command {
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_GROUP_FEATURE_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     Managers.Feature.getFeatures().stream()
                             .filter(feature -> !Managers.Overlay.getFeatureOverlayGroups(feature)
                                     .isEmpty())
@@ -81,7 +80,7 @@ public class ConfigCommand extends Command {
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_CONFIG_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
                         String overlayName = context.getArgument("overlay", String.class);
@@ -111,10 +110,10 @@ public class ConfigCommand extends Command {
                 Config<?> config = getConfigFromArguments(context, featureName, configName);
 
                 if (config == null) {
-                    return SharedSuggestionProvider.suggest(Stream.of(), builder);
+                    return SuggestionContext.suggest(Stream.of(), builder);
                 }
 
-                return SharedSuggestionProvider.suggest(config.getValidLiterals(), builder);
+                return SuggestionContext.suggest(config.getValidLiterals(), builder);
             };
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_CONFIG_VALUE_SUGGESTION_PROVIDER =
@@ -126,14 +125,14 @@ public class ConfigCommand extends Command {
                 Config<?> config = getOverlayConfigFromArguments(context, featureName, overlayName, configName);
 
                 if (config == null) {
-                    return SharedSuggestionProvider.suggest(Stream.of(), builder);
+                    return SuggestionContext.suggest(Stream.of(), builder);
                 }
 
-                return SharedSuggestionProvider.suggest(config.getValidLiterals(), builder);
+                return SuggestionContext.suggest(config.getValidLiterals(), builder);
             };
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_GROUP_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
 
@@ -148,7 +147,7 @@ public class ConfigCommand extends Command {
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_GROUP_REMOVE_ID_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     () -> {
                         String featureName = context.getArgument("feature", String.class);
                         String groupName = context.getArgument("group", String.class);
@@ -166,7 +165,7 @@ public class ConfigCommand extends Command {
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> CONFIG_PROFILES_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     () -> {
                         return Arrays.stream(ConfigProfile.values())
                                 .map(Enum::name)

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022-2025.
+ * Copyright © Wynntils 2022-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -33,9 +33,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.coordinates.Coordinates;
 import net.minecraft.commands.arguments.coordinates.Vec3Argument;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
@@ -43,14 +43,14 @@ import net.minecraft.world.phys.Vec3;
 
 public class CompassCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> SHARE_TARGET_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     Stream.concat(
                             Stream.of("party", "guild"),
                             McUtils.mc().level.players().stream().map(Player::getScoreboardName)),
                     builder);
 
     public static final SuggestionProvider<CommandSourceStack> TERRITORY_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(Models.Territory.getTerritoryNames(), builder);
+            (context, builder) -> SuggestionContext.suggest(Models.Territory.getTerritoryNames(), builder);
 
     @Override
     public String getCommandName() {

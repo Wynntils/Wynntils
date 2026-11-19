@@ -36,7 +36,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -95,9 +95,8 @@ public final class ClientCommandManager extends Manager {
                 builder -> addNode(event.getRoot(), builder.build()), context, commandInstanceSet);
     }
 
-    public void addNode(
-            RootCommandNode<SharedSuggestionProvider> root, CommandNode<? extends SharedSuggestionProvider> node) {
-        root.addChild((CommandNode<SharedSuggestionProvider>) node);
+    public void addNode(RootCommandNode<SuggestionContext> root, CommandNode<?> node) {
+        root.addChild((CommandNode<SuggestionContext>) node);
     }
 
     public void addNodeToClientDispatcher(LiteralArgumentBuilder<CommandSourceStack> nodeBuilder) {
@@ -114,7 +113,7 @@ public final class ClientCommandManager extends Manager {
 
         if (source == null) return false;
 
-        final ParseResults<CommandSourceStack> parse = clientDispatcher.parse(reader, source);
+        final ParseResults<CommandSourceStack> parse = ClientCommandBox.parse(clientDispatcher, reader, source);
 
         if (!parse.getExceptions().isEmpty()
                 || (parse.getContext().getCommand() == null

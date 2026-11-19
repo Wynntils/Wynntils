@@ -28,7 +28,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -36,7 +36,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class FunctionCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> FUNCTION_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     Stream.concat(
                             Managers.Function.getFunctions().stream().map(Function::getName),
                             Managers.Function.getFunctions().stream()
@@ -45,14 +45,14 @@ public class FunctionCommand extends Command {
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> CRASHED_FUNCTION_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     Managers.Function.getFunctions().stream()
                             .filter(Managers.Function::isCrashed)
                             .map(Function::getName),
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> FUNCTION_LIST_TYPES_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     Arrays.stream(ListType.values())
                             .map(Enum::name)
                             .map(s -> s.toLowerCase(Locale.ROOT))

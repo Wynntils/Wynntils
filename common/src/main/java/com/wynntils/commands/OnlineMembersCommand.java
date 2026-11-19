@@ -23,7 +23,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -31,7 +31,7 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class OnlineMembersCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> GUILD_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(Models.Guild.getAllGuilds(), builder);
+            (context, builder) -> SuggestionContext.suggest(Models.Guild.getAllGuilds(), builder);
 
     @Override
     public String getCommandName() {
