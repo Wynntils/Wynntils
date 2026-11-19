@@ -79,7 +79,7 @@ public class CosmeticsService extends Service {
             return false;
         }
 
-        if (McUtils.player().is(player)
+        if (McUtils.player() == player
                 && !Managers.Feature.getFeatureInstance(WynntilsCosmeticsFeature.class)
                         .renderOwnCape
                         .get()) {

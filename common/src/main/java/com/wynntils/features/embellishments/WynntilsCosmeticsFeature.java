@@ -34,7 +34,7 @@ public class WynntilsCosmeticsFeature extends Feature {
 
         Entity entity = ((EntityRenderStateExtension) event.getHumanoidRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
-        if (McUtils.player().is(player) && !renderOwnCape.get()) return;
+        if (McUtils.player() == player && !renderOwnCape.get()) return;
 
         if (Services.Cosmetics.shouldRenderCape(player, false)) {
             // Cancel default cape rendering, so ours doesn't cause a double up of capes
@@ -48,7 +48,7 @@ public class WynntilsCosmeticsFeature extends Feature {
 
         Entity entity = ((EntityRenderStateExtension) event.getHumanoidRenderState()).getEntity();
         if (!(entity instanceof AbstractClientPlayer player)) return;
-        if (McUtils.player().is(player) && !renderOwnCape.get()) return;
+        if (McUtils.player() == player && !renderOwnCape.get()) return;
 
         if (Services.Cosmetics.shouldRenderCape(player, true)) {
             // This might not be necessary?
