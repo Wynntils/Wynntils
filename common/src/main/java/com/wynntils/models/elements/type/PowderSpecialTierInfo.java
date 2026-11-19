@@ -25,7 +25,7 @@ public record PowderSpecialTierInfo(
                 ? ""
                 : BigDecimal.valueOf(valueTwo).stripTrailingZeros().toPlainString();
         MutableComponent formattedDescription = Component.empty();
-        description.visit(
+        description.visitUnbounded(
                 (style, text) -> {
                     formattedDescription.append(
                             Component.literal(text.replace("%1$s", firstValue).replace("%2$s", secondValue))

@@ -10,6 +10,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.core.text.type.StyleType;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -628,8 +629,8 @@ public class TestStyledText {
         // Note: The comparison is done on the size of the lists, as Style has an equals method that does not
         //       behave like it's implementation (null != false, when in reality they are equal).
         Assertions.assertEquals(
-                component.toFlatList().size(),
-                styledText.getComponent().toFlatList().size(),
+                ComponentUtils.toFlatList(component).size(),
+                ComponentUtils.toFlatList(styledText.getComponent()).size(),
                 "StyledText.getComponent() returned an unexpected value.");
     }
 
@@ -948,7 +949,10 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 component.getStyle().getHoverEvent(),
-                styledText.getComponent().toFlatList().getFirst().getStyle().getHoverEvent(),
+                ComponentUtils.toFlatList(styledText.getComponent())
+                        .getFirst()
+                        .getStyle()
+                        .getHoverEvent(),
                 "StyledText.fromComponent() did not inherit the correct hover event.");
     }
 
