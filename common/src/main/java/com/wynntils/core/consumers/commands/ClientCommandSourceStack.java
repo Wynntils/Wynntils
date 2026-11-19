@@ -5,18 +5,15 @@
 package com.wynntils.core.consumers.commands;
 
 import com.wynntils.utils.mc.McUtils;
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandSource;
 import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.core.RegistryAccess;
+import net.minecraft.core.HolderGetter;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.permissions.PermissionSet;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.flag.FeatureFlagSet;
 
 public class ClientCommandSourceStack extends CommandSourceStack {
     public ClientCommandSourceStack(LocalPlayer player) {
@@ -31,25 +28,18 @@ public class ClientCommandSourceStack extends CommandSourceStack {
     }
 
     @Override
-    public Collection<String> getOnlinePlayerNames() {
-        return Minecraft.getInstance().getConnection().getOnlinePlayers().stream()
-                .map(e -> e.getProfile().name())
-                .collect(Collectors.toList());
+    public HolderLookup.Provider holderLookups() {
+        return Minecraft.getInstance().getConnection().registryAccess();
     }
 
     @Override
-    public Collection<String> getAllTeams() {
-        return null;
+    public HolderGetter.Provider holderGetters() {
+        return holderLookups();
     }
 
     @Override
-    public Set<ResourceKey<Level>> levels() {
-        return null;
-    }
-
-    @Override
-    public RegistryAccess registryAccess() {
-        return null;
+    public FeatureFlagSet enabledFeatures() {
+        return Minecraft.getInstance().getConnection().enabledFeatures();
     }
 
     private static class ClientCommandSource implements CommandSource {

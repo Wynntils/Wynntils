@@ -20,15 +20,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class StatisticsCommand extends Command {
-    private static final SuggestionProvider<CommandSourceStack> STATISTIC_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
-                    Arrays.stream(StatisticKind.values()).map(StatisticKind::getId), builder);
+    private static final SuggestionProvider<CommandSourceStack> STATISTIC_SUGGESTION_PROVIDER = (context, builder) ->
+            SuggestionContext.suggest(Arrays.stream(StatisticKind.values()).map(StatisticKind::getId), builder);
 
     @Override
     public String getCommandName() {

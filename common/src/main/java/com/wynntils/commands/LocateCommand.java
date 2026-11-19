@@ -23,7 +23,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -31,10 +31,10 @@ import net.minecraft.world.phys.Vec3;
 
 public class LocateCommand extends Command {
     public static final SuggestionProvider<CommandSourceStack> SERVICE_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
+            SuggestionContext.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Services.Poi.getLabelPois().map(Poi::getName), builder);
+            SuggestionContext.suggest(Services.Poi.getLabelPois().map(Poi::getName), builder);
 
     @Override
     public String getCommandName() {

@@ -18,19 +18,19 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.Component;
 
 public class PingCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> PARTY_MEMBER_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(
+            (context, builder) -> SuggestionContext.suggest(
                     Models.Party.getPartyMembers().stream()
                             .filter(member -> !member.equals(McUtils.playerName()))
                             .toList(),
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> IGNORED_PLAYER_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(Services.Hades.getIgnoredPingUsers(), builder);
+            (context, builder) -> SuggestionContext.suggest(Services.Hades.getIgnoredPingUsers(), builder);
 
     @Override
     public String getCommandName() {

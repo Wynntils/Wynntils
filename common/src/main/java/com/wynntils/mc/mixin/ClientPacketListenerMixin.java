@@ -6,8 +6,6 @@ package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.authlib.GameProfile;
-import com.mojang.brigadier.CommandDispatcher;
-import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AddEntityEvent;
@@ -16,7 +14,6 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ChunkReceivedEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandSuggestionsEvent;
-import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -52,13 +49,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.ClientCommonPacketListenerImpl;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.client.multiplayer.CommonListenerCookie;
-import net.minecraft.commands.CommandBuildContext;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.Connection;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundCommandSuggestionsPacket;
-import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
@@ -90,11 +83,8 @@ import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.network.protocol.ping.ClientboundPongResponsePacket;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.flag.FeatureFlagSet;
 import net.minecraft.world.phys.Vec3;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -103,16 +93,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientPacketListener.class)
 public abstract class ClientPacketListenerMixin extends ClientCommonPacketListenerImpl {
-    @Shadow
-    private CommandDispatcher<SharedSuggestionProvider> commands;
-
-    @Shadow
-    private RegistryAccess.Frozen registryAccess;
-
-    @Shadow
-    @Final
-    private FeatureFlagSet enabledFeatures;
-
     protected ClientPacketListenerMixin(
             Minecraft minecraft, Connection connection, CommonListenerCookie commonListenerCookie) {
         super(minecraft, connection, commonListenerCookie);
@@ -156,19 +136,6 @@ public abstract class ClientPacketListenerMixin extends ClientCommonPacketListen
             // Prevent sending the packet
             ci.cancel();
         }
-    }
-
-    @Inject(
-            method = "handleCommands(Lnet/minecraft/network/protocol/game/ClientboundCommandsPacket;)V",
-            at = @At("RETURN"))
-    private void handleCommandsPost(ClientboundCommandsPacket packet, CallbackInfo ci) {
-        if (!isRenderThread()) return;
-        // We need to read the root from the CommandDispatcher, not the packet,
-        // due to interop with other mods
-        RootCommandNode<SharedSuggestionProvider> root = this.commands.getRoot();
-        CommandsAddedEvent event =
-                new CommandsAddedEvent(root, CommandBuildContext.simple(this.registryAccess, this.enabledFeatures));
-        MixinHelper.post(event);
     }
 
     @Inject(

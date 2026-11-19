@@ -28,9 +28,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ComponentArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -40,7 +40,7 @@ import net.minecraft.world.entity.Entity;
 
 public class LootrunCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> LOOTRUN_SUGGESTION_PROVIDER =
-            (context, suggestions) -> SharedSuggestionProvider.suggest(
+            (context, suggestions) -> SuggestionContext.suggest(
                     Stream.of(Services.LootrunPaths.LOOTRUNS.list())
                             .map((name) -> name.replaceAll("\\.json$", ""))
                             .map(StringArgumentType::escapeIfRequired),
@@ -70,7 +70,7 @@ public class LootrunCommand extends Command {
                 .then(Commands.literal("note")
                         .then(Commands.literal("add")
                                 .then(Commands.literal("json")
-                                        .then(Commands.argument("text", ComponentArgument.textComponent(context))
+                                        .then(Commands.argument("text", ComponentArgument.textComponent())
                                                 .executes(this::addJsonLootrunNote)))
                                 .then(Commands.literal("text")
                                         .then(Commands.argument("text", StringArgumentType.greedyString())

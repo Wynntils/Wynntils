@@ -21,7 +21,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -30,7 +30,7 @@ import net.minecraft.network.chat.MutableComponent;
 public class PlayerCommand extends Command {
     private static final DateFormatter DATE_FORMATTER = new DateFormatter(true);
     private static final SuggestionProvider<CommandSourceStack> PLAYER_NAME_SUGGESTION_PROVIDER =
-            (context, builder) -> SharedSuggestionProvider.suggest(Models.Player.getAllPlayerNames(), builder);
+            (context, builder) -> SuggestionContext.suggest(Models.Player.getAllPlayerNames(), builder);
 
     @Override
     public String getCommandName() {

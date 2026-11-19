@@ -20,7 +20,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
@@ -29,7 +29,7 @@ import net.minecraft.resources.Identifier;
 
 public class BombBellCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> BOMB_TYPE_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Arrays.stream(BombType.values()).map(Enum::name), builder);
+            SuggestionContext.suggest(Arrays.stream(BombType.values()).map(Enum::name), builder);
 
     private static final Component CHAMPION_CHARACTER = Component.literal("\uE003")
             .withStyle(Style.EMPTY
