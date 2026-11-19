@@ -167,9 +167,6 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
         renderables.forEach(c -> c.extractRenderState(guiGraphics));
 
-        // Render item tooltip
-        super.extractTooltip(guiGraphics, mouseX, mouseY);
-
         // Render tooltip for hovered widget
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider
