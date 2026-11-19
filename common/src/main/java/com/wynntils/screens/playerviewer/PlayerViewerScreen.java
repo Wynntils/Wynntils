@@ -35,6 +35,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.social.EntityPortraitWidget;
 import net.minecraft.client.input.KeyEvent;
@@ -242,8 +243,6 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
 
         renderPlayerModel(guiGraphics);
 
-        this.extractTooltip(guiGraphics, mouseX, mouseY);
-
         interactionButtons.forEach(button -> button.extractRenderState(guiGraphics));
         settingsButton.extractRenderState(guiGraphics);
 
@@ -277,8 +276,8 @@ public final class PlayerViewerScreen extends WynntilsContainerScreen<PlayerView
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
                 || event.button() == InputConstants.MOUSE_BUTTON_MIDDLE) {
-            Slot slot = getHoveredSlot(event.x(), event.y());
-            if (slot != null && slot.getItem() instanceof FakeItemStack fakeItemStack) {
+            SlotWidget hoveredSlot = getHoveredSlot();
+            if (hoveredSlot != null && hoveredSlot.slot().getItem() instanceof FakeItemStack fakeItemStack) {
                 fakeItemStack.cyclePage();
                 return true;
             }
