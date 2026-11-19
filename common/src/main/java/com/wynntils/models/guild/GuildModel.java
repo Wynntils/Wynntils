@@ -468,9 +468,14 @@ public final class GuildModel extends Model {
         return Collections.unmodifiableSet(guildMembers.keySet());
     }
 
+    /**
+     * Returns all online members in the local player's guild except themselves.
+     *
+     * @return all online members in the local player's guild except themselves
+     */
     public Set<String> getOnlineGuildMembers() {
         return guildMembers.entrySet().stream()
-                .filter(Map.Entry::getValue)
+                .filter(entry -> entry.getValue() && !Models.Player.isLocalPlayer(entry.getKey()))
                 .map(Map.Entry::getKey)
                 .collect(Collectors.toSet());
     }

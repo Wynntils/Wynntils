@@ -375,12 +375,9 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                 .toList());
 
         suggestedPlayers = suggestedPlayers.stream()
-                .filter(suggestedPlayer -> !Models.Party.getPartyMembers().contains(suggestedPlayer.username())
-                        && !suggestedPlayer
-                                .username()
-                                .equals(this.minecraft.getGameProfile().name()))
-                .collect(Collectors.toList()); // No need to suggest party members or yourself
-        suggestedPlayers.sort(null);
+                .filter(suggestedPlayer -> !Models.Party.getPartyMembers().contains(suggestedPlayer.username()))
+                .collect(Collectors.toList()); // No need to suggest party members
+        suggestedPlayers.sort(null); // Sort by username in alphabetical order
 
         suggestedPlayersWidgets = new ArrayList<>();
         for (int i = 0; i < suggestedPlayers.size(); i++) {
