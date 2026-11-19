@@ -8,27 +8,15 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.components.Services;
 import com.wynntils.screens.guides.widgets.GuideButton;
 import com.wynntils.utils.colors.CustomColor;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 
 public class TomeGuideButton extends GuideButton {
     private final GuideTomeItemStack tomeItemStack;
-    private boolean builtTooltip = false;
 
     public TomeGuideButton(int x, int y, GuideTomeItemStack itemStack) {
         super(x, y, itemStack);
 
         this.tomeItemStack = itemStack;
-    }
-
-    @Override
-    protected void renderTooltip(GuiGraphics guiGraphics, int mouseX, int mouseY) {
-        if (!builtTooltip) {
-            tomeItemStack.buildTooltip();
-            builtTooltip = true;
-        }
-
-        itemStack.queueGuideTooltip(guiGraphics, mouseX, mouseY);
     }
 
     @Override

@@ -9,8 +9,8 @@ import com.wynntils.handlers.item.GameItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.gear.type.ConsumableType;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
-import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
+import com.wynntils.models.wynnitem.parsing.WynnItemStatsParseResult;
 import com.wynntils.utils.type.CappedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -25,7 +25,7 @@ public final class CraftedConsumableAnnotator implements GameItemAnnotator {
         Matcher matcher = name.getMatcher(CRAFTED_CONSUMABLE_NAME_PATTERN);
         if (!matcher.matches()) return null;
 
-        WynnItemParseResult parseResult = WynnItemParser.parseItemStack(itemStack, null);
+        WynnItemStatsParseResult parseResult = WynnItemParser.parseItemStackStatsPage(itemStack, null);
 
         if (parseResult == null) return null;
 
@@ -40,6 +40,8 @@ public final class CraftedConsumableAnnotator implements GameItemAnnotator {
                         ? new CappedValue(
                                 Integer.parseInt(matcher.group("currentUses")),
                                 Integer.parseInt(matcher.group("maxUses")))
-                        : parseResult.uses());
+                        : parseResult.uses(),
+                parseResult.lore(),
+                parseResult.creator());
     }
 }

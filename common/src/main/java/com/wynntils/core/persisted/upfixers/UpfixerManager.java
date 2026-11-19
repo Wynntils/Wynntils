@@ -27,6 +27,7 @@ import com.wynntils.core.persisted.upfixers.config.HideDamageLabelsToHideLabelsU
 import com.wynntils.core.persisted.upfixers.config.HorseMountFeatureToMountKeybindFeatureUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ItemHighlightFeatureCosmeticToStoreUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ItemStatInfoConfigRenameUpfixer;
+import com.wynntils.core.persisted.upfixers.config.ItemStatInfoRollStyleUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MaxItensityToMaxIntensityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature;
@@ -108,6 +109,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new CoordinateOverlayToCoordinatesOverlayUpfixer());
         registerConfigUpfixer(new SkillPointLoadoutsToBuildLoadoutsUpfixer());
         registerConfigUpfixer(new AbilityCooldownRedirectToFeatureUpfixer());
+        registerConfigUpfixer(new ItemStatInfoRollStyleUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());

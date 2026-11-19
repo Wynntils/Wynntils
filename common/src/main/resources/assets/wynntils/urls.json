@@ -115,7 +115,7 @@
   },
   {
     "id": "dataStaticAbilitiesV2",
-    "md5": "31e210073841012dcad07fa24b24b2c0",
+    "md5": "feea28f5346d9e7dd13ade3f889a7401",
     "path": "Reference/abilities_v2.json",
     "url": "https://cdn.wynntils.com/static/Reference/abilities_v2.json"
   },
@@ -211,7 +211,7 @@
   },
   {
     "id": "dataStaticItemDisplayModelData",
-    "md5": "08ce2959f56e6857fe591f5517d1da59",
+    "md5": "f4136c165527ca05154c5b2169d8a1ef",
     "path": "Data-Storage/item_display_model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/item_display_model_data.json"
   },
@@ -283,7 +283,7 @@
   },
   {
     "id": "dataStaticMountFood",
-    "md5": "829c4c7eacdc2d26bd5e54f7d5f922ed",
+    "md5": "936386397d95598240300d219f2d8d33",
     "path": "Data-Storage/mount_food.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/mount_food.json"
   },
@@ -361,7 +361,7 @@
   },
   {
     "id": "dataStaticTextureAndFingerprintHashes",
-    "md5": "89875964b0d6c10fefd64f70b1ef444e",
+    "md5": "3305151b2f2c8b77850d96c341f28804",
     "path": "Data-Storage/texture_and_fingerprint_hashes.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/texture_and_fingerprint_hashes.json"
   },

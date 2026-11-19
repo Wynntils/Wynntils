@@ -5,9 +5,11 @@
 package com.wynntils.models.rewards.type;
 
 import com.wynntils.models.gear.type.GearMetaInfo;
+import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.models.wynnitem.type.ItemEmblem;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Map;
@@ -17,8 +19,9 @@ public record TomeInfo(
         String name,
         TomeType type,
         GearTier tier,
+        ItemEmblem emblem,
         GearMetaInfo metaInfo,
-        TomeRequirements requirements,
+        GearRequirements requirements,
         List<Pair<StatType, StatPossibleValues>> variableStats) {
     public StatPossibleValues getPossibleValues(StatType statType) {
         return this.variableStats().stream()

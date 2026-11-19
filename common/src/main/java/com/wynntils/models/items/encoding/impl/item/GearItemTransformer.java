@@ -5,10 +5,8 @@
 package com.wynntils.models.items.encoding.impl.item;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
-import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.items.encoding.data.IdentificationData;
 import com.wynntils.models.items.encoding.data.NameData;
 import com.wynntils.models.items.encoding.data.PowderData;
@@ -24,7 +22,6 @@ import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.ErrorOr;
-import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -52,11 +49,7 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
         }
         Map<StatType, StatActualValue> identifications = errorOrIdentifications.getValue();
 
-        List<Powder> powders = new ArrayList<>();
         PowderData powderData = itemDataMap.get(PowderData.class);
-        if (powderData != null) {
-            powders = powderData.powders().stream().map(Pair::a).toList();
-        }
 
         int rerolls = 0;
         RerollData rerollData = itemDataMap.get(RerollData.class);
@@ -72,16 +65,13 @@ public class GearItemTransformer extends ItemTransformer<GearItem> {
 
         List<StatActualValue> idList = identifications.values().stream().toList();
 
-        return ErrorOr.of(new GearItem(
-                gearInfo,
-                GearInstance.create(
-                        gearInfo,
-                        idList,
-                        powders,
-                        rerolls,
-                        shinyStat,
-                        GearInstanceRequirements.UNKNOWN,
-                        Optional.empty())));
+        GearInstance instance = GearInstance.create(gearInfo, idList, rerolls);
+        GearItem item = new GearItem(gearInfo, instance, shinyStat, 0);
+        if (powderData != null) {
+            item.setPowders(powderData.powders());
+            item.setPowderSpecial(powderData.powderSpecial());
+        }
+        return ErrorOr.of(item);
     }
 
     @Override
