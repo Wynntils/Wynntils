@@ -223,7 +223,7 @@ public class ValuablesProtectionFeature extends Feature {
                                             : "selling"))),
                     HorizontalAlignment.CENTER,
                     CommonColors.WHITE);
-            cs.addRenderableOnly(ctrlHintTextWidget);
+            cs.renderables.add(ctrlHintTextWidget);
         }
     }
 
@@ -270,7 +270,7 @@ public class ValuablesProtectionFeature extends Feature {
                                     I18n.get("feature.wynntils.valuablesProtection.selling")),
                             HorizontalAlignment.LEFT,
                             CommonColors.WHITE);
-                    cs.addRenderableOnly(ctrlHintTextWidget);
+                    cs.renderables.add(ctrlHintTextWidget);
                     hintTextY += 20;
                 }
 
@@ -299,7 +299,7 @@ public class ValuablesProtectionFeature extends Feature {
                         HorizontalAlignment.LEFT,
                         CommonColors.GRAY));
 
-                tmHintTextWidgets.forEach(cs::addRenderableOnly);
+                cs.renderables.addAll(tmHintTextWidgets);
             } else {
                 resetAll();
             }
