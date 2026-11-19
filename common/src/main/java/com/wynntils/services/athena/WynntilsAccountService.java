@@ -12,6 +12,7 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.services.athena.event.AthenaLoginEvent;
+import com.wynntils.utils.CryptUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.math.BigInteger;
 import java.security.PublicKey;
@@ -25,7 +26,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.util.Crypt;
+import net.minecraft.util.crypto.SigningCryptoUtils;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.codec.binary.Hex;
 import org.slf4j.Logger;
@@ -138,11 +139,11 @@ public final class WynntilsAccountService extends Service {
         try {
             byte[] publicKeyBy = Hex.decodeHex(key.toCharArray());
 
-            SecretKey secretkey = Crypt.generateSecretKey();
+            SecretKey secretkey = CryptUtils.generateSecretKey();
 
-            PublicKey publicKey = Crypt.byteToPublicKey(publicKeyBy);
+            PublicKey publicKey = SigningCryptoUtils.byteToPublicKey(publicKeyBy);
 
-            String s1 = (new BigInteger(Crypt.digestData("", publicKey, secretkey))).toString(16);
+            String s1 = (new BigInteger(CryptUtils.digestData("", publicKey, secretkey))).toString(16);
 
             McUtils.mc()
                     .services()
@@ -152,7 +153,7 @@ public final class WynntilsAccountService extends Service {
                             McUtils.mc().getUser().getAccessToken(),
                             s1.toLowerCase(Locale.ROOT));
 
-            byte[] secretKeyEncrypted = Crypt.encryptUsingKey(publicKey, secretkey.getEncoded());
+            byte[] secretKeyEncrypted = CryptUtils.encryptUsingKey(publicKey, secretkey.getEncoded());
 
             return Hex.encodeHexString(secretKeyEncrypted);
         } catch (Exception ex) {
