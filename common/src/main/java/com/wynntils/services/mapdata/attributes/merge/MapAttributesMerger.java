@@ -11,6 +11,7 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.PrismStyle;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.Optional;
@@ -34,6 +35,10 @@ public final class MapAttributesMerger {
         CustomColor borderColor =
                 getFirstOrNull(attributes, attrs -> MapAttributes.firstColor(attrs.getBorderColors()));
         Float borderWidth = getFirstOrNull(attributes, MapAttributes::getBorderWidth);
+        Boolean borderRenderInWorld = getFirstOrNull(attributes, MapAttributes::getBorderRenderInWorld);
+        CustomColor borderWorldColor = getFirstOrNull(attributes, MapAttributes::getBorderWorldColor);
+        Float borderWorldWidth = getFirstOrNull(attributes, MapAttributes::getBorderWorldWidth);
+        PrismStyle borderWorldStyle = getFirstOrNull(attributes, MapAttributes::getBorderWorldStyle);
 
         return new MapAttributesImpl(
                 priority,
@@ -50,7 +55,11 @@ public final class MapAttributesMerger {
                 markerOptions,
                 fillColor,
                 borderColor,
-                borderWidth);
+                borderWidth,
+                borderRenderInWorld,
+                borderWorldColor,
+                borderWorldWidth,
+                borderWorldStyle);
     }
 
     private static <T, R> Optional<R> firstPresent(List<T> items, Function<T, Optional<R>> extractor) {

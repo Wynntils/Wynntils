@@ -129,6 +129,11 @@ public final class ManageTerritoryArea implements MapArea {
             }
 
             @Override
+            public Optional<Boolean> getBorderRenderInWorld() {
+                return Optional.of(false);
+            }
+
+            @Override
             public Optional<CustomColor> getLabelColor() {
                 return Optional.of(CustomColor.blend(getInfoColors()));
             }

@@ -13,6 +13,7 @@ import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.PrismStyle;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.Optional;
@@ -112,5 +113,25 @@ public final class DefaultMapAttributes implements MapAttributes {
     @Override
     public Optional<Float> getBorderWidth() {
         return Optional.of(1.0f);
+    }
+
+    @Override
+    public Optional<Boolean> getBorderRenderInWorld() {
+        return Optional.of(false);
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderWorldColor() {
+        return Optional.of(CommonColors.RED);
+    }
+
+    @Override
+    public Optional<Float> getBorderWorldWidth() {
+        return Optional.of(2f);
+    }
+
+    @Override
+    public Optional<PrismStyle> getBorderWorldStyle() {
+        return Optional.of(PrismStyle.LAYERS);
     }
 }

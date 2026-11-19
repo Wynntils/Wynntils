@@ -6,6 +6,7 @@ package com.wynntils.services.mapdata.attributes.impl;
 
 import com.wynntils.services.mapdata.attributes.type.MapAreaAttributes;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.PrismStyle;
 import com.wynntils.utils.render.type.TextShadow;
 
 public final class MapAreaAttributesImpl extends MapAttributesImpl implements MapAreaAttributes {
@@ -19,7 +20,11 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
             TextShadow labelShadow,
             CustomColor fillColor,
             CustomColor borderColor,
-            Float borderWidth) {
+            Float borderWidth,
+            Boolean borderRenderInWorld,
+            CustomColor borderWorldColor,
+            Float borderWorldWidth,
+            PrismStyle borderWorldStyle) {
         super(
                 priority,
                 level,
@@ -35,7 +40,11 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
                 null,
                 fillColor,
                 borderColor,
-                borderWidth);
+                borderWidth,
+                borderRenderInWorld,
+                borderWorldColor,
+                borderWorldWidth,
+                borderWorldStyle);
     }
 
     public MapAreaAttributesImpl(MapAttributesImpl attributes) {

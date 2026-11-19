@@ -17,6 +17,10 @@ public interface MapPathAttributes extends MapAttributes {
                 "markerOptions",
                 "fillColor",
                 "borderWidth",
-                "borderColor");
+                "borderColor",
+                "borderDrawInWorld",
+                "borderWorldColor",
+                "borderWorldWidth",
+                "borderWorldStyle");
     }
 }

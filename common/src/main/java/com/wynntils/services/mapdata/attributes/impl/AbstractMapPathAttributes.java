@@ -9,6 +9,7 @@ import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.PrismStyle;
 import java.util.List;
 import java.util.Optional;
 
@@ -55,6 +56,26 @@ public abstract class AbstractMapPathAttributes extends AbstractMapAttributes im
 
     @Override
     public final Optional<Float> getBorderWidth() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Boolean> getBorderRenderInWorld() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderWorldColor() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<Float> getBorderWorldWidth() {
+        return Optional.empty();
+    }
+
+    @Override
+    public Optional<PrismStyle> getBorderWorldStyle() {
         return Optional.empty();
     }
 }

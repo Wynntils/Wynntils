@@ -8,6 +8,13 @@ import java.util.List;
 
 public interface MapLocationAttributes extends MapAttributes {
     static List<String> getUnsupportedAttributes() {
-        return List.of("fillColor", "borderWidth", "borderColor");
+        return List.of(
+                "fillColor",
+                "borderWidth",
+                "borderColor",
+                "borderDrawInWorld",
+                "borderWorldColor",
+                "borderWorldWidth",
+                "borderWorldStyle");
     }
 }

@@ -86,7 +86,7 @@ import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
-import com.wynntils.features.map.TerritoryBordersFeature;
+import com.wynntils.features.map.RenderMapAreasFeature;
 import com.wynntils.features.map.WorldMarkersFeature;
 import com.wynntils.features.overlays.AbilityCooldownsOverlayFeature;
 import com.wynntils.features.overlays.AnnihilationSunOverlayFeature;
@@ -323,7 +323,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new GuildMapFeature());
         registerFeature(new MainMapFeature());
         registerFeature(new MinimapFeature());
-        registerFeature(new TerritoryBordersFeature());
+        registerFeature(new RenderMapAreasFeature());
         registerFeature(new WorldMarkersFeature());
         // endregion
 

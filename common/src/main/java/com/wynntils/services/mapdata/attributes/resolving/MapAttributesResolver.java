@@ -47,7 +47,11 @@ public final class MapAttributesResolver {
                 resolver.getResolvedMarkerOptions(MapAttributes::getMarkerOptions),
                 resolver.getAttribute(MapAttributes::getFillColors),
                 resolver.getAttribute(MapAttributes::getBorderColors),
-                resolver.getAttribute(MapAttributes::getBorderWidth));
+                resolver.getAttribute(MapAttributes::getBorderWidth),
+                resolver.getAttribute(MapAttributes::getBorderRenderInWorld),
+                resolver.getAttribute(MapAttributes::getBorderWorldColor),
+                resolver.getAttribute(MapAttributes::getBorderWorldWidth),
+                resolver.getAttribute(MapAttributes::getBorderWorldStyle));
     }
 
     private <T> T getAttribute(Function<MapAttributes, Optional<T>> attributeGetter) {

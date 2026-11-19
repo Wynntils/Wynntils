@@ -22,6 +22,7 @@ import com.wynntils.screens.maps.managers.widgets.categorymanager.ResetButtonWid
 import com.wynntils.screens.maps.managers.widgets.categorymanager.SaveButtonWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.options.AbstractOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.options.ColorOptionWidget;
+import com.wynntils.screens.maps.managers.widgets.categorymanager.options.EnumOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.options.FloatSliderOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.options.IconOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.options.IntSliderOptionWidget;
@@ -35,6 +36,7 @@ import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.PrismStyle;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
@@ -92,6 +94,10 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     public ColorOptionWidget fillColorOptionWidget;
     public ColorOptionWidget borderColorOptionWidget;
     public FloatSliderOptionWidget borderWidthOptionWidget;
+    public ToggleOptionWidget borderRenderInWorldOptionWidget;
+    public ColorOptionWidget borderWorldColorOptionWidget;
+    public FloatSliderOptionWidget borderWorldWidthOptionWidget;
+    public EnumOptionWidget<PrismStyle> borderWorldStyleOptionWidget;
 
     // endregion
 
@@ -355,6 +361,34 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 MapAttributes::getBorderWidth,
                 this);
 
+        borderRenderInWorldOptionWidget = new ToggleOptionWidget(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderRenderInWorld"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderRenderInWorld.description"),
+                OptionCategory.AREA_BORDER,
+                MapAttributes::getBorderRenderInWorld);
+
+        borderWorldColorOptionWidget = new ColorOptionWidget(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderWorldColor"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderWorldColor.description"),
+                OptionCategory.AREA_BORDER,
+                MapAttributes::getBorderWorldColor,
+                this);
+
+        borderWorldWidthOptionWidget = new FloatSliderOptionWidget(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderWorldWidth"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderWorldWidth.description"),
+                OptionCategory.AREA_BORDER,
+                0f,
+                50f,
+                MapAttributes::getBorderWorldWidth,
+                this);
+
+        borderWorldStyleOptionWidget = new EnumOptionWidget<>(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderWorldStyle"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.borderWorldStyle.description"),
+                OptionCategory.AREA_BORDER,
+                MapAttributes::getBorderWorldStyle);
+
         // endregion
 
         optionsScrollBar = new OptionsScrollBarWidget(
@@ -385,6 +419,10 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         optionsScrollBar.addWidget(fillColorOptionWidget);
         optionsScrollBar.addWidget(borderColorOptionWidget);
         optionsScrollBar.addWidget(borderWidthOptionWidget);
+        optionsScrollBar.addWidget(borderRenderInWorldOptionWidget);
+        optionsScrollBar.addWidget(borderWorldColorOptionWidget);
+        optionsScrollBar.addWidget(borderWorldWidthOptionWidget);
+        optionsScrollBar.addWidget(borderWorldStyleOptionWidget);
 
         this.addRenderableWidget(optionsScrollBar);
 
@@ -543,6 +581,10 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         fillColorOptionWidget.display = isArea;
         borderColorOptionWidget.display = isArea;
         borderWidthOptionWidget.display = isArea;
+        borderRenderInWorldOptionWidget.display = isArea;
+        borderWorldColorOptionWidget.display = isArea;
+        borderWorldWidthOptionWidget.display = isArea;
+        borderWorldStyleOptionWidget.display = isArea;
 
         optionsScrollBar.updateWidgetPositions();
     }

@@ -6,6 +6,7 @@ package com.wynntils.services.mapdata.attributes.resolving;
 
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.PrismStyle;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 
@@ -25,4 +26,8 @@ public record ResolvedMapAttributes(
         ResolvedMarkerOptions markerOptions,
         List<CustomColor> fillColor,
         List<CustomColor> borderColor,
-        float borderWidth) {}
+        float borderWidth,
+        boolean borderRenderInWorld,
+        CustomColor borderWorldColor,
+        float borderWorldWidth,
+        PrismStyle borderWorldStyle) {}
