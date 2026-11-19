@@ -28,8 +28,11 @@ public class PartyManagementScreenFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind openPartyManagementScreen = KeyBindDefinition.OPEN_PARTY_MANAGEMENT.create(() -> {
-        partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
-        McUtils.setScreen(partyManagementScreen);
+        // Do nothing if player is not on world as parties exist only on world
+        if (Models.WorldState.onWorld()) {
+            partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
+            McUtils.setScreen(partyManagementScreen);
+        }
     });
 
     public PartyManagementScreenFeature() {
