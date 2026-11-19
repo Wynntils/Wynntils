@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.playerviewer;
@@ -16,11 +16,11 @@ public final class PlayerViewerMenu extends AbstractContainerMenu {
     private PlayerViewerMenu(Container container) {
         super(null, 100);
 
-        this.addSlot(new Slot(container, 0, 100, 63));
+        this.addSlot(new Slot(container, 0, 100, 63, Slot.Section.CONTAINER));
         int x = 28;
         int y = 9;
         for (int i = 0; i < 8; i++) {
-            this.addSlot(new Slot(container, i + 1, x, y));
+            this.addSlot(new Slot(container, i + 1, x, y, Slot.Section.CONTAINER));
 
             if (i == 3) {
                 x = 10;
