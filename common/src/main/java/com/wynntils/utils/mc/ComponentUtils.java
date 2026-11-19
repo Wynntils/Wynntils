@@ -76,7 +76,7 @@ public final class ComponentUtils {
 
     public static Component formattedTextToComponent(FormattedText formattedText) {
         MutableComponent component = Component.literal("");
-        formattedText.visit(
+        formattedText.visitUnbounded(
                 (style, string) -> {
                     component.append(Component.literal(string).withStyle(style));
                     return Optional.empty();
@@ -84,6 +84,25 @@ public final class ComponentUtils {
                 Style.EMPTY);
 
         return component;
+    }
+
+    // These 2 methods come from the Component class before they were removed in 26.4
+    public static List<Component> toFlatList(Component component) {
+        return toFlatList(component, Style.EMPTY);
+    }
+
+    public static List<Component> toFlatList(Component component, Style rootStyle) {
+        List<Component> result = new ArrayList();
+        component.visitUnbounded(
+                (style, contents) -> {
+                    if (!contents.isEmpty()) {
+                        result.add(Component.literal(contents).withStyle(style));
+                    }
+
+                    return Optional.empty();
+                },
+                rootStyle);
+        return result;
     }
 
     public static int getOptimalTooltipWidth(List<Component> tooltips, int screenWidth, int mouseX) {
