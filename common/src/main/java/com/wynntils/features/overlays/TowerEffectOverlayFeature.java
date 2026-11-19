@@ -32,7 +32,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 @ConfigCategory(Category.OVERLAYS)
 public class TowerEffectOverlayFeature extends Feature {
     private static final SoundEvent AURA_SOUND = SoundEvents.ANVIL_LAND;
-    private static final SoundEvent VOLLEY_SOUND = SoundEvents.BLAZE_SHOOT;
+    private static final SoundEvent VOLLEY_SOUND = SoundEvents.BLAZE_SHOOT.value();
 
     @RegisterOverlay
     private final Overlay auraTimerOverlay = new TowerAuraTimerOverlay();
