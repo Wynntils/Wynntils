@@ -679,11 +679,11 @@ public class TestRegex {
     @Test
     public void MountAnnotator_POTENTIAL_PATTERN() {
         PatternTester p = new PatternTester(MountAnnotator.class, "POTENTIAL_PATTERN");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff240§f Potential");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff640§f Potential");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff979§f Potential");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff1k§f Potential");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff1.3k§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff240§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff640§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff979§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff1k§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff1.3k§f Potential");
     }
 
     @Test
@@ -696,10 +696,10 @@ public class TestRegex {
     @Test
     public void MountAnnotator_ENERGY_PATTERN() {
         PatternTester p = new PatternTester(MountAnnotator.class, "ENERGY_PATTERN");
-        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE023§7\uDB00\uDC05Energy 317/317");
-        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE01F§7\uDB00\uDC05Energy 210/221");
-        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE01E§7\uDB00\uDC05Energy 210/229");
-        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE010§7\uDB00\uDC05Energy 100/204");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#ede0d4ff\uE023§7\uDB00\uDC05Energy 317/317");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#ede0d4ff\uE01F§7\uDB00\uDC05Energy 210/221");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#ede0d4ff\uE01E§7\uDB00\uDC05Energy 210/229");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#ede0d4ff\uE010§7\uDB00\uDC05Energy 100/204");
     }
 
     @Test

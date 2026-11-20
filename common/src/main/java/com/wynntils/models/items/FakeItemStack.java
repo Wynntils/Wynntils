@@ -24,6 +24,7 @@ import com.wynntils.models.items.properties.ShinyItemProperty;
 import java.util.List;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -46,7 +47,9 @@ public class FakeItemStack extends ItemStack {
         if (wynnItem instanceof NamedItemProperty namedItemProperty) {
             Handlers.Item.updateItem(this, wynnItem, StyledText.fromString(namedItemProperty.getName()));
         }
-        if (wynnItem instanceof GearTierItemProperty tierItem) {
+        if (wynnItem instanceof MountItem) {
+            this.set(DataComponents.TOOLTIP_STYLE, Identifier.withDefaultNamespace("mount"));
+        } else if (wynnItem instanceof GearTierItemProperty tierItem) {
             boolean shiny = wynnItem instanceof ShinyItemProperty shinyItem
                     && shinyItem.getShinyStat().isPresent();
             this.set(DataComponents.TOOLTIP_STYLE, tierItem.getGearTier().getTooltipStyle(shiny));
