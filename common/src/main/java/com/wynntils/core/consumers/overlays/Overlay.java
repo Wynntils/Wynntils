@@ -24,7 +24,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.RenderElementType;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
@@ -119,17 +118,17 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
         return "Overlay";
     }
 
-    public abstract void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window);
+    public abstract void render(GuiGraphicsExtractor guiGraphics, Window window);
 
-    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
-        this.render(guiGraphics, deltaTracker, window);
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, Window window) {
+        this.render(guiGraphics, window);
     }
 
-    protected void renderOrErrorMessage(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphicsExtractor guiGraphics, Window window) {
         if (this.enabledTemplateCache != null && this.enabledTemplateCache.hasError()) {
             renderEnabledTemplateErrorMessage(guiGraphics);
         } else {
-            render(guiGraphics, deltaTracker, window);
+            render(guiGraphics, window);
         }
     }
 

@@ -22,7 +22,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 
@@ -66,12 +65,12 @@ public class MountTraitsOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
         renderTraits(guiGraphics, energyFrame, toughnessFrame);
     }
 
     @Override
-    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, Window window) {
         renderTraits(guiGraphics, 16, 31);
     }
 

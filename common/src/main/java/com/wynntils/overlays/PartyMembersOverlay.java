@@ -34,7 +34,6 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.EventPriority;
@@ -182,7 +181,7 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
         }
 
         @Override
-        public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+        public void render(GuiGraphicsExtractor guiGraphics, Window window) {
             guiGraphics.pose().pushMatrix();
 
             float renderX = getRenderX();

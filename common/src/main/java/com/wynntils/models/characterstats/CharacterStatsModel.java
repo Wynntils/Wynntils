@@ -47,7 +47,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemCooldowns;
@@ -131,14 +130,15 @@ public final class CharacterStatsModel extends Model {
         return McUtils.player().position().y - endY;
     }
 
-    public float getItemCooldown(DeltaTracker deltaTracker) {
+    public float getItemCooldown() {
         ItemCooldowns.CooldownInstance cooldown = getActiveCooldown();
         if (cooldown == null) return 0.0F;
 
         ItemCooldowns cooldowns = McUtils.player().getCooldowns();
 
         float total = cooldown.endTime() - cooldown.startTime();
-        float remaining = cooldown.endTime() - (cooldowns.tickCount + deltaTracker.getGameTimeDeltaPartialTick(true));
+        float remaining = cooldown.endTime()
+                - (cooldowns.tickCount + McUtils.mc().getDeltaTracker().getGameTimeDeltaPartialTick(true));
 
         return Math.clamp(remaining / total, 0.0F, 1.0F);
     }

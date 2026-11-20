@@ -27,7 +27,6 @@ import com.wynntils.utils.type.RenderElementType;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.network.chat.Component;
@@ -76,7 +75,7 @@ public class ScoreboardOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
         if (linesToRender.isEmpty()) return;
 
         FontRenderer fontRenderer = FontRenderer.getInstance();

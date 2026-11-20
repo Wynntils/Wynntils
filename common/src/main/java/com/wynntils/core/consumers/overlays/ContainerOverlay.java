@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
@@ -77,18 +76,18 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     protected abstract List<T> getPreviewChildren();
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
-        children.forEach(o -> o.render(guiGraphics, deltaTracker, window));
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
+        children.forEach(o -> o.render(guiGraphics, window));
     }
 
     @Override
-    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, Window window) {
         List<T> previewChildren = getPreviewChildren();
         Map<T, OverlaySize> previewSize =
                 previewChildren.stream().collect(Collectors.toMap(Function.identity(), Overlay::getSize));
 
         updateLayout(previewChildren, previewSize);
-        previewChildren.forEach(o -> o.renderPreview(guiGraphics, deltaTracker, window));
+        previewChildren.forEach(o -> o.renderPreview(guiGraphics, window));
     }
 
     @Override

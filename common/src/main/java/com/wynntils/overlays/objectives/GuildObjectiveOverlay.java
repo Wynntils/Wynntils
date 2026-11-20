@@ -21,7 +21,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -61,14 +60,14 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
         if (guildObjective == null) return;
         renderObjective(guiGraphics, guildObjective);
     }
 
     @Override
-    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, Window window) {
         WynnObjective guildObjective = Models.Objectives.getGuildObjective();
         if (guildObjective == null) {
             guildObjective = WynnObjective.DEMO_GUILD;

@@ -15,7 +15,6 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 /**
@@ -69,12 +68,12 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
         renderTemplate(guiGraphics, cachedLines, getTextScale());
     }
 
     @Override
-    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, Window window) {
         renderTemplate(guiGraphics, calculateTemplateValue(getPreviewTemplate()), getTextScale());
     }
 

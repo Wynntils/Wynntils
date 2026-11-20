@@ -27,7 +27,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Supplier;
 import java.util.stream.Stream;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class BombBellOverlay extends Overlay {
@@ -104,7 +103,7 @@ public class BombBellOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
         FontRenderer.getInstance()
                 .renderTextsWithAlignment(
                         guiGraphics,
@@ -119,7 +118,7 @@ public class BombBellOverlay extends Overlay {
     }
 
     @Override
-    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, Window window) {
         FontRenderer.getInstance()
                 .renderTextsWithAlignment(
                         guiGraphics,

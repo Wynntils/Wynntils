@@ -14,7 +14,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public class HeldItemCooldownOverlay extends Overlay {
@@ -30,14 +29,14 @@ public class HeldItemCooldownOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
-        float cooldownPercent = Models.CharacterStats.getItemCooldown(deltaTracker);
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
+        float cooldownPercent = Models.CharacterStats.getItemCooldown();
         if (cooldownPercent <= 0f) return;
         renderOverlay(guiGraphics, cooldownPercent);
     }
 
     @Override
-    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, Window window) {
         renderOverlay(guiGraphics, 1F);
     }
 
