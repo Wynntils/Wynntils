@@ -6,20 +6,16 @@ package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
+import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
 import com.wynntils.handlers.item.GuiItemAnnotator;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.items.items.gui.StoreItem;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
-import net.minecraft.network.chat.FontDescription;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 
 public final class StoreTierAnnotator implements GuiItemAnnotator {
-    private static final FontDescription.Resource RARITY_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/box"));
-
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         List<StyledText> lore = LoreUtils.getLore(itemStack);
@@ -29,7 +25,7 @@ public final class StoreTierAnnotator implements GuiItemAnnotator {
         StyledTextPart firstPart = firstLine.getFirstPart();
 
         if (firstPart == null) return null;
-        if (!firstPart.getPartStyle().getFont().equals(RARITY_FONT)) return null;
+        if (!firstPart.getPartStyle().getFont().equals(BannerBoxFont.BANNER_BOX_FONT)) return null;
 
         StoreTier tier = StoreTier.parseTier(firstLine.getStringWithoutFormatting());
         if (tier == null) return null;
