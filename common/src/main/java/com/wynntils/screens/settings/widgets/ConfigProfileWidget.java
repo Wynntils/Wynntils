@@ -7,6 +7,7 @@ package com.wynntils.screens.settings.widgets;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.MathUtils;
@@ -20,9 +21,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public class ConfigProfileWidget extends WynntilsButton {
     private static final float MAX_SCALE = 1.05f;
@@ -76,8 +75,7 @@ public class ConfigProfileWidget extends WynntilsButton {
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal(EnumUtils.toNiceString(profile))
-                                .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
-                                        Identifier.withDefaultNamespace("language/wynncraft"))))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         getX() + Texture.CONFIG_PROFILE_BACKGROUND.width() / 2f,
                         getY() + 16,
                         selectedProfile ? CommonColors.PURPLE : CommonColors.WHITE,

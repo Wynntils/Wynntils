@@ -25,14 +25,14 @@ public class RequirementsDataTransformer extends DataTransformer<RequirementsDat
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, RequirementsData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> encodeRequirementsData(data);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> encodeRequirementsData(data);
         };
     }
 
     @Override
     public ErrorOr<RequirementsData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> decodeRequirementsData(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> decodeRequirementsData(byteReader);
         };
     }
 

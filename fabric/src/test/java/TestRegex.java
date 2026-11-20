@@ -1017,12 +1017,73 @@ public class TestRegex {
     }
 
     @Test
+    public void WynnItemParser_BLACK_BANNER_TEXT_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "BLACK_BANNER_TEXT_PATTERN");
+        p.shouldFind("§0Set name§7 2/5", 1);
+        p.shouldFind("§0Set§b banner §0Name§7 1/3", 2);
+    }
+
+    @Test
+    public void WynnItemParser_CLASS_REQ_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "CLASS_REQ_PATTERN");
+        p.shouldMatch("§f\uE006\uDAFF\uDFFF Class Type\uDAFF\uDFC4\uDB00\uDC53§7Mage/Dark Wizard");
+        p.shouldMatch("§f\uE007\uDAFF\uDFFF Class Type\uDAFF\uDFC4\uDB00\uDC5A§7Shaman/Skyseer");
+        p.shouldMatch("§f\uE007\uDAFF\uDFFF Class Type\uDAFF\uDFC4\uDB00\uDC44§7Assassin/Ninja");
+        p.shouldMatch("§f\uE006\uDAFF\uDFFF Class Type\uDAFF\uDFC4\uDB00\uDC49§7Warrior/Knight");
+        p.shouldMatch("§f\uE006\uDAFF\uDFFF Class Type\uDAFF\uDFC4\uDB00\uDC44§7Archer/Hunter");
+    }
+
+    @Test
+    public void WynnItemParser_COMMUNITY_EVENT_WINNER_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "COMMUNITY_EVENT_WINNER_PATTERN");
+        p.shouldMatch(
+                "§f\uDB00\uDC0C§7\uE060\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE044\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE045\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE062\uDAFF\uDF82§0\uE002\uE00E\uE00C\uE00C\uE014\uE00D\uE008\uE013\uE018 \uE004\uE015\uE004\uE00D\uE013 \uE016\uE008\uE00D\uE00D\uE004\uE011\uDB00\uDC02");
+        p.shouldMatch(
+                "§f\uDB00\uDC11§7\uE060\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE044\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE045\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE062\uDAFF\uDF82§0\uE002\uE00E\uE00C\uE00C\uE014\uE00D\uE008\uE013\uE018 \uE004\uE015\uE004\uE00D\uE013 \uE016\uE008\uE00D\uE00D\uE004\uE011\uDB00\uDC02");
+    }
+
+    @Test
+    public void WynnItemParser_CONSUMABLE_CHARGES_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "CONSUMABLE_CHARGES_PATTERN");
+        p.shouldMatch("3/3 Charges");
+        p.shouldMatch("1/10 Charges");
+        p.shouldNotMatch("3 Charges");
+    }
+
+    @Test
+    public void WynnItemParser_CONSUMABLE_DURATION_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "CONSUMABLE_DURATION_PATTERN");
+        p.shouldMatch("30s Duration");
+        p.shouldMatch("2m 10s Duration");
+        p.shouldMatch("1h 2m 3s Duration");
+        p.shouldNotMatch("2 minutes Duration");
+    }
+
+    @Test
+    public void WynnItemParser_CRAFTED_BY_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "CRAFTED_BY_PATTERN");
+        p.shouldMatch("§f\uDB00\uDC0F§#aed4d4ffCrafted by AtaraxiaSeo");
+        p.shouldMatch("§f\uDB00\uDC36§#aed4d4ffCrafted by ShadowCat117");
+    }
+
+    @Test
+    public void WynnItemParser_DISPLAY_DURATION_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "DISPLAY_DURATION_PATTERN");
+        p.shouldMatch("30s");
+        p.shouldMatch("2m 10s");
+        p.shouldMatch("1h 2m 3s");
+        p.shouldMatch("1h 0s");
+        p.shouldNotMatch("30s extra");
+    }
+
+    @Test
     public void WynnItemParser_DPS_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "DPS_PATTERN");
         p.shouldMatch("§#f2c2f2ff330§f DPS");
         p.shouldMatch("§#e0b3e6ff759§f DPS");
         p.shouldMatch("§#cff9f9ff516§f DPS");
         p.shouldMatch("§#e0b3e6ff1,009§f DPS");
+        p.shouldMatch("§#e0b3e6ff501§f DPS");
     }
 
     @Test
@@ -1035,11 +1096,43 @@ public class TestRegex {
     }
 
     @Test
+    public void WynnItemParser_HEALTH_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "HEALTH_PATTERN");
+        p.shouldMatch("§#f2c2f2ff+2,800§f Health");
+        p.shouldMatch("§#cff9f9ff+5,135§f Health");
+        p.shouldMatch("§#f2c2f2ff+2,870§f Health");
+        p.shouldMatch("§#e0b3e6ff+5,230§f Health");
+        p.shouldMatch("§#cff9f9ff+425§f Health");
+    }
+
+    @Test
+    public void WynnItemParser_IDENTIFICATION_STAT_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "IDENTIFICATION_STAT_PATTERN");
+        p.shouldMatch("§fDefence\uDAFF\uDFDD\uDB00\uDC73§#acfac6ff+40§f §8\uE023\uDAFF\uDFF7§#00f000ff\uE023");
+        p.shouldMatch("§fLife Steal\uDAFF\uDFD5\uDB00\uDC61§#acfac6ff+535/3s§f §8\uE023\uDAFF\uDFF7§#d7fe55ff\uE019");
+        p.shouldMatch("§fMana Steal\uDAFF\uDFD1\uDB00\uDC67§#acfac6ff+13/3s§f §8\uE023\uDAFF\uDFF7§#55fefeff\uE023");
+        p.shouldMatch("§fHealth\uDAFF\uDFE5\uDB00\uDC68§#acfac6ff+2,730§f §8\uE023\uDAFF\uDFF7§#fee947ff\uE014");
+        p.shouldMatch("§fFire Damage\uDAFF\uDFCC\uDB00\uDC6E§#acfac6ff+28%§f §8\uE023\uDAFF\uDFF7§#c2fe55ff\uE01A");
+        p.shouldMatch(
+                "§fMain Attack Damage\uDAFF\uDFAB\uDB00\uDC6D§#acfac6ff+49%§f §8\uE023\uDAFF\uDFF7§#55fe98ff\uE01E");
+        p.shouldMatch("§fHeal Cost\uDAFF\uDFD7\uDB00\uDC78§#faacacff+4§f §8\uE023\uDAFF\uDFF7§#fecb63ff\uE010");
+        p.shouldMatch("§fStrength\uDAFF\uDFDA\uDB00\uDC95§#acfac6ff+2");
+        p.shouldMatch("§fDexterity\uDAFF\uDFD7\uDB00\uDC95§#acfac6ff+2");
+        p.shouldMatch("§fIntelligence\uDAFF\uDFCD\uDB00\uDC95§#acfac6ff+2");
+        p.shouldMatch("§fDefence\uDAFF\uDFDD\uDB00\uDC95§#acfac6ff+2");
+        p.shouldMatch("§fAgility\uDAFF\uDFE6\uDB00\uDC95§#acfac6ff+2");
+        p.shouldMatch("§fDexterity\uDAFF\uDFD7\uDB00\uDC86§#acfac6ff+37§f §8\uDAFF\uDFFC");
+    }
+
+    @Test
     public void WynnItemParser_ITEM_ATTACK_SPEED_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "ITEM_ATTACK_SPEED_PATTERN");
         p.shouldMatch("§f\uE007§7 Slow §8(1.5 hits/s)");
         p.shouldMatch("§f\uE007§7 Very Fast §8(3.1 hits/s)");
         p.shouldMatch("§f\uE007§7 Normal §8(2.05 hits/s)");
+        p.shouldNotMatch("§f\uE007§7 Slow §8(1x5 hits/s)");
+        p.shouldMatch("§f\uE007§7 Slow §8(1.5 hits/s)");
+        p.shouldMatch("§f\uE007§7 Fast §8(2.5 hits/s)");
     }
 
     @Test
@@ -1099,38 +1192,46 @@ public class TestRegex {
     }
 
     @Test
-    public void WynnItemParser_TIER_PATTERN() {
-        PatternTester p = new PatternTester(WynnItemParser.class, "TIER_PATTERN");
+    public void WynnItemParser_LORE_PAGE_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "LORE_PAGE_PATTERN");
+        p.shouldMatch("§7Elemental Defences");
         p.shouldMatch(
-                "§f\uDB00\uDC26§b\uE060\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE036\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE062\uDAFF\uDFF8§0\uE00B\uE004\uE006\uE004\uE00D\uE003\uE000\uE011\uE018\uDB00\uDC02§b\uDB00\uDC01§#cff9f9ff\uE060\uDAFF\uDFFF\uE031\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE001\uE00E\uE016\uDB00\uDC02§b\uDB00\uDC01");
-        p.shouldMatch(
-                "§f\uDB00\uDC26\uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFDA§0\uE00D\uE00E\uE011\uE00C\uE000\uE00B\uDB00\uDC02§f\uDB00\uDC01§#e0e0e0ff\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE062\uDAFF\uDFE6§0\uE016\uE000\uE00D\uE003\uDB00\uDC02§f\uDB00\uDC01");
+                "§f\uDAFF\uDFFF\uE000\uDAFF\uDFFF §7+70\uDB00\uDC0C §f\uE001\uDAFF\uDFFF §7+100\uDB00\uDC04 §f\uE002 §7-220\uDB00\uDC04");
+        p.shouldMatch("§f\uE006\uDAFF\uDFFF Combat Level\uDAFF\uDFBB\uDB00\uDC8C§796");
+        p.shouldMatch("§f\uE001\uDAFF\uDFFF §7-175\uDB00\uDC09 §f\uE002 §7-23\uDB00\uDC09 §f\uE003 §7+195\uDB00\uDC04");
+        p.shouldMatch("§f\uE006\uDAFF\uDFFF Combat Level\uDAFF\uDFBB\uDB00\uDC94§7100");
     }
 
     @Test
-    public void WynnItemParser_PROFESSION_TIER_PATTERN() {
-        PatternTester p = new PatternTester(WynnItemParser.class, "PROFESSION_TIER_PATTERN");
-        p.shouldMatch(
-                "§f\uDB00\uDC26§8\uE060\uDB3F\uDFFF\uE001\uDB3F\uDFFF\uE001\uDB3F\uDFFF\uE001\uDB3F\uDFFF\uE062\uDB3F\uDFE9§0\uE000\uE000\uE000\uDB00\uDC02§8\uDB00\uDC01§#7dc97dff\uE060\uDB3F\uDFFF\uE038\uDB3F\uDFFF\uE03D\uDB3F\uDFFF\uE036\uDB3F\uDFFF\uE041\uDB3F\uDFFF\uE034\uDB3F\uDFFF\uE033\uDB3F\uDFFF\uE038\uDB3F\uDFFF\uE034\uDB3F\uDFFF\uE03D\uDB3F\uDFFF\uE043\uDB3F\uDFFF\uE062\uDB3F\uDFC6§0\uE008\uE00D\uE006\uE011\uE004\uE003\uE008\uE004\uE00D\uE013\uDB00\uDC02");
+    public void WynnItemParser_LORE_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "LORE_PATTERN");
+        p.shouldMatch("§f\uDB00\uDC31§8§oWell well well if it isn't the");
+        p.shouldMatch("§f\uDB00\uDC25§8§oconsequences of my own actions");
     }
 
     @Test
-    public void WynnItemParser_IDENTIFICATION_STAT_PATTERN() {
-        PatternTester p = new PatternTester(WynnItemParser.class, "IDENTIFICATION_STAT_PATTERN");
-        p.shouldMatch("§fDefence\uDAFF\uDFDD\uDB00\uDC73§#acfac6ff+40§f §8\uE023\uDAFF\uDFF7§#00f000ff\uE023");
-        p.shouldMatch("§fLife Steal\uDAFF\uDFD5\uDB00\uDC61§#acfac6ff+535/3s§f §8\uE023\uDAFF\uDFF7§#d7fe55ff\uE019");
-        p.shouldMatch("§fMana Steal\uDAFF\uDFD1\uDB00\uDC67§#acfac6ff+13/3s§f §8\uE023\uDAFF\uDFF7§#55fefeff\uE023");
-        p.shouldMatch("§fHealth\uDAFF\uDFE5\uDB00\uDC68§#acfac6ff+2,730§f §8\uE023\uDAFF\uDFF7§#fee947ff\uE014");
-        p.shouldMatch("§fFire Damage\uDAFF\uDFCC\uDB00\uDC6E§#acfac6ff+28%§f §8\uE023\uDAFF\uDFF7§#c2fe55ff\uE01A");
-        p.shouldMatch(
-                "§fMain Attack Damage\uDAFF\uDFAB\uDB00\uDC6D§#acfac6ff+49%§f §8\uE023\uDAFF\uDFF7§#55fe98ff\uE01E");
-        p.shouldMatch("§fHeal Cost\uDAFF\uDFD7\uDB00\uDC78§#faacacff+4§f §8\uE023\uDAFF\uDFF7§#fecb63ff\uE010");
-        p.shouldMatch("§fStrength\uDAFF\uDFDA\uDB00\uDC95§#acfac6ff+2");
-        p.shouldMatch("§fDexterity\uDAFF\uDFD7\uDB00\uDC95§#acfac6ff+2");
-        p.shouldMatch("§fIntelligence\uDAFF\uDFCD\uDB00\uDC95§#acfac6ff+2");
-        p.shouldMatch("§fDefence\uDAFF\uDFDD\uDB00\uDC95§#acfac6ff+2");
-        p.shouldMatch("§fAgility\uDAFF\uDFE6\uDB00\uDC95§#acfac6ff+2");
-        p.shouldMatch("§fDexterity\uDAFF\uDFD7\uDB00\uDC86§#acfac6ff+37§f §8\uDAFF\uDFFC");
+    public void WynnItemParser_MAJOR_ID_DESCRIPTION_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "MAJOR_ID_DESCRIPTION_PATTERN");
+        p.shouldMatch("§7increased by 50%.");
+        p.shouldMatch("§6+50%§7.");
+        p.shouldMatch("§c\uE002-60%§7.");
+        p.shouldMatch("§#00f000ffall elements§7.");
+        p.shouldMatch("§2\uE001+10%§7, and §c\uE002+60%§7, but further");
+        p.shouldNotMatch("");
+        p.shouldNotMatch("§f\uDB00\uDC25§#e0b3e6ff\uE000");
+        p.shouldNotMatch("§#ffea80ff\uE000");
+    }
+
+    @Test
+    public void WynnItemParser_MAJOR_ID_HEADER_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "MAJOR_ID_HEADER_PATTERN");
+        p.shouldMatch("§#f2c2c2ff\uE000\uDB00\uDC02Uncertainty Principle: ");
+        p.shouldNotMatch("§#f2c2c2ff\uE000\uDB00\uDC02Missing colon");
+        p.shouldNotMatch("§#f2c2c2ffEntropy: §7Description");
+        p.shouldMatch("§#f2c2c2ff\uE000\uDB00\uDC02Entropy: §7Meteor's speed is");
+        p.shouldMatch("§#f2c2c2ff\uE000\uDB00\uDC02Lockdown: §7Meteor will snap");
+        p.shouldMatch("§#f2c2c2ff\uE000\uDB00\uDC02Self-sufficient: §7Powder");
+        p.shouldMatch("§#c2f2f2ff\uE000\uDB00\uDC02Magnet: §7Pulls items dropped");
     }
 
     @Test
@@ -1139,23 +1240,42 @@ public class TestRegex {
         p.shouldMatch("§f\uE006\uDAFF\uDFFF Combat Level\uDAFF\uDFBB\uDB00\uDC96§798");
         p.shouldMatch("§f\uE006\uDAFF\uDFFF Combat Level\uDAFF\uDFBB\uDB00\uDC91§7104");
         p.shouldMatch("§f\uE007\uDAFF\uDFFF Combat Level\uDAFF\uDFBB\uDB00\uDC75§7120");
+        p.shouldMatch("§f\uE006\uDAFF\uDFFF Combat Level\uDAFF\uDFBB\uDB00\uDC8C§796");
+        p.shouldMatch("§f\uE006\uDAFF\uDFFF Combat Level\uDAFF\uDFBB\uDB00\uDC94§7100");
     }
 
     @Test
-    public void WynnItemParser_CLASS_REQ_PATTERN() {
-        PatternTester p = new PatternTester(WynnItemParser.class, "CLASS_REQ_PATTERN");
-        p.shouldMatch("§f\uE006\uDAFF\uDFFF Class Type\uDAFF\uDFC4\uDB00\uDC53§7Mage/Dark Wizard");
-        p.shouldMatch("§f\uE007\uDAFF\uDFFF Class Type\uDAFF\uDFC4\uDB00\uDC5A§7Shaman/Skyseer");
-        p.shouldMatch("§f\uE007\uDAFF\uDFFF Class Type\uDAFF\uDFC4\uDB00\uDC44§7Assassin/Ninja");
+    public void WynnItemParser_POWDER_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "POWDER_PATTERN");
+        p.shouldMatch("§f\uE002\uDAFF\uDFFF §eThunder IV\uDB00\uDC0A §f\uE002\uDAFF\uDFFF §eThunder IV\uDB00\uDC06");
+        p.shouldMatch("§f\uE002\uDAFF\uDFFF §eThunder IV\uDB00\uDC0A\uDB00\uDC46");
+        p.shouldMatch("§f\uE003\uDAFF\uDFFF §bWater V\uDB00\uDC19 §f\uE003\uDAFF\uDFFF §bWater V\uDB00\uDC15");
+        p.shouldMatch("§f\uE003\uDAFF\uDFFF §bWater V\uDB00\uDC19\uDB00\uDC46");
+        p.shouldMatch("§f\uE002\uDAFF\uDFFF §eThunder V\uDB00\uDC0E §f\uE002\uDAFF\uDFFF §eThunder V\uDB00\uDC0A");
     }
 
     @Test
-    public void WynnItemParser_SKILL_REQ_PATTERN() {
-        PatternTester p = new PatternTester(WynnItemParser.class, "SKILL_REQ_PATTERN");
+    public void WynnItemParser_POWDER_TITLE_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "POWDER_TITLE_PATTERN");
         p.shouldMatch(
-                "§f\uDB00\uDC00\uDB00\uDC08\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC08\uDB00\uDC08\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC08\uDB00\uDC08\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC08\uDB00\uDC04\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff110§f\uDB00\uDC04\uDB00\uDC08\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC08");
+                "§#e0b3e6ff\uE060\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE03A\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFAC§0\uE00F\uE00E\uE016\uE003\uE004\uE011 \uE012\uE00E\uE002\uE00A\uE004\uE013\uE012\uDB00\uDC02§f\uDAFF\uDFAA\uDB00\uDC7E§70/3");
         p.shouldMatch(
-                "§f\uDB00\uDC00\uDB00\uDC05\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff45§f\uDB00\uDC05\uDB00\uDC05\uE007\uDAFF\uDFFF\uDB00\uDC03§#faacacff45§f\uDB00\uDC05\uDB00\uDC05\uE007\uDAFF\uDFFF\uDB00\uDC03§#faacacff45§f\uDB00\uDC05\uDB00\uDC05\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff45§f\uDB00\uDC05\uDB00\uDC05\uE007\uDAFF\uDFFF\uDB00\uDC03§#faacacff45§f\uDB00\uDC05");
+                "§#e0b3e6ff\uE060\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE03A\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFAC§0\uE00F\uE00E\uE016\uE003\uE004\uE011 \uE012\uE00E\uE002\uE00A\uE004\uE013\uE012\uDB00\uDC02§f\uDAFF\uDFAA\uDB00\uDC7E§70/2");
+        p.shouldMatch(
+                "§#e0b3e6ff\uE060\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE03A\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFAC§0\uE00F\uE00E\uE016\uE003\uE004\uE011 \uE012\uE00E\uE002\uE00A\uE004\uE013\uE012\uDB00\uDC02§f\uDAFF\uDFAA\uDB00\uDC7D§70/4");
+        p.shouldMatch(
+                "§#e0b3e6ff\uE060\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE03A\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFAC§0\uE00F\uE00E\uE016\uE003\uE004\uE011 \uE012\uE00E\uE002\uE00A\uE004\uE013\uE012\uDB00\uDC02§f\uDAFF\uDFAA\uDB00\uDC7E§70/5");
+        p.shouldMatch(
+                "§#e0b3e6ff\uE060\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE03A\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFAC§0\uE00F\uE00E\uE016\uE003\uE004\uE011 \uE012\uE00E\uE002\uE00A\uE004\uE013\uE012\uDB00\uDC02§f\uDAFF\uDFAA\uDB00\uDC87§73/3");
+    }
+
+    @Test
+    public void WynnItemParser_PROFESSION_TIER_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "PROFESSION_TIER_PATTERN");
+        p.shouldMatch(
+                "§f\uDB00\uDC26§8\uE060\uDB3F\uDFFF\uE001\uDB3F\uDFFF\uE001\uDB3F\uDFFF\uE001\uDB3F\uDFFF\uE062\uDB3F\uDFE9§0\uE000\uE000\uE000\uDB00\uDC02§8\uDB00\uDC01§#7dc97dff\uE060\uDB3F\uDFFF\uE038\uDB3F\uDFFF\uE03D\uDB3F\uDFFF\uE036\uDB3F\uDFFF\uE041\uDB3F\uDFFF\uE034\uDB3F\uDFFF\uE033\uDB3F\uDFFF\uE038\uDB3F\uDFFF\uE034\uDB3F\uDFFF\uE03D\uDB3F\uDFFF\uE043\uDB3F\uDFFF\uE062\uDB3F\uDFC6§0\uE008\uE00D\uE006\uE011\uE004\uE003\uE008\uE004\uE00D\uE013\uDB00\uDC02");
+        p.shouldMatch("§f\uDB00\uDC26§#e6e647ff\uE000\uDB00\uDC02");
+        p.shouldMatch("§f\uDB00\uDC26§#e647e6ff\uE000\uE000\uDB00\uDC02");
     }
 
     @Test
@@ -1164,6 +1284,35 @@ public class TestRegex {
         p.shouldMatch("§f\uE006\uDAFF\uDFFF Quest\uDAFF\uDFDC\uDB00\uDC3F§7The Qira Hive §8(Lv. 80)");
         p.shouldMatch("§f\uE006\uDAFF\uDFFF Quest\uDAFF\uDFDC\uDB00\uDC32§7The Order...Grook §8(Lv. 59)");
         p.shouldMatch("§f\uE006\uDAFF\uDFFF Quest\uDAFF\uDFDC\uDB00\uDC2C§7Tower of Ascension §8(Lv. 40)");
+    }
+
+    @Test
+    public void WynnItemParser_REROLL_EXTRACT_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "REROLL_EXTRACT_PATTERN");
+        p.shouldFind("§d\uE060\uE051\uE062", 1);
+        p.shouldFind("\uE060\uE051\uE052\uE062 \uE060\uE053\uE062", 2);
+    }
+
+    @Test
+    public void WynnItemParser_REROLL_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "REROLL_PATTERN");
+        p.shouldMatch(
+                "§f\uDB00\uDC8F§#c2f2f2ff\uE060\uDAFF\uDFFF\uE053\uDAFF\uDFFF\uE062\uDAFF\uDFF8§0\uE023\uDB00\uDC02§#c2f2f2ff\uDAFF\uDFFF\uE005§f\uDAFF\uDFF6\uF005");
+        p.shouldMatch(
+                "§f\uDB00\uDC99§#f2c2c2ff\uE060\uDAFF\uDFFF\uE052\uDAFF\uDFFF\uE062\uDAFF\uDFF8§0\uE022\uDB00\uDC02§#f2c2c2ff\uDAFF\uDFFF\uE005§f\uDAFF\uDFF6\uF005");
+        p.shouldMatch(
+                "§f\uDB00\uDC83§#fff2b3ff\uE060\uDAFF\uDFFF\uE054\uDAFF\uDFFF\uE062\uDAFF\uDFF8§0\uE024\uDB00\uDC02§#fff2b3ff\uDAFF\uDFFF\uE005§f\uDAFF\uDFF6\uF005");
+        p.shouldMatch(
+                "§f\uDB00\uDCAD§#e0b3e6ff\uE060\uDAFF\uDFFF\uE055\uDAFF\uDFFF\uE062\uDAFF\uDFF8§0\uE025\uDB00\uDC02§#e0b3e6ff\uDAFF\uDFFF\uE005§f\uDAFF\uDFF6\uF005");
+    }
+
+    @Test
+    public void WynnItemParser_SET_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "SET_PATTERN");
+        p.shouldMatch(
+                "§b\uE060\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE012\uE004\uE013\uDB00\uDC02§#cff9f9ff\uDAFF\uDFFF\uE060\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE037\uDAFF\uDFFF\uE062\uDAFF\uDFE0§0\uE00C\uE00E\uE011\uE00F\uE007\uDB00\uDC02§#cff9f9ff\uDAFF\uDFC9\uDB00\uDC89§70/8");
+        p.shouldMatch(
+                "§d\uE060\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE012\uE004\uE013\uDB00\uDC02§#f2c2f2ff\uDAFF\uDFFF\uE060\uDAFF\uDFFF\uE037\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE062\uDAFF\uDFE0§0\uE007\uE00E\uE011\uE012\uE004\uDB00\uDC02§#f2c2f2ff\uDAFF\uDFC9\uDB00\uDC8B§70/2");
     }
 
     @Test
@@ -1177,8 +1326,58 @@ public class TestRegex {
     }
 
     @Test
+    public void WynnItemParser_SKILL_REQ_PART_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "SKILL_REQ_PART_PATTERN");
+        p.shouldFind(
+                "§f\uDB00\uDC00\uDB00\uDC04\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff40§f\uDB00\uDC04\uDB00\uDC04\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff70§f\uDB00\uDC04\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07",
+                5);
+        p.shouldFind(
+                "§f\uDB00\uDC06\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC03\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff115§f\uDB00\uDC03\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07",
+                5);
+    }
+
+    @Test
+    public void WynnItemParser_SKILL_REQ_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "SKILL_REQ_PATTERN");
+        p.shouldMatch(
+                "§f\uDB00\uDC00\uDB00\uDC08\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC08\uDB00\uDC08\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC08\uDB00\uDC08\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC08\uDB00\uDC04\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff110§f\uDB00\uDC04\uDB00\uDC08\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC08");
+        p.shouldMatch(
+                "§f\uDB00\uDC00\uDB00\uDC05\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff45§f\uDB00\uDC05\uDB00\uDC05\uE007\uDAFF\uDFFF\uDB00\uDC03§#faacacff45§f\uDB00\uDC05\uDB00\uDC05\uE007\uDAFF\uDFFF\uDB00\uDC03§#faacacff45§f\uDB00\uDC05\uDB00\uDC05\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff45§f\uDB00\uDC05\uDB00\uDC05\uE007\uDAFF\uDFFF\uDB00\uDC03§#faacacff45§f\uDB00\uDC05");
+        p.shouldMatch(
+                "§f\uDB00\uDC00\uDB00\uDC04\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff40§f\uDB00\uDC04\uDB00\uDC04\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff70§f\uDB00\uDC04\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07");
+        p.shouldMatch(
+                "§f\uDB00\uDC06\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC03\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff115§f\uDB00\uDC03\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07");
+        p.shouldMatch(
+                "§f\uDB00\uDC00\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC04\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff40§f\uDB00\uDC04\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07\uDB00\uDC04\uE006\uDAFF\uDFFF\uDB00\uDC03§#acfac6ff40§f\uDB00\uDC04\uDB00\uDC07\uE005\uDAFF\uDFFF\uDB00\uDC03§80§f\uDB00\uDC07");
+    }
+
+    @Test
+    public void WynnItemParser_SPECIAL_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "SPECIAL_PATTERN");
+        p.shouldMatch("§f\uE001\uDAFF\uDFFF §eChain Lightning\uDAFF\uDFB2\uDB00\uDC7B§7Tier I");
+        p.shouldMatch("§f\uE002 §bConcentration\uDAFF\uDFB6\uDB00\uDC75§7Tier III");
+    }
+
+    @Test
+    public void WynnItemParser_TIER_PATTERN() {
+        PatternTester p = new PatternTester(WynnItemParser.class, "TIER_PATTERN");
+        p.shouldMatch(
+                "§f\uDB00\uDC26§b\uE060\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE036\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE062\uDAFF\uDFF8§0\uE00B\uE004\uE006\uE004\uE00D\uE003\uE000\uE011\uE018\uDB00\uDC02§b\uDB00\uDC01§#cff9f9ff\uE060\uDAFF\uDFFF\uE031\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE062\uDAFF\uDFEC§0\uE001\uE00E\uE016\uDB00\uDC02§b\uDB00\uDC01");
+        p.shouldMatch(
+                "§f\uDB00\uDC26\uE060\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE062\uDAFF\uDFDA§0\uE00D\uE00E\uE011\uE00C\uE000\uE00B\uDB00\uDC02§f\uDB00\uDC01§#e0e0e0ff\uE060\uDAFF\uDFFF\uE046\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE062\uDAFF\uDFE6§0\uE016\uE000\uE00D\uE003\uDB00\uDC02§f\uDB00\uDC01");
+        p.shouldMatch(
+                "§f\uDB00\uDC26§d\uE060\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE062\uDAFF\uDFE6§0\uE011\uE000\uE011\uE004\uDB00\uDC02§d\uDB00\uDC01§#f2c2f2ff\uE060\uDAFF\uDFFF\uE037\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE03C\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE062\uDAFF\uDFDA§0\uE007\uE004\uE00B\uE00C\uE004\uE013\uDB00\uDC02§d\uDB00\uDC01");
+        p.shouldMatch(
+                "§f\uDB00\uDC26§b\uE060\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE036\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE033\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE048\uDAFF\uDFFF\uE062\uDAFF\uDFC8§0\uE00B\uE004\uE006\uE004\uE00D\uE003\uE000\uE011\uE018\uDB00\uDC02§b\uDB00\uDC01§#cff9f9ff\uE060\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE037\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE062\uDAFF\uDFC2§0\uE002\uE007\uE004\uE012\uE013\uE00F\uE00B\uE000\uE013\uE004\uDB00\uDC02§b\uDB00\uDC01");
+        p.shouldMatch(
+                "§f\uDB00\uDC26§d\uE060\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE062\uDAFF\uDFE6§0\uE011\uE000\uE011\uE004\uDB00\uDC02§d\uDB00\uDC01§#f2c2f2ff\uE060\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE036\uDAFF\uDFFF\uE036\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE036\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE062\uDAFF\uDFD0§0\uE00B\uE004\uE006\uE006\uE008\uE00D\uE006\uE012\uDB00\uDC02§d\uDB00\uDC01");
+    }
+
+    @Test
     public void WynnItemParser_TOOLTIP_PAGE_PATTERN() {
         PatternTester p = new PatternTester(WynnItemParser.class, "TOOLTIP_PAGE_PATTERN");
+        p.shouldFind("§#ffea80ff\uE000", 1);
+        p.shouldFind("§#455449ff\uE000\uDB00\uDC04§#ffea80ff\uE000", 2);
         // Page 1
         p.shouldFind(
                 "§f\uDB00\uDC32\uDB00\uDC30\uF002\uDAFF\uDF93\uDB00\uDC44§#ffea80ff\uE000\uDB00\uDC04§#455449ff\uE000\uDB00\uDC04\uE000",

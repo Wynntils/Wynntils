@@ -11,8 +11,12 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.text.FontLookup;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
+import com.wynntils.core.text.fonts.wynnfonts.BannerFlagFont;
+import com.wynntils.core.text.fonts.wynnfonts.BannerPillFont;
+import com.wynntils.core.text.fonts.wynnfonts.BannerRibbonFont;
 import com.wynntils.core.text.fonts.wynnfonts.BannerSymbolFont;
 import com.wynntils.core.text.fonts.wynnfonts.FancyFont;
+import com.wynntils.core.text.fonts.wynnfonts.TooltipBannerFont;
 import com.wynntils.core.text.fonts.wynnfonts.TooltipIdentificationMeterFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsCoordinatesFont;
@@ -48,8 +52,12 @@ public final class FontManager extends Manager {
 
     private void registerFonts() {
         registerFont(new BannerBoxFont());
+        registerFont(new BannerFlagFont());
+        registerFont(new BannerPillFont());
+        registerFont(new BannerRibbonFont());
         registerFont(new BannerSymbolFont());
         registerFont(new FancyFont());
+        registerFont(new TooltipBannerFont());
         registerFont(new TooltipIdentificationMeterFont());
         registerFont(new WynncraftKeybindsFont());
         registerFont(new WynntilsCoordinatesFont());
@@ -159,7 +167,6 @@ public final class FontManager extends Manager {
 
     private void registerFontsForLookup() {
         registerWynnFont("minecraft:default", "d");
-        registerWynnFont("minecraft:banner/pill", "bp");
         registerWynnFont("minecraft:chat/prefix", "cp");
         registerWynnFont("minecraft:hud/gameplay/default/top_left", "gtl");
         registerWynnFont("minecraft:hud/gameplay/default/top_middle", "gtm");

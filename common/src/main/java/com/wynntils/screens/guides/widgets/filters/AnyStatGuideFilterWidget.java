@@ -38,7 +38,7 @@ public class AnyStatGuideFilterWidget<T extends ItemStatProvider<String>> extend
                 .renderScrollingText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal(provider.getDisplayName())
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         getX(),
                         getY(),
                         getWidth(),

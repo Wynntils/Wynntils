@@ -7,14 +7,15 @@ package com.wynntils.models.gear.type;
 import java.util.Locale;
 
 public enum GearRestrictions {
-    NONE(""),
-    UNTRADABLE("Untradable Item"),
-    QUEST_ITEM("Quest Item"),
-    SOULBOUND("Soulbound Item");
+    NONE("", ""),
+    UNTRADABLE("Untradable", "This item cannot be traded with other players"),
+    QUEST_ITEM("Quest Item", "This item is used for a quest and cannot be dropped or traded");
 
+    private final String name;
     private final String description;
 
-    GearRestrictions(String description) {
+    GearRestrictions(String name, String description) {
+        this.name = name;
         this.description = description;
     }
 
@@ -26,6 +27,10 @@ public enum GearRestrictions {
         }
 
         return null;
+    }
+
+    public String getName() {
+        return name;
     }
 
     public String getDescription() {

@@ -30,6 +30,9 @@ public class AutoAttackFeature extends Feature {
     @Persisted
     private final Config<Boolean> adaptiveLagCorrection = new Config<>(true);
 
+    @Persisted
+    private final Config<Boolean> weaponSwing = new Config<>(true);
+
     private long lastSpellInput = -1L;
     private int spellInputs = 0;
 
@@ -106,7 +109,7 @@ public class AutoAttackFeature extends Feature {
             return;
         }
 
-        QueuedMeleeScheduler.queueCurrentMelee(0, 0, adaptiveLagCorrection.get(), true);
+        QueuedMeleeScheduler.queueCurrentMelee(0, 0, adaptiveLagCorrection.get(), weaponSwing.get(), true);
     }
 
     static boolean shouldQueueHeldAutoAttack(

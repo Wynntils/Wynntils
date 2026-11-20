@@ -1,16 +1,18 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.gear.type.GearInstanceRequirements;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
+import com.wynntils.models.items.properties.RequirementItemProperty;
 import com.wynntils.models.items.properties.RerollableItemProperty;
 import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeInstance;
@@ -27,13 +29,20 @@ public class TomeItem extends GameItem
                 GearTypeItemProperty,
                 RerollableItemProperty,
                 LeveledItemProperty,
+                RequirementItemProperty,
                 IdentifiableItemProperty<TomeInfo, TomeInstance> {
     private final TomeInfo tomeInfo;
     private final TomeInstance tomeInstance;
+    private final GearInstanceRequirements gearInstanceRequirements;
 
-    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance) {
+    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance, GearInstanceRequirements gearInstanceRequirements) {
         this.tomeInfo = tomeInfo;
         this.tomeInstance = tomeInstance;
+        this.gearInstanceRequirements = gearInstanceRequirements;
+    }
+
+    public TomeItem(TomeInfo tomeInfo, TomeInstance tomeInstance) {
+        this(tomeInfo, tomeInstance, null);
     }
 
     @Override
@@ -49,6 +58,11 @@ public class TomeItem extends GameItem
     @Override
     public Optional<TomeInstance> getItemInstance() {
         return Optional.ofNullable(tomeInstance);
+    }
+
+    @Override
+    public boolean isUnidentified() {
+        return tomeInstance == null;
     }
 
     @Override
@@ -83,6 +97,16 @@ public class TomeItem extends GameItem
     }
 
     @Override
+    public GearInstanceRequirements getGearInstanceRequirements() {
+        return gearInstanceRequirements;
+    }
+
+    @Override
+    public boolean meetsActualRequirements() {
+        return gearInstanceRequirements != null && gearInstanceRequirements.meetsAllRequirements();
+    }
+
+    @Override
     public List<StatActualValue> getIdentifications() {
         if (tomeInstance == null) return List.of();
 
@@ -107,12 +131,12 @@ public class TomeItem extends GameItem
 
     @Override
     public boolean isPerfect() {
-        return tomeInstance != null && tomeInstance.isPerfect();
+        return tomeInstance != null && tomeInstance.isPerfect() || hasOverallValue() && getOverallPercentage() == 100;
     }
 
     @Override
     public boolean isDefective() {
-        return tomeInstance != null && tomeInstance.isDefective();
+        return tomeInstance != null && tomeInstance.isDefective() || hasOverallValue() && getOverallPercentage() == 0;
     }
 
     @Override

@@ -18,6 +18,7 @@ import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.characterstats.event.CombatXpGainEvent;
+import com.wynntils.models.raid.type.RaidInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.StreamModeEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -232,14 +233,19 @@ public class DiscordRichPresenceFeature extends Feature {
             return;
         }
 
-        Position position = McUtils.player().position();
-        if (position != null) {
-            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
-                    McUtils.player().position());
-            if (territoryProfile != null && territoryProfile != lastTerritoryProfile) {
-                lastTerritoryProfile = territoryProfile;
-                String location = territoryProfile.getName();
-                Services.Discord.setDetails(location);
+        RaidInfo currentRaid = Models.Raid.getCurrentRaid();
+        if (currentRaid != null) {
+            Services.Discord.setDetails(currentRaid.getRaidKind().getRaidName());
+        } else {
+            Position position = McUtils.player().position();
+            if (position != null) {
+                TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
+                        McUtils.player().position());
+                if (territoryProfile != null && territoryProfile != lastTerritoryProfile) {
+                    lastTerritoryProfile = territoryProfile;
+                    String location = territoryProfile.getName();
+                    Services.Discord.setDetails(location);
+                }
             }
         }
 

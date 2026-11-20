@@ -19,14 +19,15 @@ public class NameDataTransformer extends DataTransformer<NameData> {
     @Override
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, NameData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> encodeName(data.name().orElse(""));
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 ->
+                encodeName(data.name().orElse(""));
         };
     }
 
     @Override
     public ErrorOr<NameData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> decodeName(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> decodeName(byteReader);
         };
     }
 

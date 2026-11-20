@@ -9,6 +9,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
+import com.wynntils.core.text.fonts.wynnfonts.BannerRibbonFont;
 import com.wynntils.screens.settings.widgets.ConfigProfileReturnButton;
 import com.wynntils.screens.settings.widgets.ConfigProfileWidget;
 import com.wynntils.utils.colors.CommonColors;
@@ -39,22 +41,12 @@ import net.minecraft.resources.Identifier;
 import org.joml.Vector2i;
 
 public class ConfigProfileScreen extends WynntilsScreen {
-    private static final FontDescription.Resource RIBBON_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/ribbon"));
-    private static final Component CONFIG_PROFILE_BANNER_BACKGROUND = Component.literal(
-                    "\uDAFF\uDFF9\uE060\uDAFF\uDFFF\uE042\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE032\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE030\uDAFF\uDFFF\uE061\uDAFF\uDFFF\uE03F\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03E\uDAFF\uDFFF\uE035\uDAFF\uDFFF\uE038\uDAFF\uDFFF\uE03B\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE062\uDAFF\uDF9E")
-            .withStyle(Style.EMPTY.withFont(RIBBON_FONT).withColor(ChatFormatting.AQUA));
-    private static final Component CONFIG_PROFILE_BANNER_FOREGROUND = Component.literal(
-                    "\uE012\uE004\uE00B\uE004\uE002\uE013 \uE000 \uE00F\uE011\uE00E\uE005\uE008\uE00B\uE004")
-            .withStyle(Style.EMPTY.withFont(RIBBON_FONT).withColor(ChatFormatting.BLACK));
-
     private static final StyledText WYNNCRAFT_LOGO =
             StyledText.fromComponent(Component.literal("\uE005\uDAFF\uDFFF\uE006")
                     .withStyle(Style.EMPTY.withFont(
                             new FontDescription.Resource(Identifier.withDefaultNamespace("screen/static")))));
-    private static final StyledText AMPERSAND_WYNNCRAFT_FONT = StyledText.fromComponent(Component.literal("&")
-            .withStyle(Style.EMPTY.withFont(
-                    new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft")))));
+    private static final StyledText AMPERSAND_WYNNCRAFT_FONT = StyledText.fromComponent(
+            Component.literal("&").withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
     private static final Identifier WYNNTILS_LOGO_LOCATION = Identifier.fromNamespaceAndPath("wynntils", "logo.png");
 
     private static final int WIDGET_SPACING = 180;
@@ -71,6 +63,8 @@ public class ConfigProfileScreen extends WynntilsScreen {
             new AnimationPercentage(() -> true, Duration.of(WELCOME_DELAY_MS, ChronoUnit.MILLIS));
     private final AnimationPercentage wynntilsFadeAnimationPercentage =
             new AnimationPercentage(() -> true, Duration.of(WYNNTILS_FADE_TIME_MS, ChronoUnit.MILLIS));
+
+    private final Component selectProfileComponent;
 
     private final Screen previousScreen;
 
@@ -89,7 +83,11 @@ public class ConfigProfileScreen extends WynntilsScreen {
         this.previousScreen = previousScreen;
         this.focusedProfile = focusedProfile;
 
-        this.showWelcomePrompt = Managers.Config.showWelcomeScreen.get();
+        // We want to ensure we are on the server so the resource pack is loaded
+        this.showWelcomePrompt = Managers.Config.showWelcomeScreen.get() && Managers.Connection.onServer();
+
+        selectProfileComponent =
+                BannerRibbonFont.buildMessage("select a profile", CommonColors.AQUA, CommonColors.BLACK, "");
     }
 
     public static Screen create(Screen previousScreen, ConfigProfile focusedProfile) {
@@ -209,8 +207,8 @@ public class ConfigProfileScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(CONFIG_PROFILE_BANNER_BACKGROUND)
-                                .append(StyledText.fromComponent(CONFIG_PROFILE_BANNER_FOREGROUND)),
+                        StyledText.fromComponent(BannerRibbonFont.buildMessage(
+                                "select a profile", CommonColors.AQUA, CommonColors.BLACK, "")),
                         this.width / 2f,
                         bannerY,
                         CommonColors.WHITE,

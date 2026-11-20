@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.activities.type.Dungeon;
@@ -47,9 +48,7 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -491,11 +490,13 @@ public class ItemTextOverlayFeature extends Feature {
 
         private int getSelectedMountStatValue() {
             if (mountItemStat.get() == ConfigMountStat.POTENTIAL) {
-                return estimatePotential.get()
+                int potential = item.getMountInfo().potential();
+
+                return estimatePotential.get() && potential >= 1000
                         ? item.getMountInfo().maxStats().values().stream()
                                 .mapToInt(Integer::intValue)
                                 .sum()
-                        : item.getMountInfo().potential();
+                        : potential;
             } else {
                 return item.getMountInfo()
                         .stats()
@@ -574,9 +575,8 @@ public class ItemTextOverlayFeature extends Feature {
         public ItemTextOverlayFeature.TextOverlay getTextOverlay() {
             Skill skill = item.getSkill();
 
-            StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(
-                            new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
+            StyledText text = StyledText.fromComponent(
+                    Component.literal(skill.getSymbol()).withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());
@@ -601,9 +601,8 @@ public class ItemTextOverlayFeature extends Feature {
         public TextOverlay getTextOverlay() {
             Skill skill = item.getType().getSkill();
 
-            StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(
-                            new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
+            StyledText text = StyledText.fromComponent(
+                    Component.literal(skill.getSymbol()).withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());

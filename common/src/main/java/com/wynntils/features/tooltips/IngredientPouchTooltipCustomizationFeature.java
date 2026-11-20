@@ -19,6 +19,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -35,8 +36,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class IngredientPouchTooltipCustomizationFeature extends Feature {
-    private static final Integer DEFAULT_INGREDIENT_COLOR = 0x20aa20;
-
     @Persisted
     private final Config<Boolean> mergeItems = new Config<>(true);
 
@@ -217,10 +216,10 @@ public class IngredientPouchTooltipCustomizationFeature extends Feature {
 
     private Component getColoredIngredientName(boolean defaultColor, IngredientInfo ingredient) {
         if (defaultColor) {
-            return Component.literal(ingredient.name()).withColor(DEFAULT_INGREDIENT_COLOR);
+            return Component.literal(ingredient.name()).withColor(CommonColors.INGREDIENT_PRIMARY.asInt());
         }
 
-        return Component.literal(ingredient.name()).withStyle(getColorForTier(ingredient.tier()));
+        return Component.literal(ingredient.name()).withStyle(Models.Profession.getColorForTier(ingredient.tier()));
     }
 
     private Component getStarsComponent(IngredientInfo ingredient) {
@@ -229,18 +228,9 @@ public class IngredientPouchTooltipCustomizationFeature extends Feature {
                         3,
                         ingredient.tier(),
                         CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY),
-                        CustomColor.fromChatFormatting(getColorForTier(ingredient.tier())),
+                        CustomColor.fromChatFormatting(Models.Profession.getColorForTier(ingredient.tier())),
                         CustomColor.fromChatFormatting(ChatFormatting.BLACK),
                         ""));
-    }
-
-    private ChatFormatting getColorForTier(Integer tier) {
-        return switch (tier) {
-            case 3 -> ChatFormatting.AQUA;
-            case 2 -> ChatFormatting.LIGHT_PURPLE;
-            case 1 -> ChatFormatting.YELLOW;
-            default -> ChatFormatting.DARK_GRAY;
-        };
     }
 
     private enum IngredientStyle {

@@ -12,6 +12,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.models.abilities.bossbars.DistortionBar;
 import com.wynntils.utils.colors.CommonColors;
@@ -22,10 +23,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 import net.neoforged.bus.api.SubscribeEvent;
 
 public class MageDistortionOverlay extends Overlay {
@@ -85,8 +84,7 @@ public class MageDistortionOverlay extends Overlay {
                         StyledText.fromComponent(Component.empty()
                                 .withColor(0xd599ff)
                                 .append(Component.literal("\uE035")
-                                        .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
-                                                Identifier.withDefaultNamespace("common")))))
+                                        .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)))
                                 .append(Component.literal(" Distortion: 50"))),
                         renderX,
                         renderX + this.getWidth(),
@@ -104,9 +102,7 @@ public class MageDistortionOverlay extends Overlay {
     public void tick() {
         component = Component.empty()
                 .withColor(0xd599ff)
-                .append(Component.literal("\uE035")
-                        .withStyle(Style.EMPTY.withFont(
-                                new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
+                .append(Component.literal("\uE035").withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)))
                 .append(Component.literal(" Distortion: ")
                         .append(String.valueOf(Models.Ability.distortionBar.getCurrent())));
     }

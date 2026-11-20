@@ -21,14 +21,14 @@ public class DefenseDataTransformer extends DataTransformer<DefenseData> {
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, DefenseData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> encodeDefenseData(data);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> encodeDefenseData(data);
         };
     }
 
     @Override
     public ErrorOr<DefenseData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> decodeDefenseData(byteReader);
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> decodeDefenseData(byteReader);
         };
     }
 

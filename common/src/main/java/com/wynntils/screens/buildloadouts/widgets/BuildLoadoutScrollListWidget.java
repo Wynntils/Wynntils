@@ -6,6 +6,7 @@ package com.wynntils.screens.buildloadouts.widgets;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.tooltip.type.ItemSourceType;
 import com.wynntils.models.character.type.SavableTome;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
@@ -212,7 +213,7 @@ public class BuildLoadoutScrollListWidget extends ScrollListWidget implements It
         WynnItem item = errorOrItem.getValue();
 
         if (item instanceof TomeItem tomeItem) {
-            return Optional.of(new FakeItemStack(tomeItem, "From loadout"));
+            return Optional.of(new FakeItemStack(tomeItem, ItemSourceType.ENCODED, "From loadout"));
         }
 
         return Optional.empty();
