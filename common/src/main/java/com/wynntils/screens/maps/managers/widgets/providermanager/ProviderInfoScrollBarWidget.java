@@ -26,7 +26,6 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
     private static final int WIDGET_HEIGHT_PADDING = 4;
 
     private final ProviderManagementScreen parent;
-    private Mode selectedMode = Mode.FEATURES;
 
     private final ProviderInfoScrollBarSelectorWidget featuresButton;
     private final ProviderInfoScrollBarSelectorWidget categoriesButton;
@@ -75,12 +74,13 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
     public void populateWidgets() {
         registeredWidgets = new ArrayList<>();
         scrollOffsetY = 0;
-        String providerId = parent.getSelectedProviderId();
-        Optional<MapDataProvider> providerOpt = Services.MapData.getProviderFromId(providerId);
+        Optional<MapDataProvider> providerOpt =
+                Services.MapData.getProviderFromId(parent.getSelectedCompleteProviderId());
 
         if (providerOpt.isEmpty()) return;
 
         MapDataProvider provider = providerOpt.get();
+        Mode selectedMode = getSelectedMode();
 
         if (selectedMode == Mode.FEATURES) {
             for (MapFeature<?> mapFeature : provider.getFeatures().toList()) {
@@ -240,18 +240,21 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
+        if (!this.visible) return false;
+
         return super.isMouseOver(mouseX, mouseY)
                 || featuresButton.isMouseOver(mouseX, mouseY)
                 || categoriesButton.isMouseOver(mouseX, mouseY)
                 || iconsButton.isMouseOver(mouseX, mouseY);
     }
 
+    // The mode is kept on the screen, so it survives this widget being rebuilt (for example on resize)
     public Mode getSelectedMode() {
-        return selectedMode;
+        return parent.getSelectedInfoMode();
     }
 
     public void setSelectedMode(Mode mode) {
-        selectedMode = mode;
+        parent.setSelectedInfoMode(mode);
         populateWidgets();
     }
 

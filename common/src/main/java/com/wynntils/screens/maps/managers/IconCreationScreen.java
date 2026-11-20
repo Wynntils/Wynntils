@@ -27,7 +27,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 
 public class IconCreationScreen extends WynntilsScreen {
@@ -98,7 +97,7 @@ public class IconCreationScreen extends WynntilsScreen {
                 backgroundY + BACKGROUND_HEIGHT + BUTTON_TOP_GAP,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
-                Component.translatable("screens.wynntils.map.managers.categoryManager.iconSelectionScreen.cancel"),
+                Component.translatable("screens.wynntils.map.managers.iconSelectionScreen.cancel"),
                 Texture.MANAGER_WIDGET_BACKGROUND_RED,
                 this::onClose));
 
@@ -107,8 +106,9 @@ public class IconCreationScreen extends WynntilsScreen {
                 backgroundY + BACKGROUND_HEIGHT + BUTTON_TOP_GAP,
                 BUTTON_WIDTH,
                 BUTTON_HEIGHT,
-                Component.translatable("screens.wynntils.map.managers.categoryManager.iconSelectionScreen.save"),
+                Component.translatable("screens.wynntils.map.managers.iconSelectionScreen.save"),
                 Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
+                Texture.MANAGER_WIDGET_BACKGROUND_DARKGREEN,
                 () -> {
                     Services.Waypoints.addCustomIcon(newIcon);
                     Services.MapData.getIcon(newIcon.getIconId()).ifPresent(onIconSelect);
@@ -205,25 +205,24 @@ public class IconCreationScreen extends WynntilsScreen {
 
             int iconBoxSize = Math.min(Math.max(iconWidth, iconHeight) + ICON_BORDER * 2, previewBottom - previewTop);
 
+            float scale = Math.min(1f, (float) (iconBoxSize - ICON_BORDER * 2) / Math.max(iconWidth, iconHeight));
+            int drawWidth = Math.max(1, Math.round(iconWidth * scale));
+            int drawHeight = Math.max(1, Math.round(iconHeight * scale));
+
             int iconBoxX = previewCenterX - iconBoxSize / 2;
             int iconBoxY = previewTop + (previewBottom - previewTop - iconBoxSize) / 2;
 
             RenderUtils.drawNineSliceScalingTexturedRect(
                     guiGraphics, Texture.MANAGER_TEXT_BOX_BACKGROUND, iconBoxX, iconBoxY, iconBoxSize, iconBoxSize);
 
-            RenderUtils.drawTexturedRect(
+            RenderUtils.drawScalingTexturedRect(
                     guiGraphics,
-                    RenderPipelines.GUI_TEXTURED,
                     newIcon.getIdentifier(),
                     CommonColors.WHITE,
-                    iconBoxX + (iconBoxSize - iconWidth) / 2f,
-                    iconBoxY + (iconBoxSize - iconHeight) / 2f,
-                    iconWidth,
-                    iconHeight,
-                    0f,
-                    0f,
-                    iconWidth,
-                    iconHeight,
+                    iconBoxX + (iconBoxSize - drawWidth) / 2f,
+                    iconBoxY + (iconBoxSize - drawHeight) / 2f,
+                    drawWidth,
+                    drawHeight,
                     iconWidth,
                     iconHeight);
         }
