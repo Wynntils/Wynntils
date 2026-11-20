@@ -99,8 +99,47 @@ public final class ModelGroupRegistry {
         // Make the lists unmodifiable
         groupToModelIds.replaceAll((name, ids) -> List.copyOf(ids));
 
+        logUnmatchedEntries(modelCache, infos);
+
         return new ModelGroupCache(
                 Collections.unmodifiableMap(groupToModelIds), Collections.unmodifiableMap(modelIdToGroup));
+    }
+
+    // TODO: maybe make it so that we do not have to match all models twice
+    private void logUnmatchedEntries(ModelCache modelCache, List<GroupInfo> infos) {
+        if (modelCache.modelIdToModelInfo().isEmpty()) return;
+
+        for (GroupInfo groupInfo : infos) {
+            for (Map.Entry<String, VariantInfo> variantEntry :
+                    groupInfo.variants().entrySet()) {
+                VariantInfo variant = variantEntry.getValue();
+
+                Set<String> unmatchedHashes = new LinkedHashSet<>(variant.textureHashes());
+                Set<String> unmatchedFingerprints = new LinkedHashSet<>(variant.fingerprints());
+
+                for (ModelInfo model : modelCache.modelIdToModelInfo().values()) {
+                    for (Identifier textureId : model.textureIds()) {
+                        String textureHash = modelCache.textureIdToTextureHash().get(textureId);
+                        if (!variant.matches(textureHash, model.fingerprint())) continue;
+
+                        unmatchedHashes.remove(textureHash);
+                        unmatchedFingerprints.remove(model.fingerprint());
+                    }
+                }
+
+                if (!unmatchedHashes.isEmpty()) {
+                    WynntilsMod.error("ModelGroupRegistry: Group '" + groupInfo.name() + "' variant '"
+                            + variantEntry.getKey() + "' has texture hashes that never matched any model: "
+                            + unmatchedHashes);
+                }
+
+                if (!unmatchedFingerprints.isEmpty()) {
+                    WynntilsMod.error("ModelGroupRegistry: Group '" + groupInfo.name() + "' variant '"
+                            + variantEntry.getKey() + "' has fingerprints that never matched any model: "
+                            + unmatchedFingerprints);
+                }
+            }
+        }
     }
 
     private static final class GroupInfoDeserializer implements JsonDeserializer<GroupInfo> {
