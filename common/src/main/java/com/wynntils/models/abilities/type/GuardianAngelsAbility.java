@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.abilities.type;
 
-import com.wynntils.core.components.Services;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
 import java.util.List;
@@ -31,7 +31,7 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
         if (modelIds.isEmpty()) return false;
 
         Set<String> groups = modelIds.stream()
-                .map(f -> Services.CustomModel.getGroup(f).orElse(null))
+                .map(f -> Models.ResourcePack.getGroup(f).orElse(null))
                 .collect(Collectors.toSet());
 
         return groups.size() == 1 && (groups.contains(GROUP) || groups.contains(ULT_GROUP));
@@ -43,7 +43,7 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
         if (modelIds.isEmpty()) return false;
 
         Set<String> groups = modelIds.stream()
-                .map(f -> Services.CustomModel.getGroup(f).orElse(null))
+                .map(f -> Models.ResourcePack.getGroup(f).orElse(null))
                 .collect(Collectors.toSet());
 
         if (groups.size() != 1) return false;
@@ -56,7 +56,7 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
     @Override
     public void onMatched(int entityId, List<Float> modelIds) {
         pendingGroup = modelIds.stream()
-                .map(f -> Services.CustomModel.getGroup(f).orElse(null))
+                .map(f -> Models.ResourcePack.getGroup(f).orElse(null))
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);

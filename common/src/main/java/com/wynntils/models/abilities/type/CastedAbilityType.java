@@ -6,7 +6,6 @@ package com.wynntils.models.abilities.type;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Services;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.utils.mc.McUtils;
@@ -42,7 +41,7 @@ public abstract class CastedAbilityType {
         if (modelIds.isEmpty()) return false;
 
         return modelIds.stream()
-                .allMatch(f -> Services.CustomModel.getGroup(f)
+                .allMatch(f -> Models.ResourcePack.getGroup(f)
                         .map(g -> g.equals(group))
                         .orElse(false));
     }

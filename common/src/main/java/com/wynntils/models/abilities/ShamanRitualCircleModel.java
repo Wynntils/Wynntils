@@ -5,7 +5,7 @@
 package com.wynntils.models.abilities;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Services;
+import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
@@ -93,7 +93,7 @@ public final class ShamanRitualCircleModel extends Model {
         if (customModelData == null) return false;
 
         for (Float modelId : customModelData.floats()) {
-            Optional<String> group = Services.CustomModel.getGroup(modelId);
+            Optional<String> group = Models.ResourcePack.getGroup(modelId);
             if (group.isPresent() && group.get().equals(RITUAL_CIRCLE_GROUP)) return true;
         }
 
