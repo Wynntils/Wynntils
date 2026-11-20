@@ -84,10 +84,6 @@ public class ProfessionHighlightFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Post event) {
-        Screen screen = event.getScreen();
-
-        if (!(screen instanceof AbstractContainerScreen<?>)) return;
-
         if (!(Models.Container.getCurrentContainer()
                 instanceof HighlightableProfessionProperty highlightableProfessionProperty)) {
             return;

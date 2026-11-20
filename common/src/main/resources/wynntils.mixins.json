@@ -58,6 +58,7 @@
     "ScoreboardMixin",
     "ScreenMixin",
     "SlotMixin",
+    "SlotWidgetMixin",
     "SoundManagerMixin",
     "SubmitNodeCollectionMixin",
     "WingsLayerMixin",
