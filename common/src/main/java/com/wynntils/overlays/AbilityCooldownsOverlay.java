@@ -26,7 +26,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
 import java.util.List;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -118,7 +117,7 @@ public class AbilityCooldownsOverlay extends ContainerOverlay<AbilityCooldownsOv
         }
 
         @Override
-        public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+        public void render(GuiGraphicsExtractor guiGraphics, Window window) {
             float renderX = Math.round(getRenderX());
             float renderY = Math.round(getRenderY());
 

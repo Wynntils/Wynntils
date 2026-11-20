@@ -20,7 +20,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.resources.language.I18n;
 
@@ -52,7 +51,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
         BarOverlayTemplatePair template = getTemplate();
 
         if (templateCache == null) {
@@ -62,7 +61,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, Window window) {
         BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
         Pair<StyledText, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
@@ -79,7 +78,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    protected void renderOrErrorMessage(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    protected void renderOrErrorMessage(GuiGraphicsExtractor guiGraphics, Window window) {
         if (templateCache == null) return;
         if (templateCache.b().hasError()) {
             StyledText[] errorMessage = {
@@ -103,7 +102,7 @@ public abstract class BarOverlay extends DynamicOverlay {
                             1);
 
         } else {
-            super.renderOrErrorMessage(guiGraphics, deltaTracker, window);
+            super.renderOrErrorMessage(guiGraphics, window);
         }
     }
 

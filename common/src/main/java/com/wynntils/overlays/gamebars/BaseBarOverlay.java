@@ -23,7 +23,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.UniversalTexture;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 
 public abstract class BaseBarOverlay extends Overlay {
@@ -86,13 +85,13 @@ public abstract class BaseBarOverlay extends Overlay {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
         float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
         renderAll(guiGraphics, renderedProgress);
     }
 
     @Override
-    public void renderPreview(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void renderPreview(GuiGraphicsExtractor guiGraphics, Window window) {
         if (progress() == null) {
             renderAll(guiGraphics, 50);
             return;

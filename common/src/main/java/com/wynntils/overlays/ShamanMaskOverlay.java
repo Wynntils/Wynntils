@@ -15,7 +15,6 @@ import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.models.abilities.type.ShamanMaskType;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -49,12 +48,12 @@ public class ShamanMaskOverlay extends TextOverlay {
     }
 
     @Override
-    public void render(GuiGraphicsExtractor guiGraphics, DeltaTracker deltaTracker, Window window) {
+    public void render(GuiGraphicsExtractor guiGraphics, Window window) {
         ShamanMaskType currentMaskType = Models.ShamanMask.getCurrentMaskType();
 
         if (currentMaskType == ShamanMaskType.NONE && !displayNone.get()) return;
 
-        super.render(guiGraphics, deltaTracker, window);
+        super.render(guiGraphics, window);
     }
 
     @Override

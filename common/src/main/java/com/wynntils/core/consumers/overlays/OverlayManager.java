@@ -391,10 +391,10 @@ public final class OverlayManager extends Manager {
                 if (showPreview) {
                     if (selectedOverlay != null && overlay != selectedOverlay && !renderNonSelected) continue;
 
-                    overlay.renderPreview(event.getGuiGraphics(), event.getDeltaTracker(), event.getWindow());
+                    overlay.renderPreview(event.getGuiGraphics(), event.getWindow());
                 } else if (shouldRender && overlay.isRendered()) {
                     long startTime = System.currentTimeMillis();
-                    overlay.renderOrErrorMessage(event.getGuiGraphics(), event.getDeltaTracker(), event.getWindow());
+                    overlay.renderOrErrorMessage(event.getGuiGraphics(), event.getWindow());
                     logProfilingData(startTime, overlay);
                 }
             } catch (Throwable t) {
