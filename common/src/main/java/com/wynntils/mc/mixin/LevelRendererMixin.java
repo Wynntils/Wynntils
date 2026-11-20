@@ -21,7 +21,6 @@ import net.minecraft.client.renderer.entity.state.EntityRenderState;
 import net.minecraft.client.renderer.state.level.CameraRenderState;
 import net.minecraft.client.renderer.state.level.LevelRenderState;
 import net.minecraft.world.entity.Entity;
-import org.joml.Vector4f;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -32,14 +31,12 @@ public abstract class LevelRendererMixin {
     @Inject(
             at = @At("TAIL"),
             method =
-                    "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lorg/joml/Vector4f;ZZ)V")
+                    "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Z)V")
     private void renderLevelPost(
             GraphicsResourceAllocator resourceAllocator,
             boolean renderOutline,
             CameraRenderState cameraState,
-            GpuBufferSlice terrainFog,
-            Vector4f fogColor,
-            boolean shouldRenderSky,
+            GpuBufferSlice fogBuffer,
             boolean consistentDepthRequired,
             CallbackInfo ci) {
         // No PoseStack is provided here, as it'd be just an empty stack.
@@ -49,14 +46,12 @@ public abstract class LevelRendererMixin {
     @Inject(
             at = @At("HEAD"),
             method =
-                    "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Lorg/joml/Vector4f;ZZ)V")
+                    "render(Lcom/mojang/blaze3d/resource/GraphicsResourceAllocator;ZLnet/minecraft/client/renderer/state/level/CameraRenderState;Lcom/mojang/renderpearl/api/buffers/GpuBufferSlice;Z)V")
     private void renderLevelPre(
             GraphicsResourceAllocator resourceAllocator,
             boolean renderOutline,
             CameraRenderState cameraState,
-            GpuBufferSlice terrainFog,
-            Vector4f fogColor,
-            boolean shouldRenderSky,
+            GpuBufferSlice fogBuffer,
             boolean consistentDepthRequired,
             CallbackInfo ci) {
         MixinHelper.post(new RenderLevelEvent.Pre(cameraState.projectionMatrix, cameraState));
