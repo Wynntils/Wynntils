@@ -89,7 +89,7 @@ public final class KeyBindManager extends Manager {
     }
 
     public KeyBind createKeyBind(KeyBindDefinition definition, Runnable onPress, Consumer<Slot> onInventoryPress) {
-        KeyMapping mapping = mappingsById.get(definition.id());
+        WynntilsKeyMapping mapping = mappingsById.get(definition.id());
         if (mapping == null) {
             throw new IllegalStateException("KeyMapping for " + definition.id() + " not registered!");
         }
@@ -175,6 +175,7 @@ public final class KeyBindManager extends Manager {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent.Pre e) {
         mappingsById.values().forEach(WynntilsKeyMapping::suppressScreenInput);
+        enabledKeyBinds.forEach(KeyBind::resetPress);
     }
 
     @SubscribeEvent
@@ -199,6 +200,7 @@ public final class KeyBindManager extends Manager {
         List<KeyBind> list = keyBinds.getOrDefault(feature, new ArrayList<>());
         if (list.isEmpty()) return;
 
+        list.forEach(KeyBind::resetPress);
         enabledKeyBinds.addAll(list);
 
         Options options = McUtils.options();
@@ -223,6 +225,7 @@ public final class KeyBindManager extends Manager {
         if (list.isEmpty()) return;
 
         list.forEach(enabledKeyBinds::remove);
+        list.forEach(KeyBind::resetPress);
 
         Options options = McUtils.options();
         List<KeyMapping> current = new ArrayList<>(Arrays.asList(options.keyMappings));
@@ -241,17 +244,7 @@ public final class KeyBindManager extends Manager {
     }
 
     private void triggerKeybinds() {
-        checkAllKeyBinds(keyBind -> {
-            if (keyBind.onlyFirstPress()) {
-                if (keyBind.getKeyMapping().isDown() && !keyBind.isPressed()) {
-                    keyBind.onPress();
-                }
-
-                keyBind.setIsPressed(keyBind.getKeyMapping().isDown());
-            } else if (keyBind.getKeyMapping().isDown()) {
-                keyBind.onPress();
-            }
-        });
+        checkAllKeyBinds(KeyBind::trigger);
     }
 
     private void checkAllKeyBinds(Consumer<KeyBind> checkKeybind) {

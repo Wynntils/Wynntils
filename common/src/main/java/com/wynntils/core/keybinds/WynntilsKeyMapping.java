@@ -10,12 +10,25 @@ import net.minecraft.client.KeyMapping;
 
 public final class WynntilsKeyMapping extends KeyMapping {
     private boolean blockedByScreen;
+    private boolean pendingPress;
+    private boolean repeatingInput;
 
     public WynntilsKeyMapping(KeyBindDefinition definition) {
         super(definition.translationKey(), definition.type(), definition.defaultKey(), definition.category());
     }
 
+    public boolean consumePress() {
+        boolean pressed = pendingPress;
+        pendingPress = false;
+        return pressed;
+    }
+
+    public void resetPress() {
+        pendingPress = false;
+    }
+
     public void onInput(int action, boolean inScreen) {
+        repeatingInput = action == InputConstants.REPEAT;
         if (action == InputConstants.RELEASE) {
             blockedByScreen = false;
         } else if (inScreen) {
@@ -30,6 +43,7 @@ public final class WynntilsKeyMapping extends KeyMapping {
 
         blockedByScreen = true;
         super.setDown(false);
+        resetPress();
     }
 
     @Override
@@ -41,12 +55,26 @@ public final class WynntilsKeyMapping extends KeyMapping {
         if (down && inScreen) {
             blockedByScreen = false;
         }
-        super.setDown(down && !blockedByScreen);
+        boolean isDown = down && !blockedByScreen;
+        // Remember short taps without treating held-key repeats as fresh presses.
+        pendingPress |= isDown && !isDown() && !repeatingInput;
+        super.setDown(isDown);
+    }
+
+    @Override
+    protected void release() {
+        super.release();
+        resetPress();
+        repeatingInput = false;
     }
 
     @Override
     public void setKey(InputConstants.Key key) {
-        if (!this.key.equals(key)) blockedByScreen = false;
+        if (!this.key.equals(key)) {
+            blockedByScreen = false;
+            resetPress();
+            repeatingInput = false;
+        }
         super.setKey(key);
     }
 }

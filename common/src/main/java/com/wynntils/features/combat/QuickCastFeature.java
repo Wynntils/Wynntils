@@ -32,7 +32,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.KeyMapping;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.InteractionHand;
@@ -51,16 +50,16 @@ public class QuickCastFeature extends Feature {
             List.of(CombatClickType.PRIMARY, CombatClickType.PRIMARY, CombatClickType.SECONDARY);
 
     @RegisterKeyBind
-    private final KeyBind castFirstSpell = KeyBindDefinition.CAST_FIRST_SPELL.create(() -> {});
+    private final KeyBind castFirstSpell = KeyBindDefinition.CAST_FIRST_SPELL.create();
 
     @RegisterKeyBind
-    private final KeyBind castSecondSpell = KeyBindDefinition.CAST_SECOND_SPELL.create(() -> {});
+    private final KeyBind castSecondSpell = KeyBindDefinition.CAST_SECOND_SPELL.create();
 
     @RegisterKeyBind
-    private final KeyBind castThirdSpell = KeyBindDefinition.CAST_THIRD_SPELL.create(() -> {});
+    private final KeyBind castThirdSpell = KeyBindDefinition.CAST_THIRD_SPELL.create();
 
     @RegisterKeyBind
-    private final KeyBind castFourthSpell = KeyBindDefinition.CAST_FOURTH_SPELL.create(() -> {});
+    private final KeyBind castFourthSpell = KeyBindDefinition.CAST_FOURTH_SPELL.create();
 
     @RegisterKeyBind
     private final KeyBind castMeleeAttack = KeyBindDefinition.CAST_MELEE_ATTACK.create(() -> {});
@@ -321,9 +320,9 @@ public class QuickCastFeature extends Feature {
 
     private void refreshInputSelectionState() {
         for (int i = 0; i < spellBindings.length; i++) {
-            KeyMapping keyMapping = spellBindings[i].keyBind().getKeyMapping();
-            boolean isDown = keyMapping.isDown();
-            boolean justPressed = consumeSpellPress(keyMapping, spellKeysWereDown[i]);
+            KeyBind keyBind = spellBindings[i].keyBind();
+            boolean isDown = keyBind.getKeyMapping().isDown();
+            boolean justPressed = keyBind.consumePress();
             spellKeysJustPressed[i] = justPressed;
 
             if (justPressed) {
@@ -337,15 +336,6 @@ public class QuickCastFeature extends Feature {
         boolean meleeDown = castMeleeAttack.getKeyMapping().isDown();
         meleeKeyJustPressed = meleeDown && !meleeKeyWasDown;
         meleeKeyWasDown = meleeDown;
-    }
-
-    static boolean consumeSpellPress(KeyMapping keyMapping, boolean wasDown) {
-        boolean justPressed = keyMapping.isDown() && !wasDown;
-        // A press and release can both arrive between input refreshes.
-        while (keyMapping.consumeClick()) {
-            justPressed = true;
-        }
-        return justPressed;
     }
 
     private SpellSelection getNextSpellSelection() {
@@ -381,7 +371,7 @@ public class QuickCastFeature extends Feature {
     private void clearInputSelectionState() {
         // Inputs recorded before a reset must not become a new pending spell.
         for (SpellBinding spellBinding : spellBindings) {
-            consumeSpellPress(spellBinding.keyBind().getKeyMapping(), true);
+            spellBinding.keyBind().resetPress();
         }
         Arrays.fill(spellKeysWereDown, false);
         Arrays.fill(spellKeysJustPressed, false);
