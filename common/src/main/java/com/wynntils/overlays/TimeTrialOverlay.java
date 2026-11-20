@@ -51,7 +51,7 @@ public class TimeTrialOverlay extends Overlay {
         super(
                 new OverlayPosition(
                         153,
-                        30,
+                        34,
                         VerticalAlignment.TOP,
                         HorizontalAlignment.LEFT,
                         OverlayPosition.AnchorSection.TOP_LEFT),

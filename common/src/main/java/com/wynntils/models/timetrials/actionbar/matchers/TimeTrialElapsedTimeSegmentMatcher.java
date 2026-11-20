@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TimeTrialElapsedTimeSegmentMatcher implements ActionBarSegmentMatcher {
-    private static final String SEGMENT_START = "\uDB00\uDC1C\u0001";
+    private static final String SEGMENT_START = "\uDB00\uDC20\u0001";
 
     private static final String TIME_ICON = "\uE000";
 
