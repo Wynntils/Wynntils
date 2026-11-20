@@ -29,8 +29,8 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.resources.Identifier;
-import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -88,7 +88,8 @@ public final class KeyBindManager extends Manager {
         KeyMapping.resetMapping();
     }
 
-    public KeyBind createKeyBind(KeyBindDefinition definition, Runnable onPress, Consumer<Slot> onInventoryPress) {
+    public KeyBind createKeyBind(
+            KeyBindDefinition definition, Runnable onPress, Consumer<SlotWidget> onInventoryPress) {
         KeyMapping mapping = mappingsById.get(definition.id());
         if (mapping == null) {
             throw new IllegalStateException("KeyMapping for " + definition.id() + " not registered!");

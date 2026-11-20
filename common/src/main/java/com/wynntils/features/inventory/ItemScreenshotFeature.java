@@ -46,6 +46,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.render.GuiRenderer;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -59,7 +60,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Util;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -81,13 +81,13 @@ public class ItemScreenshotFeature extends Feature {
     private final Config<Boolean> saveToDisk = new Config<>(false);
 
     private boolean changePositioner = false;
-    private Slot screenshotSlot = null;
+    private SlotWidget screenshotSlot = null;
 
     public ItemScreenshotFeature() {
         super(ProfileDefault.ENABLED);
     }
 
-    private void onInventoryPress(Slot hoveredSlot) {
+    private void onInventoryPress(SlotWidget hoveredSlot) {
         screenshotSlot = hoveredSlot;
     }
 
@@ -95,7 +95,7 @@ public class ItemScreenshotFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void render(ItemTooltipRenderEvent.Pre e) {
         if (!Models.WorldState.onWorld()) return;
-        if (screenshotSlot == null || !screenshotSlot.hasItem()) return;
+        if (screenshotSlot == null || !screenshotSlot.slot().hasItem()) return;
 
         Screen screen = McUtils.screen();
         if (!(screen instanceof AbstractContainerScreen<?>)) return;
@@ -104,7 +104,7 @@ public class ItemScreenshotFeature extends Feature {
                 screen,
                 screenshotSlot,
                 e.getTooltips(),
-                screenshotSlot.getItem().get(DataComponents.TOOLTIP_STYLE));
+                screenshotSlot.slot().getItem().get(DataComponents.TOOLTIP_STYLE));
         screenshotSlot = null;
     }
 
@@ -116,8 +116,9 @@ public class ItemScreenshotFeature extends Feature {
         event.setPositioner(NO_POSITIONER);
     }
 
-    private void takeScreenshot(Screen screen, Slot hoveredSlot, List<Component> itemTooltip, Identifier tooltipStyle) {
-        ItemStack itemStack = hoveredSlot.getItem();
+    private void takeScreenshot(
+            Screen screen, SlotWidget hoveredSlot, List<Component> itemTooltip, Identifier tooltipStyle) {
+        ItemStack itemStack = hoveredSlot.slot().getItem();
         List<Component> tooltip = new ArrayList<>(itemTooltip);
         removeLoreTooltipLines(tooltip);
 

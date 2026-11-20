@@ -6,20 +6,23 @@ package com.wynntils.core.keybinds;
 
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 
 /** Wraps a {@link KeyMapping} with relevant context */
 public class KeyBind {
     private final KeyBindDefinition definition;
     private final Runnable onPress;
-    private final Consumer<Slot> onInventoryPress;
+    private final Consumer<SlotWidget> onInventoryPress;
 
     private final KeyMapping keyMapping;
 
     private boolean isPressed = false;
 
     public KeyBind(
-            KeyBindDefinition definition, KeyMapping keyMapping, Runnable onPress, Consumer<Slot> onInventoryPress) {
+            KeyBindDefinition definition,
+            KeyMapping keyMapping,
+            Runnable onPress,
+            Consumer<SlotWidget> onInventoryPress) {
         this.definition = definition;
         this.keyMapping = keyMapping;
         this.onPress = onPress;
@@ -50,7 +53,7 @@ public class KeyBind {
         if (onPress != null) onPress.run();
     }
 
-    public void onInventoryPress(Slot slot) {
+    public void onInventoryPress(SlotWidget slot) {
         if (onInventoryPress != null) onInventoryPress.accept(slot);
     }
 

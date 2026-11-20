@@ -17,6 +17,7 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.KeyEvent;
@@ -33,12 +34,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(AbstractContainerScreen.class)
 public abstract class AbstractContainerScreenMixin {
     @Shadow
-    public Slot hoveredSlot;
+    public abstract SlotWidget getHoveredSlot();
 
     @Inject(method = "extractContents(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V", at = @At("RETURN"))
     private void extractContentsPost(GuiGraphicsExtractor guiGraphics, CallbackInfo info) {
-        MixinHelper.post(
-                new ContainerRenderEvent((AbstractContainerScreen<?>) (Object) this, guiGraphics, this.hoveredSlot));
+        MixinHelper.post(new ContainerRenderEvent((AbstractContainerScreen<?>) (Object) this, guiGraphics));
     }
 
     @WrapOperation(
@@ -119,7 +119,7 @@ public abstract class AbstractContainerScreenMixin {
 
     @Inject(method = "keyPressed(Lnet/minecraft/client/input/KeyEvent;)Z", at = @At("HEAD"), cancellable = true)
     private void keyPressedPre(KeyEvent keyEvent, CallbackInfoReturnable<Boolean> cir) {
-        InventoryKeyPressEvent event = new InventoryKeyPressEvent(keyEvent, this.hoveredSlot);
+        InventoryKeyPressEvent event = new InventoryKeyPressEvent(keyEvent, this.getHoveredSlot());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             cir.setReturnValue(true);
@@ -134,7 +134,7 @@ public abstract class AbstractContainerScreenMixin {
     private void mousePressedPre(
             MouseButtonEvent mouseButtonEvent, boolean isDoubleClick, CallbackInfoReturnable<Boolean> cir) {
         InventoryMouseClickedEvent event =
-                new InventoryMouseClickedEvent(mouseButtonEvent, isDoubleClick, this.hoveredSlot);
+                new InventoryMouseClickedEvent(mouseButtonEvent, isDoubleClick, this.getHoveredSlot());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             cir.setReturnValue(true);

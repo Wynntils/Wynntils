@@ -33,6 +33,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.entity.player.Inventory;
@@ -179,17 +180,19 @@ public class ItemLockFeature extends Feature {
                 8);
     }
 
-    private void tryChangeLockStateOnHoveredSlot(Slot hoveredSlot) {
-        if (hoveredSlot == null || !(hoveredSlot.container instanceof Inventory)) return;
+    private void tryChangeLockStateOnHoveredSlot(SlotWidget hoveredSlot) {
+        if (hoveredSlot == null || !(hoveredSlot.slot().container instanceof Inventory)) return;
+
+        Slot slot = hoveredSlot.slot();
 
         classSlotLockMap.get().putIfAbsent(Models.Character.getId(), new TreeSet<>());
 
         Set<Integer> classSet = classSlotLockMap.get().get(Models.Character.getId());
 
-        if (classSet.contains(hoveredSlot.getContainerSlot())) {
-            classSet.remove(hoveredSlot.getContainerSlot());
+        if (classSet.contains(slot.getContainerSlot())) {
+            classSet.remove(slot.getContainerSlot());
         } else {
-            classSet.add(hoveredSlot.getContainerSlot());
+            classSet.add(slot.getContainerSlot());
         }
 
         classSlotLockMap.touched();

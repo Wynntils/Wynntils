@@ -51,7 +51,7 @@ public class TerritoryDefenseMessageFeature extends Feature {
                 ATTACK_SCREEN_TITLE.matcher(McUtils.screen().getTitle().getString());
         if (!titleMatcher.matches()) return;
 
-        ItemStack itemStack = event.getHoveredSlot().getItem();
+        ItemStack itemStack = event.getHoveredSlot().slot().getItem();
 
         for (Component tooltipLine : LoreUtils.getTooltipLines(itemStack)) {
             Matcher matcher =

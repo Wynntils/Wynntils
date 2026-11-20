@@ -33,6 +33,7 @@ import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.inventory.Slot;
@@ -140,19 +141,20 @@ public class ItemFavoriteFeature extends Feature {
                 Texture.FAVORITE_ICON.height());
     }
 
-    private void tryChangeFavoriteStateOnHoveredSlot(Slot hoveredSlot) {
-        if (hoveredSlot == null || !hoveredSlot.hasItem()) return;
+    private void tryChangeFavoriteStateOnHoveredSlot(SlotWidget hoveredSlot) {
+        if (hoveredSlot == null || !hoveredSlot.slot().hasItem()) return;
+
+        Slot slot = hoveredSlot.slot();
 
         String itemName = null;
 
         Optional<NamedItemProperty> namedItemPropertyOpt =
-                Models.Item.asWynnItemProperty(hoveredSlot.getItem(), NamedItemProperty.class);
+                Models.Item.asWynnItemProperty(slot.getItem(), NamedItemProperty.class);
         if (namedItemPropertyOpt.isPresent()) {
             itemName = namedItemPropertyOpt.get().getName();
         } else if (allowFavoritingAllItems.get()) {
             itemName = WynnUtils.stripItemNameMarkers(WynnUtils.normalizeBadString(
-                    StyledText.fromComponent((hoveredSlot.getItem().getHoverName()))
-                            .getStringWithoutFormatting()));
+                    StyledText.fromComponent((slot.getItem().getHoverName())).getStringWithoutFormatting()));
         }
 
         if (itemName != null && !itemName.isBlank()) {

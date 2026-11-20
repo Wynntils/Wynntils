@@ -61,6 +61,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -186,13 +187,15 @@ public class ChatItemFeature extends Feature {
         e.setMessage(modified);
     }
 
-    private void shareItem(Slot hoveredSlot, boolean share) {
+    private void shareItem(SlotWidget hoveredSlot, boolean share) {
         if (hoveredSlot == null || pageParser != null) return;
 
+        Slot slot = hoveredSlot.slot();
+
         // Special case for unidentified items
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearItem.class);
-        Optional<TomeItem> tomeItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), TomeItem.class);
-        Optional<CharmItem> charmItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), CharmItem.class);
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(slot.getItem(), GearItem.class);
+        Optional<TomeItem> tomeItemOpt = Models.Item.asWynnItem(slot.getItem(), TomeItem.class);
+        Optional<CharmItem> charmItemOpt = Models.Item.asWynnItem(slot.getItem(), CharmItem.class);
         if ((gearItemOpt.isPresent() && gearItemOpt.get().isUnidentified())
                 || (tomeItemOpt.isPresent() && tomeItemOpt.get().isUnidentified())
                 || (charmItemOpt.isPresent() && charmItemOpt.get().isUnidentified())) {
@@ -202,7 +205,7 @@ public class ChatItemFeature extends Feature {
             return;
         }
 
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(hoveredSlot.getItem());
+        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(slot.getItem());
         if (wynnItemOpt.isEmpty()) return;
 
         WynnItem item = wynnItemOpt.get();
@@ -211,13 +214,13 @@ public class ChatItemFeature extends Feature {
         if (!Models.ItemEncoding.canEncodeItem(item)) return;
 
         if (item instanceof PagedItemProperty pagedItem
-                && !(hoveredSlot.getItem() instanceof FakeItemStack)
+                && !(slot.getItem() instanceof FakeItemStack)
                 && McUtils.screen() instanceof AbstractContainerScreen<?> screen
                 && screen.getMenu() == McUtils.containerMenu()) {
             ItemSharingScreen sharingScreen = share && showSharingScreen.get()
-                    ? ItemSharingScreen.createParsing(item, hoveredSlot.getItem(), (pagedItem.currentPage() + 1) % 3)
+                    ? ItemSharingScreen.createParsing(item, slot.getItem(), (pagedItem.currentPage() + 1) % 3)
                     : null;
-            pageParser = new PageParser(screen, screen.getMenu(), hoveredSlot, pagedItem, share, sharingScreen);
+            pageParser = new PageParser(screen, screen.getMenu(), slot, pagedItem, share, sharingScreen);
 
             if (sharingScreen != null) {
                 McUtils.setScreen(sharingScreen);
@@ -227,7 +230,7 @@ public class ChatItemFeature extends Feature {
             return;
         }
 
-        finishSharing(hoveredSlot, item, share);
+        finishSharing(slot, item, share);
     }
 
     @SubscribeEvent

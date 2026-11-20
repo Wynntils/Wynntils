@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.KeyMapping;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 
 public record KeyBindDefinition(
         String id,
@@ -30,11 +30,11 @@ public record KeyBindDefinition(
         return Managers.KeyBind.createKeyBind(this, onPress, null);
     }
 
-    public KeyBind create(Consumer<Slot> inventoryPress) {
+    public KeyBind create(Consumer<SlotWidget> inventoryPress) {
         return Managers.KeyBind.createKeyBind(this, null, inventoryPress);
     }
 
-    public KeyBind create(Runnable onPress, Consumer<Slot> inventoryPress) {
+    public KeyBind create(Runnable onPress, Consumer<SlotWidget> inventoryPress) {
         return Managers.KeyBind.createKeyBind(this, onPress, inventoryPress);
     }
 
