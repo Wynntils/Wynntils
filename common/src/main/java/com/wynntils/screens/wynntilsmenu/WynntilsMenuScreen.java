@@ -38,7 +38,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.ContainerUtils;
-import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -97,7 +96,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         y,
                         Texture.QUEST_BOOK_ICON,
                         true,
-                        () -> ContainerUtils.openInventory(InventoryUtils.CONTENT_BOOK_SLOT_NUM),
+                        ContainerUtils::openContentBook,
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)
