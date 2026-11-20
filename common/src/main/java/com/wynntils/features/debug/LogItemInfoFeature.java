@@ -23,12 +23,12 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 @ConfigCategory(Category.DEBUG)
@@ -49,9 +49,9 @@ public class LogItemInfoFeature extends Feature {
         logItem(McUtils.player().getItemBySlot(EquipmentSlot.MAINHAND));
     }
 
-    private void onLogItemInfoInventoryPress(Slot hoveredSlot) {
+    private void onLogItemInfoInventoryPress(SlotWidget hoveredSlot) {
         if (hoveredSlot == null) return;
-        logItem(hoveredSlot.getItem());
+        logItem(hoveredSlot.slot().getItem());
     }
 
     private void logItem(ItemStack itemStack) {

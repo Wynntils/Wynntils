@@ -46,6 +46,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
@@ -370,10 +371,10 @@ public class ItemCompareFeature extends Feature {
         return gearOpt.isEmpty() ? false : gearOpt.get().getGearType() == gearItemReference.getGearType();
     }
 
-    private void onSelectKeyPress(Slot hoveredSlot) {
+    private void onSelectKeyPress(SlotWidget hoveredSlot) {
         if (hoveredSlot == null) return;
 
-        int slot = hoveredSlot.getContainerSlot();
+        int slot = hoveredSlot.slot().getContainerSlot();
 
         // Selecting armor and accessory slots is not allowed
         for (int i : InventoryAccessory.getSlots()) {
@@ -383,7 +384,7 @@ public class ItemCompareFeature extends Feature {
             if (slot == i + Inventory.INVENTORY_SIZE) return;
         }
 
-        ItemStack itemStack = hoveredSlot.getItem();
+        ItemStack itemStack = hoveredSlot.slot().getItem();
         if (itemStack.isEmpty()) return;
 
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);

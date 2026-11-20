@@ -42,11 +42,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -225,13 +225,14 @@ public class TradeMarketQuickSearchFeature extends Feature {
         }
     }
 
-    private void tryQuickSearch(Slot hoveredSlot) {
-        if (!Models.TradeMarket.getTradeMarketState().isResults() || hoveredSlot == null || !hoveredSlot.hasItem())
-            return;
+    private void tryQuickSearch(SlotWidget hoveredSlot) {
+        if (!Models.TradeMarket.getTradeMarketState().isResults()
+                || hoveredSlot == null
+                || !hoveredSlot.slot().hasItem()) return;
 
         boolean shouldInstantSearch = instantSearch.get() != KeyboardUtils.isKeyDown(InputConstants.KEY_LSHIFT);
 
-        ItemStack itemStack = hoveredSlot.getItem();
+        ItemStack itemStack = hoveredSlot.slot().getItem();
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (gearBoxItemOpt.isPresent()) {
             guessedGearList.clear();

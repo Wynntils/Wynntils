@@ -4,16 +4,16 @@
  */
 package com.wynntils.mc.event;
 
+import net.minecraft.client.gui.components.inventory.SlotWidget;
 import net.minecraft.client.input.KeyEvent;
-import net.minecraft.world.inventory.Slot;
 import net.neoforged.bus.api.Event;
 import net.neoforged.bus.api.ICancellableEvent;
 
 public class InventoryKeyPressEvent extends Event implements ICancellableEvent {
     private final KeyEvent keyEvent;
-    private final Slot hoveredSlot;
+    private final SlotWidget hoveredSlot;
 
-    public InventoryKeyPressEvent(KeyEvent keyEvent, Slot hoveredSlot) {
+    public InventoryKeyPressEvent(KeyEvent keyEvent, SlotWidget hoveredSlot) {
         this.keyEvent = keyEvent;
         this.hoveredSlot = hoveredSlot;
     }
@@ -34,7 +34,7 @@ public class InventoryKeyPressEvent extends Event implements ICancellableEvent {
         return keyEvent.modifiers();
     }
 
-    public Slot getHoveredSlot() {
+    public SlotWidget getHoveredSlot() {
         return hoveredSlot;
     }
 }
