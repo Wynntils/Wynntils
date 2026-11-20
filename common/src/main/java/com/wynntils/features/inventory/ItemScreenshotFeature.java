@@ -93,7 +93,7 @@ public class ItemScreenshotFeature extends Feature {
 
     // All other features must be able to update the tooltip first
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void render(ItemTooltipRenderEvent.Pre e) {
+    public void render(ItemTooltipRenderEvent e) {
         if (!Models.WorldState.onWorld()) return;
         if (screenshotSlot == null || !screenshotSlot.slot().hasItem()) return;
 
@@ -188,7 +188,7 @@ public class ItemScreenshotFeature extends Feature {
 
             guiGraphics.pose().pushMatrix();
             guiGraphics.pose().scale(scalew, scaleh);
-            guiGraphics.tooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, tooltipStyle, false);
+            guiGraphics.tooltip(mc.font, tooltip, 0, 0, NO_POSITIONER, tooltipStyle, 0);
             guiGraphics.pose().popMatrix();
 
             guiRenderer.render();

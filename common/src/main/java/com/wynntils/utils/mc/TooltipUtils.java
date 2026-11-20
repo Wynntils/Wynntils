@@ -32,7 +32,12 @@ public final class TooltipUtils {
     }
 
     public static int getTooltipHeight(List<ClientTooltipComponent> lines) {
-        return (lines.size() == 1 ? -2 : 0)
+        return getTooltipHeight(lines, 0);
+    }
+
+    public static int getTooltipHeight(List<ClientTooltipComponent> lines, int linesBeforeExtraSpace) {
+        boolean hasExtraSpace = linesBeforeExtraSpace > 0 && linesBeforeExtraSpace < lines.size();
+        return (hasExtraSpace ? 0 : -2)
                 + lines.stream()
                         .mapToInt(clientTooltip -> clientTooltip.getHeight(
                                 FontRenderer.getInstance().getFont()))

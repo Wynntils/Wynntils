@@ -27,14 +27,20 @@ public abstract class TooltipRenderEvent extends Event {
 
     public static class Pre extends TooltipRenderEvent {
         private final List<ClientTooltipComponent> tooltips;
+        private final int linesBeforeExtraSpace;
 
-        public Pre(GuiGraphicsExtractor guiGraphics, List<ClientTooltipComponent> tooltips) {
+        public Pre(GuiGraphicsExtractor guiGraphics, List<ClientTooltipComponent> tooltips, int linesBeforeExtraSpace) {
             super(guiGraphics);
             this.tooltips = tooltips;
+            this.linesBeforeExtraSpace = linesBeforeExtraSpace;
         }
 
         public List<ClientTooltipComponent> getTooltips() {
             return tooltips;
+        }
+
+        public int getLinesBeforeExtraSpace() {
+            return linesBeforeExtraSpace;
         }
     }
 

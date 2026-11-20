@@ -1,6 +1,5 @@
 {
   "client": [
-    "FabricAbstractContainerScreenMixin",
     "FabricGuiGraphicsExtractorMixin",
     "FabricHudMixin"
   ],

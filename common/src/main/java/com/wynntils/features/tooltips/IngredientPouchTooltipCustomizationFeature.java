@@ -61,7 +61,7 @@ public class IngredientPouchTooltipCustomizationFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+    public void onTooltipRender(ItemTooltipRenderEvent event) {
         Optional<IngredientPouchItem> ingredientPouchItemOpt =
                 Models.Item.asWynnItem(event.getItemStack(), IngredientPouchItem.class);
 
@@ -164,18 +164,17 @@ public class IngredientPouchTooltipCustomizationFeature extends Feature {
     }
 
     private Comparator<Pair<IngredientInfo, Integer>> comparatorFor(SortOption option) {
-        Comparator<Pair<IngredientInfo, Integer>> comparator =
-                switch (option) {
-                    case RARITY ->
-                        Comparator.comparingInt((Pair<IngredientInfo, Integer> pair) ->
-                                        pair.a().tier())
-                                .reversed();
-                    case LEVEL ->
-                        Comparator.comparingInt((Pair<IngredientInfo, Integer> pair) ->
-                                        pair.a().level())
-                                .reversed();
-                    case NAME -> Comparator.comparing(pair -> pair.a().name());
-                };
+        Comparator<Pair<IngredientInfo, Integer>> comparator = switch (option) {
+            case RARITY ->
+                Comparator.comparingInt(
+                                (Pair<IngredientInfo, Integer> pair) -> pair.a().tier())
+                        .reversed();
+            case LEVEL ->
+                Comparator.comparingInt(
+                                (Pair<IngredientInfo, Integer> pair) -> pair.a().level())
+                        .reversed();
+            case NAME -> Comparator.comparing(pair -> pair.a().name());
+        };
 
         return invertSort.get() ? comparator.reversed() : comparator;
     }

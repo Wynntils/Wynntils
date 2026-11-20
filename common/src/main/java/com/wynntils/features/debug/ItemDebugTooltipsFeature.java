@@ -31,7 +31,7 @@ public class ItemDebugTooltipsFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+    public void onTooltipRender(ItemTooltipRenderEvent event) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
         if (wynnItemOpt.isEmpty()) return;
         WynnItem wynnItem = wynnItemOpt.get();

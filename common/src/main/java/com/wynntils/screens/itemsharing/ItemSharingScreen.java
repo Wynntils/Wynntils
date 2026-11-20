@@ -201,7 +201,7 @@ public final class ItemSharingScreen extends WynntilsScreen {
                         Math.max(4, Math.min(x, screenWidth - actualWidth - 4)),
                         Math.max(4, Math.min(y - actualHeight / 2, screenHeight - actualHeight - 4))),
                 previewItemStack.get(DataComponents.TOOLTIP_STYLE),
-                false);
+                0);
     }
 
     private void refreshPreview() {

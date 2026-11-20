@@ -40,6 +40,7 @@ import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.inventory.SlotWidget;
@@ -201,15 +202,16 @@ public class TradeMarketQuickSearchFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onItemTooltipRender(ItemTooltipRenderEvent.Pre event) {
+    public void onItemTooltipRender(ItemTooltipRenderEvent event) {
         if (!Models.TradeMarket.getTradeMarketState().isResults()) return;
 
         if (guessedGearList.isEmpty()) return;
 
         // Don't render item tooltips if mouse is hovering a button.
         // Otherwise tooltip will be rendered over it and block the view.
+        GuiGraphicsExtractor graphics = event.getGuiGraphics();
         for (AbstractButton button : guessedGearList) {
-            if (button.isMouseOver(event.getMouseX(), event.getMouseY())) {
+            if (button.isMouseOver(graphics.mouseX(), graphics.mouseY())) {
                 event.setCanceled(true);
                 return;
             }

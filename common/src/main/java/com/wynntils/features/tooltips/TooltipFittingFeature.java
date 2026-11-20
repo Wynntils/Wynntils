@@ -48,7 +48,7 @@ public class TooltipFittingFeature extends Feature {
         if (fitToScreen.get()) {
             List<ClientTooltipComponent> tooltips = e.getTooltips();
 
-            int tooltipHeight = TooltipUtils.getTooltipHeight(tooltips);
+            int tooltipHeight = TooltipUtils.getTooltipHeight(tooltips, e.getLinesBeforeExtraSpace());
 
             tooltipHeight *= universalScale.get();
 

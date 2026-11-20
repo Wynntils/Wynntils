@@ -44,7 +44,7 @@ public class ItemGuessFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+    public void onTooltipRender(ItemTooltipRenderEvent event) {
         Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(event.getItemStack(), GearBoxItem.class);
         if (gearBoxItemOpt.isEmpty()) return;
         int maxWidth = 0;

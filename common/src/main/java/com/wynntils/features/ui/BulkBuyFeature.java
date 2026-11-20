@@ -209,7 +209,7 @@ public class BulkBuyFeature extends Feature {
 
     // This needs to be low so it runs after weapon tooltips are generated (for weapon merchants)
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+    public void onTooltipRender(ItemTooltipRenderEvent event) {
         if (!isBulkBuyable(McUtils.containerMenu(), event.getItemStack())) return;
 
         MutableComponent component = Component.empty()

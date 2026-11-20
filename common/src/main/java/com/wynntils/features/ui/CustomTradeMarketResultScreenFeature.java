@@ -78,7 +78,7 @@ public class CustomTradeMarketResultScreenFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderTooltip(ItemTooltipRenderEvent.Pre event) {
+    public void onRenderTooltip(ItemTooltipRenderEvent event) {
         if (shiftBehaviorConfig.get() == ShiftBehavior.NONE) return;
         if (McUtils.screen() == null) return;
 
@@ -92,14 +92,13 @@ public class CustomTradeMarketResultScreenFeature extends Feature {
 
         List<Component> tooltips = new ArrayList<>(event.getTooltips());
 
-        MutableComponent component =
-                switch (shiftBehaviorConfig.get()) {
-                    case NONE -> Component.empty();
-                    case ENABLED_IF_SHIFT_HELD ->
-                        (Component.translatable("feature.wynntils.customTradeMarketResultScreen.shiftToEnable"));
-                    case DISABLED_IF_SHIFT_HELD ->
-                        (Component.translatable("feature.wynntils.customTradeMarketResultScreen.shiftToDisable"));
-                };
+        MutableComponent component = switch (shiftBehaviorConfig.get()) {
+            case NONE -> Component.empty();
+            case ENABLED_IF_SHIFT_HELD ->
+                (Component.translatable("feature.wynntils.customTradeMarketResultScreen.shiftToEnable"));
+            case DISABLED_IF_SHIFT_HELD ->
+                (Component.translatable("feature.wynntils.customTradeMarketResultScreen.shiftToDisable"));
+        };
 
         tooltips.add(Component.empty());
         tooltips.add(component.withStyle(ChatFormatting.GREEN));

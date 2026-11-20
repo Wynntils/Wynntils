@@ -30,7 +30,7 @@ public class LobbyUptimeFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+    public void onTooltipRender(ItemTooltipRenderEvent event) {
         Optional<ServerItem> serverItemOpt = Models.Item.asWynnItem(event.getItemStack(), ServerItem.class);
         if (serverItemOpt.isEmpty()) return;
 

@@ -133,7 +133,7 @@ public class ItemStatInfoFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
+    public void onTooltipRender(ItemTooltipRenderEvent event) {
         if (KeyboardUtils.isKeyDown(InputConstants.KEY_RSHIFT)) return;
 
         ItemStack itemStack = event.getItemStack();

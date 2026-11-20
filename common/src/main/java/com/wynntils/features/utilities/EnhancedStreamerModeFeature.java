@@ -98,7 +98,7 @@ public class EnhancedStreamerModeFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.LOW)
-    public void onRenderTooltip(ItemTooltipRenderEvent.Pre event) {
+    public void onRenderTooltip(ItemTooltipRenderEvent event) {
         if (!Models.StreamerMode.isInStream()) return;
         if (!hideGearTooltips.get()) return;
         if (KeyboardUtils.isKeyDown(InputConstants.KEY_SPACE)) return;
