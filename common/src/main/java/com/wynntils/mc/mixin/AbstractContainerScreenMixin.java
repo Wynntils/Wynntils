@@ -39,7 +39,7 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @WrapOperation(
-            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
+            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -65,7 +65,7 @@ public abstract class AbstractContainerScreenMixin {
     }
 
     @WrapOperation(
-            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;II)V",
+            method = "extractLabels(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
             at =
                     @At(
                             value = "INVOKE",
