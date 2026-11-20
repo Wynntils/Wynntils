@@ -172,18 +172,4 @@ public abstract class HudMixin {
     private void onExtractChatPre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
         MixinHelper.post(new RenderEvent.Pre(guiGraphics, this.minecraft.getWindow(), RenderElementType.CHAT));
     }
-
-    @Inject(
-            method = "extractTabList(Lnet/minecraft/client/gui/GuiGraphicsExtractor;)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void onExtractTabListPre(GuiGraphicsExtractor guiGraphics, CallbackInfo ci) {
-        RenderEvent.Pre renderEvent =
-                new RenderEvent.Pre(guiGraphics, McUtils.window(), RenderElementType.PLAYER_TAB_LIST);
-        MixinHelper.post(renderEvent);
-
-        if (renderEvent.isCanceled()) {
-            ci.cancel();
-        }
-    }
 }

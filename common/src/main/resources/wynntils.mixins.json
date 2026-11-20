@@ -53,6 +53,7 @@
     "OptionsMixin",
     "PackRepositoryMixin",
     "PauseScreenMixin",
+    "PlayerTabOverlayMixin",
     "ProgressScreenMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
