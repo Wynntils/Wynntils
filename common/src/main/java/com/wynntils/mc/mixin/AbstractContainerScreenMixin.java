@@ -12,18 +12,15 @@ import com.wynntils.mc.event.ContainerLabelRenderEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
-import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.inventory.SlotWidget;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.Slot;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
@@ -91,30 +88,6 @@ public abstract class AbstractContainerScreenMixin {
         if (event.isCanceled()) return;
 
         original.call(instance, font, event.getInventoryLabel(), x, y, event.getColor(), dropShadow);
-    }
-
-    @Inject(
-            method =
-                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
-            at = @At("HEAD"),
-            cancellable = true)
-    private void extractSlotPre(
-            GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
-        SlotRenderEvent.Pre event = new SlotRenderEvent.Pre(guiGraphics, (Screen) (Object) this, slot);
-        MixinHelper.post(event);
-
-        if (event.isCanceled()) {
-            info.cancel();
-        }
-    }
-
-    @Inject(
-            method =
-                    "extractSlot(Lnet/minecraft/client/gui/GuiGraphicsExtractor;Lnet/minecraft/world/inventory/Slot;II)V",
-            at = @At("RETURN"))
-    private void extractSlotPost(
-            GuiGraphicsExtractor guiGraphics, Slot slot, int mouseX, int mouseY, CallbackInfo info) {
-        MixinHelper.post(new SlotRenderEvent.Post(guiGraphics, (Screen) (Object) this, slot));
     }
 
     @Inject(method = "keyPressed(Lnet/minecraft/client/input/KeyEvent;)Z", at = @At("HEAD"), cancellable = true)
