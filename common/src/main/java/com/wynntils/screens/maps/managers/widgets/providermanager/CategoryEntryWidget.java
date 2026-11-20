@@ -43,6 +43,8 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
     private static final int TEXT_GAP = 6;
 
     private final MapCategory mapCategory;
+    private final String providerId;
+    private final boolean interactive;
     private final String categoryId;
     private final Optional<String> categoryName;
     private final MapIcon icon;
@@ -51,9 +53,11 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
     private List<Component> generatedTooltip = new ArrayList<>();
 
-    public CategoryEntryWidget(int x, int y, int width, int height, MapCategory mapCategory) {
+    public CategoryEntryWidget(int x, int y, int width, int height, MapCategory mapCategory, String providerId) {
         super(x, y, width, height, Component.literal(mapCategory.getCategoryId()));
         this.mapCategory = mapCategory;
+        this.providerId = providerId;
+        this.interactive = providerId == null || Services.MapData.isProviderEnabled(providerId);
         this.categoryId = mapCategory.getCategoryId();
         this.categoryName = mapCategory.getName();
 
@@ -62,14 +66,16 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
         this.icon = this.iconId.equals(MapIcon.NO_ICON_ID)
                 ? null
-                : Services.MapData.getIcon(this.iconId).orElse(null);
+                : Services.MapData.getIcon(this.iconId, providerId).orElse(null);
 
         generateTooltip();
     }
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        handleCursor(guiGraphics);
+        if (interactive) {
+            handleCursor(guiGraphics);
+        }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics, Texture.MANAGER_WIDGET_BACKGROUND, getX(), getY(), this.width, this.height);
@@ -140,6 +146,7 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (!interactive) return false;
         if (!isMouseOver(event.x(), event.y())) return false;
 
         if (event.button() == InputConstants.MOUSE_BUTTON_RIGHT) {
@@ -163,9 +170,9 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
     }
 
     private <T> Optional<T> resolveAttribute(Function<MapAttributes, Optional<T>> getter) {
-        return Services.MapData.getOwnAttributesForCategory(categoryId)
+        return Services.MapData.getOwnAttributesForCategory(categoryId, providerId)
                 .flatMap(getter)
-                .or(() -> Services.MapData.getInheritedAttributesForCategory(categoryId)
+                .or(() -> Services.MapData.getInheritedAttributesForCategory(categoryId, providerId)
                         .flatMap(getter));
     }
 
@@ -195,6 +202,8 @@ public class CategoryEntryWidget extends AbstractWidget implements TooltipProvid
                     Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.iconId"),
                     iconValue);
         }
+
+        if (!interactive) return;
 
         this.generatedTooltip.add(Component.empty());
 

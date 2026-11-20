@@ -82,13 +82,17 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
         MapDataProvider provider = providerOpt.get();
         Mode selectedMode = getSelectedMode();
 
+        // The selected provider may be disabled, so its own icons and categories have to be passed along, otherwise
+        // entries that use them would not be able to find them
+        String providerId = parent.getSelectedCompleteProviderId();
+
         if (selectedMode == Mode.FEATURES) {
             for (MapFeature<?> mapFeature : provider.getFeatures().toList()) {
-                registeredWidgets.add(new FeatureEntryWidget(0, 0, 0, 28, mapFeature));
+                registeredWidgets.add(new FeatureEntryWidget(0, 0, 0, 28, mapFeature, providerId));
             }
         } else if (selectedMode == Mode.CATEGORIES) {
             for (MapCategory mapCategory : provider.getCategories().toList()) {
-                registeredWidgets.add(new CategoryEntryWidget(0, 0, 0, 28, mapCategory));
+                registeredWidgets.add(new CategoryEntryWidget(0, 0, 0, 28, mapCategory, providerId));
             }
         } else if (selectedMode == Mode.ICONS) {
             for (MapIcon mapIcon : provider.getIcons().toList()) {

@@ -142,8 +142,8 @@ public class MapDataService extends Service {
         return getFeatures().filter(f -> f.getCategoryId().startsWith(categoryId));
     }
 
-    public Optional<MapAttributes> getBaseAttributesForCategory(String categoryId) {
-        List<MapAttributes> attributesList = getCategoryDefinitions(categoryId)
+    public Optional<MapAttributes> getBaseAttributesForCategory(String categoryId, String includedProviderId) {
+        List<MapAttributes> attributesList = getCategoryDefinitions(categoryId, includedProviderId)
                 .map(MapCategory::getAttributes)
                 .filter(Optional::isPresent)
                 .map(Optional::get)
@@ -156,6 +156,10 @@ public class MapDataService extends Service {
     }
 
     public Optional<MapAttributes> getOwnAttributesForCategory(String categoryId) {
+        return getOwnAttributesForCategory(categoryId, null);
+    }
+
+    public Optional<MapAttributes> getOwnAttributesForCategory(String categoryId, String includedProviderId) {
         List<MapAttributes> ownAttributes = new ArrayList<>();
 
         overrideProviders.values().stream()
@@ -164,7 +168,7 @@ public class MapDataService extends Service {
                 .filter(Objects::nonNull)
                 .forEach(ownAttributes::add);
 
-        getBaseAttributesForCategory(categoryId).ifPresent(ownAttributes::add);
+        getBaseAttributesForCategory(categoryId, includedProviderId).ifPresent(ownAttributes::add);
 
         if (ownAttributes.isEmpty()) {
             return Optional.empty();
@@ -173,6 +177,10 @@ public class MapDataService extends Service {
     }
 
     public Optional<MapAttributes> getInheritedAttributesForCategory(String categoryId) {
+        return getInheritedAttributesForCategory(categoryId, null);
+    }
+
+    public Optional<MapAttributes> getInheritedAttributesForCategory(String categoryId, String includedProviderId) {
         List<MapAttributes> resolvedAttributes = new ArrayList<>();
 
         overrideProviders.values().stream()
@@ -183,7 +191,7 @@ public class MapDataService extends Service {
                 .forEach(resolvedAttributes::add);
 
         for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
-            getBaseAttributesForCategory(id).ifPresent(resolvedAttributes::add);
+            getBaseAttributesForCategory(id, includedProviderId).ifPresent(resolvedAttributes::add);
         }
 
         if (resolvedAttributes.isEmpty()) {
@@ -198,8 +206,20 @@ public class MapDataService extends Service {
         return resolvedAttributesCache.computeIfAbsent(feature, k -> MapAttributesResolver.resolve(feature));
     }
 
+    public ResolvedMapAttributes resolveMapAttributes(MapFeature feature, String includedProviderId) {
+        if (includedProviderId == null || isProviderEnabled(includedProviderId)) {
+            return resolveMapAttributes(feature);
+        }
+
+        return MapAttributesResolver.resolve(feature, includedProviderId);
+    }
+
     public Stream<MapCategory> getCategoryDefinitions(String categoryId) {
-        return getProviders()
+        return getCategoryDefinitions(categoryId, null);
+    }
+
+    public Stream<MapCategory> getCategoryDefinitions(String categoryId, String includedProviderId) {
+        return getProvidersIncluding(includedProviderId)
                 .flatMap(MapDataProvider::getCategories)
                 .filter(p -> p.getCategoryId().equals(categoryId));
     }
@@ -220,6 +240,19 @@ public class MapDataService extends Service {
             Stream<MapIcon> allIcons = getProviders().flatMap(MapDataProvider::getIcons);
             return allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst();
         });
+    }
+
+    public Optional<MapIcon> getIcon(String iconId, String includedProviderId) {
+        if (includedProviderId == null || isProviderEnabled(includedProviderId)) {
+            return getIcon(iconId);
+        }
+
+        if (iconId.equals(MapIcon.NO_ICON_ID)) return Optional.empty();
+
+        return getProvidersIncluding(includedProviderId)
+                .flatMap(MapDataProvider::getIcons)
+                .filter(i -> i.getIconId().equals(iconId))
+                .findFirst();
     }
 
     public Optional<MapIcon> getIcon(MapFeature feature) {
@@ -319,6 +352,19 @@ public class MapDataService extends Service {
      * @return false if no such provider is registered, or it is not toggleable
      */
     public boolean toggleProvider(String providerId) {
+        return toggleProvider(providerId, null);
+    }
+
+    /**
+     * Toggles a provider's enabled state.
+     *
+     * @param providerId The complete provider id
+     * @param onLoaded Run once an enabled online provider has finished downloading, as until then it only has
+     *                 placeholder data.
+     *
+     * @return false if no such provider is registered, or it is not toggleable
+     */
+    public boolean toggleProvider(String providerId, Runnable onLoaded) {
         MapDataProviderInfo info = registeredProviders.get(providerId);
         if (info == null || !info.toggleable()) return false;
 
@@ -333,11 +379,26 @@ public class MapDataService extends Service {
         if (enabled && getJsonProviderInfoByCompleteId(providerId).isPresent()) {
             // Reload and validate JSON providers before enabling them, including previously failed providers as they
             // may have been fixed.
-            getJsonProviderInfoByCompleteId(providerId).ifPresent(this::registerJsonProvider);
+            getJsonProviderInfoByCompleteId(providerId).ifPresent(jsonInfo -> registerJsonProvider(jsonInfo, onLoaded));
         } else {
             invalidateCaches(info.provider());
         }
 
+        return true;
+    }
+
+    public void ensureProviderLoaded(String completeProviderId, Runnable onLoaded) {
+        loadPlaceholderProvider(completeProviderId, onLoaded);
+    }
+
+    private boolean loadPlaceholderProvider(String completeProviderId, Runnable onLoaded) {
+        MapDataProviderInfo info = registeredProviders.get(completeProviderId);
+        if (info == null || info.provider() != UNLOADED_PLACEHOLDER_PROVIDER) return false;
+
+        Optional<JsonProviderInfo> jsonProviderInfo = getJsonProviderInfoByCompleteId(completeProviderId);
+        if (jsonProviderInfo.isEmpty()) return false;
+
+        loadJsonProvider(jsonProviderInfo.get(), onLoaded);
         return true;
     }
 
@@ -429,11 +490,19 @@ public class MapDataService extends Service {
     }
 
     private void registerProvider(String providerId, MapDataProviderInfo providerInfo) {
-        // Add or update the provider
-        registeredProviders.putFirst(providerId, providerInfo);
+        MapDataProviderInfo oldInfo = registeredProviders.get(providerId);
+
+        if (oldInfo == null) {
+            registeredProviders.putFirst(providerId, providerInfo);
+        } else {
+            registeredProviders.put(providerId, providerInfo);
+        }
         providerInfo.provider().onChange(this::onProviderChange);
 
-        // Invalidate caches
+        // Invalidate caches.
+        if (oldInfo != null && oldInfo.provider() != providerInfo.provider()) {
+            invalidateCaches(oldInfo.provider());
+        }
         invalidateCaches(providerInfo.provider());
     }
 
@@ -445,15 +514,23 @@ public class MapDataService extends Service {
     }
 
     private void registerJsonProvider(JsonProviderInfo providerInfo) {
+        registerJsonProvider(providerInfo, null);
+    }
+
+    private void registerJsonProvider(JsonProviderInfo providerInfo, Runnable onLoaded) {
         if (!providerEnabledOverrides.get().getOrDefault(providerInfo.completeId(), true)) {
             registerJsonProvider(providerInfo.completeId(), UNLOADED_PLACEHOLDER_PROVIDER);
             return;
         }
 
+        loadJsonProvider(providerInfo, onLoaded);
+    }
+
+    private void loadJsonProvider(JsonProviderInfo providerInfo, Runnable onLoaded) {
         switch (providerInfo.providerType()) {
             case BUNDLED -> createBundledProvider(providerInfo.providerId(), providerInfo.providerFilename());
             case LOCAL -> createLocalProvider(providerInfo.providerId(), providerInfo.providerFilePath());
-            case REMOTE -> createOnlineProvider(providerInfo.providerId(), providerInfo.providerUrl());
+            case REMOTE -> createOnlineProvider(providerInfo.providerId(), providerInfo.providerUrl(), onLoaded);
         }
     }
 
@@ -495,7 +572,7 @@ public class MapDataService extends Service {
         registerJsonProvider(completeId, provider);
     }
 
-    private void createOnlineProvider(String id, String url) {
+    private void createOnlineProvider(String id, String url, Runnable onLoaded) {
         String completeId = "online:" + id;
         // Register a dummy provider; this will be replaced once loading has finished
         registerJsonProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
@@ -504,6 +581,10 @@ public class MapDataService extends Service {
             if (!registeredProviders.containsKey(loadedId)) return;
 
             registerJsonProvider(loadedId, provider);
+
+            if (onLoaded != null) {
+                onLoaded.run();
+            }
         });
     }
 
@@ -511,18 +592,40 @@ public class MapDataService extends Service {
         jsonProviders.get().values().forEach(this::registerJsonProvider);
     }
 
+    /**
+     * Adds local providers for new files, and removes the ones whose file no longer exists. Providers that are
+     * already known are not read again
+     */
     public void refreshLocalJsonProviders() {
+        refreshLocalJsonProviders(false);
+    }
+
+    /**
+     * Does what {@link #refreshLocalJsonProviders()} does, and also reads every known local provider from its file
+     * again, so that changes made to the files take effect.
+     */
+    public void reloadLocalJsonProviders() {
+        refreshLocalJsonProviders(true);
+    }
+
+    private void refreshLocalJsonProviders(boolean reloadKnown) {
         File[] files = LOCAL_PROVIDERS.listFiles();
 
         if (files != null) {
             for (File file : files) {
                 if (!file.getName().endsWith(".json")) continue;
 
-                boolean alreadyKnown = jsonProviders.get().values().stream()
-                        .anyMatch(info -> info.providerType() == JsonProviderInfo.JsonProviderType.LOCAL
-                                && info.providerFilePath().equals(file.getAbsolutePath()));
+                Optional<JsonProviderInfo> knownInfo = jsonProviders.get().values().stream()
+                        .filter(info -> info.providerType() == JsonProviderInfo.JsonProviderType.LOCAL
+                                && info.providerFilePath().equals(file.getAbsolutePath()))
+                        .findFirst();
 
-                if (alreadyKnown) continue;
+                if (knownInfo.isPresent()) {
+                    if (reloadKnown) {
+                        reloadLocalProvider(knownInfo.get());
+                    }
+                    continue;
+                }
 
                 String providerId = file.getName().substring(0, file.getName().length() - ".json".length());
 
@@ -539,6 +642,24 @@ public class MapDataService extends Service {
                 .map(JsonProviderInfo::providerId)
                 .toList()
                 .forEach(this::removeJsonProvider);
+    }
+
+    private void reloadLocalProvider(JsonProviderInfo providerInfo) {
+        String completeId = providerInfo.completeId();
+
+        // A provider that is disabled and has not been loaded is loaded from its file when it is viewed or enabled
+        MapDataProviderInfo registeredInfo = registeredProviders.get(completeId);
+        if (registeredInfo != null && registeredInfo.provider() == UNLOADED_PLACEHOLDER_PROVIDER) return;
+
+        JsonProvider provider = JsonProvider.loadLocalFile(completeId, new File(providerInfo.providerFilePath()));
+        if (provider == null) {
+            // The file could not be read or parsed, so the previously loaded data is kept. Let the user know, as
+            // otherwise the reload would seem to have worked
+            McUtils.sendErrorToClient(I18n.get("service.wynntils.mapdata.localProviderReloadFailed", completeId));
+            return;
+        }
+
+        registerJsonProvider(completeId, provider);
     }
 
     private void reloadJsonOverrideProviders() {
@@ -580,8 +701,12 @@ public class MapDataService extends Service {
     }
 
     public Stream<MapDataProvider> getProviders() {
+        return getProvidersIncluding(null);
+    }
+
+    private Stream<MapDataProvider> getProvidersIncluding(String includedProviderId) {
         return registeredProviders.entrySet().stream()
-                .filter(entry -> isProviderEnabled(entry.getKey()))
+                .filter(entry -> entry.getKey().equals(includedProviderId) || isProviderEnabled(entry.getKey()))
                 .map(entry -> entry.getValue().provider());
     }
 

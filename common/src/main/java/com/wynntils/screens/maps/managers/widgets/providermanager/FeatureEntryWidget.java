@@ -53,30 +53,38 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
     private final MapIcon icon;
 
     private final WaypointCategoryScreen waypointParent;
+    private final boolean interactive;
 
     private List<Component> generatedTooltip = new ArrayList<>();
 
-    public FeatureEntryWidget(int x, int y, int width, int height, MapFeature<?> mapFeature) {
-        this(null, x, y, width, height, mapFeature);
+    public FeatureEntryWidget(int x, int y, int width, int height, MapFeature<?> mapFeature, String providerId) {
+        this(null, providerId, x, y, width, height, mapFeature);
     }
 
     public FeatureEntryWidget(
             int x, int y, int width, int height, WaypointLocation waypoint, WaypointCategoryScreen parent) {
-        this(parent, x, y, width, height, waypoint);
+        this(parent, null, x, y, width, height, waypoint);
     }
 
     private FeatureEntryWidget(
-            WaypointCategoryScreen waypointParent, int x, int y, int width, int height, MapFeature<?> mapFeature) {
+            WaypointCategoryScreen waypointParent,
+            String providerId,
+            int x,
+            int y,
+            int width,
+            int height,
+            MapFeature<?> mapFeature) {
         super(x, y, width, height, Component.literal(mapFeature.getFeatureId()));
         this.mapFeature = mapFeature;
         this.waypointParent = waypointParent;
+        this.interactive = providerId == null || Services.MapData.isProviderEnabled(providerId);
 
-        this.attributes = Services.MapData.resolveMapAttributes(mapFeature);
+        this.attributes = Services.MapData.resolveMapAttributes(mapFeature, providerId);
         this.featureId = mapFeature.getFeatureId();
         this.categoryId = mapFeature.getCategoryId();
 
         this.icon = mapFeature instanceof MapLocation
-                ? Services.MapData.getIcon(attributes.iconId()).orElse(null)
+                ? Services.MapData.getIcon(attributes.iconId(), providerId).orElse(null)
                 : null;
 
         generateTooltip();
@@ -84,7 +92,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (!isWaypointEntry()) {
+        if (!isWaypointEntry() && interactive) {
             handleCursor(guiGraphics);
         }
 
@@ -153,7 +161,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (isWaypointEntry()) return false;
+        if (isWaypointEntry() || !interactive) return false;
 
         if (!isMouseOver(event.x(), event.y())) return false;
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && mapFeature instanceof MapLocation mapLocation) {
@@ -269,6 +277,8 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
                     Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.location"),
                     "%d, %d, %d".formatted(location.x(), location.y(), location.z()));
         }
+
+        if (!interactive) return;
 
         this.generatedTooltip.add(Component.empty());
 

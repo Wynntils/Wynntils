@@ -24,6 +24,7 @@ public class ProviderManagerEntryWidget extends ProviderEntryWidget {
     private static final int BUTTON_PADDING = 5;
 
     private final ProviderType providerType;
+    private final ProviderManagementScreen parent;
     private final boolean toggleable;
 
     public boolean enabled;
@@ -36,6 +37,7 @@ public class ProviderManagerEntryWidget extends ProviderEntryWidget {
                 parent::getSelectedCompleteProviderId,
                 id -> parent.setSelectedProvider(id, providerType));
         this.providerType = providerType;
+        this.parent = parent;
         this.enabled = Services.MapData.isProviderEnabled(completeProviderId);
 
         MapDataProviderInfo info = Services.MapData.getProviderInfos().get(completeProviderId);
@@ -83,8 +85,15 @@ public class ProviderManagerEntryWidget extends ProviderEntryWidget {
         if (toggleable && isMouseInsideButton(event.x(), event.y())) {
             this.playDownSound(McUtils.mc().getSoundManager());
 
-            if (Services.MapData.toggleProvider(getProviderId())) {
+            String providerId = getProviderId();
+            if (Services.MapData.toggleProvider(providerId, () -> parent.scheduleRefreshAfterLoad(providerId))) {
                 enabled = Services.MapData.isProviderEnabled(getProviderId());
+
+                // Only what is shown for the selected provider depends on its enabled state, so toggling another
+                // provider must not change the selection
+                if (providerId.equals(parent.getSelectedCompleteProviderId())) {
+                    parent.refreshSelectedProvider();
+                }
             }
 
             return true;
