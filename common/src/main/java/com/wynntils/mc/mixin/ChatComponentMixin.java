@@ -10,6 +10,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.AddGuiMessageLineEvent;
 import com.wynntils.mc.event.ChatComponentRenderEvent;
+import com.wynntils.mc.event.ChatMessageAddedEvent;
 import com.wynntils.mc.event.ChatScreenCreateEvent;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -17,11 +18,13 @@ import net.minecraft.client.GuiMessage;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ChatComponent.class)
@@ -36,6 +39,19 @@ public abstract class ChatComponentMixin {
     private void onInit(CallbackInfo ci) {
         allMessages = new CopyOnWriteArrayList<>();
         trimmedMessages = new CopyOnWriteArrayList<>();
+    }
+
+    @ModifyVariable(
+            method =
+                    "addMessage(Lnet/minecraft/network/chat/Component;Lnet/minecraft/network/chat/MessageSignature;Lnet/minecraft/client/GuiMessageTag;)V",
+            at = @At("HEAD"),
+            argsOnly = true)
+    private Component updateChatPrefix(Component message) {
+        Component previousMessage =
+                allMessages.isEmpty() ? null : allMessages.getFirst().content();
+        ChatMessageAddedEvent event = new ChatMessageAddedEvent(message, previousMessage);
+        MixinHelper.post(event);
+        return event.getMessage();
     }
 
     @WrapOperation(

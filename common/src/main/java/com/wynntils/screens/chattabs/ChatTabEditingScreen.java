@@ -20,6 +20,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -153,19 +154,22 @@ public final class ChatTabEditingScreen extends WynntilsGridLayoutScreen {
 
         // region Recipient Types
 
-        // Display all recipient types in two rows of 4 checkboxes each
+        // keep the extra info prefixes under the existing info option
         List<WynntilsCheckbox> oldBoxes = new ArrayList<>(recipientTypeBoxes);
         recipientTypeBoxes.clear();
 
         int x = (int) (dividedWidth * 35);
         int y = (int) (dividedHeight * SECOND_ROW_Y);
-        for (int i = 0; i < RecipientType.values().length; i++) {
+        List<RecipientType> recipientTypes = Arrays.stream(RecipientType.values())
+                .filter(type -> type.getFilterType() == type)
+                .toList();
+        for (int i = 0; i < recipientTypes.size(); i++) {
             if (i == 4 || i == 8) {
                 y += (int) (dividedHeight * 5);
                 x = (int) (dividedWidth * 35);
             }
 
-            RecipientType type = RecipientType.values()[i];
+            RecipientType type = recipientTypes.get(i);
             WynntilsCheckbox oldCheckbox = oldBoxes.stream()
                     .filter(checkbox -> checkbox.getMessage().getString().equals(type.getName()))
                     .findFirst()
