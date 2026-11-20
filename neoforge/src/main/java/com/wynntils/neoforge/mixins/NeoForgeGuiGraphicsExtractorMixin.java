@@ -32,46 +32,46 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class NeoForgeGuiGraphicsExtractorMixin {
     // Note: Call site 3 of 3 of ItemTooltipRenderEvent. Check the event class for more info.
     //       See FabricAbstractContainerScreenMixin#renderTooltipPre for the Fabric mixin.
-    @WrapOperation(
-            method =
-                    "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/resources/Identifier;Z)V",
-            at =
-                    @At(
-                            value = "INVOKE",
-                            target =
-                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;Z)V"),
-            remap = false)
-    private void setTooltipForNextFramePre(
-            GuiGraphicsExtractor instance,
-            Font font,
-            List<Component> tooltipLines,
-            Optional<TooltipComponent> visualTooltipComponent,
-            int mouseX,
-            int mouseY,
-            Identifier backgroundTexture,
-            boolean extraSpaceAfterFirstLine,
-            Operation<Void> operation,
-            @Local(argsOnly = true) ItemStack itemStack) {
-        ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
-                (GuiGraphicsExtractor) (Object) this,
-                itemStack,
-                Screen.getTooltipFromItem(McUtils.mc(), itemStack),
-                mouseX,
-                mouseY);
-        MixinHelper.post(event);
-
-        if (event.isCanceled()) return;
-
-        operation.call(
-                instance,
-                font,
-                event.getTooltips(),
-                event.getItemStack().getTooltipImage(),
-                event.getMouseX(),
-                event.getMouseY(),
-                backgroundTexture,
-                extraSpaceAfterFirstLine);
-    }
+//    @WrapOperation(
+//            method =
+//                    "setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/resources/Identifier;Z)V",
+//            at =
+//                    @At(
+//                            value = "INVOKE",
+//                            target =
+//                                    "Lnet/minecraft/client/gui/GuiGraphicsExtractor;setTooltipForNextFrame(Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;IILnet/minecraft/resources/Identifier;Z)V"),
+//            remap = false)
+//    private void setTooltipForNextFramePre(
+//            GuiGraphicsExtractor instance,
+//            Font font,
+//            List<Component> tooltipLines,
+//            Optional<TooltipComponent> visualTooltipComponent,
+//            int mouseX,
+//            int mouseY,
+//            Identifier backgroundTexture,
+//            boolean extraSpaceAfterFirstLine,
+//            Operation<Void> operation,
+//            @Local(argsOnly = true) ItemStack itemStack) {
+//        ItemTooltipRenderEvent.Pre event = new ItemTooltipRenderEvent.Pre(
+//                (GuiGraphicsExtractor) (Object) this,
+//                itemStack,
+//                Screen.getTooltipFromItem(McUtils.mc(), itemStack),
+//                mouseX,
+//                mouseY);
+//        MixinHelper.post(event);
+//
+//        if (event.isCanceled()) return;
+//
+//        operation.call(
+//                instance,
+//                font,
+//                event.getTooltips(),
+//                event.getItemStack().getTooltipImage(),
+//                event.getMouseX(),
+//                event.getMouseY(),
+//                backgroundTexture,
+//                extraSpaceAfterFirstLine);
+//    }
 
     @Inject(
             method =
