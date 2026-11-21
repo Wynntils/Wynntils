@@ -1,9 +1,12 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.type;
 
+import com.wynntils.core.persisted.config.UntranslatableEnum;
+
+@UntranslatableEnum
 public enum HealthTexture implements BarTexture {
     WYNN(0, 17, 8),
     GRUNE(84, 99, 7),

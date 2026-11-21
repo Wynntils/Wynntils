@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2025.
+ * Copyright © Wynntils 2021-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -11,6 +11,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.UntranslatableEnum;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
 import java.util.List;
@@ -150,6 +151,7 @@ public class PacketDebuggerFeature extends Feature {
         WynntilsMod.info("RECV packet: " + describePacket(packet));
     }
 
+    @UntranslatableEnum
     private enum PacketFilterType {
         ALL(packetClass -> false),
         FILTERED(IGNORE_LIST::contains),

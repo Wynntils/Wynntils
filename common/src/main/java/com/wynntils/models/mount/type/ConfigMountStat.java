@@ -4,8 +4,10 @@
  */
 package com.wynntils.models.mount.type;
 
+import com.wynntils.core.persisted.config.UntranslatableEnum;
 import java.util.Optional;
 
+@UntranslatableEnum
 public enum ConfigMountStat {
     ACCELERATION("acceleration", MountStat.ACCELERATION),
     ALTITUDE("altitude", MountStat.ALTITUDE),
