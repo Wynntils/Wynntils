@@ -21,6 +21,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
@@ -440,7 +441,10 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
             implements Comparable<SuggestedPlayer> {
         @Override
         public int compareTo(SuggestedPlayer suggestedPlayer) {
-            return username().compareToIgnoreCase(suggestedPlayer.username());
+            // Friends come before guild members, then alphabetical order ignoring case
+            return Comparator.comparing(SuggestedPlayer::suggestedPlayerType)
+                    .thenComparing(SuggestedPlayer::username, String.CASE_INSENSITIVE_ORDER)
+                    .compare(this, suggestedPlayer);
         }
     }
 
