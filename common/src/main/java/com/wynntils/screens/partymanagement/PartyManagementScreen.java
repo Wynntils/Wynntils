@@ -23,6 +23,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -367,10 +368,26 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
      * This should be called when a friend joins/leaves the world or when the refresh button is pressed
      */
     public void reloadSuggestedPlayersWidgets() {
-        List<SuggestedPlayer> suggestedPlayers = Models.Friends.getOnlineFriends().keySet().stream()
+        List<String> onlineFriends =
+                Models.Friends.getOnlineFriends().keySet().stream().toList();
+        /*
+        This is used to compare online guild members to while ignoring case.
+        The friends list does not preserve the case of Minecraft usernames, unlike the guild member list.
+        That means the friends list could refer to "Steve" as "steve", "StEvE", or so on depending on the case the
+        player used when adding "Steve" as a friend. That is why we must ignore case while comparing names.
+         */
+        List<String> lowercaseOnlineFriends = onlineFriends.stream()
+                .map(username -> username.toLowerCase(Locale.ROOT))
+                .toList();
+
+        List<String> onlineGuildMembers = Models.Guild.getOnlineGuildMembers().stream()
+                .filter(username -> !lowercaseOnlineFriends.contains(
+                        username.toLowerCase(Locale.ROOT))) // Remove friends to prevent duplicates
+                .toList();
+        List<SuggestedPlayer> suggestedPlayers = onlineFriends.stream()
                 .map(username -> new SuggestedPlayer(username, SuggestedPlayerType.FRIEND))
                 .collect(Collectors.toList());
-        suggestedPlayers.addAll(Models.Guild.getOnlineGuildMembers().stream()
+        suggestedPlayers.addAll(onlineGuildMembers.stream()
                 .map(username -> new SuggestedPlayer(username, SuggestedPlayerType.GUILD))
                 .toList());
 
