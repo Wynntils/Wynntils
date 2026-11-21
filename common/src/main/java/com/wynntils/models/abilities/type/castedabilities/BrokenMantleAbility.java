@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities.type;
+package com.wynntils.models.abilities.type.castedabilities;
 
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
@@ -11,21 +11,15 @@ import java.util.List;
 
 public class BrokenMantleAbility extends CastedAbilityType implements ShieldAbilityProperty {
     private static final ClassType CLASS_TYPE = ClassType.WARRIOR;
-    private static final SpellType SPELL_TYPE = SpellType.WAR_SCREAM;
     private static final String NAME = "Broken Mantle";
     private static final String GROUP = "Broken Mantle";
 
-    private final MantleAbility mantleAbility;
-
-    public BrokenMantleAbility(MantleAbility mantleAbility) {
-        super(CLASS_TYPE, SPELL_TYPE, null, NAME, GROUP);
-        this.mantleAbility = mantleAbility;
+    public BrokenMantleAbility() {
+        super(CLASS_TYPE, null, null, NAME, GROUP, true);
     }
 
     @Override
     public boolean allowsOutOfWindowSpawn(List<Float> modelIds) {
-        if (!mantleAbility.isActive()) return false;
-
         return verifyCustomModelData(modelIds);
     }
 
@@ -41,5 +35,10 @@ public class BrokenMantleAbility extends CastedAbilityType implements ShieldAbil
         if (entityIds.isEmpty()) {
             onCleared();
         }
+    }
+
+    @Override
+    public boolean validSpell(SpellType spellType) {
+        return true;
     }
 }

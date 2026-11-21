@@ -13,7 +13,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TimeTrialCheckpointsSegmentMatcher implements ActionBarSegmentMatcher {
-    private static final String SEGMENT_START = "\uDB00\uDC1C\u0001";
+    private static final String SEGMENT_START = "\uDB00\uDC20\u0001";
 
     private static final char SPACER_END_HIGH_SURROGATE = '\uDAFF';
 

@@ -33,11 +33,11 @@ public final class MountAnnotator implements GameItemAnnotator {
     private static final Pattern MOUNT_PATTERN = Pattern.compile(
             "\uDAFC\uDC00(?<name>.+?)(?:'s?)? (?<type>Saddle|Reins|Harness|Whistle|Flute|Ocarina)\uDAFC\uDC00");
     private static final Pattern POTENTIAL_PATTERN =
-            Pattern.compile("§f\uDB00\uDC01§#e0e0e0ff(?<potential>(?:\\d+(?:\\.\\d+)?k?|\\d+))§f Potential");
+            Pattern.compile("§f\uDB00\uDC01§#ede0d4ff(?<potential>(?:\\d+(?:\\.\\d+)?k?|\\d+))§f Potential");
     private static final Pattern COLOR_PATTERN =
             Pattern.compile("§f\uE00E\uDB00\uDC01§7 (?<primaryColor>.+)-(?<secondaryColor>.+)");
     private static final Pattern ENERGY_PATTERN =
-            Pattern.compile("§8\uE023\uDAFF\uDFF7§#e0e0e0ff.§7\uDB00\uDC05Energy (?<current>\\d+)/(?<cap>\\d+)");
+            Pattern.compile("§8\uE023\uDAFF\uDFF7§#ede0d4ff.§7\uDB00\uDC05Energy (?<current>\\d+)/(?<cap>\\d+)");
     private static final Pattern STAT_PATTERN = Pattern.compile(
             "§f(?<statName>"
                     + Arrays.stream(MountStat.values())

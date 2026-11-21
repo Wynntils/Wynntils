@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities.type;
+package com.wynntils.models.abilities.type.castedabilities;
 
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
@@ -14,6 +14,6 @@ public class MantleAbility extends CastedAbilityType implements ShieldAbilityPro
     private static final String GROUP = "Mantle";
 
     public MantleAbility() {
-        super(CLASS_TYPE, SPELL_TYPE, null, NAME, GROUP);
+        super(CLASS_TYPE, SPELL_TYPE, null, NAME, GROUP, true);
     }
 }

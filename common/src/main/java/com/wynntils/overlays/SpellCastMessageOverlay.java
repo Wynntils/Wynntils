@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -32,8 +33,6 @@ import net.neoforged.bus.api.SubscribeEvent;
 public class SpellCastMessageOverlay extends Overlay {
     private static final FontDescription SPELL_COSTS_FONT =
             new FontDescription.Resource(Identifier.withDefaultNamespace("hud/gameplay/default/bottom_middle"));
-    private static final FontDescription WYNNCRAFT_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft"));
 
     private static final String MANA_ICON = "\uE531";
     private static final String HEALTH_ICON = "\uE530";
@@ -77,7 +76,7 @@ public class SpellCastMessageOverlay extends Overlay {
 
         component.append(Component.literal(event.getSpellType().getName() + " Cast! ")
                 .withStyle(Style.EMPTY
-                        .withFont(modernStyle ? WYNNCRAFT_FONT : FontDescription.DEFAULT)
+                        .withFont(modernStyle ? CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT : FontDescription.DEFAULT)
                         .withColor(ChatFormatting.GRAY)));
 
         if (!modernStyle) {
@@ -86,7 +85,7 @@ public class SpellCastMessageOverlay extends Overlay {
 
         component.append(Component.literal("-" + manaCost + " ")
                 .withStyle(Style.EMPTY
-                        .withFont(modernStyle ? WYNNCRAFT_FONT : FontDescription.DEFAULT)
+                        .withFont(modernStyle ? CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT : FontDescription.DEFAULT)
                         .withColor(ChatFormatting.AQUA)));
 
         if (modernStyle) {
@@ -103,7 +102,10 @@ public class SpellCastMessageOverlay extends Overlay {
 
             component.append(Component.literal((modernStyle ? " -" : "-") + healthCost + " ")
                     .withStyle(Style.EMPTY
-                            .withFont(modernStyle ? WYNNCRAFT_FONT : FontDescription.DEFAULT)
+                            .withFont(
+                                    modernStyle
+                                            ? CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT
+                                            : FontDescription.DEFAULT)
                             .withColor(ChatFormatting.RED)));
 
             if (modernStyle) {
@@ -139,11 +141,14 @@ public class SpellCastMessageOverlay extends Overlay {
     public void onSpellFailed(SpellEvent.Failed event) {
         if (!showFailedCasts.get()) return;
 
-        spellMessage = StyledText.fromComponent(Component.literal(
-                        event.getFailureReason().getDisplayMessage())
-                .withStyle(Style.EMPTY
-                        .withFont(messageStyle.get() == MessageStyle.MODERN ? WYNNCRAFT_FONT : FontDescription.DEFAULT)
-                        .withColor(ChatFormatting.RED)));
+        spellMessage = StyledText.fromComponent(
+                Component.literal(event.getFailureReason().getDisplayMessage())
+                        .withStyle(Style.EMPTY
+                                .withFont(
+                                        messageStyle.get() == MessageStyle.MODERN
+                                                ? CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT
+                                                : FontDescription.DEFAULT)
+                                .withColor(ChatFormatting.RED)));
     }
 
     @Override
