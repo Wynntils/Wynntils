@@ -71,6 +71,11 @@ public class SeaskipperDestinationArea implements MapArea {
                 return Optional.of(List.of(getColor()));
             }
 
+            @Override
+            public Optional<Boolean> getBorderRenderInWorld() {
+                return Optional.of(false);
+            }
+
             private CustomColor getColor() {
                 if (destination.isPlayerInside()) return CommonColors.ORANGE;
                 return destination.isAvailable()

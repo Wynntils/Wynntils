@@ -9,6 +9,7 @@ import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.PrismStyle;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.Optional;
@@ -113,6 +114,26 @@ public final class OverrideMapAttributes implements MapAttributes {
     @Override
     public Optional<List<CustomColor>> getBorderColors() {
         return resolveAttribute(MapAttributes::getBorderColors);
+    }
+
+    @Override
+    public Optional<Boolean> getBorderRenderInWorld() {
+        return resolveAttribute(MapAttributes::getBorderRenderInWorld);
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderWorldColor() {
+        return resolveAttribute(MapAttributes::getBorderWorldColor);
+    }
+
+    @Override
+    public Optional<Float> getBorderWorldWidth() {
+        return resolveAttribute(MapAttributes::getBorderWorldWidth);
+    }
+
+    @Override
+    public Optional<PrismStyle> getBorderWorldStyle() {
+        return resolveAttribute(MapAttributes::getBorderWorldStyle);
     }
 
     @Override

@@ -5,6 +5,7 @@
 package com.wynntils.services.mapdata.attributes.type;
 
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.PrismStyle;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.Optional;
@@ -85,6 +86,18 @@ public interface MapAttributes {
 
     // The width of the border on the map
     Optional<Float> getBorderWidth();
+
+    // Whether the border should be drawn in the world
+    Optional<Boolean> getBorderRenderInWorld();
+
+    // The render style of the border in the world
+    Optional<CustomColor> getBorderWorldColor();
+
+    // The width of the border in the world
+    Optional<Float> getBorderWorldWidth();
+
+    // How the border should be drawn in the world
+    Optional<PrismStyle> getBorderWorldStyle();
 
     // endregion
 
