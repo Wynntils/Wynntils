@@ -40,7 +40,7 @@ public class TestStyledText {
                 .withStyle(ChatFormatting.RED)
                 .withStyle(Style.EMPTY.withFont(bannerPillFont))
                 .append(Component.literal("inherited font"));
-        final String expected = "§c§{fr:bp}inherited font";
+        final String expected = "§c§{fr:wynncraft_banner_pill}inherited font";
 
         StyledText styledText = StyledText.fromComponent(component);
 

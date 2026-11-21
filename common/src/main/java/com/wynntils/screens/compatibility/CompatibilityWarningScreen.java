@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.screens.base.widgets.WynntilsCheckbox;
 import com.wynntils.screens.update.UpdateScreen;
 import com.wynntils.services.athena.type.CompatibilityTier;
@@ -26,9 +27,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public final class CompatibilityWarningScreen extends WynntilsScreen {
     private final CompatibilityTier compatibilityTier;
@@ -105,8 +104,7 @@ public final class CompatibilityWarningScreen extends WynntilsScreen {
                 .renderText(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal("Outdated Wynntils")
-                                .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
-                                        Identifier.withDefaultNamespace("language/wynncraft"))))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         this.width / 2f,
                         offsetY + 20,
                         CommonColors.RED,

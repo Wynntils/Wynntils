@@ -13,6 +13,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.utils.colors.CommonColors;
@@ -30,9 +31,7 @@ import java.util.Optional;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public class PowderSpecialBarOverlay extends Overlay {
     @Persisted
@@ -111,8 +110,7 @@ public class PowderSpecialBarOverlay extends Overlay {
             text = StyledText.fromComponent(Component.empty()
                     .withStyle(powderSpecialType.getLightColor())
                     .append(Component.literal(String.valueOf(powderSpecialType.getSymbol()))
-                            .withStyle(Style.EMPTY.withFont(
-                                    new FontDescription.Resource(Identifier.withDefaultNamespace("common")))))
+                            .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)))
                     .append(Component.literal(" " + (int) powderSpecialCharge + "%")));
         }
 

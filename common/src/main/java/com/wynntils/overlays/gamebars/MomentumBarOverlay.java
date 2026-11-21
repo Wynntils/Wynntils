@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.models.abilities.bossbars.MomentumBar;
@@ -22,9 +23,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public class MomentumBarOverlay extends BaseBarOverlay {
     @Persisted
@@ -81,8 +80,7 @@ public class MomentumBarOverlay extends BaseBarOverlay {
                         guiGraphics,
                         StyledText.fromString(Models.Ability.momentumBar.getMomentum() + " ")
                                 .append(StyledText.fromComponent(Component.literal("\uE013")
-                                        .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
-                                                Identifier.withDefaultNamespace("common")))))),
+                                        .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)))),
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),
                         renderY,

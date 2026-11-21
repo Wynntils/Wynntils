@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.models.abilities.bossbars.MirrorImageBar;
@@ -19,9 +20,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.stream.Collectors;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public class MirrorImageBarOverlay extends BaseBarOverlay {
     public MirrorImageBarOverlay() {
@@ -61,8 +60,7 @@ public class MirrorImageBarOverlay extends BaseBarOverlay {
                                         Component.literal(Models.Ability.mirrorImageBar.getClones().stream()
                                                         .map(MirrorImageClone::getString)
                                                         .collect(Collectors.joining()))
-                                                .withStyle(Style.EMPTY.withFont(new FontDescription.Resource(
-                                                        Identifier.withDefaultNamespace("common")))))),
+                                                .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)))),
                         this.getRenderX(),
                         this.getRenderX() + this.getWidth(),
                         renderY,
