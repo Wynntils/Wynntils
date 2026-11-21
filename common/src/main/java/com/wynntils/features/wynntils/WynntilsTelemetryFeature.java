@@ -6,7 +6,7 @@ package com.wynntils.features.wynntils;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.ProfileDefault;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
@@ -73,7 +73,7 @@ public class WynntilsTelemetryFeature extends Feature {
         String trace = ExceptionUtils.getStackTrace(event.getThrowable());
 
         ApiResponse apiResponse =
-                Managers.Net.callApi(UrlId.API_ATHENA_TELEMETRY_CRASH, Map.of("trace", title + trace));
+                Services.WynntilsAccount.callApi(UrlId.API_ATHENA_TELEMETRY_CRASH, Map.of("trace", title + trace));
 
         apiResponse.handleJsonObject(json -> {
             String response = JsonUtils.getNullableJsonString(json, "message");
