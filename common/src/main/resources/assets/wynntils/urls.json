@@ -115,7 +115,7 @@
   },
   {
     "id": "dataStaticAbilitiesV2",
-    "md5": "feea28f5346d9e7dd13ade3f889a7401",
+    "md5": "0c5ba4fb6cca16ef9936c67a5cfccc64",
     "path": "Reference/abilities_v2.json",
     "url": "https://cdn.wynntils.com/static/Reference/abilities_v2.json"
   },
@@ -364,6 +364,12 @@
     "md5": "3305151b2f2c8b77850d96c341f28804",
     "path": "Data-Storage/texture_and_fingerprint_hashes.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/texture_and_fingerprint_hashes.json"
+  },
+  {
+    "id": "dataStaticTextureAndFingerprintHashesV2",
+    "md5": "1b9de715e007ee5dcf036ed5f8fd9ec3",
+    "path": "Data-Storage/texture_and_fingerprint_hashes_v2.json",
+    "url": "https://cdn.wynntils.com/static/Data-Storage/texture_and_fingerprint_hashes_v2.json"
   },
   {
     "id": "dataStaticTomes",
