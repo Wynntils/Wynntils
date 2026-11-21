@@ -27,13 +27,8 @@ public class PartyManagementScreenFeature extends Feature {
     private PartyManagementScreen partyManagementScreen;
 
     @RegisterKeyBind
-    private final KeyBind openPartyManagementScreen = KeyBindDefinition.OPEN_PARTY_MANAGEMENT.create(() -> {
-        // Do nothing if player is not on world as parties exist only on world
-        if (Models.WorldState.onWorld()) {
-            partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
-            McUtils.setScreen(partyManagementScreen);
-        }
-    });
+    private final KeyBind openPartyManagementScreen =
+            KeyBindDefinition.OPEN_PARTY_MANAGEMENT.create(this::tryOpenPartyManagementScreen);
 
     public PartyManagementScreenFeature() {
         super(
@@ -116,5 +111,13 @@ public class PartyManagementScreenFeature extends Feature {
         partyManagementScreen.reloadCreateLeaveButton();
         partyManagementScreen.reloadMembersWidgets();
         partyManagementScreen.reloadSuggestedPlayersWidgets();
+    }
+
+    private void tryOpenPartyManagementScreen() {
+        // Do nothing if player is not on world as parties exist only on world
+        if (Models.WorldState.onWorld()) {
+            partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
+            McUtils.setScreen(partyManagementScreen);
+        }
     }
 }
