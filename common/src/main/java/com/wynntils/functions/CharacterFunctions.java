@@ -246,13 +246,6 @@ public class CharacterFunctions {
         }
     }
 
-    public static class RitualCircleRadiusFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.ShamanRitualCircle.getRadius();
-        }
-    }
-
     public static class CommanderDurationFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
