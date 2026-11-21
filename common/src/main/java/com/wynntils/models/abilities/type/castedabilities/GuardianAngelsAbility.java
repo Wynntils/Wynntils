@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities.type;
+package com.wynntils.models.abilities.type.castedabilities;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
@@ -23,7 +23,7 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
     private String pendingGroup;
 
     public GuardianAngelsAbility() {
-        super(CLASS_TYPE, SPELL_TYPE, null, NAME, null);
+        super(CLASS_TYPE, SPELL_TYPE, null, NAME, null, true);
     }
 
     @Override
@@ -39,7 +39,6 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
 
     @Override
     public boolean allowsOutOfWindowSpawn(List<Float> modelIds) {
-        if (!isActive()) return false;
         if (modelIds.isEmpty()) return false;
 
         Set<String> groups = modelIds.stream()

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities.type;
+package com.wynntils.models.abilities.type.castedabilities;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -23,18 +23,25 @@ public abstract class CastedAbilityType {
     private final SpellType validUnconfirmedSpell;
     private final String name;
     private final String group;
+    private final boolean boundToPlayer;
 
     protected Set<Integer> entityIds = new HashSet<>();
     protected final Set<Integer> pendingEntityIds = new HashSet<>();
     private boolean registrationScheduled = false;
 
     protected CastedAbilityType(
-            ClassType classType, SpellType spellType, SpellType unconfirmedSpellType, String name, String group) {
+            ClassType classType,
+            SpellType spellType,
+            SpellType unconfirmedSpellType,
+            String name,
+            String group,
+            boolean boundToPlayer) {
         this.validClass = classType;
         this.validSpell = spellType;
         this.validUnconfirmedSpell = unconfirmedSpellType;
         this.name = name;
         this.group = group;
+        this.boundToPlayer = boundToPlayer;
     }
 
     public boolean verifyCustomModelData(List<Float> modelIds) {
@@ -64,6 +71,10 @@ public abstract class CastedAbilityType {
 
     public boolean allowsOutOfWindowSpawn(List<Float> modelIds) {
         return false;
+    }
+
+    public boolean isBoundToPlayer() {
+        return boundToPlayer;
     }
 
     public boolean isOutsideProximity(Entity entity) {
