@@ -7,24 +7,32 @@ package com.wynntils.models.mount.actionbar.segments;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.utils.type.CappedValue;
 
-public class MountEnergySegment extends ActionBarSegment {
+public class MountTraitsSegment extends ActionBarSegment {
     private final CappedValue cappedEnergy;
+    private final CappedValue cappedToughness;
 
-    public MountEnergySegment(String segmentText, int startIndex, int endIndex, CappedValue cappedEnergy) {
+    public MountTraitsSegment(
+            String segmentText, int startIndex, int endIndex, CappedValue cappedEnergy, CappedValue cappedToughness) {
         super(segmentText, startIndex, endIndex);
         this.cappedEnergy = cappedEnergy;
+        this.cappedToughness = cappedToughness;
     }
 
     public CappedValue getCappedEnergy() {
         return cappedEnergy;
     }
 
+    public CappedValue getCappedToughness() {
+        return cappedToughness;
+    }
+
     @Override
     public String toString() {
-        return "MountEnergySegment{" + "endIndex="
+        return "MountTraitsSegment{" + "endIndex="
                 + endIndex + ", startIndex="
                 + startIndex + ", segmentText='"
                 + segmentText + '\'' + ", cappedEnergy="
-                + cappedEnergy + '}';
+                + cappedEnergy + ", cappedToughness="
+                + cappedToughness + '}';
     }
 }

@@ -37,6 +37,7 @@ import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.lootrun.LootrunBeaconModel;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
+import com.wynntils.models.mount.actionbar.matchers.MountTraitsSegmentMatcher;
 import com.wynntils.models.npc.label.BossAltarLabelParser;
 import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
@@ -744,6 +745,21 @@ public class TestRegex {
                 "§fBoost\uDAFF\uDFE8\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
         p.shouldMatch(
                 "§fTraining\uDAFF\uDFDD\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
+    }
+
+    @Test
+    public void MountTraitsSegmentMatcher_MOUNT_TRAITS_PATTERN() {
+        PatternTester p = new PatternTester(MountTraitsSegmentMatcher.class, "MOUNT_TRAITS_PATTERN");
+        p.shouldMatch(
+                "\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE02C\uDAFF\uDFEC");
+        p.shouldMatch(
+                "\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE00F\uDAFF\uDFEC\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2");
+        p.shouldMatch(
+                "\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE010\uDAFF\uDFEC\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2");
+        p.shouldMatch(
+                "\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2\uDB00\uDC0B\uE021\uDAFF\uDFEC");
+        p.shouldMatch(
+                "\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE021\uDAFF\uDFEC\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2");
     }
 
     @Test
