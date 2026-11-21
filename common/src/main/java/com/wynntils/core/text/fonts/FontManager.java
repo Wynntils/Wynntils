@@ -21,6 +21,7 @@ import com.wynntils.core.text.fonts.wynnfonts.TooltipIdentificationMeterFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsCoordinatesFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsKeybindsFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynntilsMountTraitFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsTimeTrialsFont;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -62,6 +63,7 @@ public final class FontManager extends Manager {
         registerFont(new WynncraftKeybindsFont());
         registerFont(new WynntilsCoordinatesFont());
         registerFont(new WynntilsKeybindsFont());
+        registerFont(new WynntilsMountTraitFont());
         registerFont(new WynntilsTimeTrialsFont());
     }
 
