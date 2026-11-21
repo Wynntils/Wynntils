@@ -4,7 +4,7 @@ Chat Item
 Party Management Screen
 - Online guild members are now suggested for invites
 
-Lootrun Overlays & Functions
+Custom Lootrun Beacons, Lootrun Overlays & Functions
 - Added support for Violet beacons
 - Updated color of purple and pink beacons
 - Added max blue count to beacon count overlay
