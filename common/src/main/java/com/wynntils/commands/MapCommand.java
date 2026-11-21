@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2024.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -10,23 +10,42 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.commands.Command;
-import com.wynntils.services.map.type.CustomPoiProvider;
+import com.wynntils.services.mapdata.MapDataService;
+import com.wynntils.services.mapdata.providers.MapDataProviderInfo;
+import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
+import com.wynntils.utils.mc.McUtils;
 import java.net.URI;
-import java.net.URISyntaxException;
+import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandBuildContext;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.util.Util;
 
 public class MapCommand extends Command {
-    private static final SuggestionProvider<CommandSourceStack> POI_PROVIDER_SUGGESTION_PROVIDER =
+    private static final SuggestionProvider<CommandSourceStack> PROVIDER_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Services.Poi.getCustomPoiProviders().stream()
-                            .map(CustomPoiProvider::getName)
+                    Services.MapData.getProviderInfos().entrySet().stream()
+                            .filter(entry -> entry.getValue().toggleable())
+                            .map(Map.Entry::getKey)
+                            .toArray(String[]::new),
+                    builder);
+
+    private static final SuggestionProvider<CommandSourceStack> REMOVABLE_PROVIDER_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    Services.MapData.getJsonProviderInfos().values().stream()
+                            .filter(info -> info.providerType() == JsonProviderInfo.JsonProviderType.REMOTE)
+                            .map(JsonProviderInfo::providerId)
                             .toArray(String[]::new),
                     builder);
 
@@ -39,117 +58,328 @@ public class MapCommand extends Command {
     public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
             LiteralArgumentBuilder<CommandSourceStack> base, CommandBuildContext context) {
         return Commands.literal("map")
-                .then(Commands.literal("poiProvider")
-                        .then(Commands.literal("add")
-                                .then(Commands.argument("name", StringArgumentType.string())
-                                        .then(Commands.argument("url", StringArgumentType.string())
-                                                .executes(this::addPoiProvider))))
-                        .then(Commands.literal("remove")
-                                .then(Commands.argument("name", StringArgumentType.greedyString())
-                                        .suggests(POI_PROVIDER_SUGGESTION_PROVIDER)
-                                        .executes(this::removePoiProvider)))
-                        .then(Commands.literal("list").executes(this::listPoiProviders))
-                        .then(Commands.literal("reload").executes(this::reloadPoiProviders))
+                .then(Commands.literal("provider")
+                        .then(Commands.literal("remote")
+                                .then(Commands.literal("add")
+                                        .then(Commands.argument("name", StringArgumentType.string())
+                                                .then(Commands.argument("url", StringArgumentType.string())
+                                                        .executes(this::addProvider))))
+                                .then(Commands.literal("remove")
+                                        .then(Commands.argument("name", StringArgumentType.greedyString())
+                                                .suggests(REMOVABLE_PROVIDER_SUGGESTION_PROVIDER)
+                                                .executes(this::removeProvider))))
+                        .then(Commands.literal("local")
+                                .then(Commands.literal("folder").executes(this::localProvidersFolder)))
                         .then(Commands.literal("toggle")
                                 .then(Commands.argument("name", StringArgumentType.greedyString())
-                                        .suggests(POI_PROVIDER_SUGGESTION_PROVIDER)
-                                        .executes(this::togglePoiProvider))));
+                                        .suggests(PROVIDER_SUGGESTION_PROVIDER)
+                                        .executes(this::toggleProvider)))
+                        .then(Commands.literal("reload").executes(this::reloadProviders))
+                        .then(Commands.literal("list").executes(this::listProviders)));
     }
 
-    private int reloadPoiProviders(CommandContext<CommandSourceStack> context) {
-        Services.Poi.loadCustomPoiProviders();
+    private int reloadProviders(CommandContext<CommandSourceStack> context) {
+        Services.MapData.reloadData();
 
         context.getSource()
                 .sendSuccess(
-                        () -> Component.literal("Successfully reloaded POI providers.")
+                        () -> Component.translatable("command.wynntils.map.reloadProviders")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
         return 1;
     }
 
-    private int addPoiProvider(CommandContext<CommandSourceStack> context) {
+    private int localProvidersFolder(CommandContext<CommandSourceStack> context) {
+        Util.getPlatform().openFile(MapDataService.LOCAL_PROVIDERS);
+        return 1;
+    }
+
+    private int addProvider(CommandContext<CommandSourceStack> context) {
         String name = context.getArgument("name", String.class);
         String url = context.getArgument("url", String.class);
 
+        URI uri;
         try {
-            Services.Poi.addCustomPoiProvider(new CustomPoiProvider(name, new URI(url)));
-        } catch (URISyntaxException e) {
+            uri = URI.create(url);
+        } catch (IllegalArgumentException e) {
             context.getSource()
-                    .sendFailure(
-                            Component.literal("The provided URL is invalid.").withStyle(ChatFormatting.RED));
+                    .sendFailure(Component.translatable("command.wynntils.map.invalidUrl")
+                            .withStyle(ChatFormatting.RED));
             return 0;
         }
 
+        String scheme = uri.getScheme();
+        if (scheme == null || !(scheme.equals("http") || scheme.equals("https"))) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.map.invalidUrlScheme")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        Services.MapData.addJsonProvider(JsonProviderInfo.createRemote(name, url));
         context.getSource()
                 .sendSuccess(
-                        () -> Component.literal("Successfully added POI provider.")
+                        () -> Component.translatable("command.wynntils.map.providerAdded")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
         return 1;
     }
 
-    private int removePoiProvider(CommandContext<CommandSourceStack> context) {
+    private int removeProvider(CommandContext<CommandSourceStack> context) {
         String name = context.getArgument("name", String.class);
 
-        if (!Services.Poi.removeCustomPoiProvider(name)) {
+        Optional<JsonProviderInfo> providerOpt =
+                Optional.ofNullable(Services.MapData.getJsonProviderInfos().get(name));
+
+        if (providerOpt.isEmpty()) {
             context.getSource()
-                    .sendFailure(Component.literal("The provided name does not match any POI provider.")
+                    .sendFailure(Component.translatable("command.wynntils.map.jsonProviderNotFound")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        if (providerOpt.get().providerType() != JsonProviderInfo.JsonProviderType.REMOTE) {
+            MutableComponent folderCommand = Component.literal("/wynntils map provider local folder")
+                    .withStyle(Style.EMPTY
+                            .withColor(ChatFormatting.YELLOW)
+                            .withClickEvent(new ClickEvent.RunCommand("/wynntils map provider local folder"))
+                            .withHoverEvent(new HoverEvent.ShowText(
+                                    Component.translatable("command.wynntils.map.openFolder"))));
+
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.map.onlyRemoteRemovable")
+                            .withStyle(ChatFormatting.RED)
+                            .append(folderCommand));
+            return 0;
+        }
+
+        if (!Services.MapData.removeJsonProvider(name)) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.map.removeFailed")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
 
         context.getSource()
                 .sendSuccess(
-                        () -> Component.literal("Successfully removed POI provider.")
+                        () -> Component.translatable("command.wynntils.map.providerRemoved")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
         return 1;
     }
 
-    private int listPoiProviders(CommandContext<CommandSourceStack> context) {
-        MutableComponent message = Component.literal("POI providers: ").withStyle(ChatFormatting.YELLOW);
+    private int listProviders(CommandContext<CommandSourceStack> context) {
+        MutableComponent message =
+                Component.translatable("command.wynntils.map.providersHeader").withStyle(ChatFormatting.YELLOW);
 
-        for (CustomPoiProvider poiProvider : Services.Poi.getCustomPoiProviders()) {
-            message.append(Component.literal("\n"));
-            message.append(Component.literal(poiProvider.getName()).withStyle(ChatFormatting.GOLD));
-            message.append(Component.literal(poiProvider.isEnabled() ? " (enabled)" : " (disabled)")
-                    .withStyle(poiProvider.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED));
-            message.append(Component.empty());
-            message.append(Component.literal(" (").withStyle(ChatFormatting.GRAY));
-            message.append(Component.literal(poiProvider.getUrl().toString()).withStyle(ChatFormatting.GRAY));
-            message.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
+        List<Map.Entry<String, MapDataProviderInfo>> builtInProviders = new ArrayList<>();
+        List<Map.Entry<String, MapDataProviderInfo>> bundledProviders = new ArrayList<>();
+        List<Map.Entry<String, MapDataProviderInfo>> localProviders = new ArrayList<>();
+        List<Map.Entry<String, MapDataProviderInfo>> remoteProviders = new ArrayList<>();
+
+        for (Map.Entry<String, MapDataProviderInfo> entry :
+                Services.MapData.getProviderInfos().entrySet()) {
+            Optional<JsonProviderInfo> jsonProviderInfo =
+                    Services.MapData.getJsonProviderInfoByCompleteId(entry.getKey());
+
+            if (jsonProviderInfo.isEmpty()) {
+                builtInProviders.add(entry);
+                continue;
+            }
+
+            switch (jsonProviderInfo.get().providerType()) {
+                case BUNDLED -> bundledProviders.add(entry);
+                case LOCAL -> localProviders.add(entry);
+                case REMOTE -> remoteProviders.add(entry);
+            }
+        }
+
+        boolean firstSection = true;
+
+        if (!builtInProviders.isEmpty()) {
+            if (appendProviderSection(
+                            context, message, "command.wynntils.map.builtInHeader", builtInProviders, firstSection)
+                    == 0) {
+                return 0;
+            }
+            firstSection = false;
+        }
+        if (!bundledProviders.isEmpty()) {
+            if (appendProviderSection(
+                            context, message, "command.wynntils.map.bundledHeader", bundledProviders, firstSection)
+                    == 0) {
+                return 0;
+            }
+            firstSection = false;
+        }
+        if (!localProviders.isEmpty()) {
+            if (appendProviderSection(
+                            context, message, "command.wynntils.map.localHeader", localProviders, firstSection)
+                    == 0) {
+                return 0;
+            }
+            firstSection = false;
+        }
+        if (!remoteProviders.isEmpty()) {
+            if (appendProviderSection(
+                            context, message, "command.wynntils.map.remoteHeader", remoteProviders, firstSection)
+                    == 0) {
+                return 0;
+            }
         }
 
         context.getSource().sendSuccess(() -> message, false);
         return 1;
     }
 
-    private int togglePoiProvider(CommandContext<CommandSourceStack> context) {
+    private int appendProviderSection(
+            CommandContext<CommandSourceStack> context,
+            MutableComponent message,
+            String headerKey,
+            List<Map.Entry<String, MapDataProviderInfo>> entries,
+            boolean firstSection) {
+        if (!firstSection) {
+            message.append("\n");
+        }
+
+        message.append("\n").append(Component.translatable(headerKey).withStyle(ChatFormatting.YELLOW));
+
+        for (Map.Entry<String, MapDataProviderInfo> entry : entries) {
+            String providerId = entry.getKey();
+            MapDataProviderInfo providerInfo = entry.getValue();
+
+            boolean enabled = Services.MapData.isProviderEnabled(providerId);
+            ChatFormatting statusColor = enabled ? ChatFormatting.GREEN : ChatFormatting.RED;
+            String statusKey = enabled ? "command.wynntils.map.enabled" : "command.wynntils.map.disabled";
+
+            message.append("\n")
+                    .append(Component.literal(providerId)
+                            .withStyle(Style.EMPTY
+                                    .withColor(ChatFormatting.GOLD)
+                                    .withHoverEvent(new HoverEvent.ShowText(Component.translatable(
+                                                    "command.wynntils.map.ownedBy", providerInfo.getOwnerName())
+                                            .withStyle(ChatFormatting.AQUA)))))
+                    .append(Component.literal(" (").withStyle(statusColor))
+                    .append(Component.translatable(statusKey).withStyle(statusColor))
+                    .append(Component.literal(")").withStyle(statusColor));
+
+            if (!providerInfo.toggleable()) {
+                message.append(Component.literal(" [")
+                        .append(Component.translatable("command.wynntils.map.required"))
+                        .append("]")
+                        .withStyle(ChatFormatting.DARK_AQUA));
+            }
+
+            Optional<JsonProviderInfo> jsonProviderInfo = Services.MapData.getJsonProviderInfoByCompleteId(providerId);
+            if (jsonProviderInfo.isEmpty()) continue;
+
+            Optional<MutableComponent> pathComponent = getPathComponent(jsonProviderInfo.get());
+            if (pathComponent.isEmpty()) {
+                context.getSource()
+                        .sendFailure(Component.translatable("command.wynntils.map.invalidUrl")
+                                .withStyle(ChatFormatting.RED));
+                return 0;
+            }
+
+            message.append(Component.literal("\n  ").withStyle(ChatFormatting.GRAY))
+                    .append(pathComponent.get());
+        }
+
+        return 1;
+    }
+
+    private Optional<MutableComponent> getPathComponent(JsonProviderInfo providerInfo) {
+        String path = providerInfo.path();
+
+        switch (providerInfo.providerType()) {
+            case LOCAL -> {
+                String displayPath = path;
+                try {
+                    Path fullPath = Path.of(path);
+                    Path mcDir = McUtils.getGameDirectory().toPath();
+                    if (fullPath.startsWith(mcDir)) {
+                        displayPath = mcDir.relativize(fullPath).toString();
+                    }
+                } catch (Exception e) {
+                    // fall back to the full path if anything goes wrong
+                }
+
+                return Optional.of(Component.literal(displayPath)
+                        .withStyle(Style.EMPTY
+                                .withColor(ChatFormatting.WHITE)
+                                .withClickEvent(new ClickEvent.OpenFile(path))
+                                .withHoverEvent(new HoverEvent.ShowText(
+                                        Component.translatable("command.wynntils.map.openFile")))));
+            }
+            case REMOTE -> {
+                URI uri;
+                try {
+                    uri = URI.create(path);
+                } catch (IllegalArgumentException e) {
+                    return Optional.empty();
+                }
+
+                return Optional.of(Component.literal(path)
+                        .withStyle(Style.EMPTY
+                                .withColor(ChatFormatting.WHITE)
+                                .withClickEvent(new ClickEvent.OpenUrl(uri))
+                                .withHoverEvent(new HoverEvent.ShowText(
+                                        Component.translatable("command.wynntils.map.openUrl")))));
+            }
+            default -> {
+                return Optional.of(Component.literal(path).withStyle(ChatFormatting.GRAY));
+            }
+        }
+    }
+
+    private int toggleProvider(CommandContext<CommandSourceStack> context) {
         String name = context.getArgument("name", String.class);
 
-        Optional<CustomPoiProvider> poiProvider = Services.Poi.getCustomPoiProviders().stream()
-                .filter(p -> p.getName().equals(name))
-                .findFirst();
+        // Also accept the bare name of JSON providers, as used by the other provider commands
+        String providerId = Optional.ofNullable(
+                        Services.MapData.getJsonProviderInfos().get(name))
+                .map(JsonProviderInfo::completeId)
+                .orElse(name);
 
-        if (poiProvider.isEmpty()) {
+        MapDataProviderInfo providerInfo = Services.MapData.getProviderInfos().get(providerId);
+
+        if (providerInfo == null) {
             context.getSource()
-                    .sendFailure(Component.literal("The provided name does not match any POI provider.")
+                    .sendFailure(Component.translatable("command.wynntils.map.providerNotFound")
                             .withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        poiProvider.get().setEnabled(!poiProvider.get().isEnabled());
+        if (!providerInfo.toggleable()) {
+            context.getSource()
+                    .sendFailure(Component.translatable("command.wynntils.map.providerNotToggleable")
+                            .withStyle(ChatFormatting.RED));
+            return 0;
+        }
+
+        if (Services.MapData.toggleProvider(providerId)) {
+            boolean enabled = Services.MapData.isProviderEnabled(providerId);
+            ChatFormatting statusColor = enabled ? ChatFormatting.GREEN : ChatFormatting.RED;
+
+            MutableComponent statusComponent = Component.translatable(
+                            enabled ? "command.wynntils.map.enabled" : "command.wynntils.map.disabled")
+                    .withStyle(statusColor);
+
+            MutableComponent message = Component.translatable("command.wynntils.map.providerToggledPrefix")
+                    .withStyle(ChatFormatting.GREEN)
+                    .append(Component.literal(providerId).withStyle(ChatFormatting.WHITE))
+                    .append(Component.translatable("command.wynntils.map.providerToggledSuffix")
+                            .withStyle(ChatFormatting.GREEN))
+                    .append(statusComponent);
+
+            context.getSource().sendSuccess(() -> message, false);
+            return 1;
+        }
 
         context.getSource()
-                .sendSuccess(
-                        () -> Component.literal("Successfully toggled POI provider ")
-                                .append(Component.literal(name).withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(" to "))
-                                .append(Component.literal(poiProvider.get().isEnabled() ? "enabled" : "disabled")
-                                        .withStyle(ChatFormatting.UNDERLINE)),
-                        false);
-
-        return 1;
+                .sendFailure(Component.translatable("command.wynntils.map.toggleFailed")
+                        .withStyle(ChatFormatting.RED));
+        return 0;
     }
 }

@@ -71,7 +71,7 @@ public record BoundingPolygon(List<Vector2f> vertices, List<Vector2f> axes) impl
 
     public float maxWidth() {
         float minX = Float.MAX_VALUE;
-        float maxX = Float.MIN_VALUE;
+        float maxX = -Float.MAX_VALUE;
 
         for (Vector2f vertex : vertices) {
             if (vertex.x < minX) {

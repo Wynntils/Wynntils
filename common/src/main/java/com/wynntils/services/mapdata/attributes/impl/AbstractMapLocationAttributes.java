@@ -6,16 +6,17 @@ package com.wynntils.services.mapdata.attributes.impl;
 
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.utils.colors.CustomColor;
+import java.util.List;
 import java.util.Optional;
 
 public abstract class AbstractMapLocationAttributes extends AbstractMapAttributes implements MapLocationAttributes {
     @Override
-    public final Optional<CustomColor> getFillColor() {
+    public Optional<List<CustomColor>> getFillColors() {
         return Optional.empty();
     }
 
     @Override
-    public final Optional<CustomColor> getBorderColor() {
+    public Optional<List<CustomColor>> getBorderColors() {
         return Optional.empty();
     }
 
