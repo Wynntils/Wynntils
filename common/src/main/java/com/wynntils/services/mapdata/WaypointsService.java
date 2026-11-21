@@ -31,6 +31,7 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -64,6 +65,8 @@ public class WaypointsService extends Service {
         }
 
         if (storage == customIcons) {
+            // Icons with a bad or too large texture are deserialized as null
+            customIcons.get().removeIf(Objects::isNull);
             WAYPOINTS_PROVIDER.updateIcons(customIcons.get());
         }
     }

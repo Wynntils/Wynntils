@@ -20,6 +20,7 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.JsonUtils;
 import java.lang.reflect.Type;
 import java.util.List;
+import java.util.Objects;
 import net.minecraft.network.chat.Component;
 
 public final class JsonProviderSerializer implements JsonDeserializer<JsonProvider> {
@@ -59,11 +60,20 @@ public final class JsonProviderSerializer implements JsonDeserializer<JsonProvid
                 new TypeToken<List<MapCategory>>() {}.getType());
         List<MapIcon> icons = context.deserialize(
                 JsonUtils.getNullableJsonArray(jsonProvider, "icons"), new TypeToken<List<MapIcon>>() {}.getType());
+        if (icons != null) {
+            // Icons with a bad or too large texture are deserialized as null, the rest of the provider is still usable
+            icons = icons.stream().filter(Objects::nonNull).toList();
+        }
 
-        String descriptionString = jsonProvider.has("description")
-                ? jsonProvider.get("description").getAsString()
-                : null;
-        Component description = descriptionString != null ? Component.literal(descriptionString) : null;
+        // The description is optional, so a missing, null or non-string value is ignored
+        // instead of failing to load the whole provider
+        JsonElement descriptionElement = jsonProvider.get("description");
+        Component description = null;
+        if (descriptionElement != null
+                && descriptionElement.isJsonPrimitive()
+                && descriptionElement.getAsJsonPrimitive().isString()) {
+            description = Component.literal(descriptionElement.getAsString());
+        }
 
         return new JsonProvider(version, features, categories, icons, description);
     }
