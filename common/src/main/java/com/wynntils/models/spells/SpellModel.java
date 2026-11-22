@@ -242,7 +242,7 @@ public final class SpellModel extends Model {
             return;
         }
 
-        spellInputsActive = spellInputsSegment.getDirections().length > 0;
+        spellInputsActive = spellInputsSegment.getDirections().length % 3 > 0;
         ticksSinceSpellInputActivity = spellInputsActive ? 0 : SPELL_COST_RESET_TICKS;
 
         // noop if the spell state hasn't changed
