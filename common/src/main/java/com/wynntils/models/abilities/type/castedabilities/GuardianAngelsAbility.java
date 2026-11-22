@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities.type;
+package com.wynntils.models.abilities.type.castedabilities;
 
-import com.wynntils.core.components.Services;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.type.SpellType;
 import java.util.List;
@@ -23,7 +23,7 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
     private String pendingGroup;
 
     public GuardianAngelsAbility() {
-        super(CLASS_TYPE, SPELL_TYPE, null, NAME, null);
+        super(CLASS_TYPE, SPELL_TYPE, null, NAME, null, true);
     }
 
     @Override
@@ -31,7 +31,7 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
         if (modelIds.isEmpty()) return false;
 
         Set<String> groups = modelIds.stream()
-                .map(f -> Services.CustomModel.getGroup(f).orElse(null))
+                .map(f -> Models.ResourcePack.getGroup(f).orElse(null))
                 .collect(Collectors.toSet());
 
         return groups.size() == 1 && (groups.contains(GROUP) || groups.contains(ULT_GROUP));
@@ -39,11 +39,10 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
 
     @Override
     public boolean allowsOutOfWindowSpawn(List<Float> modelIds) {
-        if (!isActive()) return false;
         if (modelIds.isEmpty()) return false;
 
         Set<String> groups = modelIds.stream()
-                .map(f -> Services.CustomModel.getGroup(f).orElse(null))
+                .map(f -> Models.ResourcePack.getGroup(f).orElse(null))
                 .collect(Collectors.toSet());
 
         if (groups.size() != 1) return false;
@@ -56,7 +55,7 @@ public class GuardianAngelsAbility extends CastedAbilityType implements ShieldAb
     @Override
     public void onMatched(int entityId, List<Float> modelIds) {
         pendingGroup = modelIds.stream()
-                .map(f -> Services.CustomModel.getGroup(f).orElse(null))
+                .map(f -> Models.ResourcePack.getGroup(f).orElse(null))
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);

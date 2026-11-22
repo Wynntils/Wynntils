@@ -19,7 +19,8 @@ public enum CrowdSourcedDataGameVersion {
     VERSION_211_RELEASE("2.1.1"),
     VERSION_211_PATCH_6("2.1.1 Patch #6"), // Bugfixes in the mod & some pois changed
     VERSION_220_1_BETA("2.2.0_1 Beta"), // First revision of Fruma beta
-    VERSION_22029_RELEASE("2.2.0_29 Release"); // Fixes serialization issue
+    VERSION_22029_RELEASE("2.2.0_29 Release"), // Fixes serialization issue
+    VERSION_2260_RELEASE("2.2.6_0 Release");
 
     private final String readableVersion;
 

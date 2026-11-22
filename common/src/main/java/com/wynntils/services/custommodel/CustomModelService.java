@@ -18,7 +18,6 @@ import java.util.concurrent.ConcurrentHashMap;
 public class CustomModelService extends Service {
     private Map<String, Float> floatData = new ConcurrentHashMap<>();
     private Map<String, Pair<Float, Float>> rangeData = new ConcurrentHashMap<>();
-    private Map<Float, String> modelToGroup = new ConcurrentHashMap<>();
 
     public CustomModelService() {
         super(List.of());
@@ -27,8 +26,6 @@ public class CustomModelService extends Service {
     @Override
     public void registerDownloads(DownloadRegistry registry) {
         registry.registerDownload(UrlId.DATA_STATIC_MODEL_DATA).handleJsonObject(this::handleModelData);
-        registry.registerDownload(UrlId.DATA_STATIC_ITEM_DISPLAY_MODEL_DATA)
-                .handleJsonObject(this::handleItemDisplayModelData);
     }
 
     public Optional<Float> getFloat(String key) {
@@ -41,10 +38,6 @@ public class CustomModelService extends Service {
         if (key == null) return Optional.empty();
 
         return Optional.ofNullable(rangeData.get(key));
-    }
-
-    public Optional<String> getGroup(float modelData) {
-        return Optional.ofNullable(modelToGroup.get(modelData));
     }
 
     private void handleModelData(JsonObject jsonObject) {
@@ -75,32 +68,5 @@ public class CustomModelService extends Service {
 
         floatData = newFloatData;
         rangeData = newRangeData;
-    }
-
-    private void handleItemDisplayModelData(JsonObject jsonObject) {
-        Map<Float, String> newModelToGroup = new ConcurrentHashMap<>();
-
-        if (jsonObject.has("models")) {
-            JsonObject modelsObject = jsonObject.getAsJsonObject("models");
-
-            modelsObject.asMap().forEach((groupName, element) -> {
-                if (!element.isJsonArray()) {
-                    WynntilsMod.error("Invalid item display model data: group '" + groupName + "' is not an array");
-                    return;
-                }
-
-                element.getAsJsonArray().forEach(item -> {
-                    if (item.isJsonPrimitive() && item.getAsJsonPrimitive().isNumber()) {
-                        float modelData = item.getAsJsonPrimitive().getAsFloat();
-                        newModelToGroup.put(modelData, groupName);
-                    } else {
-                        WynntilsMod.error(
-                                "Invalid item display model data: non-float value in group '" + groupName + "'");
-                    }
-                });
-            });
-        }
-
-        modelToGroup = newModelToGroup;
     }
 }

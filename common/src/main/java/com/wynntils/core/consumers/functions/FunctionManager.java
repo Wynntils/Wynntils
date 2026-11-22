@@ -549,7 +549,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.PowderSpecialChargeFunction());
         registerFunction(new CharacterFunctions.PuppetCountFunction());
         registerFunction(new CharacterFunctions.RemnantCountFunction());
-        registerFunction(new CharacterFunctions.RitualCircleRadiusFunction());
         registerFunction(new CharacterFunctions.PatchworkAbominationDurationFunction());
         registerFunction(new CharacterFunctions.PuppetsInTimeRangeFunction());
         registerFunction(new CharacterFunctions.SnakeCountFunction());
@@ -772,6 +771,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.GuardianAngelsCountFunction());
         registerFunction(new SpellFunctions.MantleShieldCountFunction());
         registerFunction(new SpellFunctions.BrokenMantleShieldCountFunction());
+        registerFunction(new SpellFunctions.RitualCircleRadiusFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
         registerFunction(new SpellFunctions.ShamanTotemLocationFunction());

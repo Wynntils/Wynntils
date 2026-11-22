@@ -20,7 +20,7 @@ import com.wynntils.models.mount.event.MountEvent;
 import com.wynntils.models.mount.type.MountChoice;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.overlays.MountEnergyOverlay;
+import com.wynntils.overlays.MountTraitsOverlay;
 import com.wynntils.overlays.TimeTrialOverlay;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.RenderElementType;
@@ -38,7 +38,7 @@ public class MountKeybindFeature extends Feature {
     private final KeyBind rideMountKeybind = KeyBindDefinition.RIDE_MOUNT.create(this::tryRideMount);
 
     @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
-    private final MountEnergyOverlay mountEnergyOverlay = new MountEnergyOverlay();
+    private final MountTraitsOverlay mountTraitsOverlay = new MountTraitsOverlay();
 
     @RegisterOverlay(renderType = RenderElementType.ACTION_BAR)
     private final TimeTrialOverlay timeTrialOverlay = new TimeTrialOverlay();

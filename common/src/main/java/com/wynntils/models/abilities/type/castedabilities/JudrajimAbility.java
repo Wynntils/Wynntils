@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities.type;
+package com.wynntils.models.abilities.type.castedabilities;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.models.character.type.ClassType;
@@ -16,7 +16,7 @@ public class JudrajimAbility extends CastedAbilityType {
     private static final String GROUP = "Judrajim";
 
     public JudrajimAbility() {
-        super(CLASS_TYPE, null, UNCONFIRMED_SPELL_TYPE, NAME, GROUP);
+        super(CLASS_TYPE, null, UNCONFIRMED_SPELL_TYPE, NAME, GROUP, false);
     }
 
     /**

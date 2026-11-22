@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.resourcepack;
@@ -46,6 +46,11 @@ public final class WynntilsResourceProvider implements RepositorySource {
     private static final PackSource WYNNTILS_PRELOADED_PACK_SOURCE =
             PackSource.create(component -> component.copy().append(Component.literal(" (Wynntils)")), true);
 
+    public static boolean isWynncraftPack(Pack pack) {
+        StyledText packDescription = StyledText.fromComponent(pack.getDescription());
+        return packDescription.matches(WYNNCRAFT_PACK_PATTERN);
+    }
+
     @Override
     public void loadPacks(Consumer<Pack> onLoad) {
         try {
@@ -78,8 +83,7 @@ public final class WynntilsResourceProvider implements RepositorySource {
                     }
 
                     // Load the pack description and check if it matches the Wynncraft pack pattern
-                    StyledText packDescription = StyledText.fromComponent(pack.getDescription());
-                    if (packDescription.matches(WYNNCRAFT_PACK_PATTERN)) {
+                    if (isWynncraftPack(pack)) {
                         onLoad.accept(pack);
                     }
                 });
