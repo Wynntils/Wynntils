@@ -463,7 +463,7 @@ public class ItemTextOverlayFeature extends Feature {
                         MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.GREEN)));
             } else {
                 task = new TextRenderTask(
-                        MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.DARK_RED)));
+                        StyledText.fromComponent(ComponentUtils.makeCrimsonStyle(MARKER_SYMBOL, true)), style);
             }
 
             return new TextOverlay(task, -1, 1, 0.85f);
