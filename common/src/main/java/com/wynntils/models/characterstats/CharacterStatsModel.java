@@ -97,7 +97,7 @@ public final class CharacterStatsModel extends Model {
         event.runIfPresent(HealthTextSegment.class, this::updateHealth);
         event.runIfPresent(ManaTextSegment.class, this::updateMana);
         event.runIfPresent(MeterBarSegment.class, this::updateSprint);
-        event.runIfPresent(PowderSpecialSegment.class, this::updatePowderSpecial);
+        event.runIfPresentOrElse(PowderSpecialSegment.class, this::updatePowderSpecial, this::clearPowderSpecial);
         event.runIfPresent(CombatExperienceSegment.class, this::updateCombatExperience);
         event.runIfPresent(ProfessionExperienceSegment.class, this::updateProfessionExperience);
 
@@ -273,6 +273,10 @@ public final class CharacterStatsModel extends Model {
 
     private void updatePowderSpecial(PowderSpecialSegment segment) {
         powderSpecialInfo = segment.getPowderSpecialInfo();
+    }
+
+    private void clearPowderSpecial() {
+        powderSpecialInfo = PowderSpecialInfo.EMPTY;
     }
 
     private void updateCombatExperience(CombatExperienceSegment combatExperienceSegment) {

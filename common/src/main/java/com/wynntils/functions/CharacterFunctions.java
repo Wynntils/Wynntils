@@ -500,6 +500,19 @@ public class CharacterFunctions {
         }
     }
 
+    public static class PowderSpecialElementFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
+            if (powderSpecialInfoOpt.isEmpty()) return "";
+
+            PowderSpecialInfo powderSpecialInfo = powderSpecialInfoOpt.get();
+            return powderSpecialInfo.powder() == null
+                    ? ""
+                    : powderSpecialInfo.powder().getName();
+        }
+    }
+
     public static class CurrentDistortionFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {

@@ -62,7 +62,7 @@ public class PowderSpecialSegmentMatcher implements ActionBarSegmentMatcher {
     private PowderSpecialInfo getPowderSpecialInfo(String powderSpecialText) {
         // Handle empty powder special
         if (powderSpecialText.equals(EMPTY_POWDER_SPECIAL)) {
-            return PowderSpecialInfo.EMPTY;
+            return PowderSpecialInfo.NO_CHARGE;
         }
 
         for (Powder powder : Powder.values()) {
