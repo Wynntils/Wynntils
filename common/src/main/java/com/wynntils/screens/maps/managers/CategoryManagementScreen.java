@@ -13,7 +13,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.type.OverrideType;
 import com.wynntils.screens.maps.managers.widgets.ManagerSearchWidget;
-import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryInfoWidget;
+import com.wynntils.screens.maps.managers.widgets.StyledInfoButton;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryTreeWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.DeleteButtonWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.OptionsScrollBarWidget;
@@ -35,8 +35,11 @@ import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -55,7 +58,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     public CategoryTreeWidget categoryTreeWidget;
 
     public OverrideSelectionWidget overrideSelectionWidget;
-    public CategoryInfoWidget infoWidget;
+    private StyledInfoButton infoWidget;
     public SaveButtonWidget saveButtonWidget;
     public ResetButtonWidget resetButtonWidget;
     public DeleteButtonWidget deleteButtonWidget;
@@ -145,7 +148,11 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         offsetX = (int) ((this.width - Texture.MANAGER_BACKGROUND.width()) / 2f);
         offsetY = (int) ((this.height - Texture.MANAGER_BACKGROUND.height()) / 2f);
 
-        infoWidget = new CategoryInfoWidget(offsetX + WIDTH_OFFSET + 546 - 20, offsetY + HEIGHT_OFFSET, 20, 20, this);
+        infoWidget = new StyledInfoButton(
+                offsetX + WIDTH_OFFSET + 546 - 20,
+                offsetY + HEIGHT_OFFSET,
+                Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.title"),
+                buildInfoTooltip());
         this.addRenderableWidget(infoWidget);
 
         categorySearchWidget = new ManagerSearchWidget(
@@ -533,6 +540,95 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         return handled;
     }
 
+    private List<Component> buildInfoTooltip() {
+        List<Component> lines = new ArrayList<>();
+
+        lines.add(Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.title")
+                .withStyle(ChatFormatting.GOLD));
+
+        Component description = Component.translatable(
+                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.description");
+
+        lines.add(description.copy().withStyle(ChatFormatting.GRAY));
+
+        lines.add(Component.empty());
+
+        lines.add(Component.literal("- ")
+                .withStyle(ChatFormatting.GOLD)
+                .append(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.inherited.title")
+                        .withStyle(ChatFormatting.WHITE)));
+
+        Component inheritedDescription = Component.translatable(
+                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.inherited.description");
+
+        lines.add(inheritedDescription.copy().withStyle(ChatFormatting.GRAY));
+
+        lines.add(Component.empty());
+
+        lines.add(Component.literal("- ")
+                .withStyle(ChatFormatting.GOLD)
+                .append(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.notInherited.title")
+                        .withStyle(ChatFormatting.WHITE)));
+
+        Component notInheritedDescription = Component.translatable(
+                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.notInherited.description");
+
+        lines.add(notInheritedDescription.copy().withStyle(ChatFormatting.GRAY));
+
+        lines.add(Component.empty());
+
+        lines.add(Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.override.title")
+                .withStyle(ChatFormatting.GOLD));
+
+        Component overrideTypeIntro =
+                Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.override.description");
+
+        lines.add(overrideTypeIntro.copy().withStyle(ChatFormatting.GRAY));
+
+        OverrideType currentType = selectedOverrideType;
+
+        OverrideType[] overrideTypes = OverrideType.values();
+
+        for (OverrideType type : overrideTypes) {
+            lines.add(Component.empty());
+
+            boolean isCurrent = type == currentType;
+            ChatFormatting labelColor = isCurrent ? ChatFormatting.RED : ChatFormatting.WHITE;
+
+            Component typeLabel = Component.literal(type.getDisplayName()).withStyle(labelColor);
+
+            if (isCurrent) {
+                typeLabel = typeLabel
+                        .copy()
+                        .append(" ")
+                        .append(Component.translatable(
+                                        "screens.wynntils.map.managers.categoryManager.infoWidget.override.current")
+                                .withStyle(labelColor));
+            }
+
+            lines.add(Component.literal("- ").withStyle(ChatFormatting.GOLD).append(typeLabel));
+
+            Component typeDescription =
+                    switch (type) {
+                        case MAP_LOCATION_OVERRIDE ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.categoryManager.infoWidget.override.mapLocationOverride.description");
+                        case MAP_PATH_OVERRIDE ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.categoryManager.infoWidget.override.mapPathOverride.description");
+                        case MAP_AREA_OVERRIDE ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.categoryManager.infoWidget.override.mapAreaOverride.description");
+                    };
+
+            lines.add(typeDescription.copy().withStyle(ChatFormatting.GRAY));
+        }
+
+        return lines;
+    }
+
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
@@ -656,7 +752,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         selectedOverrideType = newOverrideType;
         updateOptionWidgetsVisibility();
         updateOptionWidgets();
-        infoWidget.generateTooltip();
+        infoWidget.setTooltipLines(buildInfoTooltip());
         saveButtonWidget.generateTooltip();
         deleteButtonWidget.generateTooltip();
     }

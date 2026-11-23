@@ -11,6 +11,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.FeatureCategoryScreen;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.widgets.StyledButton;
+import com.wynntils.screens.maps.managers.widgets.StyledInfoButton;
 import com.wynntils.screens.maps.managers.widgets.TexturedTextInputBoxWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.options.AbstractOptionWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.options.ColorOptionWidget;
@@ -42,13 +43,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
 public final class PathCreationScreen extends WynntilsScreen {
+    private static final int INFO_BUTTON_X = 541;
+
     private final Screen previous;
     private final boolean editing;
     private final MapAttributesBuilder settings;
@@ -57,6 +62,7 @@ public final class PathCreationScreen extends WynntilsScreen {
     private PathOptionsScrollBarWidget mapOptions;
     private PathToggleOptionWidget recordChests;
     private StyledButton saveButton;
+    private StyledInfoButton infoButton;
     private String category;
     private String label;
     private boolean recordHighlights;
@@ -97,6 +103,20 @@ public final class PathCreationScreen extends WynntilsScreen {
         y = (height - Texture.MANAGER_BACKGROUND.height()) / 2;
         int left = x + 15;
         int right = x + 290;
+
+        infoButton = addRenderableWidget(new StyledInfoButton(
+                x + INFO_BUTTON_X,
+                y + 18,
+                text("info"),
+                List.of(
+                        text("info").copy().withStyle(ChatFormatting.GOLD),
+                        text("save.tooltip").copy().withStyle(ChatFormatting.GRAY),
+                        Component.empty(),
+                        text("info.hide", Component.translatable("screens.wynntils.map.providerManager.name"))
+                                .copy()
+                                .withStyle(ChatFormatting.GRAY),
+                        Component.empty(),
+                        text("info.remove", "wynntils/localProviders").copy().withStyle(ChatFormatting.GRAY))));
 
         TexturedTextInputBoxWidget name = new TexturedTextInputBoxWidget(
                 left, y + 49, 270, 20, value -> label = value, this, TexturedTextInputBoxWidget.Mode.STRING);
@@ -276,6 +296,7 @@ public final class PathCreationScreen extends WynntilsScreen {
 
                         McUtils.setScreen(previous);
                     });
+            saveButton.setTooltip(Tooltip.create(text("save.tooltip")));
         } else {
             button(saveX, y + 282, left + 546 - saveX, "record", Texture.MANAGER_WIDGET_BACKGROUND_GREEN, () -> {
                 configure();
@@ -341,13 +362,22 @@ public final class PathCreationScreen extends WynntilsScreen {
                     .renderScrollingText(
                             graphics,
                             StyledText.fromComponent(text("error", error)),
-                            x + 561,
+                            x + INFO_BUTTON_X - 8,
                             y + 26,
-                            365,
+                            INFO_BUTTON_X - 8 - 196,
                             CommonColors.RED,
                             HorizontalAlignment.RIGHT,
                             VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
+        }
+
+        if (infoButton.isMouseOver(mouseX, mouseY)) {
+            graphics.setTooltipForNextFrame(
+                    infoButton.getTooltipLines().stream()
+                            .map(Component::getVisualOrderText)
+                            .toList(),
+                    mouseX,
+                    mouseY);
         }
 
         for (PathOptionsScrollBarWidget panel : List.of(worldOptions, mapOptions)) {

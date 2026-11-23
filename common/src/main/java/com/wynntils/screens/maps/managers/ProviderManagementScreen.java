@@ -13,11 +13,11 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.managers.type.ProviderManagerMode;
 import com.wynntils.screens.maps.managers.type.ProviderType;
 import com.wynntils.screens.maps.managers.widgets.ManagerSearchWidget;
+import com.wynntils.screens.maps.managers.widgets.StyledInfoButton;
 import com.wynntils.screens.maps.managers.widgets.providermanager.DescriptionScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.NewProviderButton;
 import com.wynntils.screens.maps.managers.widgets.providermanager.OpenLocalProviderFolderButton;
 import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderInfoScrollBarWidget;
-import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderManagerInfoWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.ProviderScrollBarWidget;
 import com.wynntils.screens.maps.managers.widgets.providermanager.RefreshLocalProvidersButton;
 import com.wynntils.screens.maps.managers.widgets.providermanager.RemoteProviderCreationWidget;
@@ -35,8 +35,10 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -58,7 +60,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     // Kept here rather than in the info widget, so it survives the widgets being rebuilt on resize
     private ProviderInfoScrollBarWidget.Mode selectedInfoMode = ProviderInfoScrollBarWidget.Mode.FEATURES;
 
-    public ProviderManagerInfoWidget infoWidget;
+    private StyledInfoButton infoWidget;
     public ManagerSearchWidget providerSearchWidget;
     public ProviderScrollBarWidget providerScrollBarWidget;
 
@@ -102,8 +104,11 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         offsetX = (int) ((this.width - Texture.MANAGER_BACKGROUND.width()) / 2f);
         offsetY = (int) ((this.height - Texture.MANAGER_BACKGROUND.height()) / 2f);
 
-        infoWidget =
-                new ProviderManagerInfoWidget(offsetX + WIDTH_OFFSET + 546 - 20, offsetY + HEIGHT_OFFSET, 20, 20, this);
+        infoWidget = new StyledInfoButton(
+                offsetX + WIDTH_OFFSET + 546 - 20,
+                offsetY + HEIGHT_OFFSET,
+                Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.overview.title"),
+                buildInfoTooltip());
         this.addRenderableWidget(infoWidget);
 
         providerSearchWidget = new ManagerSearchWidget(
@@ -217,6 +222,72 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         }
     }
 
+    private List<Component> buildInfoTooltip() {
+        List<Component> lines = new ArrayList<>();
+
+        // Overview
+        lines.add(Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.overview.title")
+                .withStyle(ChatFormatting.GOLD));
+
+        Component overviewDescription =
+                Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.overview.description");
+
+        lines.add(overviewDescription.copy().withStyle(ChatFormatting.GRAY));
+
+        lines.add(Component.empty());
+
+        // Provider types
+        lines.add(Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.types.title")
+                .withStyle(ChatFormatting.GOLD));
+
+        Component typesDescription =
+                Component.translatable("screens.wynntils.map.managers.providerManager.infoWidget.types.description");
+
+        lines.add(typesDescription.copy().withStyle(ChatFormatting.GRAY));
+
+        ProviderType currentType = selectedProviderType;
+
+        for (ProviderType type : ProviderType.values()) {
+            lines.add(Component.empty());
+
+            boolean isCurrent = type == currentType;
+            ChatFormatting labelColor = isCurrent ? ChatFormatting.RED : ChatFormatting.WHITE;
+
+            Component typeLabel = Component.literal(type.getDisplayName()).withStyle(labelColor);
+
+            if (isCurrent) {
+                typeLabel = typeLabel
+                        .copy()
+                        .append(" ")
+                        .append(Component.translatable(
+                                        "screens.wynntils.map.managers.providerManager.infoWidget.types.current")
+                                .withStyle(labelColor));
+            }
+
+            lines.add(Component.literal("- ").withStyle(ChatFormatting.GOLD).append(typeLabel));
+
+            Component typeDescription =
+                    switch (type) {
+                        case BUILT_IN ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.builtIn.description");
+                        case JSON_BUNDLED ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonBundled.description");
+                        case JSON_LOCAL ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonLocal.description");
+                        case JSON_REMOTE ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.providerManager.infoWidget.types.jsonRemote.description");
+                    };
+
+            lines.add(typeDescription.copy().withStyle(ChatFormatting.GRAY));
+        }
+
+        return lines;
+    }
+
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children()) {
             if (!child.isMouseOver(mouseX, mouseY)) continue;
@@ -298,7 +369,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         Services.MapData.ensureProviderLoaded(completeProviderId, () -> scheduleRefreshAfterLoad(completeProviderId));
 
         providerInfoScrollBarWidget.populateWidgets();
-        infoWidget.generateTooltip();
+        infoWidget.setTooltipLines(buildInfoTooltip());
 
         Optional<MapDataProvider> providerOptional =
                 Services.MapData.getProviderFromId(getSelectedCompleteProviderId());
