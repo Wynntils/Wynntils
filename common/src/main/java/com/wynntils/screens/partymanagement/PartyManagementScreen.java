@@ -21,10 +21,13 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -56,6 +59,12 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
 
     public static Screen create() {
         return new PartyManagementScreen();
+    }
+
+    @Override
+    public void added() {
+        // Request guild member list on screen open in case online guild member list is stale.
+        Models.Guild.requestGuildMembers();
     }
 
     @Override
@@ -121,7 +130,10 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                                 .withStyle(ChatFormatting.STRIKETHROUGH))
                         .append(Component.literal("\n"))
                         .append(Component.translatable("screens.wynntils.partyManagementGui.friend")
-                                .withStyle(ChatFormatting.GREEN))));
+                                .withStyle(ChatFormatting.GREEN))
+                        .append(Component.literal("\n"))
+                        .append(Component.translatable("screens.wynntils.partyManagementGui.guild")
+                                .withStyle(ChatFormatting.AQUA))));
         // endregion
     }
 
@@ -357,14 +369,38 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
      * This should be called when a friend joins/leaves the world or when the refresh button is pressed
      */
     public void reloadSuggestedPlayersWidgets() {
-        List<String> suggestedPlayers =
-                new ArrayList<>(Models.Friends.getOnlineFriends().keySet());
-        suggestedPlayers.removeAll(Models.Party.getPartyMembers()); // No need to suggest party members
-        suggestedPlayers.sort(String.CASE_INSENSITIVE_ORDER);
+        List<String> onlineFriends =
+                Models.Friends.getOnlineFriends().keySet().stream().toList();
+        /*
+        This is used to compare online guild members to while ignoring case.
+        The friends list does not preserve the case of Minecraft usernames, unlike the guild member list.
+        That means the friends list could refer to "Steve" as "steve", "StEvE", or so on depending on the case the
+        player used when adding "Steve" as a friend. That is why we must ignore case while comparing names.
+         */
+        List<String> lowercaseOnlineFriends = onlineFriends.stream()
+                .map(username -> username.toLowerCase(Locale.ROOT))
+                .toList();
+
+        List<String> onlineGuildMembers = Models.Guild.getOnlineGuildMembers().stream()
+                .filter(username -> !lowercaseOnlineFriends.contains(
+                        username.toLowerCase(Locale.ROOT))) // Remove friends to prevent duplicates
+                .toList();
+        List<SuggestedPlayer> suggestedPlayers = onlineFriends.stream()
+                .map(username -> new SuggestedPlayer(username, SuggestedPlayerType.FRIEND))
+                .collect(Collectors.toList());
+        suggestedPlayers.addAll(onlineGuildMembers.stream()
+                .map(username -> new SuggestedPlayer(username, SuggestedPlayerType.GUILD))
+                .toList());
+
+        suggestedPlayers = suggestedPlayers.stream()
+                .filter(suggestedPlayer -> !Models.Party.getPartyMembers().contains(suggestedPlayer.username()))
+                .collect(Collectors.toList()); // No need to suggest party members
+        suggestedPlayers.sort(null); // Sort by username in alphabetical order
 
         suggestedPlayersWidgets = new ArrayList<>();
         for (int i = 0; i < suggestedPlayers.size(); i++) {
-            String playerName = suggestedPlayers.get(i);
+            SuggestedPlayer suggestedPlayer = suggestedPlayers.get(i);
+            String playerName = suggestedPlayer.username();
             boolean isOffline = !Models.Friends.getOnlineFriends().containsKey(playerName);
             if (playerName == null) continue;
 
@@ -373,7 +409,7 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
                     dividedHeight * (23 + i * 3),
                     (int) ((dividedWidth * 60) - (dividedWidth * 36)),
                     BUTTON_SIZE,
-                    playerName,
+                    suggestedPlayer,
                     isOffline,
                     60 - 36));
         }
@@ -399,5 +435,21 @@ public final class PartyManagementScreen extends WynntilsGridLayoutScreen {
         reloadCreateLeaveButton();
         reloadMembersWidgets();
         reloadSuggestedPlayersWidgets();
+    }
+
+    public record SuggestedPlayer(String username, SuggestedPlayerType suggestedPlayerType)
+            implements Comparable<SuggestedPlayer> {
+        @Override
+        public int compareTo(SuggestedPlayer suggestedPlayer) {
+            // Friends come before guild members, then alphabetical order ignoring case
+            return Comparator.comparing(SuggestedPlayer::suggestedPlayerType)
+                    .thenComparing(SuggestedPlayer::username, String.CASE_INSENSITIVE_ORDER)
+                    .compare(this, suggestedPlayer);
+        }
+    }
+
+    public enum SuggestedPlayerType {
+        FRIEND,
+        GUILD
     }
 }

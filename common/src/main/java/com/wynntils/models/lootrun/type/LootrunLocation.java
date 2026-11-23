@@ -15,6 +15,7 @@ public enum LootrunLocation {
     CANYON_OF_THE_LOST_EXCURSION(BlockPos.containing(580.0, 78.0, -5022.0)),
     THE_FRUMA_FORAY_WEST(BlockPos.containing(-2025.0, 4.0, -780.0)),
     THE_FRUMA_FORAY_EAST(BlockPos.containing(-1287.0, 76.0, -1154.0)),
+    CANYON_OF_THE_LOST_EXCURSION_NORTH(BlockPos.containing(572, 78.0, -5023.0)),
     UNKNOWN(null);
 
     private static final int START_LOCATION_RADIUS = 20;

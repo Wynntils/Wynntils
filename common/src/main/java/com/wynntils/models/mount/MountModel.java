@@ -20,8 +20,8 @@ import com.wynntils.mc.event.SetLocalPlayerVehicleEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.MountItem;
-import com.wynntils.models.mount.actionbar.matchers.MountEnergySegmentMatcher;
-import com.wynntils.models.mount.actionbar.segments.MountEnergySegment;
+import com.wynntils.models.mount.actionbar.matchers.MountTraitsSegmentMatcher;
+import com.wynntils.models.mount.actionbar.segments.MountTraitsSegment;
 import com.wynntils.models.mount.event.MountEvent;
 import com.wynntils.models.mount.type.ColorType;
 import com.wynntils.models.mount.type.MountChoice;
@@ -62,12 +62,15 @@ public final class MountModel extends Model {
             1185, TextColor.fromLegacyFormat(ChatFormatting.GREEN),
             1500, TextColor.fromLegacyFormat(ChatFormatting.AQUA)));
 
+    private boolean hideMountTraits;
+
     private Map<String, MountColorInfo> mountColors = new HashMap<>();
 
     // Parsed from the UI element so is not as accurate as the item tooltip
     private CappedValue currentMountEnergy = CappedValue.EMPTY;
 
-    private boolean hideMountEnergy = false;
+    private CappedValue currentMountToughness = CappedValue.EMPTY;
+
     private int summonTick = -1;
     private int dismountTick = -1;
     private MountType expectedMountType = null;
@@ -77,7 +80,7 @@ public final class MountModel extends Model {
     public MountModel() {
         super(List.of());
 
-        Handlers.ActionBar.registerSegment(new MountEnergySegmentMatcher());
+        Handlers.ActionBar.registerSegment(new MountTraitsSegmentMatcher());
     }
 
     @Override
@@ -174,14 +177,14 @@ public final class MountModel extends Model {
 
     @SubscribeEvent
     public void onActionBarRender(ActionBarRenderEvent event) {
-        if (!hideMountEnergy) return;
-
-        event.setSegmentEnabled(MountEnergySegment.class, false);
+        if (hideMountTraits) {
+            event.setSegmentEnabled(MountTraitsSegment.class, false);
+        }
     }
 
     @SubscribeEvent
     public void onActionBarUpdate(ActionBarUpdatedEvent event) {
-        event.runIfPresentOrElse(MountEnergySegment.class, this::updateMountEnergy, this::clearMountEnergy);
+        event.runIfPresentOrElse(MountTraitsSegment.class, this::updateMountTraits, this::clearMountTraits);
     }
 
     public void tryRideMount(MountChoice mountChoice) {
@@ -278,13 +281,18 @@ public final class MountModel extends Model {
         return currentMountType;
     }
 
-    public void setHideMountEnergy(boolean hide) {
-        hideMountEnergy = hide;
+    public void setHideMountTraits(boolean hide) {
+        hideMountTraits = hide;
     }
 
     public Optional<CappedValue> getCurrentMountEnergy() {
         if (currentMountEnergy == CappedValue.EMPTY) return Optional.empty();
         return Optional.of(currentMountEnergy);
+    }
+
+    public Optional<CappedValue> getCurrentMountToughness() {
+        if (currentMountToughness == CappedValue.EMPTY) return Optional.empty();
+        return Optional.of(currentMountToughness);
     }
 
     private void handleMountItemUse() {
@@ -309,12 +317,14 @@ public final class MountModel extends Model {
                 .collect(Collectors.toMap(MountColorInfo::displayName, mountColorInfo -> mountColorInfo));
     }
 
-    private void updateMountEnergy(MountEnergySegment segment) {
+    private void updateMountTraits(MountTraitsSegment segment) {
         currentMountEnergy = segment.getCappedEnergy();
+        currentMountToughness = segment.getCappedToughness();
     }
 
-    private void clearMountEnergy() {
+    private void clearMountTraits() {
         currentMountEnergy = CappedValue.EMPTY;
+        currentMountToughness = CappedValue.EMPTY;
     }
 
     private void postMountErrorMessage(RideMountStatus status) {

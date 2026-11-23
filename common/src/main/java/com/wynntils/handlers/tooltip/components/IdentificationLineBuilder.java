@@ -216,7 +216,7 @@ public final class IdentificationLineBuilder {
                     .append(Component.literal(String.valueOf(range.a())).withColor(color))
                     .append(Component.literal(", ").withColor(darkColor))
                     .append(Component.literal(String.valueOf(range.b())).withColor(color))
-                    .append(Component.literal("]"));
+                    .append(Component.literal("]").withColor(darkColor));
         } else if (display == IdentificationDisplay.REROLL_CHANCE) {
             statValue
                     .append(Component.literal(" "))

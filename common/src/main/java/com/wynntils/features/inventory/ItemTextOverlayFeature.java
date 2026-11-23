@@ -13,6 +13,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.activities.type.Dungeon;
@@ -47,9 +48,7 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -427,6 +426,7 @@ public class ItemTextOverlayFeature extends Feature {
     }
 
     private final class OverallRollMarkerOverlay implements TextOverlayInfo {
+        private static final float DEFECTIVE_OVERALL_MIN = 0.0f;
         private static final float GREEN_OVERALL_MIN = 80.0f;
         private static final float BLUE_OVERALL_MIN = 95.0f;
         private static final float PERFECT_OVERALL_MIN = 100.0f;
@@ -442,7 +442,9 @@ public class ItemTextOverlayFeature extends Feature {
 
         @Override
         public boolean isTextOverlayEnabled() {
-            return overallRollMarkersEnabled.get() && hasOverallValue && overallPercentage >= GREEN_OVERALL_MIN;
+            return overallRollMarkersEnabled.get()
+                    && hasOverallValue
+                    && (overallPercentage >= GREEN_OVERALL_MIN || overallPercentage == DEFECTIVE_OVERALL_MIN);
         }
 
         @Override
@@ -456,9 +458,12 @@ public class ItemTextOverlayFeature extends Feature {
             } else if (overallPercentage >= BLUE_OVERALL_MIN) {
                 task = new TextRenderTask(
                         MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.AQUA)));
-            } else {
+            } else if (overallPercentage > DEFECTIVE_OVERALL_MIN) {
                 task = new TextRenderTask(
                         MARKER_SYMBOL, style.withCustomColor(CustomColor.fromChatFormatting(ChatFormatting.GREEN)));
+            } else {
+                task = new TextRenderTask(
+                        StyledText.fromComponent(ComponentUtils.makeCrimsonStyle(MARKER_SYMBOL, true)), style);
             }
 
             return new TextOverlay(task, -1, 1, 0.85f);
@@ -576,9 +581,8 @@ public class ItemTextOverlayFeature extends Feature {
         public ItemTextOverlayFeature.TextOverlay getTextOverlay() {
             Skill skill = item.getSkill();
 
-            StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(
-                            new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
+            StyledText text = StyledText.fromComponent(
+                    Component.literal(skill.getSymbol()).withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());
@@ -603,9 +607,8 @@ public class ItemTextOverlayFeature extends Feature {
         public TextOverlay getTextOverlay() {
             Skill skill = item.getType().getSkill();
 
-            StyledText text = StyledText.fromComponent(Component.literal(skill.getSymbol())
-                    .withStyle(Style.EMPTY.withFont(
-                            new FontDescription.Resource(Identifier.withDefaultNamespace("common")))));
+            StyledText text = StyledText.fromComponent(
+                    Component.literal(skill.getSymbol()).withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)));
             TextRenderSetting style = TextRenderSetting.DEFAULT
                     .withCustomColor(CustomColor.fromChatFormatting(skill.getColorCode()))
                     .withTextShadow(skillIconShadow.get());

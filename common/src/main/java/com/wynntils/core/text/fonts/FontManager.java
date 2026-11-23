@@ -11,6 +11,9 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.text.FontLookup;
 import com.wynntils.core.text.fonts.wynnfonts.BannerBoxFont;
+import com.wynntils.core.text.fonts.wynnfonts.BannerFlagFont;
+import com.wynntils.core.text.fonts.wynnfonts.BannerPillFont;
+import com.wynntils.core.text.fonts.wynnfonts.BannerRibbonFont;
 import com.wynntils.core.text.fonts.wynnfonts.BannerSymbolFont;
 import com.wynntils.core.text.fonts.wynnfonts.FancyFont;
 import com.wynntils.core.text.fonts.wynnfonts.TooltipBannerFont;
@@ -18,6 +21,7 @@ import com.wynntils.core.text.fonts.wynnfonts.TooltipIdentificationMeterFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsCoordinatesFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsKeybindsFont;
+import com.wynntils.core.text.fonts.wynnfonts.WynntilsMountTraitFont;
 import com.wynntils.core.text.fonts.wynnfonts.WynntilsTimeTrialsFont;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -49,6 +53,9 @@ public final class FontManager extends Manager {
 
     private void registerFonts() {
         registerFont(new BannerBoxFont());
+        registerFont(new BannerFlagFont());
+        registerFont(new BannerPillFont());
+        registerFont(new BannerRibbonFont());
         registerFont(new BannerSymbolFont());
         registerFont(new FancyFont());
         registerFont(new TooltipBannerFont());
@@ -56,6 +63,7 @@ public final class FontManager extends Manager {
         registerFont(new WynncraftKeybindsFont());
         registerFont(new WynntilsCoordinatesFont());
         registerFont(new WynntilsKeybindsFont());
+        registerFont(new WynntilsMountTraitFont());
         registerFont(new WynntilsTimeTrialsFont());
     }
 
@@ -161,7 +169,6 @@ public final class FontManager extends Manager {
 
     private void registerFontsForLookup() {
         registerWynnFont("minecraft:default", "d");
-        registerWynnFont("minecraft:banner/pill", "bp");
         registerWynnFont("minecraft:chat/prefix", "cp");
         registerWynnFont("minecraft:hud/gameplay/default/top_left", "gtl");
         registerWynnFont("minecraft:hud/gameplay/default/top_middle", "gtm");

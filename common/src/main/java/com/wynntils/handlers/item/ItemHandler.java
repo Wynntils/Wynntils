@@ -39,6 +39,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.profiling.Profiler;
+import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
@@ -47,6 +49,7 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.component.ItemLore;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -265,23 +268,28 @@ public final class ItemHandler extends Handler {
         ItemStack previous = getPreviousPowderTarget(menu, slot, incoming);
         boolean playerInventory = menu == McUtils.inventoryMenu()
                 || menu.slots.get(slot).container == McUtils.player().getInventory();
-        List<StyledText> previousLore = LoreUtils.getLore(previous);
-        List<StyledText> incomingLore = LoreUtils.getLore(incoming);
+        boolean paged = ((ItemStackExtension) previous).getAnnotation() instanceof PagedItemProperty;
+        // Identical lore cannot signal a page change. Paged annotations still need their lore for page parsing.
+        boolean sameLoreComponents = !paged && hasSameLoreComponents(previous, incoming);
+        List<StyledText> previousLore = sameLoreComponents ? null : LoreUtils.getLore(previous);
+        List<StyledText> incomingLore = sameLoreComponents ? null : LoreUtils.getLore(incoming);
+        boolean pageChanged = !sameLoreComponents
+                && WynnItemParser.parseTooltipPage(previousLore) != WynnItemParser.parseTooltipPage(incomingLore);
         boolean reuse = pagedUpdates.canReuse(
                 menu.containerId,
                 playerInventory,
-                WynnItemParser.parseTooltipPage(previousLore) != WynnItemParser.parseTooltipPage(incomingLore),
-                Objects.equals(previousLore, incomingLore),
+                pageChanged,
+                sameLoreComponents || Objects.equals(previousLore, incomingLore),
                 System.nanoTime());
 
         // A pending powder target is an explicitly tracked item transfer, even if its
         // temporary client-side replacement no longer has the item's annotation.
         boolean powderUpdate = powderTarget != null && previous == powderTarget.stack();
-        if (!reuse && !powderUpdate && ((ItemStackExtension) previous).getAnnotation() instanceof PagedItemProperty) {
+        if (paged && !reuse && !powderUpdate) {
             previous = ItemStack.EMPTY;
             previousLore = List.of();
         }
-        onItemStackUpdate(previous, incoming, previousLore, incomingLore);
+        onItemStackUpdate(previous, incoming, previousLore, incomingLore, sameLoreComponents);
     }
 
     private ItemStack getPreviousPowderTarget(AbstractContainerMenu menu, int slot, ItemStack incoming) {
@@ -338,11 +346,15 @@ public final class ItemHandler extends Handler {
     }
 
     private void onItemStackUpdate(ItemStack existingItem, ItemStack newItem) {
-        onItemStackUpdate(existingItem, newItem, null, null);
+        onItemStackUpdate(existingItem, newItem, null, null, false);
     }
 
     private void onItemStackUpdate(
-            ItemStack existingItem, ItemStack newItem, List<StyledText> existingLore, List<StyledText> newLore) {
+            ItemStack existingItem,
+            ItemStack newItem,
+            List<StyledText> existingLore,
+            List<StyledText> newLore,
+            boolean sameLoreComponents) {
         // For e.g. FakeItemStacks we will already have an annotation
         if (((ItemStackExtension) newItem).getAnnotation() != null) return;
 
@@ -370,17 +382,11 @@ public final class ItemHandler extends Handler {
             return;
         }
 
-        // Server updates already converted these lists for page-response tracking.
-        // Other update paths only need to read them after the identity checks above.
-        if (existingLore == null) {
-            existingLore = LoreUtils.getLore(existingItem);
-        }
-
-        if (newLore == null) {
-            newLore = LoreUtils.getLore(newItem);
-        }
-
         if (annotation instanceof PagedItemProperty pagedItem) {
+            if (existingLore == null) {
+                existingLore = LoreUtils.getLore(existingItem);
+                newLore = LoreUtils.getLore(newItem);
+            }
             int page = WynnItemParser.parseTooltipPage(newLore);
             if (!Objects.equals(existingLore, newLore) || !pagedItem.hasParsedPage(page)) {
                 ItemPageAnnotator.update(pagedItem, newItem);
@@ -390,7 +396,7 @@ public final class ItemHandler extends Handler {
             updateItem(newItem, annotation, originalName);
         } else {
             // The name is identical to the existing stack; now check the lore
-            if (isLoreSoftMatching(existingLore, newLore)) {
+            if (isLoreSoftMatching(existingItem, newItem, existingLore, newLore, sameLoreComponents)) {
                 // This is exactly the same item, so copy existing annotation
                 updateItem(newItem, annotation, originalName);
             } else {
@@ -421,11 +427,17 @@ public final class ItemHandler extends Handler {
         return WILDCARD_ITEMS.contains(itemStack.getItem());
     }
 
+    private static boolean hasSameLoreComponents(ItemStack firstItem, ItemStack secondItem) {
+        ItemLore firstLore = firstItem.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
+        ItemLore secondLore = secondItem.getOrDefault(DataComponents.LORE, ItemLore.EMPTY);
+        return firstLore.lines().equals(secondLore.lines());
+    }
+
     /**
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    private boolean isLoreSoftMatching(List<StyledText> firstLoreLines, List<StyledText> secondLoreLines) {
+    private boolean compareLore(List<StyledText> firstLoreLines, List<StyledText> secondLoreLines) {
         // Tags implement equals, so we can use this to check if the lore is identical
         // This is the most common short-circuit case
         if (Objects.equals(firstLoreLines, secondLoreLines)) return true;
@@ -525,6 +537,36 @@ public final class ItemHandler extends Handler {
         updateItem(itemStack, annotation, name);
     }
 
+    public List<ItemAnnotator> getAnnotators() {
+        return Collections.unmodifiableList(annotators);
+    }
+
+    // region Profiling
+
+    private boolean isLoreSoftMatching(
+            ItemStack firstItem,
+            ItemStack secondItem,
+            List<StyledText> firstLoreLines,
+            List<StyledText> secondLoreLines,
+            boolean sameLoreComponents) {
+        ProfilerFiller profiler = Profiler.get();
+        profiler.push("itemLoreComparison");
+        try {
+            // Server updates have already compared the raw lore or built the styled lists.
+            if (sameLoreComponents || (firstLoreLines == null && hasSameLoreComponents(firstItem, secondItem))) {
+                profiler.incrementCounter("fastReturns");
+                return true;
+            }
+            if (firstLoreLines == null) {
+                firstLoreLines = LoreUtils.getLore(firstItem);
+                secondLoreLines = LoreUtils.getLore(secondItem);
+            }
+            return compareLore(firstLoreLines, secondLoreLines);
+        } finally {
+            profiler.pop();
+        }
+    }
+
     private void logProfilingData(long startTime, ItemAnnotation annotation) {
         long endTime = System.currentTimeMillis();
         int timeSpent = (int) (endTime - startTime);
@@ -548,9 +590,7 @@ public final class ItemHandler extends Handler {
         profilingCounts.clear();
     }
 
-    public List<ItemAnnotator> getAnnotators() {
-        return Collections.unmodifiableList(annotators);
-    }
+    // endregion
 
     private record PendingPowderTarget(AbstractContainerMenu menu, int slot, ItemStack stack, long expiresAt) {}
 }

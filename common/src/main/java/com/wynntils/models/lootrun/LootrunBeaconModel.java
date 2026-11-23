@@ -46,6 +46,7 @@ import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
+import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -821,8 +822,25 @@ public final class LootrunBeaconModel extends Model {
     }
 
     private void handleLootrunTaskLocations(Reader reader) {
-        Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
-        taskLocations = Managers.Json.GSON.fromJson(reader, type);
+        Type type = new TypeToken<Map<String, Set<TaskLocation>>>() {}.getType();
+        Map<String, Set<TaskLocation>> tasksStringNameLocations = Managers.Json.GSON.fromJson(reader, type);
+        Map<LootrunLocation, Set<TaskLocation>> tasksCampLocations = new HashMap<>();
+
+        tasksStringNameLocations.forEach((campName, tasks) -> {
+            LootrunLocation camp = EnumUtils.fromJsonFormat(LootrunLocation.class, campName);
+
+            if (camp == null) {
+                WynntilsMod.warn("Unknown lootrun camp " + campName + " placing tasks in unknown camp");
+                camp = LootrunLocation.UNKNOWN;
+            }
+
+            tasksCampLocations.merge(camp, tasks, (existingTasks, additionalTasks) -> {
+                existingTasks.addAll(additionalTasks);
+                return existingTasks;
+            });
+        });
+
+        taskLocations = tasksCampLocations;
     }
 
     private LootrunBeaconDetails getCurrentLootrunBeaconDetails() {

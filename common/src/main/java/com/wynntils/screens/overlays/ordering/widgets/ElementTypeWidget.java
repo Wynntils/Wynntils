@@ -6,6 +6,7 @@ package com.wynntils.screens.overlays.ordering.widgets;
 
 import com.google.common.collect.Lists;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -21,16 +22,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public class ElementTypeWidget extends AbstractWidget {
     private static final List<Component> TOOLTIP =
             List.of(Component.translatable("screens.wynntils.overlayOrdering.elementWidget.tooltip"));
-    private static final Style STYLE = Style.EMPTY
-            .withUnderlined(true)
-            .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("language/wynncraft")));
+    private static final Style STYLE =
+            Style.EMPTY.withUnderlined(true).withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT);
 
     private final RenderElementType elementType;
     private final StyledText text;

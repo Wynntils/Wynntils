@@ -37,6 +37,7 @@ import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.TerritoryUpgradeAnnotator;
 import com.wynntils.models.lootrun.LootrunBeaconModel;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
+import com.wynntils.models.mount.actionbar.matchers.MountTraitsSegmentMatcher;
 import com.wynntils.models.npc.label.BossAltarLabelParser;
 import com.wynntils.models.npc.label.FastTravelLabelParser;
 import com.wynntils.models.npc.label.NpcLabelParser;
@@ -679,11 +680,11 @@ public class TestRegex {
     @Test
     public void MountAnnotator_POTENTIAL_PATTERN() {
         PatternTester p = new PatternTester(MountAnnotator.class, "POTENTIAL_PATTERN");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff240§f Potential");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff640§f Potential");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff979§f Potential");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff1k§f Potential");
-        p.shouldMatch("§f\uDB00\uDC01§#e0e0e0ff1.3k§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff240§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff640§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff979§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff1k§f Potential");
+        p.shouldMatch("§f\uDB00\uDC01§#ede0d4ff1.3k§f Potential");
     }
 
     @Test
@@ -696,10 +697,10 @@ public class TestRegex {
     @Test
     public void MountAnnotator_ENERGY_PATTERN() {
         PatternTester p = new PatternTester(MountAnnotator.class, "ENERGY_PATTERN");
-        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE023§7\uDB00\uDC05Energy 317/317");
-        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE01F§7\uDB00\uDC05Energy 210/221");
-        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE01E§7\uDB00\uDC05Energy 210/229");
-        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#e0e0e0ff\uE010§7\uDB00\uDC05Energy 100/204");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#ede0d4ff\uE023§7\uDB00\uDC05Energy 317/317");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#ede0d4ff\uE01F§7\uDB00\uDC05Energy 210/221");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#ede0d4ff\uE01E§7\uDB00\uDC05Energy 210/229");
+        p.shouldMatch("§8\uE023\uDAFF\uDFF7§#ede0d4ff\uE010§7\uDB00\uDC05Energy 100/204");
     }
 
     @Test
@@ -744,6 +745,21 @@ public class TestRegex {
                 "§fBoost\uDAFF\uDFE8\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
         p.shouldMatch(
                 "§fTraining\uDAFF\uDFDD\uDB00\uDC44§#acfac6ff140§7/140§f §8\uE023\uDAFF\uDFF7§a\uE023§7\uDAFF\uDFF7\uDB00\uDC09");
+    }
+
+    @Test
+    public void MountTraitsSegmentMatcher_MOUNT_TRAITS_PATTERN() {
+        PatternTester p = new PatternTester(MountTraitsSegmentMatcher.class, "MOUNT_TRAITS_PATTERN");
+        p.shouldMatch(
+                "\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE02C\uDAFF\uDFEC");
+        p.shouldMatch(
+                "\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE00F\uDAFF\uDFEC\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2");
+        p.shouldMatch(
+                "\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE010\uDAFF\uDFEC\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2");
+        p.shouldMatch(
+                "\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2\uDB00\uDC0B\uE021\uDAFF\uDFEC");
+        p.shouldMatch(
+                "\uDB00\uDC15\uE05E\uDAFF\uDFE2\uDB00\uDC0B\uE021\uDAFF\uDFEC\uDB00\uDC0B\uE060\uDB00\uDC01\uE061\uDAFF\uDFE2");
     }
 
     @Test

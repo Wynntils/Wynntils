@@ -115,37 +115,37 @@
   },
   {
     "id": "dataStaticAbilitiesV2",
-    "md5": "31e210073841012dcad07fa24b24b2c0",
+    "md5": "0c5ba4fb6cca16ef9936c67a5cfccc64",
     "path": "Reference/abilities_v2.json",
     "url": "https://cdn.wynntils.com/static/Reference/abilities_v2.json"
   },
   {
     "id": "dataStaticAspects",
-    "md5": "107425bbc43abcc812a653e129ba8ca1",
+    "md5": "04565450fb7db49fbb9afba84a0c8c0d",
     "path": "Reference/aspects.json",
     "url": "https://cdn.wynntils.com/static/Reference/aspects.json"
   },
   {
     "id": "dataStaticCaveInfo",
-    "md5": "a67d80084b2554e91cbc76d406a1c4a9",
+    "md5": "b7312e9193c5d3fd96d0d134e7e011ed",
     "path": "Reference/caves.json",
     "url": "https://cdn.wynntils.com/static/Reference/caves.json"
   },
   {
     "id": "dataStaticCharms",
-    "md5": "2bdbed2f1de29cf5bb9de88c0d6b8c79",
+    "md5": "2d22aa9f61467b91d11aba3e6a32b715",
     "path": "Reference/charms.json",
     "url": "https://cdn.wynntils.com/static/Reference/charms.json"
   },
   {
     "id": "dataStaticCombatLocations",
-    "md5": "efa7ccca92fd8b6037339f0ffaa61019",
+    "md5": "fabc7bf6de2e231a33500240fe85be12",
     "path": "Data-Storage/combat_locations.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/combat_locations.json"
   },
   {
     "id": "dataStaticCombatMapFeatures",
-    "md5": "075bf5555407f17316fbf4dae15e670c",
+    "md5": "d7b4c5943284f7d6b6e8da6c58516be1",
     "path": "Reference/combat_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Reference/combat_mapfeatures.json"
   },
@@ -169,7 +169,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "53550004530b00d51708ff1132e1f150",
+    "md5": "97e66ae87810ea2354f4ae00f46459fb",
     "path": "Reference/gear.json",
     "url": "https://cdn.wynntils.com/static/Reference/gear.json"
   },
@@ -199,7 +199,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "402f4b39d023ad71cf59c2936e481e3a",
+    "md5": "531f60948980ea945004716694d2ab59",
     "path": "Reference/ingredients.json",
     "url": "https://cdn.wynntils.com/static/Reference/ingredients.json"
   },
@@ -241,7 +241,7 @@
   },
   {
     "id": "dataStaticLootrunTasksNamedV2",
-    "md5": "0bc51ca15cc70905c398ed06971fbfa3",
+    "md5": "349b7880d52972d5075e3474863011ed",
     "path": "Data-Storage/lootrun_tasks_named_v2.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/lootrun_tasks_named_v2.json"
   },
@@ -253,7 +253,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "be924a7cb57c2eb217c46e11f96d5e54",
+    "md5": "60b7c8694dcb4f0275ee163d802c0fc3",
     "path": "Reference/maps.json",
     "url": "https://cdn.wynntils.com/static/Reference/maps.json"
   },
@@ -265,13 +265,13 @@
   },
   {
     "id": "dataStaticMaterials",
-    "md5": "97d351535aea4f545933c8aa7c050ffc",
+    "md5": "0901322ceb55057fa6a3c7a3ef2ecc7b",
     "path": "Reference/materials.json",
     "url": "https://cdn.wynntils.com/static/Reference/materials.json"
   },
   {
     "id": "dataStaticModelData",
-    "md5": "59988e5bb93c5300c459545323779cdd",
+    "md5": "8cb8412124456bc4daea87f037821813",
     "path": "Data-Storage/model_data.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/model_data.json"
   },
@@ -283,7 +283,7 @@
   },
   {
     "id": "dataStaticMountFood",
-    "md5": "829c4c7eacdc2d26bd5e54f7d5f922ed",
+    "md5": "936386397d95598240300d219f2d8d33",
     "path": "Data-Storage/mount_food.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/mount_food.json"
   },
@@ -307,7 +307,7 @@
   },
   {
     "id": "dataStaticRecipes",
-    "md5": "8d94e078a383dd2b538a12ecb3a5099a",
+    "md5": "bdfd1a285c6f20b37428ffaa4317c630",
     "path": "Reference/recipes.json",
     "url": "https://cdn.wynntils.com/static/Reference/recipes.json"
   },
@@ -325,7 +325,7 @@
   },
   {
     "id": "dataStaticServiceMapFeatures",
-    "md5": "33a69fab4a86ca25bc88425e919a7519",
+    "md5": "5cca45c5ecac62ae06dc39e299eec077",
     "path": "Data-Storage/service_mapfeatures.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/service_mapfeatures.json"
   },
@@ -337,13 +337,13 @@
   },
   {
     "id": "dataStaticServicesCrowdsourced",
-    "md5": "b77e71fc7f8e816019f7c033c6810460",
+    "md5": "3206e067c3b71bc6b3e563e7575bcb3c",
     "path": "Data-Storage/services_crowdsourced.json",
     "url": "https://cdn.wynntils.com/static/Data-Storage/services_crowdsourced.json"
   },
   {
     "id": "dataStaticSets",
-    "md5": "c92421c548f778098c223af30e4ea753",
+    "md5": "12328ec5c22c8e6d0365ce722bd9817b",
     "path": "Reference/sets.json",
     "url": "https://cdn.wynntils.com/static/Reference/sets.json"
   },
@@ -366,14 +366,20 @@
     "url": "https://cdn.wynntils.com/static/Data-Storage/texture_and_fingerprint_hashes.json"
   },
   {
+    "id": "dataStaticTextureAndFingerprintHashesV2",
+    "md5": "1b9de715e007ee5dcf036ed5f8fd9ec3",
+    "path": "Data-Storage/texture_and_fingerprint_hashes_v2.json",
+    "url": "https://cdn.wynntils.com/static/Data-Storage/texture_and_fingerprint_hashes_v2.json"
+  },
+  {
     "id": "dataStaticTomes",
-    "md5": "635bd5225b0b64df780526ab4ff0e4ad",
+    "md5": "bb7fec28a8b895a7111b63f264d56851",
     "path": "Reference/tomes.json",
     "url": "https://cdn.wynntils.com/static/Reference/tomes.json"
   },
   {
     "id": "dataStaticTools",
-    "md5": "9df97f56c40ad3c98efce2de38f5da85",
+    "md5": "93d8eab0e567ddda2a9c78c96e46abf2",
     "path": "Reference/tools.json",
     "url": "https://cdn.wynntils.com/static/Reference/tools.json"
   },

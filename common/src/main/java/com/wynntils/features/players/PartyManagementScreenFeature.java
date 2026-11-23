@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.ConfigProfile;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.models.players.event.FriendsEvent;
+import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.screens.partymanagement.PartyManagementScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -27,10 +28,8 @@ public class PartyManagementScreenFeature extends Feature {
     private PartyManagementScreen partyManagementScreen;
 
     @RegisterKeyBind
-    private final KeyBind openPartyManagementScreen = KeyBindDefinition.OPEN_PARTY_MANAGEMENT.create(() -> {
-        partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
-        McUtils.setScreen(partyManagementScreen);
-    });
+    private final KeyBind openPartyManagementScreen =
+            KeyBindDefinition.OPEN_PARTY_MANAGEMENT.create(this::tryOpenPartyManagementScreen);
 
     public PartyManagementScreenFeature() {
         super(
@@ -107,11 +106,26 @@ public class PartyManagementScreenFeature extends Feature {
     }
     // endregion
 
+    // region Guild events
+    @SubscribeEvent
+    public void onGuildMemberList(HadesRelationsUpdateEvent.GuildMemberList e) {
+        reloadScreenWidgets();
+    }
+    // endregion
+
     private void reloadScreenWidgets() {
         if (partyManagementScreen == null) return;
 
         partyManagementScreen.reloadCreateLeaveButton();
         partyManagementScreen.reloadMembersWidgets();
         partyManagementScreen.reloadSuggestedPlayersWidgets();
+    }
+
+    private void tryOpenPartyManagementScreen() {
+        // Do nothing if player is not on world as parties exist only on world
+        if (Models.WorldState.onWorld()) {
+            partyManagementScreen = (PartyManagementScreen) PartyManagementScreen.create();
+            McUtils.setScreen(partyManagementScreen);
+        }
     }
 }

@@ -8,14 +8,15 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.Argument;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.models.abilities.type.ArrowShieldAbility;
-import com.wynntils.models.abilities.type.BrokenMantleAbility;
-import com.wynntils.models.abilities.type.CastedAbilityType;
-import com.wynntils.models.abilities.type.GuardianAngelsAbility;
-import com.wynntils.models.abilities.type.JudrajimAbility;
-import com.wynntils.models.abilities.type.MantleAbility;
 import com.wynntils.models.abilities.type.ShamanTotem;
-import com.wynntils.models.abilities.type.ShieldAbilityProperty;
+import com.wynntils.models.abilities.type.castedabilities.ArrowShieldAbility;
+import com.wynntils.models.abilities.type.castedabilities.BrokenMantleAbility;
+import com.wynntils.models.abilities.type.castedabilities.CastedAbilityType;
+import com.wynntils.models.abilities.type.castedabilities.GuardianAngelsAbility;
+import com.wynntils.models.abilities.type.castedabilities.JudrajimAbility;
+import com.wynntils.models.abilities.type.castedabilities.MantleAbility;
+import com.wynntils.models.abilities.type.castedabilities.RitualCircleAbility;
+import com.wynntils.models.abilities.type.castedabilities.ShieldAbilityProperty;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
@@ -113,6 +114,15 @@ public class SpellFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("is_judrajim_active");
+        }
+    }
+
+    public static class RitualCircleRadiusFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.CastedAbility.getActiveAbility(RitualCircleAbility.class)
+                    .map(RitualCircleAbility::getCharge)
+                    .orElse(0);
         }
     }
 

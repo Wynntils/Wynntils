@@ -12,6 +12,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ServerResourcePackEvent;
+import com.wynntils.mc.event.WynncraftResourcePackLoadedEvent;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
@@ -190,6 +191,17 @@ public final class ResourcePackService extends Service {
         WynntilsMod.warn("Could not find the preload target pack to select it.");
         resourcePackRepository.setSelected(selectedIds);
         return anyRemoved;
+    }
+
+    public void onResourceReloadFinished() {
+        if (!isWynncraftPackActive()) return;
+
+        WynntilsMod.postEvent(new WynncraftResourcePackLoadedEvent());
+    }
+
+    public boolean isWynncraftPackActive() {
+        return McUtils.mc().getResourcePackRepository().getSelectedPacks().stream()
+                .anyMatch(WynntilsResourceProvider::isWynncraftPack);
     }
 
     // Note: This method checks if the preloaded pack is selected,

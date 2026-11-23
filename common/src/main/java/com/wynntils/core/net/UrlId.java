@@ -61,7 +61,7 @@ public enum UrlId {
     DATA_STATIC_SETS("dataStaticSets"),
     DATA_STATIC_SHINY_STATS("dataStaticShinyStats"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
-    DATA_STATIC_TEXTURE_AND_FINGERPRINT_HASHES("dataStaticTextureAndFingerprintHashes"),
+    DATA_STATIC_TEXTURE_AND_FINGERPRINT_HASHES("dataStaticTextureAndFingerprintHashesV2"),
     DATA_STATIC_TOMES("dataStaticTomes"),
     DATA_STATIC_TOOLS("dataStaticTools"),
     DATA_STATIC_URLS("dataStaticUrls"),
