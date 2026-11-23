@@ -52,7 +52,7 @@ public final class StatusEffectModel extends Model {
      * <p>Test cases can be found in {@code TestStatusEffectParsing}.
      */
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-            "^(?:(?<prefix>\\S+)\\s+)?(?:(?<modifier>[+-]?[\\d.,]+)(?<modifierSuffix>(?:/\\d+s)|%)?\\s+)?(?<icon>[^A-Za-z0-9+']*)(?<name>[A-Za-z0-9][A-Za-z0-9 ]*?)\\s*(?<timer>\\((?:(?<hours>\\d{2}):)?(?<minutes>\\d{2}|\\*{2}):(?<seconds>\\d{2}|\\*{2})\\))$");
+            "^(?:(?<prefix>\\S+)\\s+)?(?:(?<modifier>[+-]?[\\d.,]+)(?<modifierSuffix>(?:/\\d+s)|%)?\\s+)?(?<icon>[^A-Za-z0-9+']*)(?<name>[A-Za-z0-9][A-Za-z0-9 ]*?(?:/s)?)\\s*(?<timer>\\((?:(?<hours>\\d{2}):)?(?<minutes>\\d{2}|\\*{2}):(?<seconds>\\d{2}|\\*{2})\\))$");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 

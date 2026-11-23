@@ -98,6 +98,25 @@ public class TestStatusEffectParsing {
                 "§7§{fr:minecraft:common}", effects.get(1).getPrefix().getString(StyleType.INCLUDE_FONTS));
     }
 
+    @Test
+    public void parsePerSecondEffectsFromComponentJson() {
+        StyledText footer = StyledText.fromComponent(componentFromJson(PER_SECOND_EFFECTS_JSON));
+
+        List<StatusEffect> effects = StatusEffectModel.parseStatusEffects(footer);
+
+        Assertions.assertEquals(2, effects.size());
+        StatusEffect manaPotion = effects.getFirst();
+        assertEffect(manaPotion, "Ⓛ", "+10", "", "", "mana/s", "(00:14)", 14);
+        Assertions.assertEquals(10.0, manaPotion.getModifierValue());
+        Assertions.assertEquals("Ⓛ +10 mana/s (00:14)", manaPotion.asString().getStringWithoutFormatting());
+
+        StatusEffect healthPotion = effects.getLast();
+        assertEffect(healthPotion, "Ⓛ", "+6000", "", "", "health/s", "(00:02)", 2);
+        Assertions.assertEquals(6000.0, healthPotion.getModifierValue());
+        Assertions.assertEquals(
+                "Ⓛ +6000 health/s (00:02)", healthPotion.asString().getStringWithoutFormatting());
+    }
+
     private static Component componentFromJson(String json) {
         JsonElement jsonElement = JsonParser.parseString(json);
         return ComponentSerialization.CODEC
@@ -200,6 +219,15 @@ public class TestStatusEffectParsing {
             {"text":"⬤ ","color":"#555555","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"},
             {"text":"Shield ","color":"#AAAAAA","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"},
             {"text":"(00:11)   ","color":"#55FF55","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"}
+            ]}
+            """;
+
+    private static final String PER_SECOND_EFFECTS_JSON = """
+            {"text":"","extra":[
+            {"text":"Status Effects","color":"#FF55FF","bold":true,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"},
+            {"text":"\\n ","color":"#AAAAAA","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"},
+            {"text":"Ⓛ","color":"#FFFFFF","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"},{"text":" +10 mana/s ","color":"#AAAAAA","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"},{"text":"(00:14)  ","color":"#AA0000","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"},
+            {"text":"Ⓛ","color":"#FFFFFF","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"},{"text":" +6000 health/s ","color":"#AAAAAA","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"},{"text":"(00:02)                          ","color":"#AA0000","bold":false,"italic":false,"underlined":false,"strikethrough":false,"obfuscated":false,"font":"minecraft:default"}
             ]}
             """;
 }
