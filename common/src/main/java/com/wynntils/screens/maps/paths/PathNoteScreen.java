@@ -37,6 +37,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 
 public final class PathNoteScreen extends WynntilsScreen {
+    private static final Identifier DEFAULT_FONT = Identifier.withDefaultNamespace("default");
     private static final int WIDTH = 576;
     private static final int HEIGHT = 320;
     private static final int CONTENT_TOP = 43;
@@ -54,7 +55,7 @@ public final class PathNoteScreen extends WynntilsScreen {
 
     private final Screen previous;
     private String content = "";
-    private String fontId = "minecraft:default";
+    private String fontId = DEFAULT_FONT.toString();
     private String positionX;
     private String positionY;
     private String positionZ;
@@ -289,8 +290,8 @@ public final class PathNoteScreen extends WynntilsScreen {
                 HorizontalAlignment.LEFT,
                 VerticalAlignment.TOP,
                 TextShadow.NONE);
-        Identifier font = Identifier.tryParse(fontId);
-        if (font != null && !fontId.isBlank() && !content.isBlank()) {
+        Identifier font = resolveFont();
+        if (font != null && !content.isBlank()) {
             int bodyY = previewTop + PREVIEW_PADDING + fontRenderer.getFont().lineHeight + 2;
             RenderUtils.enableScissor(
                     graphics, previewTextX, y + bodyY, previewTextWidth, CONTENT_BOTTOM - PREVIEW_PADDING - bodyY);
@@ -360,7 +361,7 @@ public final class PathNoteScreen extends WynntilsScreen {
         Vec3 position;
         if (note == null) {
             content = "";
-            fontId = "minecraft:default";
+            fontId = DEFAULT_FONT.toString();
             color = CommonColors.WHITE;
             shadowColor = CommonColors.BLACK;
             bold = false;
@@ -447,8 +448,8 @@ public final class PathNoteScreen extends WynntilsScreen {
             return;
         }
 
-        Identifier font = Identifier.tryParse(fontId);
-        if (font == null || fontId.isBlank()) {
+        Identifier font = resolveFont();
+        if (font == null) {
             error = text("invalidFont");
 
             return;
@@ -486,6 +487,10 @@ public final class PathNoteScreen extends WynntilsScreen {
         }
 
         selectNote(null);
+    }
+
+    private Identifier resolveFont() {
+        return fontId.isBlank() ? DEFAULT_FONT : Identifier.tryParse(fontId);
     }
 
     private Component text(String key) {
