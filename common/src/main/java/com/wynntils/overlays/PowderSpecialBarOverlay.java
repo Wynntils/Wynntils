@@ -12,74 +12,56 @@ import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.elements.type.Powder;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
-import com.wynntils.utils.render.type.UniversalTexture;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.wynn.ItemUtils;
 import java.util.Optional;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.Style;
+import net.minecraft.resources.Identifier;
 
 public class PowderSpecialBarOverlay extends Overlay {
-    @Persisted
-    private final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
+    private static final Identifier POWDER_SPECIAL_BAR_TEXTURE =
+            Identifier.withDefaultNamespace("textures/font/hud/gameplay/default/center_middle/powder_special.png");
+    private static final int TEXTURE_WIDTH = 320;
+    private static final int TEXTURE_HEIGHT = 192;
+    private static final int BAR_WIDTH = 12;
+    private static final int BAR_HEIGHT = 6;
+    private static final int CELL_WIDTH = 32;
+    private static final int CELL_HEIGHT = 32;
+    private static final int U_OFFSET = 10;
+    private static final int V_OFFSET = 13;
 
     @Persisted
-    private final Config<Boolean> flip = new Config<>(false);
-
-    @Persisted
-    private final Config<UniversalTexture> barTexture = new Config<>(UniversalTexture.A);
-
-    @Persisted
-    private final Config<Boolean> onlyIfWeaponHeld = new Config<>(false);
-
-    @Persisted
-    private final Config<Boolean> hideIfNoCharge = new Config<>(true);
-
-    @Persisted
-    private final Config<Boolean> shouldDisplayOriginal = new Config<>(true);
+    private final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
     public PowderSpecialBarOverlay() {
         super(
                 new OverlayPosition(
-                        -30,
-                        150,
-                        VerticalAlignment.BOTTOM,
+                        5,
+                        0,
+                        VerticalAlignment.MIDDLE,
                         HorizontalAlignment.CENTER,
-                        OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
-                new OverlaySize(81, 21));
+                        OverlayPosition.AnchorSection.MIDDLE),
+                new OverlaySize(BAR_WIDTH, BAR_HEIGHT));
     }
 
     @Override
     public void render(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
         Optional<PowderSpecialInfo> powderSpecialInfoOpt = Models.CharacterStats.getPowderSpecialInfo();
-        if (this.hideIfNoCharge.get() && powderSpecialInfoOpt.isEmpty()) return;
+        if (powderSpecialInfoOpt.isEmpty()) return;
 
-        if (this.onlyIfWeaponHeld.get()
-                && !ItemUtils.isWeapon(McUtils.inventory().getSelectedItem())) {
-            return;
-        }
-
-        PowderSpecialInfo powderSpecialInfo = powderSpecialInfoOpt.orElse(PowderSpecialInfo.EMPTY);
-        renderWithSpecificSpecial(guiGraphics, powderSpecialInfo.charge() * 100f, powderSpecialInfo.powder());
+        renderWithSpecificSpecial(
+                guiGraphics,
+                powderSpecialInfoOpt.get().charge() * 10f,
+                powderSpecialInfoOpt.get().powder());
     }
 
     @Override
     public void renderPreview(GuiGraphics guiGraphics, DeltaTracker deltaTracker, Window window) {
-        renderWithSpecificSpecial(guiGraphics, 40, Powder.THUNDER);
+        renderWithSpecificSpecial(guiGraphics, 4, Powder.THUNDER);
     }
 
     @Override
@@ -89,55 +71,32 @@ public class PowderSpecialBarOverlay extends Overlay {
 
     private void renderWithSpecificSpecial(
             GuiGraphics guiGraphics, float powderSpecialCharge, Powder powderSpecialType) {
-        Texture universalBarTexture = Texture.UNIVERSAL_BAR;
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
+                POWDER_SPECIAL_BAR_TEXTURE,
+                getRenderX(),
+                getRenderY(),
+                BAR_WIDTH,
+                BAR_HEIGHT,
+                U_OFFSET + (CELL_WIDTH * (Math.max(0, powderSpecialCharge - 1))),
+                calculateVOffset(powderSpecialType),
+                BAR_WIDTH,
+                BAR_HEIGHT,
+                TEXTURE_WIDTH,
+                TEXTURE_HEIGHT);
+    }
 
-        final float renderedHeight = barTexture.get().getHeight() * (this.getWidth() / 81);
-
-        float renderY =
-                switch (this.getRenderVerticalAlignment()) {
-                    case TOP -> this.getRenderY();
-                    case MIDDLE -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
-                    case BOTTOM -> this.getRenderY() + this.getHeight() - renderedHeight;
+    private int calculateVOffset(Powder powderSpecialType) {
+        int powderOrder = powderSpecialType == null
+                ? 0
+                : switch (powderSpecialType) {
+                    case AIR -> 1;
+                    case EARTH -> 2;
+                    case FIRE -> 3;
+                    case THUNDER -> 4;
+                    case WATER -> 5;
                 };
 
-        CustomColor color;
-        StyledText text;
-        if (powderSpecialType == null) {
-            color = CommonColors.GRAY;
-            text = StyledText.fromString("Unknown");
-        } else {
-            color = powderSpecialType.getColor();
-            text = StyledText.fromComponent(Component.empty()
-                    .withStyle(powderSpecialType.getLightColor())
-                    .append(Component.literal(String.valueOf(powderSpecialType.getSymbol()))
-                            .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT)))
-                    .append(Component.literal(" " + (int) powderSpecialCharge + "%")));
-        }
-
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        guiGraphics,
-                        text,
-                        this.getRenderX(),
-                        this.getRenderX() + this.getWidth(),
-                        renderY,
-                        0,
-                        color,
-                        this.getRenderHorizontalAlignment(),
-                        this.textShadow.get());
-
-        RenderUtils.drawColoredProgressBar(
-                guiGraphics,
-                universalBarTexture,
-                color,
-                this.getRenderX(),
-                renderY + 10,
-                this.getRenderX() + this.getWidth(),
-                renderY + 10 + renderedHeight,
-                0,
-                barTexture.get().getTextureY1(),
-                Texture.UNIVERSAL_BAR.width(),
-                barTexture.get().getTextureY2(),
-                (this.flip.get() ? -1f : 1f) * powderSpecialCharge / 100f);
+        return V_OFFSET + (CELL_HEIGHT * powderOrder);
     }
 }
