@@ -254,22 +254,30 @@ public final class PathCreationScreen extends WynntilsScreen {
                 inherited);
 
         int actionWidth = (546 - 5) / 2;
+
+        button(left, y + 282, actionWidth, "cancel", Texture.MANAGER_WIDGET_BACKGROUND_RED, () -> {
+            Services.MapPaths.cancel();
+            McUtils.setScreen(previous);
+        });
+
+        int saveX = left + actionWidth + 5;
         saveButton = null;
         if (editing || Services.MapPaths.isRecording()) {
-            saveButton = button(left, y + 282, actionWidth, "save", Texture.MANAGER_WIDGET_BACKGROUND_GREEN, () -> {
-                configure();
-                if (Services.MapPaths.save(label).isEmpty()) {
-                    error = Component.translatable("command.wynntils.map.path.saveFailed")
-                            .getString();
-                    McUtils.sendErrorToClient(error);
+            saveButton =
+                    button(saveX, y + 282, left + 546 - saveX, "save", Texture.MANAGER_WIDGET_BACKGROUND_GREEN, () -> {
+                        configure();
+                        if (Services.MapPaths.save(label).isEmpty()) {
+                            error = Component.translatable("command.wynntils.map.path.saveFailed")
+                                    .getString();
+                            McUtils.sendErrorToClient(error);
 
-                    return;
-                }
+                            return;
+                        }
 
-                McUtils.setScreen(previous);
-            });
+                        McUtils.setScreen(previous);
+                    });
         } else {
-            button(left, y + 282, actionWidth, "record", Texture.MANAGER_WIDGET_BACKGROUND_GREEN, () -> {
+            button(saveX, y + 282, left + 546 - saveX, "record", Texture.MANAGER_WIDGET_BACKGROUND_GREEN, () -> {
                 configure();
                 if (Services.MapPaths.startRecording()) {
                     McUtils.setScreen(null);
@@ -277,11 +285,6 @@ public final class PathCreationScreen extends WynntilsScreen {
             });
         }
 
-        int cancelX = left + actionWidth + 5;
-        button(cancelX, y + 282, left + 546 - cancelX, "cancel", Texture.MANAGER_WIDGET_BACKGROUND_RED, () -> {
-            Services.MapPaths.cancel();
-            McUtils.setScreen(previous);
-        });
         updateButtons();
     }
 
