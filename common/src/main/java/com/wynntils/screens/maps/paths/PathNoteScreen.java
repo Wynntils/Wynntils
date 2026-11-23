@@ -38,6 +38,13 @@ import net.minecraft.world.phys.Vec3;
 public final class PathNoteScreen extends WynntilsScreen {
     private static final int WIDTH = 576;
     private static final int HEIGHT = 320;
+    private static final int OPTIONS_X = 220;
+    private static final int OPTIONS_WIDTH = 341;
+    private static final int OPTIONS_PADDING = 6;
+    private static final int INPUT_GAP = 5;
+    private static final int INPUT_WIDTH = OPTIONS_WIDTH - 2 * OPTIONS_PADDING;
+    private static final int COORDINATE_WIDTH = (INPUT_WIDTH - 2 * INPUT_GAP) / 3;
+    private static final int COORDINATE_STEP = COORDINATE_WIDTH + INPUT_GAP;
 
     private final Screen previous;
     private String content = "";
@@ -82,10 +89,12 @@ public final class PathNoteScreen extends WynntilsScreen {
                 x + 15, y + 43, 200, 231, this::selectNote, this::removeNote, Services.MapPaths::canEditNotes));
         noteList.scrollOffsetY = scroll;
         noteList.setNotes(Services.MapPaths.getNotes(), selected);
-        int left = x + 220;
+        int left = x + OPTIONS_X + OPTIONS_PADDING;
+        int toggleWidth = (INPUT_WIDTH - INPUT_GAP) / 2;
+        int rightToggle = left + toggleWidth + INPUT_GAP;
 
         TexturedTextInputBoxWidget textInput = new TexturedTextInputBoxWidget(
-                left, y + 43, 341, 20, value -> content = value, this, TexturedTextInputBoxWidget.Mode.STRING);
+                left, y + 43, INPUT_WIDTH, 20, value -> content = value, this, TexturedTextInputBoxWidget.Mode.STRING);
         textInput.setTextBoxInput(content);
         addRenderableWidget(textInput);
 
@@ -95,30 +104,54 @@ public final class PathNoteScreen extends WynntilsScreen {
                 text("shadowColor"), text("shadowDescription"), shadowColor, CommonColors.BLACK, this, true);
         colorWidget.setX(left);
         colorWidget.setY(y + 70);
-        colorWidget.setWidth(341);
+        colorWidget.setWidth(INPUT_WIDTH);
         shadowWidget.setX(left);
         shadowWidget.setY(y + 94);
-        shadowWidget.setWidth(341);
+        shadowWidget.setWidth(INPUT_WIDTH);
         addRenderableWidget(colorWidget);
         addRenderableWidget(shadowWidget);
 
-        boldWidget = toggle(left, y + 118, "bold", bold);
-        italicWidget = toggle(left + 173, y + 118, "italic", italic);
-        underlineWidget = toggle(left, y + 142, "underlined", underlined);
-        strikeWidget = toggle(left + 173, y + 142, "strikethrough", strikethrough);
+        boldWidget = toggle(left, y + 118, toggleWidth, "bold", bold);
+        italicWidget = toggle(rightToggle, y + 118, toggleWidth, "italic", italic);
+        underlineWidget = toggle(left, y + 142, toggleWidth, "underlined", underlined);
+        strikeWidget = toggle(rightToggle, y + 142, toggleWidth, "strikethrough", strikethrough);
 
         TexturedTextInputBoxWidget fontInput = new TexturedTextInputBoxWidget(
-                left + 55, y + 166, 286, 20, value -> fontId = value, this, TexturedTextInputBoxWidget.Mode.STRING);
+                left + 55,
+                y + 166,
+                INPUT_WIDTH - 55,
+                20,
+                value -> fontId = value,
+                this,
+                TexturedTextInputBoxWidget.Mode.STRING);
         fontInput.setTextBoxInput(fontId);
         fontInput.setTooltip(Tooltip.create(text("fontHint")));
         addRenderableWidget(fontInput);
 
         TexturedTextInputBoxWidget inputX = new TexturedTextInputBoxWidget(
-                left, y + 202, 110, 20, value -> positionX = value, this, TexturedTextInputBoxWidget.Mode.FLOAT);
+                left,
+                y + 202,
+                COORDINATE_WIDTH,
+                20,
+                value -> positionX = value,
+                this,
+                TexturedTextInputBoxWidget.Mode.FLOAT);
         TexturedTextInputBoxWidget inputY = new TexturedTextInputBoxWidget(
-                left + 115, y + 202, 110, 20, value -> positionY = value, this, TexturedTextInputBoxWidget.Mode.FLOAT);
+                left + COORDINATE_STEP,
+                y + 202,
+                COORDINATE_WIDTH,
+                20,
+                value -> positionY = value,
+                this,
+                TexturedTextInputBoxWidget.Mode.FLOAT);
         TexturedTextInputBoxWidget inputZ = new TexturedTextInputBoxWidget(
-                left + 230, y + 202, 111, 20, value -> positionZ = value, this, TexturedTextInputBoxWidget.Mode.FLOAT);
+                left + 2 * COORDINATE_STEP,
+                y + 202,
+                INPUT_WIDTH - 2 * COORDINATE_STEP,
+                20,
+                value -> positionZ = value,
+                this,
+                TexturedTextInputBoxWidget.Mode.FLOAT);
         inputX.setTextBoxInput(positionX);
         inputY.setTextBoxInput(positionY);
         inputZ.setTextBoxInput(positionZ);
@@ -129,7 +162,7 @@ public final class PathNoteScreen extends WynntilsScreen {
         newButton = addRenderableWidget(new StyledButton(
                 x + 15, y + 282, 200, 20, text("new"), Texture.MANAGER_WIDGET_BACKGROUND, () -> selectNote(null)));
         saveButton = addRenderableWidget(new StyledButton(
-                left,
+                x + OPTIONS_X,
                 y + 282,
                 168,
                 20,
@@ -138,7 +171,7 @@ public final class PathNoteScreen extends WynntilsScreen {
                 Texture.MANAGER_WIDGET_BACKGROUND_DARKGREEN,
                 this::saveNote));
         addRenderableWidget(new StyledButton(
-                left + 173, y + 282, 168, 20, text("done"), Texture.MANAGER_WIDGET_BACKGROUND, this::onClose));
+                x + OPTIONS_X + 173, y + 282, 168, 20, text("done"), Texture.MANAGER_WIDGET_BACKGROUND, this::onClose));
     }
 
     @Override
@@ -149,6 +182,10 @@ public final class PathNoteScreen extends WynntilsScreen {
     @Override
     public void doRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(graphics, Texture.MANAGER_BACKGROUND, x, y);
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                graphics, Texture.MANAGER_WIDGET_BACKGROUND, x + OPTIONS_X, y + 27, OPTIONS_WIDTH, 201);
+        int optionsLeft = x + OPTIONS_X + OPTIONS_PADDING;
+
         RenderUtils.drawNineSliceScalingTexturedRect(
                 graphics, Texture.MANAGER_SCROLL_BAR_HEADER, x + 15, y + 18, 150, 16);
         FontRenderer.getInstance()
@@ -165,7 +202,7 @@ public final class PathNoteScreen extends WynntilsScreen {
                 .renderText(
                         graphics,
                         StyledText.fromComponent(text("text")),
-                        x + 220,
+                        optionsLeft,
                         y + 33,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -175,7 +212,7 @@ public final class PathNoteScreen extends WynntilsScreen {
                 .renderText(
                         graphics,
                         StyledText.fromComponent(text("font")),
-                        x + 220,
+                        optionsLeft,
                         y + 176,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -185,7 +222,7 @@ public final class PathNoteScreen extends WynntilsScreen {
                 .renderText(
                         graphics,
                         StyledText.fromComponent(Component.literal("X")),
-                        x + 220,
+                        optionsLeft,
                         y + 192,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -195,7 +232,7 @@ public final class PathNoteScreen extends WynntilsScreen {
                 .renderText(
                         graphics,
                         StyledText.fromComponent(Component.literal("Y")),
-                        x + 335,
+                        optionsLeft + COORDINATE_STEP,
                         y + 192,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -205,7 +242,7 @@ public final class PathNoteScreen extends WynntilsScreen {
                 .renderText(
                         graphics,
                         StyledText.fromComponent(Component.literal("Z")),
-                        x + 450,
+                        optionsLeft + 2 * COORDINATE_STEP,
                         y + 192,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -216,13 +253,13 @@ public final class PathNoteScreen extends WynntilsScreen {
         renderables.forEach(widget -> widget.render(graphics, mouseX, mouseY, partialTick));
 
         RenderUtils.drawNineSliceScalingTexturedRect(
-                graphics, Texture.MANAGER_SCROLL_BAR_HEADER, x + 220, y + 230, 150, 16);
+                graphics, Texture.MANAGER_SCROLL_BAR_HEADER, x + 220, y + 233, 150, 16);
         FontRenderer.getInstance()
                 .renderText(
                         graphics,
                         StyledText.fromComponent(text("preview")),
                         x + 240,
-                        y + 238,
+                        y + 241,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE,
@@ -348,7 +385,7 @@ public final class PathNoteScreen extends WynntilsScreen {
         }
     }
 
-    private PathToggleOptionWidget toggle(int x, int y, String key, boolean value) {
+    private PathToggleOptionWidget toggle(int x, int y, int width, String key, boolean value) {
         PathToggleOptionWidget widget =
                 new PathToggleOptionWidget(text(key), text(key + "Description"), attributes -> Optional.of(false));
         widget.updateFromAttributes(Optional.empty(), Optional.empty());
@@ -356,7 +393,7 @@ public final class PathNoteScreen extends WynntilsScreen {
         widget.setInherited(false);
         widget.setX(x);
         widget.setY(y);
-        widget.setWidth(168);
+        widget.setWidth(width);
 
         return addRenderableWidget(widget);
     }
