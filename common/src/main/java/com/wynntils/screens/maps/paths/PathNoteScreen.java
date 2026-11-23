@@ -41,6 +41,8 @@ public final class PathNoteScreen extends WynntilsScreen {
     private static final int WIDTH = 576;
     private static final int HEIGHT = 320;
     private static final int CONTENT_TOP = 43;
+    private static final int NOTE_LIST_X = 15;
+    private static final int NOTE_LIST_WIDTH = 200;
     private static final int CONTENT_BOTTOM = 274;
     private static final int OPTIONS_X = 220;
     private static final int OPTIONS_BOTTOM = 239;
@@ -50,6 +52,9 @@ public final class PathNoteScreen extends WynntilsScreen {
     private static final int INPUT_WIDTH = OPTIONS_WIDTH - 2 * OPTIONS_PADDING;
     private static final int COORDINATE_WIDTH = (INPUT_WIDTH - 2 * INPUT_GAP) / 3;
     private static final int COORDINATE_STEP = COORDINATE_WIDTH + INPUT_GAP;
+    private static final int BUTTON_Y = 282;
+    private static final int BUTTON_WIDTH = 80;
+    private static final int BUTTON_GAP = BUTTON_WIDTH / 2;
     private static final int PREVIEW_PADDING = 5;
     private static final CustomColor PREVIEW_TITLE_COLOR = CustomColor.fromInt(0x524030);
 
@@ -75,6 +80,7 @@ public final class PathNoteScreen extends WynntilsScreen {
     private StyledButton newButton;
     private PathNoteListWidget noteList;
     private PathNote selected;
+    private boolean editingNote;
     private Component error = Component.empty();
     private int x;
     private int y;
@@ -82,7 +88,6 @@ public final class PathNoteScreen extends WynntilsScreen {
     public PathNoteScreen(Screen previous) {
         super(Component.translatable("screens.wynntils.map.paths.noteEditor.title"));
         this.previous = previous;
-        loadNote(null);
     }
 
     @Override
@@ -93,15 +98,133 @@ public final class PathNoteScreen extends WynntilsScreen {
         y = (height - HEIGHT) / 2;
         int scroll = noteList == null ? 0 : noteList.scrollOffsetY;
         noteList = addRenderableWidget(new PathNoteListWidget(
-                x + 15,
+                x + NOTE_LIST_X,
                 y + CONTENT_TOP,
-                200,
+                NOTE_LIST_WIDTH,
                 CONTENT_BOTTOM - CONTENT_TOP,
                 this::selectNote,
                 this::removeNote,
                 Services.MapPaths::canEditNotes));
         noteList.scrollOffsetY = scroll;
         noteList.setNotes(Services.MapPaths.getNotes(), selected);
+
+        int doneX = x + (WIDTH - BUTTON_WIDTH) / 2;
+        newButton = addRenderableWidget(new StyledButton(
+                doneX - BUTTON_GAP - BUTTON_WIDTH,
+                y + BUTTON_Y,
+                BUTTON_WIDTH,
+                20,
+                text("new"),
+                Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
+                Texture.MANAGER_WIDGET_BACKGROUND_DARKGREEN,
+                () -> selectNote(null)));
+        addRenderableWidget(new StyledButton(
+                doneX, y + BUTTON_Y, BUTTON_WIDTH, 20, text("done"), Texture.MANAGER_WIDGET_BACKGROUND, this::onClose));
+        saveButton = addRenderableWidget(new StyledButton(
+                doneX + BUTTON_WIDTH + BUTTON_GAP,
+                y + BUTTON_Y,
+                BUTTON_WIDTH,
+                20,
+                text("save"),
+                Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
+                Texture.MANAGER_WIDGET_BACKGROUND_DARKGREEN,
+                this::saveNote));
+        updateButtons();
+
+        if (editingNote) {
+            addNoteOptions();
+        }
+    }
+
+    @Override
+    public void onClose() {
+        McUtils.setScreen(previous);
+    }
+
+    @Override
+    public void doRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.drawTexturedRect(graphics, Texture.MANAGER_BACKGROUND, x, y);
+        RenderUtils.drawNineSliceScalingTexturedRect(
+                graphics, Texture.MANAGER_SCROLL_BAR_HEADER, x + 15, y + 18, 150, 16);
+        FontRenderer.getInstance()
+                .renderText(
+                        graphics,
+                        StyledText.fromComponent(getTitle()),
+                        x + 35,
+                        y + 26,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.NORMAL);
+        if (editingNote) {
+            renderNoteOptions(graphics);
+        }
+
+        updateButtons();
+        renderables.forEach(widget -> widget.render(graphics, mouseX, mouseY, partialTick));
+
+        if (editingNote) {
+            renderPreview(graphics);
+        }
+
+        if (!error.getString().isEmpty()) {
+            FontRenderer.getInstance()
+                    .renderScrollingText(
+                            graphics,
+                            StyledText.fromComponent(error),
+                            x + 561,
+                            y + 26,
+                            341,
+                            CommonColors.RED,
+                            HorizontalAlignment.RIGHT,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        }
+
+        if (!editingNote) return;
+
+        for (AbstractOptionWidget<?> widget :
+                List.of(colorWidget, shadowWidget, boldWidget, italicWidget, underlineWidget, strikeWidget)) {
+            List<Component> lines = widget.getTooltipLines(mouseX, mouseY);
+            if (!lines.isEmpty()) {
+                graphics.setTooltipForNextFrame(
+                        lines.stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
+            }
+        }
+    }
+
+    @Override
+    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
+        if (editingNote) {
+            for (ColorOptionWidget widget : List.of(colorWidget, shadowWidget)) {
+                if (widget.isMouseOverTextBox(event.x(), event.y())) {
+                    setFocusedTextInput(widget.getTextInputBoxWidget(event.x(), event.y()));
+                }
+            }
+        }
+
+        boolean handled = super.doMouseClicked(event, isDoubleClick);
+        TextInputBoxWidget focused = getFocusedTextInput();
+        if (focused != null && !focused.isMouseOver(event.x(), event.y())) {
+            setFocusedTextInput(null);
+        }
+
+        return handled;
+    }
+
+    @Override
+    protected void rebuildWidgets() {
+        collectStyle();
+        super.rebuildWidgets();
+    }
+
+    private void updateButtons() {
+        boolean canEditNotes = Services.MapPaths.canEditNotes();
+        newButton.active = canEditNotes;
+        saveButton.active = canEditNotes && editingNote && !content.isBlank();
+    }
+
+    private void addNoteOptions() {
         int left = x + OPTIONS_X + OPTIONS_PADDING;
         int toggleWidth = (INPUT_WIDTH - INPUT_GAP) / 2;
         int rightToggle = left + toggleWidth + INPUT_GAP;
@@ -171,30 +294,9 @@ public final class PathNoteScreen extends WynntilsScreen {
         addRenderableWidget(inputX);
         addRenderableWidget(inputY);
         addRenderableWidget(inputZ);
-
-        newButton = addRenderableWidget(new StyledButton(
-                x + 15, y + 282, 200, 20, text("new"), Texture.MANAGER_WIDGET_BACKGROUND, () -> selectNote(null)));
-        saveButton = addRenderableWidget(new StyledButton(
-                x + OPTIONS_X,
-                y + 282,
-                168,
-                20,
-                text("save"),
-                Texture.MANAGER_WIDGET_BACKGROUND_GREEN,
-                Texture.MANAGER_WIDGET_BACKGROUND_DARKGREEN,
-                this::saveNote));
-        addRenderableWidget(new StyledButton(
-                x + OPTIONS_X + 173, y + 282, 168, 20, text("done"), Texture.MANAGER_WIDGET_BACKGROUND, this::onClose));
     }
 
-    @Override
-    public void onClose() {
-        McUtils.setScreen(previous);
-    }
-
-    @Override
-    public void doRender(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(graphics, Texture.MANAGER_BACKGROUND, x, y);
+    private void renderNoteOptions(GuiGraphics graphics) {
         RenderUtils.drawNineSliceScalingTexturedRect(
                 graphics,
                 Texture.MANAGER_WIDGET_BACKGROUND,
@@ -204,18 +306,6 @@ public final class PathNoteScreen extends WynntilsScreen {
                 OPTIONS_BOTTOM - CONTENT_TOP);
         int optionsLeft = x + OPTIONS_X + OPTIONS_PADDING;
 
-        RenderUtils.drawNineSliceScalingTexturedRect(
-                graphics, Texture.MANAGER_SCROLL_BAR_HEADER, x + 15, y + 18, 150, 16);
-        FontRenderer.getInstance()
-                .renderText(
-                        graphics,
-                        StyledText.fromComponent(getTitle()),
-                        x + 35,
-                        y + 26,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
-                        TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         graphics,
@@ -266,10 +356,9 @@ public final class PathNoteScreen extends WynntilsScreen {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
-        saveButton.active = Services.MapPaths.canEditNotes();
-        newButton.active = Services.MapPaths.canEditNotes();
-        renderables.forEach(widget -> widget.render(graphics, mouseX, mouseY, partialTick));
+    }
 
+    private void renderPreview(GuiGraphics graphics) {
         int previewTop = OPTIONS_BOTTOM + 5;
         int previewTextX = x + OPTIONS_X + PREVIEW_PADDING;
         int previewTextWidth = OPTIONS_WIDTH - 2 * PREVIEW_PADDING;
@@ -307,52 +396,6 @@ public final class PathNoteScreen extends WynntilsScreen {
                     TextShadow.NORMAL);
             RenderUtils.disableScissor(graphics);
         }
-
-        if (!error.getString().isEmpty()) {
-            FontRenderer.getInstance()
-                    .renderScrollingText(
-                            graphics,
-                            StyledText.fromComponent(error),
-                            x + 561,
-                            y + 26,
-                            341,
-                            CommonColors.RED,
-                            HorizontalAlignment.RIGHT,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-        }
-
-        for (AbstractOptionWidget<?> widget :
-                List.of(colorWidget, shadowWidget, boldWidget, italicWidget, underlineWidget, strikeWidget)) {
-            List<Component> lines = widget.getTooltipLines(mouseX, mouseY);
-            if (!lines.isEmpty()) {
-                graphics.setTooltipForNextFrame(
-                        lines.stream().map(Component::getVisualOrderText).toList(), mouseX, mouseY);
-            }
-        }
-    }
-
-    @Override
-    public boolean doMouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        for (ColorOptionWidget widget : List.of(colorWidget, shadowWidget)) {
-            if (widget.isMouseOverTextBox(event.x(), event.y())) {
-                setFocusedTextInput(widget.getTextInputBoxWidget(event.x(), event.y()));
-            }
-        }
-
-        boolean handled = super.doMouseClicked(event, isDoubleClick);
-        TextInputBoxWidget focused = getFocusedTextInput();
-        if (focused != null && !focused.isMouseOver(event.x(), event.y())) {
-            setFocusedTextInput(null);
-        }
-
-        return handled;
-    }
-
-    @Override
-    protected void rebuildWidgets() {
-        collectStyle();
-        super.rebuildWidgets();
     }
 
     private void loadNote(PathNote note) {
@@ -390,6 +433,7 @@ public final class PathNoteScreen extends WynntilsScreen {
     }
 
     private void selectNote(PathNote note) {
+        editingNote = true;
         loadNote(note);
         super.rebuildWidgets();
     }
@@ -404,7 +448,11 @@ public final class PathNoteScreen extends WynntilsScreen {
 
         if (selected == note) {
             List<PathNote> remaining = Services.MapPaths.getNotes();
-            selectNote(remaining.isEmpty() ? null : remaining.get(Math.min(index, remaining.size() - 1)));
+            if (remaining.isEmpty()) {
+                closeNoteEditor();
+            } else {
+                selectNote(remaining.get(Math.min(index, remaining.size() - 1)));
+            }
         } else {
             rebuildWidgets();
         }
@@ -424,7 +472,7 @@ public final class PathNoteScreen extends WynntilsScreen {
     }
 
     private void collectStyle() {
-        if (colorWidget == null) return;
+        if (!editingNote || colorWidget == null) return;
 
         color = colorWidget.getValue();
         shadowColor = shadowWidget.getValue();
@@ -486,7 +534,14 @@ public final class PathNoteScreen extends WynntilsScreen {
             }
         }
 
-        selectNote(null);
+        closeNoteEditor();
+    }
+
+    private void closeNoteEditor() {
+        editingNote = false;
+        selected = null;
+        error = Component.empty();
+        super.rebuildWidgets();
     }
 
     private Identifier resolveFont() {
