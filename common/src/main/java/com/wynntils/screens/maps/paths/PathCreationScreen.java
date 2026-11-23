@@ -43,7 +43,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
@@ -118,7 +117,6 @@ public final class PathCreationScreen extends WynntilsScreen {
                     selected -> category = selected));
         });
         categoryButton.setMessage(Component.literal(category));
-        categoryButton.setTooltip(Tooltip.create(Component.literal(category)));
 
         worldOptions = addRenderableWidget(new PathOptionsScrollBarWidget(left, y + 97, 270, 177, text("worldHeader")));
         mapOptions = addRenderableWidget(new PathOptionsScrollBarWidget(right, y + 97, 271, 177, text("mapHeader")));
