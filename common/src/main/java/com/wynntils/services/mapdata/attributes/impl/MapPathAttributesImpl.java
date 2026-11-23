@@ -32,6 +32,10 @@ public final class MapPathAttributesImpl extends MapAttributesImpl implements Ma
                 null,
                 null,
                 null,
+                null,
+                null,
+                null,
+                null,
                 null);
     }
 

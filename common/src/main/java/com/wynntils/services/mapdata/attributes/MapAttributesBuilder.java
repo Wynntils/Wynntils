@@ -15,6 +15,7 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapLocationAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapPathAttributes;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.PrismStyle;
 import com.wynntils.utils.render.type.TextShadow;
 import java.lang.reflect.Field;
 
@@ -34,6 +35,10 @@ public class MapAttributesBuilder {
     private CustomColor fillColor;
     private CustomColor borderColor;
     private Float borderWidth;
+    private Boolean borderRenderInWorld;
+    private CustomColor borderWorldColor;
+    private Float borderWorldWidth;
+    private PrismStyle borderWorldStyle;
 
     public MapAttributesBuilder from(MapAttributes attributes) {
         if (attributes == null) return this;
@@ -56,6 +61,10 @@ public class MapAttributesBuilder {
         this.borderColor =
                 MapAttributes.firstColor(attributes.getBorderColors()).orElse(null);
         this.borderWidth = attributes.getBorderWidth().orElse(null);
+        this.borderRenderInWorld = attributes.getBorderRenderInWorld().orElse(null);
+        this.borderWorldColor = attributes.getBorderWorldColor().orElse(null);
+        this.borderWorldWidth = attributes.getBorderWorldWidth().orElse(null);
+        this.borderWorldStyle = attributes.getBorderWorldStyle().orElse(null);
         return this;
     }
 
@@ -134,6 +143,26 @@ public class MapAttributesBuilder {
         return this;
     }
 
+    public MapAttributesBuilder setBorderRenderInWorld(Boolean borderRenderInWorld) {
+        this.borderRenderInWorld = borderRenderInWorld;
+        return this;
+    }
+
+    public MapAttributesBuilder setBorderWorldColor(CustomColor borderWorldColor) {
+        this.borderWorldColor = borderWorldColor;
+        return this;
+    }
+
+    public MapAttributesBuilder setBorderWorldWidth(Float borderWorldWidth) {
+        this.borderWorldWidth = borderWorldWidth;
+        return this;
+    }
+
+    public MapAttributesBuilder setBorderWorldStyle(PrismStyle borderWorldStyle) {
+        this.borderWorldStyle = borderWorldStyle;
+        return this;
+    }
+
     public MapLocationAttributesBuilder asLocationAttributes() {
         return new MapLocationAttributesBuilder();
     }
@@ -203,7 +232,11 @@ public class MapAttributesBuilder {
                     labelShadow,
                     fillColor,
                     borderColor,
-                    borderWidth);
+                    borderWidth,
+                    borderRenderInWorld,
+                    borderWorldColor,
+                    borderWorldWidth,
+                    borderWorldStyle);
         }
     }
 }

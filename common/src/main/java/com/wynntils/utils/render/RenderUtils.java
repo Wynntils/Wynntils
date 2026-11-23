@@ -13,6 +13,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
 import com.wynntils.utils.render.state.ArcRenderState;
 import com.wynntils.utils.render.state.CircleClippedBlitRenderState;
@@ -48,6 +49,7 @@ import net.minecraft.client.renderer.texture.AbstractTexture;
 import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.gizmos.Gizmos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.util.Mth;
@@ -1583,5 +1585,14 @@ public final class RenderUtils {
             guiGraphics.guiRenderState.submitGuiElement(new ColoredLineBatchRenderState(
                     RenderPipelines.GUI, TextureSetup.noTexture(), pose, segments, scissorArea));
         }
+    }
+
+    public static void drawPolygon(List<Location> vertices, int color, float width) {
+        for (int i = 0; i < vertices.size() - 1; ++i) {
+            Location a = vertices.get(i);
+            Location b = vertices.get(i + 1);
+            Gizmos.line(a.toVec3(), b.toVec3(), color, width);
+        }
+        Gizmos.line(vertices.getFirst().toVec3(), vertices.getLast().toVec3(), color, width);
     }
 }

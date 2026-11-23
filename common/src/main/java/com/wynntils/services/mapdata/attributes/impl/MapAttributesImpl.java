@@ -9,6 +9,7 @@ import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.PrismStyle;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +30,10 @@ public class MapAttributesImpl implements MapAttributes {
     private final CustomColor fillColor;
     private final CustomColor borderColor;
     private final Float borderWidth;
+    private final Boolean borderRenderInWorld;
+    private final CustomColor borderWorldColor;
+    private final Float borderWorldWidth;
+    private final PrismStyle borderWorldStyle;
 
     public MapAttributesImpl(
             Integer priority,
@@ -45,7 +50,11 @@ public class MapAttributesImpl implements MapAttributes {
             MapMarkerOptionsImpl markerOptions,
             CustomColor fillColor,
             CustomColor borderColor,
-            Float borderWidth) {
+            Float borderWidth,
+            Boolean borderRenderInWorld,
+            CustomColor borderWorldColor,
+            Float borderWorldWidth,
+            PrismStyle borderWorldStyle) {
         this.priority = priority;
         this.level = level;
         this.label = label;
@@ -61,6 +70,10 @@ public class MapAttributesImpl implements MapAttributes {
         this.fillColor = fillColor;
         this.borderColor = borderColor;
         this.borderWidth = borderWidth;
+        this.borderRenderInWorld = borderRenderInWorld;
+        this.borderWorldColor = borderWorldColor;
+        this.borderWorldWidth = borderWorldWidth;
+        this.borderWorldStyle = borderWorldStyle;
     }
 
     public MapAttributesImpl(MapAttributesImpl attributes) {
@@ -79,7 +92,11 @@ public class MapAttributesImpl implements MapAttributes {
                 attributes.markerOptions,
                 attributes.fillColor,
                 attributes.borderColor,
-                attributes.borderWidth);
+                attributes.borderWidth,
+                attributes.borderRenderInWorld,
+                attributes.borderWorldColor,
+                attributes.borderWorldWidth,
+                attributes.borderWorldStyle);
     }
 
     @Override
@@ -155,6 +172,26 @@ public class MapAttributesImpl implements MapAttributes {
     @Override
     public Optional<Float> getBorderWidth() {
         return Optional.ofNullable(borderWidth);
+    }
+
+    @Override
+    public Optional<Boolean> getBorderRenderInWorld() {
+        return Optional.ofNullable(borderRenderInWorld);
+    }
+
+    @Override
+    public Optional<CustomColor> getBorderWorldColor() {
+        return Optional.ofNullable(borderWorldColor);
+    }
+
+    @Override
+    public Optional<Float> getBorderWorldWidth() {
+        return Optional.ofNullable(borderWorldWidth);
+    }
+
+    @Override
+    public Optional<PrismStyle> getBorderWorldStyle() {
+        return Optional.ofNullable(borderWorldStyle);
     }
 
     @Override
