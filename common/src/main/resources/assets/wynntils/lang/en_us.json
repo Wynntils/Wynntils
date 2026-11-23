@@ -3923,7 +3923,7 @@
   "screens.wynntils.map.paths.inheritValue": "Leave blank to inherit: %s",
   "screens.wynntils.map.paths.label": "Label",
   "screens.wynntils.map.paths.labelColor": "Label color",
-  "screens.wynntils.map.paths.lineTexture": "Line — no texture",
+  "screens.wynntils.map.paths.lineTexture": "Line",
   "screens.wynntils.map.paths.lineTexture.description": "No texture is selected. The world path renders as a plain line.",
   "screens.wynntils.map.paths.mapColor": "Fill color",
   "screens.wynntils.map.paths.mapHeader": "Map appearance",
