@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TimeTrialCheckpointTimeSegmentMatcher implements ActionBarSegmentMatcher {
-    private static final String SEGMENT_START = "\uDB00\uDC29\u0001";
+    private static final String SEGMENT_START = "\uDB00\uDC2E\u0001";
 
     private static final String TIME_PATTERN = "(?:(?<minute>\\d+):)?(?<seconds>\\d+).(?<milliseconds>\\d+)";
 

@@ -24,7 +24,8 @@ public enum TrialType {
     TREASURY_BILL("Treasury Bill"),
     ULTIMATE_SACRIFICE("Ultimate Sacrifice"),
     WARMTH_DEVOURER("Warmth Devourer"),
-    IMPERITIA("Imperitia");
+    IMPERITIA("Imperitia"),
+    SPREZZATURA("Sprezzatura");
 
     private final String name;
 

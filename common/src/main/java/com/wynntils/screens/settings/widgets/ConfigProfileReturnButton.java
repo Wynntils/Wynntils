@@ -5,9 +5,11 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.wynnfonts.BannerPillFont;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.ConfigProfileScreen;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -16,26 +18,21 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.input.InputWithModifiers;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public class ConfigProfileReturnButton extends WynntilsButton {
-    private static final FontDescription.Resource PILL_FONT =
-            new FontDescription.Resource(Identifier.withDefaultNamespace("banner/pill"));
-    private static final MutableComponent RETURN_BACKGROUND = Component.literal(
-                    "\uDAFF\uDFFF\uE060\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE034\uDAFF\uDFFF\uE043\uDAFF\uDFFF\uE044\uDAFF\uDFFF\uE041\uDAFF\uDFFF\uE03D\uDAFF\uDFFF\uE062\uDAFF\uDFDA")
-            .withStyle(Style.EMPTY.withFont(PILL_FONT));
-    private static final MutableComponent RETURN_FOREGROUND = Component.literal("\uE011\uE004\uE013\uE014\uE011\uE00D")
-            .withStyle(Style.EMPTY.withFont(PILL_FONT).withColor(ChatFormatting.WHITE));
-
+    private final Component returnComponent;
+    private final Component returnComponentHovered;
     private final ConfigProfileScreen screen;
 
     public ConfigProfileReturnButton(int x, int y, int width, int height, ConfigProfileScreen screen) {
         super(x, y, width, height, Component.literal("Config Profile Return Button"));
 
         this.screen = screen;
+
+        this.returnComponent = BannerPillFont.buildMessage(
+                "return", CustomColor.fromChatFormatting(ChatFormatting.DARK_GRAY), CommonColors.WHITE, "");
+        this.returnComponentHovered = BannerPillFont.buildMessage(
+                "return", CustomColor.fromChatFormatting(ChatFormatting.GRAY), CommonColors.WHITE, "");
     }
 
     @Override
@@ -43,9 +40,7 @@ public class ConfigProfileReturnButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         guiGraphics,
-                        StyledText.fromComponent(RETURN_BACKGROUND.withStyle(
-                                        isHovered ? ChatFormatting.GRAY : ChatFormatting.DARK_GRAY))
-                                .append(StyledText.fromComponent(RETURN_FOREGROUND)),
+                        StyledText.fromComponent(isHovered ? returnComponentHovered : returnComponent),
                         getX() + width / 2f,
                         getY() + height,
                         CommonColors.WHITE,

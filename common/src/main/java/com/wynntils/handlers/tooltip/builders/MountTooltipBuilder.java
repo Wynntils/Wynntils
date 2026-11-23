@@ -34,6 +34,8 @@ import net.minecraft.network.chat.Style;
 
 public class MountTooltipBuilder extends TooltipBuilder {
     private static final ItemEmblem ITEM_EMBLEM = new ItemEmblem(ItemEmblem.ItemEmblemShape.BADGE, 4);
+    private static final CustomColor MOUNT_PRIMARY_COLOR = CustomColor.fromInt(0xede0d4);
+    private static final CustomColor MOUNT_SECONDARY_COLOR = CustomColor.fromInt(0xbc8f62);
 
     private final MountItem item;
 
@@ -61,15 +63,16 @@ public class MountTooltipBuilder extends TooltipBuilder {
                 ItemEmblemSprite.MOUNT,
                 Component.literal(StringUtils.toPossessive(item.getName()) + " "
                                 + item.getMountType().getMountItemName())
-                        .withStyle(CommonStyles.WHITE_LANGUAGE_WYNNCRAFT),
-                BannerBoxFont.buildMessage("mount", CommonColors.WHITE, CommonColors.BLACK, ""),
-                BannerBoxFont.buildMessage(
-                        item.getMountType().name(), item.getGearTier().getSecondaryColor(), CommonColors.BLACK, "")));
+                        .withStyle(Style.EMPTY
+                                .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
+                                .withColor(MOUNT_PRIMARY_COLOR.asInt())),
+                BannerBoxFont.buildMessage("mount", MOUNT_SECONDARY_COLOR, CommonColors.BLACK, ""),
+                BannerBoxFont.buildMessage(item.getMountType().name(), MOUNT_PRIMARY_COLOR, CommonColors.BLACK, "")));
 
         lines.add(TooltipLine.empty());
 
         lines.add(HeaderStatsLineBuilder.buildhighlightStatLine(
-                StringUtils.integerToShortString(item.getMountInfo().potential()), "Potential", item.getGearTier()));
+                StringUtils.integerToShortString(item.getMountInfo().potential()), "Potential", MOUNT_PRIMARY_COLOR));
 
         MutableComponent colorLine = Component.empty()
                 .append(Component.literal("\uE00E")
@@ -102,7 +105,7 @@ public class MountTooltipBuilder extends TooltipBuilder {
     private List<TooltipElement> buildRequirements() {
         List<TooltipElement> lines = new ArrayList<>();
 
-        lines.add(divider(item.getGearTier()));
+        lines.add(divider(MOUNT_PRIMARY_COLOR));
 
         lines.add(RequirementsLineBuilder.buildLevelRequirementLine(
                 item.getMountType().getLevel()));
@@ -118,7 +121,7 @@ public class MountTooltipBuilder extends TooltipBuilder {
     private List<TooltipElement> buildStats() {
         List<TooltipElement> lines = new ArrayList<>();
 
-        lines.add(divider(item.getGearTier()));
+        lines.add(divider(MOUNT_PRIMARY_COLOR));
 
         MutableComponent statsHeader = Component.empty()
                 .append(Component.literal("Level/Limit ")

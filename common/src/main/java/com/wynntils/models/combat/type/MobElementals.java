@@ -4,14 +4,13 @@
  */
 package com.wynntils.models.combat.type;
 
+import com.wynntils.core.text.fonts.CommonFonts;
 import com.wynntils.models.elements.type.Element;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FontDescription;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.resources.Identifier;
 
 public record MobElementals(List<Element> weaknesses, List<Element> damages, List<Element> defenses) {
     public static final MobElementals EMPTY = new MobElementals(List.of(), List.of(), List.of());
@@ -31,9 +30,7 @@ public record MobElementals(List<Element> weaknesses, List<Element> damages, Lis
 
         for (Element element : elements) {
             text.append(Component.literal(element.getSymbol())
-                    .withStyle(Style.EMPTY
-                            .withFont(new FontDescription.Resource(Identifier.withDefaultNamespace("common")))
-                            .withColor(element.getColorCode())));
+                    .withStyle(Style.EMPTY.withFont(CommonFonts.COMMON_FONT).withColor(element.getColorCode())));
         }
 
         // The label uses the colour of the last element in the group, can't use the same style as the symbol uses

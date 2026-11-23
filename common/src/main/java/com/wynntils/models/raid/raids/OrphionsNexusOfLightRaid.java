@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2025.
+ * Copyright © Wynntils 2025-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.raid.raids;
@@ -22,10 +22,10 @@ public class OrphionsNexusOfLightRaid extends RaidKind {
     private static Map<Integer, Map<String, String>> buildRoomMap() {
         Map<Integer, Map<String, String>> nameMap = new TreeMap<>();
 
-        Map<String, String> challenge1Map = Map.of("Hold the tower", "Decaying Tower");
-        Map<String, String> challenge2Map = Map.of(
-                "Kill all Crystalline", "Cloud Decay",
-                "Collect 10 Light", "Light Gathering");
+        Map<String, String> challenge1Map =
+                Map.of("Hold the tower", "Decaying Tower", "Kill all Crystalline", "Cloud Decay");
+        Map<String, String> challenge2Map =
+                Map.of("Collect 10 Light", "Light Gathering", "Cleanse the rooms of", "Seek And Destroy");
         Map<String, String> challenge3Map = Map.of(
                 "Purify the decaying", "Light Tower",
                 "Escort your party to", "Invisible Maze");

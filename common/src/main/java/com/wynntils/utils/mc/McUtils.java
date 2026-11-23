@@ -8,6 +8,8 @@ import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.fonts.wynnfonts.BannerPillFont;
+import com.wynntils.utils.colors.CustomColor;
 import java.io.File;
 import java.util.UUID;
 import net.minecraft.ChatFormatting;
@@ -167,7 +169,13 @@ public final class McUtils {
     }
 
     public static void sendWynntilsPillMessage(Component component) {
-        sendMessageToClient(ComponentUtils.addWynntilsPillHeader(component));
+        sendMessageToClient(Component.empty()
+                .append(BannerPillFont.buildMessage(
+                        "wynntils",
+                        CustomColor.fromChatFormatting(ChatFormatting.AQUA),
+                        CustomColor.fromChatFormatting(ChatFormatting.BLACK),
+                        " "))
+                .append(component));
     }
 
     public static void removeMessageFromChat(Component component) {

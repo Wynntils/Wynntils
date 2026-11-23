@@ -10,12 +10,13 @@ import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
-import com.wynntils.models.abilities.type.ArrowShieldAbility;
-import com.wynntils.models.abilities.type.BrokenMantleAbility;
-import com.wynntils.models.abilities.type.CastedAbilityType;
-import com.wynntils.models.abilities.type.GuardianAngelsAbility;
-import com.wynntils.models.abilities.type.JudrajimAbility;
-import com.wynntils.models.abilities.type.MantleAbility;
+import com.wynntils.models.abilities.type.castedabilities.ArrowShieldAbility;
+import com.wynntils.models.abilities.type.castedabilities.BrokenMantleAbility;
+import com.wynntils.models.abilities.type.castedabilities.CastedAbilityType;
+import com.wynntils.models.abilities.type.castedabilities.GuardianAngelsAbility;
+import com.wynntils.models.abilities.type.castedabilities.JudrajimAbility;
+import com.wynntils.models.abilities.type.castedabilities.MantleAbility;
+import com.wynntils.models.abilities.type.castedabilities.RitualCircleAbility;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
@@ -94,7 +95,8 @@ public final class CastedAbilityModel extends Model {
 
         for (CastedAbilityType type : abilityTypes) {
             if (!type.validClass()) continue;
-            if (type.isOutsideProximity(entity)) continue;
+            if (!type.isBoundToPlayer() && type.isOutsideProximity(entity)) continue;
+            if (type.isBoundToPlayer() && entity.getVehicle() != McUtils.player()) continue;
 
             if (withinCastWindow) {
                 if (!type.validSpell(lastCastSpell) && !type.validUnconfirmedSpell(lastUnconfirmedSpell)) continue;
@@ -205,12 +207,11 @@ public final class CastedAbilityModel extends Model {
     }
 
     private void registerAbilityTypes() {
-        MantleAbility mantleAbility = new MantleAbility();
-
-        abilityTypes.add(mantleAbility);
-        abilityTypes.add(new BrokenMantleAbility(mantleAbility));
+        abilityTypes.add(new MantleAbility());
+        abilityTypes.add(new BrokenMantleAbility());
         abilityTypes.add(new GuardianAngelsAbility());
         abilityTypes.add(new ArrowShieldAbility());
         abilityTypes.add(new JudrajimAbility());
+        abilityTypes.add(new RitualCircleAbility());
     }
 }

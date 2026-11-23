@@ -1,0 +1,13 @@
+{
+  "providers": [
+    {
+      "ascent": 8,
+      "chars": [
+        "\uE060\uE061"
+      ],
+      "file": "wynntils:font/mount_trait.png",
+      "height": 16,
+      "type": "bitmap"
+    }
+  ]
+}

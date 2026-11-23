@@ -32,6 +32,7 @@ import com.wynntils.core.persisted.upfixers.config.LootrunPathSettingsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MaxItensityToMaxIntensityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature;
+import com.wynntils.core.persisted.upfixers.config.MountEnergyToMountTraitsOverlayUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MythicBlockerToChestBlockerUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MythicFoundToValuableFoundUpfixer;
 import com.wynntils.core.persisted.upfixers.config.NpcDialoguesOverlayConfigsMovedUpfixer;
@@ -114,6 +115,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new SkillPointLoadoutsToBuildLoadoutsUpfixer());
         registerConfigUpfixer(new AbilityCooldownRedirectToFeatureUpfixer());
         registerConfigUpfixer(new ItemStatInfoRollStyleUpfixer());
+        registerConfigUpfixer(new MountEnergyToMountTraitsOverlayUpfixer());
         registerConfigUpfixer(new WorldMarkersRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersWaypointConfigsRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersFeatureRenamesUpfixer());
