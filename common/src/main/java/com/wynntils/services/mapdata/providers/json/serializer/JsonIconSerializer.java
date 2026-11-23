@@ -26,12 +26,17 @@ public final class JsonIconSerializer implements JsonDeserializer<MapIconImpl>, 
         String id = json.get("id").getAsString();
         String base64Texture = json.get("texture").getAsString();
 
-        byte[] texture = Base64.getDecoder().decode(base64Texture);
+        // Checked before decoding, so that a huge texture is never even decoded
+        if (base64Texture.length() > MapIconImpl.MAX_BASE64_LENGTH) {
+            WynntilsMod.warn("Ignoring icon " + id + ", its texture is too large");
+            return null;
+        }
 
         try {
+            byte[] texture = Base64.getDecoder().decode(base64Texture);
             return new MapIconImpl(id, texture);
-        } catch (IOException e) {
-            WynntilsMod.warn("Bad icon texture for " + id, e);
+        } catch (IOException | IllegalArgumentException e) {
+            WynntilsMod.warn("Ignoring icon " + id + ", it has a bad texture: " + e.getMessage());
             return null;
         }
     }

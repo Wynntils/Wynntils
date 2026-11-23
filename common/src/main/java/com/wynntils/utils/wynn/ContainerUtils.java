@@ -89,23 +89,27 @@ public final class ContainerUtils {
                 hashedItems.get(clickedSlot)));
     }
 
+    public static void pressSwapHandsOnSlot(int containerId, int stateId, int slotIndex, ItemStack carriedItem) {
+        pressKeyOnSlot(containerId, stateId, slotIndex, 40, ClickType.SWAP, carriedItem);
+    }
+
     public static void pressKeyOnSlot(int clickedSlot, int containerId, int buttonNum, List<ItemStack> items) {
+        pressKeyOnSlot(containerId, 0, clickedSlot, buttonNum, ClickType.SWAP, items.get(clickedSlot));
+    }
+
+    public static void pressKeyOnSlot(
+            int containerId, int stateId, int slotIndex, int buttonNum, ClickType clickType, ItemStack carriedItem) {
         Int2ObjectMap<HashedStack> changedSlots = new Int2ObjectOpenHashMap<>();
-        changedSlots.put(clickedSlot, ItemUtils.createHashedItem(new ItemStack(Items.AIR)));
-
-        List<HashedStack> hashedItems =
-                items.stream().map(ItemUtils::createHashedItem).toList();
-
-        int transactionId = 0;
+        changedSlots.put(slotIndex, ItemUtils.createHashedItem(new ItemStack(Items.AIR)));
 
         McUtils.sendPacket(new ServerboundContainerClickPacket(
                 containerId,
-                transactionId,
-                (short) clickedSlot,
+                stateId,
+                (short) slotIndex,
                 (byte) buttonNum,
-                ClickType.SWAP,
+                clickType,
                 changedSlots,
-                hashedItems.get(clickedSlot)));
+                ItemUtils.createHashedItem(carriedItem)));
     }
 
     public static void closeContainer(int containerId) {

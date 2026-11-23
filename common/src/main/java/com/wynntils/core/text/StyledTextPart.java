@@ -403,6 +403,11 @@ public final class StyledTextPart {
                             CustomColor.fromHexString(jsonObject.get("color").getAsString())
                                     .asInt());
                 }
+                if (jsonObject.has("shadowColor")) {
+                    style = style.withShadowColor(CustomColor.fromHexString(
+                                    jsonObject.get("shadowColor").getAsString())
+                            .asInt());
+                }
                 if (jsonObject.has("margin-left")) {
                     String marginType = jsonObject.get("margin-left").getAsString();
 

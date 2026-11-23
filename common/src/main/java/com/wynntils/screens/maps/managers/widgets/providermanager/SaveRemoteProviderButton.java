@@ -141,6 +141,16 @@ public class SaveRemoteProviderButton extends AbstractWidget implements TooltipP
                     "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.nameEmpty");
         }
 
+        if (name.contains(":")) {
+            return Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.nameInvalid");
+        }
+
+        if (Services.MapData.getProviderInfos().containsKey("built-in:" + name)) {
+            return Component.translatable(
+                    "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.nameBuiltIn");
+        }
+
         if (Services.MapData.getJsonProviderInfos().containsKey(name)) {
             return Component.translatable(
                     "screens.wynntils.map.managers.providerManager.saveRemoteProviderButton.error.nameExists");

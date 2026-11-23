@@ -4,10 +4,14 @@
  */
 package com.wynntils.models.activities.quests;
 
+import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.net.DownloadRegistry;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.type.ActivityDifficulty;
@@ -17,10 +21,12 @@ import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import java.io.Reader;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -33,8 +39,19 @@ public final class QuestModel extends Model {
 
     private final Map<String, QuestStorage> questStorage = new HashMap<>();
 
+    private Map<String, SimpleQuestInfo> quests = new LinkedHashMap<>();
+
     public QuestModel() {
         super(List.of());
+    }
+
+    @Override
+    public void registerDownloads(DownloadRegistry registry) {
+        registry.registerDownload(UrlId.DATA_STATIC_QUESTS).handleReader(this::handleQuests);
+    }
+
+    public SimpleQuestInfo getQuestInfo(String name) {
+        return quests.getOrDefault(name, SimpleQuestInfo.UNKNOWN);
     }
 
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
@@ -220,5 +237,11 @@ public final class QuestModel extends Model {
             Optional<Location> loc2 = quest2.nextLocation();
             return (int) (getDistance(loc1) - getDistance(loc2));
         }
+    }
+
+    private void handleQuests(Reader reader) {
+        TypeToken<Map<String, SimpleQuestInfo>> type = new TypeToken<>() {};
+
+        this.quests = Managers.Json.GSON.fromJson(reader, type.getType());
     }
 }

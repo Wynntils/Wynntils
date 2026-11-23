@@ -26,7 +26,6 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
     private static final int WIDGET_HEIGHT_PADDING = 4;
 
     private final ProviderManagementScreen parent;
-    private Mode selectedMode = Mode.FEATURES;
 
     private final ProviderInfoScrollBarSelectorWidget featuresButton;
     private final ProviderInfoScrollBarSelectorWidget categoriesButton;
@@ -75,20 +74,25 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
     public void populateWidgets() {
         registeredWidgets = new ArrayList<>();
         scrollOffsetY = 0;
-        String providerId = parent.getSelectedProviderId();
-        Optional<MapDataProvider> providerOpt = Services.MapData.getProviderFromId(providerId);
+        Optional<MapDataProvider> providerOpt =
+                Services.MapData.getProviderFromId(parent.getSelectedCompleteProviderId());
 
         if (providerOpt.isEmpty()) return;
 
         MapDataProvider provider = providerOpt.get();
+        Mode selectedMode = getSelectedMode();
+
+        // The selected provider may be disabled, so its own icons and categories have to be passed along, otherwise
+        // entries that use them would not be able to find them
+        String providerId = parent.getSelectedCompleteProviderId();
 
         if (selectedMode == Mode.FEATURES) {
             for (MapFeature<?> mapFeature : provider.getFeatures().toList()) {
-                registeredWidgets.add(new FeatureEntryWidget(0, 0, 0, 28, mapFeature));
+                registeredWidgets.add(new FeatureEntryWidget(0, 0, 0, 28, mapFeature, providerId));
             }
         } else if (selectedMode == Mode.CATEGORIES) {
             for (MapCategory mapCategory : provider.getCategories().toList()) {
-                registeredWidgets.add(new CategoryEntryWidget(0, 0, 0, 28, mapCategory));
+                registeredWidgets.add(new CategoryEntryWidget(0, 0, 0, 28, mapCategory, providerId));
             }
         } else if (selectedMode == Mode.ICONS) {
             for (MapIcon mapIcon : provider.getIcons().toList()) {
@@ -240,18 +244,21 @@ public class ProviderInfoScrollBarWidget extends ScrollBarWidget implements Tool
 
     @Override
     public boolean isMouseOver(double mouseX, double mouseY) {
+        if (!this.visible) return false;
+
         return super.isMouseOver(mouseX, mouseY)
                 || featuresButton.isMouseOver(mouseX, mouseY)
                 || categoriesButton.isMouseOver(mouseX, mouseY)
                 || iconsButton.isMouseOver(mouseX, mouseY);
     }
 
+    // The mode is kept on the screen, so it survives this widget being rebuilt (for example on resize)
     public Mode getSelectedMode() {
-        return selectedMode;
+        return parent.getSelectedInfoMode();
     }
 
     public void setSelectedMode(Mode mode) {
-        selectedMode = mode;
+        parent.setSelectedInfoMode(mode);
         populateWidgets();
     }
 

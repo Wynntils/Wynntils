@@ -17,7 +17,7 @@ public class MountTypeDataTransformer extends DataTransformer<MountTypeData> {
     @Override
     protected ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, MountTypeData data) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> {
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> {
                 if (data.mountType().getEncodingId() == -1) {
                     yield ErrorOr.error("Mount type cannot be encoded.");
                 }
@@ -32,7 +32,7 @@ public class MountTypeDataTransformer extends DataTransformer<MountTypeData> {
     @Override
     public ErrorOr<MountTypeData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
-            case VERSION_1, VERSION_2, VERSION_3 -> {
+            case VERSION_1, VERSION_2, VERSION_3, VERSION_4 -> {
                 MountType mountType = MountType.fromEncodingId(byteReader.read().value());
 
                 if (mountType == null) {

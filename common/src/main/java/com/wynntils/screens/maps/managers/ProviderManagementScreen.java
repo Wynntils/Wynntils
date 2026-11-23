@@ -53,8 +53,10 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
     private ProviderManagerMode providerManagerMode = ProviderManagerMode.NONE;
 
-    private String selectedProviderId = "";
+    private String selectedCompleteProviderId = "";
     private ProviderType selectedProviderType;
+    // Kept here rather than in the info widget, so it survives the widgets being rebuilt on resize
+    private ProviderInfoScrollBarWidget.Mode selectedInfoMode = ProviderInfoScrollBarWidget.Mode.FEATURES;
 
     public ProviderManagerInfoWidget infoWidget;
     public ManagerSearchWidget providerSearchWidget;
@@ -157,7 +159,12 @@ public final class ProviderManagementScreen extends WynntilsScreen {
 
         // end region
 
-        updateMenu();
+        if (providerManagerMode == ProviderManagerMode.DEFAULT) {
+            // The widgets were rebuilt (for example on resize), so apply the selection to them again
+            setSelectedProvider(selectedCompleteProviderId, selectedProviderType);
+        } else {
+            updateMenu();
+        }
     }
 
     @Override
@@ -267,8 +274,7 @@ public final class ProviderManagementScreen extends WynntilsScreen {
             descriptionScrollBarWidget.visible = true;
             descriptionScrollBarWidget.updateContentHeight();
 
-            String providerUrl = Services.MapData.getProviderFromId(getSelectedProviderId())
-                    .flatMap(Services.MapData::getJsonProviderInfo)
+            String providerUrl = getSelectedJsonProviderInfo()
                     .map(JsonProviderInfo::providerUrl)
                     .orElse(null);
 
@@ -285,12 +291,17 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         }
     }
 
-    public void setSelectedProvider(String providerId, ProviderType providerType) {
-        selectedProviderId = providerId;
+    public void setSelectedProvider(String completeProviderId, ProviderType providerType) {
+        selectedCompleteProviderId = completeProviderId;
         selectedProviderType = providerType;
-        providerInfoScrollBarWidget.populateWidgets();
 
-        Optional<MapDataProvider> providerOptional = Services.MapData.getProviderFromId(getSelectedProviderId());
+        Services.MapData.ensureProviderLoaded(completeProviderId, () -> scheduleRefreshAfterLoad(completeProviderId));
+
+        providerInfoScrollBarWidget.populateWidgets();
+        infoWidget.generateTooltip();
+
+        Optional<MapDataProvider> providerOptional =
+                Services.MapData.getProviderFromId(getSelectedCompleteProviderId());
 
         if (providerOptional.isEmpty()) {
             descriptionScrollBarWidget.setDescription(null);
@@ -320,8 +331,40 @@ public final class ProviderManagementScreen extends WynntilsScreen {
         updateMenu();
     }
 
-    public String getSelectedProviderId() {
-        return selectedProviderId;
+    /**
+     * Rebuilds what is shown for the provider once it has finished loading. Safe to call from any thread, the refresh
+     * itself is run on the main thread.
+     */
+    public void scheduleRefreshAfterLoad(String completeProviderId) {
+        McUtils.mc().execute(() -> refreshAfterProviderLoaded(completeProviderId));
+    }
+
+    private void refreshAfterProviderLoaded(String completeProviderId) {
+        if (McUtils.screen() != this) return;
+        if (!completeProviderId.equals(selectedCompleteProviderId)) return;
+
+        refreshSelectedProvider();
+    }
+
+    public void refreshSelectedProvider() {
+        if (providerManagerMode != ProviderManagerMode.DEFAULT) return;
+
+        setSelectedProvider(selectedCompleteProviderId, selectedProviderType);
+    }
+
+    public void clearSelectionIfProviderMissing() {
+        if (providerManagerMode != ProviderManagerMode.DEFAULT) return;
+        if (Services.MapData.getProviderFromId(selectedCompleteProviderId).isPresent()) return;
+
+        setSelectedProvider("", null);
+    }
+
+    public String getSelectedCompleteProviderId() {
+        return selectedCompleteProviderId;
+    }
+
+    public Optional<JsonProviderInfo> getSelectedJsonProviderInfo() {
+        return Services.MapData.getJsonProviderInfoByCompleteId(selectedCompleteProviderId);
     }
 
     public ProviderType getSelectedProviderType() {
@@ -331,5 +374,13 @@ public final class ProviderManagementScreen extends WynntilsScreen {
     public void setProviderManagerMode(ProviderManagerMode providerManagerMode) {
         this.providerManagerMode = providerManagerMode;
         updateMenu();
+    }
+
+    public ProviderInfoScrollBarWidget.Mode getSelectedInfoMode() {
+        return selectedInfoMode;
+    }
+
+    public void setSelectedInfoMode(ProviderInfoScrollBarWidget.Mode mode) {
+        selectedInfoMode = mode;
     }
 }

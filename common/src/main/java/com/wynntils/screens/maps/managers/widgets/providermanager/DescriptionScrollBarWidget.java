@@ -30,6 +30,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
@@ -138,8 +139,18 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
         }
 
         private void refresh() {
-            MapDataProvider provider = Services.MapData.getProviderFromId(parent.getSelectedProviderId())
-                    .orElseThrow();
+            MapDataProvider provider = Services.MapData.getProviderFromId(parent.getSelectedCompleteProviderId())
+                    .orElse(null);
+
+            if (provider == null) {
+                // The selected provider is no longer registered, for example, its local file was deleted, so there
+                // is nothing to show for it
+                stats = List.of();
+                urlString = null;
+                url = null;
+                setHeight(PADDING * 2 + LINE_HEIGHT + LINE_GAP + LINE_HEIGHT);
+                return;
+            }
 
             stats = List.of(
                     Component.translatable(
@@ -153,7 +164,7 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
                             provider.getIcons().count()));
 
             JsonProviderInfo jsonProviderInfo =
-                    Services.MapData.getJsonProviderInfo(provider).orElse(null);
+                    parent.getSelectedJsonProviderInfo().orElse(null);
             if (jsonProviderInfo != null && jsonProviderInfo.providerUrl() != null) {
                 urlString = jsonProviderInfo.providerUrl();
                 url = Component.translatable(
@@ -233,13 +244,26 @@ public class DescriptionScrollBarWidget extends ScrollBarWidget {
             if (event.button() == InputConstants.MOUSE_BUTTON_LEFT
                     && urlString != null
                     && isMouseOverUrl(event.x(), event.y())) {
+                URI uri;
                 try {
-                    Util.getPlatform().openUri(URI.create(urlString));
+                    uri = URI.create(urlString);
                 } catch (IllegalArgumentException e) {
                     return false;
                 }
 
                 playDownSound(McUtils.mc().getSoundManager());
+
+                McUtils.setScreen(new ConfirmLinkScreen(
+                        confirmed -> {
+                            if (confirmed) {
+                                Util.getPlatform().openUri(uri);
+                            }
+
+                            McUtils.setScreen(parent);
+                        },
+                        urlString,
+                        false));
+
                 return true;
             }
 

@@ -47,7 +47,7 @@ public class FeatureScrollBarWidget extends ScrollBarWidget implements TooltipPr
     public void populateWidgets(String categoryId) {
         registeredWidgets = features.get()
                 .filter(feature -> feature.getCategoryId().equals(categoryId))
-                .map(feature -> new FeatureEntryWidget(0, 0, 0, ENTRY_HEIGHT, feature, true, referenceLocation))
+                .map(feature -> new FeatureEntryWidget(0, 0, 0, ENTRY_HEIGHT, feature, referenceLocation))
                 .toList();
         scrollOffsetY = 0;
 

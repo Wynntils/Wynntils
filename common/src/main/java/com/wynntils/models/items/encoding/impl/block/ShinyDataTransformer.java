@@ -20,7 +20,7 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
     public ErrorOr<UnsignedByte[]> encodeData(ItemTransformingVersion version, ShinyData data) {
         return switch (version) {
             case VERSION_1 -> ErrorOr.of(encodeShinyData(data));
-            case VERSION_2, VERSION_3 -> ErrorOr.of(encodeShinyDataV2(data));
+            case VERSION_2, VERSION_3, VERSION_4 -> ErrorOr.of(encodeShinyDataV2(data));
         };
     }
 
@@ -33,7 +33,7 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
     public ErrorOr<ShinyData> decodeData(ItemTransformingVersion version, ArrayReader<UnsignedByte> byteReader) {
         return switch (version) {
             case VERSION_1 -> decodeShinyData(byteReader);
-            case VERSION_2, VERSION_3 -> decodeShinyDataV2(byteReader);
+            case VERSION_2, VERSION_3, VERSION_4 -> decodeShinyDataV2(byteReader);
         };
     }
 
@@ -70,7 +70,6 @@ public class ShinyDataTransformer extends DataTransformer<ShinyData> {
         // The following bytes is are assembled into an integer representing the shiny value.
         long statValue = UnsignedByteUtils.decodeVariableSizedInteger(byteReader);
 
-        // Note: V1 encoding does not support shiny rerolls, so we default to 0.
         return ErrorOr.of(new ShinyData(
                 new ShinyStat(Models.Shiny.getShinyStatType(statTypeId.value()), statValue, shinyRerolls.value())));
     }

@@ -107,12 +107,11 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
             return true;
         }
 
-        for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
-            if (isInsideViewport(event.x(), event.y())
-                    && abstractOptionWidget.isHovered()
-                    && abstractOptionWidget.mouseClicked(event, isDoubleClick)) {
-                pressedWidget = abstractOptionWidget;
+        if (!isInsideViewport(event.x(), event.y())) return false;
 
+        for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
+            if (abstractOptionWidget.isHovered() && abstractOptionWidget.mouseClicked(event, isDoubleClick)) {
+                pressedWidget = abstractOptionWidget;
                 return true;
             }
         }
@@ -143,11 +142,9 @@ public class OptionsScrollBarWidget extends ScrollBarWidget {
         }
 
         for (AbstractOptionWidget<?> abstractOptionWidget : getWidgets()) {
-            if (isInsideViewport(mouseX, mouseY)) {
-                if (abstractOptionWidget.isHovered()
-                        && abstractOptionWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
-                    return true;
-                }
+            if (abstractOptionWidget.isHovered()
+                    && abstractOptionWidget.mouseScrolled(mouseX, mouseY, deltaX, deltaY)) {
+                return true;
             }
         }
 

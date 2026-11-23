@@ -58,8 +58,12 @@ public class RefreshLocalProvidersButton extends AbstractWidget {
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
         if (event.button() != InputConstants.MOUSE_BUTTON_LEFT) return false;
 
-        Services.MapData.refreshLocalJsonProviders();
+        // Reload the providers from their files, so that changes made to the files take effect
+        Services.MapData.reloadLocalJsonProviders();
         parent.providerScrollBarWidget.populateWidgets();
+        parent.clearSelectionIfProviderMissing();
+        // The selected provider may have changed, so what is shown for it has to be rebuilt as well
+        parent.refreshSelectedProvider();
 
         this.playDownSound(McUtils.mc().getSoundManager());
 

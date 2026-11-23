@@ -51,33 +51,41 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
     private final MapIcon icon;
 
     private final boolean readOnly;
+    private final boolean interactive;
     private final Location referenceLocation;
 
     private List<Component> generatedTooltip = new ArrayList<>();
 
-    public FeatureEntryWidget(int x, int y, int width, int height, MapFeature<?> mapFeature) {
-        this(x, y, width, height, mapFeature, false, null);
+    public FeatureEntryWidget(int x, int y, int width, int height, MapFeature<?> mapFeature, String providerId) {
+        this(x, y, width, height, mapFeature, providerId, false, null);
     }
 
     public FeatureEntryWidget(
+            int x, int y, int width, int height, MapFeature<?> mapFeature, Location referenceLocation) {
+        this(x, y, width, height, mapFeature, null, true, referenceLocation);
+    }
+
+    private FeatureEntryWidget(
             int x,
             int y,
             int width,
             int height,
             MapFeature<?> mapFeature,
+            String providerId,
             boolean readOnly,
             Location referenceLocation) {
         super(x, y, width, height, Component.literal(mapFeature.getFeatureId()));
         this.mapFeature = mapFeature;
         this.readOnly = readOnly;
+        this.interactive = !readOnly && Services.MapData.isProviderEnabled(providerId);
         this.referenceLocation = referenceLocation;
 
-        this.attributes = Services.MapData.resolveMapAttributes(mapFeature);
+        this.attributes = Services.MapData.resolveMapAttributes(mapFeature, providerId);
         this.featureId = mapFeature.getFeatureId();
         this.categoryId = mapFeature.getCategoryId();
 
         this.icon = mapFeature instanceof MapLocation
-                ? Services.MapData.getIcon(attributes.iconId()).orElse(null)
+                ? Services.MapData.getIcon(attributes.iconId(), providerId).orElse(null)
                 : null;
 
         generateTooltip();
@@ -85,7 +93,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (!readOnly) {
+        if (interactive) {
             handleCursor(guiGraphics);
         }
 
@@ -154,7 +162,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (readOnly) return false;
+        if (!interactive) return false;
 
         if (!isMouseOver(event.x(), event.y())) return false;
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && mapFeature instanceof MapLocation mapLocation) {
@@ -263,6 +271,8 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
                     Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.location"),
                     "%d, %d, %d".formatted(location.x(), location.y(), location.z()));
         }
+
+        if (!interactive) return;
 
         this.generatedTooltip.add(Component.empty());
 

@@ -214,7 +214,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                 .renderAlignedTextInBox(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal(EnumUtils.toNiceString(getGuideType()) + " Guide")
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         this.width / 2f - 56,
                         this.width / 2f + 56,
                         9,
@@ -229,7 +229,7 @@ public abstract class GuideContainerWidget<T> extends AbstractWidget implements 
                 .renderAlignedTextInBox(
                         guiGraphics,
                         StyledText.fromComponent(Component.literal(String.valueOf(getItemCount()))
-                                .withStyle(Style.EMPTY.withFont(CommonFonts.LANGUAGE_WYNNCRAFT_FONT))),
+                                .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT))),
                         this.width / 2f - 56,
                         this.width / 2f + 56,
                         8 + 19,

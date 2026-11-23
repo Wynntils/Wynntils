@@ -87,17 +87,21 @@ public final class StringUtils {
         return Long.parseLong(numStr);
     }
 
-    public static String formatDuration(long seconds) {
+    public static String formatDuration(long seconds, boolean padSingleDigits) {
         long hours = seconds / 3600;
         long minutes = (seconds % 3600) / 60;
         long remainingSeconds = seconds % 60;
 
+        String minuteFormat = padSingleDigits ? "%02d" : "%d";
+        String secondFormat = padSingleDigits ? "%02d" : "%d";
+
         if (hours > 0) {
-            return String.format("%dh %02dm %02ds", hours, minutes, remainingSeconds);
+            return String.format(
+                    "%d" + "h " + minuteFormat + "m " + secondFormat + "s", hours, minutes, remainingSeconds);
         } else if (minutes > 0) {
-            return String.format("%dm %02ds", minutes, remainingSeconds);
+            return String.format(minuteFormat + "m " + secondFormat + "s", minutes, remainingSeconds);
         } else {
-            return String.format("%ds", remainingSeconds);
+            return String.format(secondFormat + "s", remainingSeconds);
         }
     }
 
