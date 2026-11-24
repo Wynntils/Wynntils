@@ -104,11 +104,11 @@ public final class McUtils {
     }
 
     public static void playSoundUI(SoundEvent sound) {
-        mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
+        playSoundUI(sound, 1.0F, 1.0F);
     }
 
-    public static void playSoundUI(SoundEvent sound, float volume) {
-        mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F, volume));
+    public static void playSoundUI(SoundEvent sound, float volume, float pitch) {
+        playSound(sound, SoundSource.UI, volume, pitch);
     }
 
     public static void playSoundMaster(SoundEvent sound) {

@@ -14,7 +14,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
-import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.neoforged.bus.api.SubscribeEvent;
 
@@ -41,6 +40,6 @@ public class TokenTrackerBellFeature extends Feature {
         // Do not keep playing the sound if we go too far over the needed amount
         if (collected > deposited.max() + 5) return;
 
-        McUtils.mc().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BELL_BLOCK, 0.7f, 0.75f));
+        McUtils.playSoundUI(SoundEvents.BELL_BLOCK, 0.7f, 0.75f);
     }
 }
