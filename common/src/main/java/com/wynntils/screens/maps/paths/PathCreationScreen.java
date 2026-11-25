@@ -22,6 +22,7 @@ import com.wynntils.screens.maps.paths.widgets.PathNotesOptionWidget;
 import com.wynntils.screens.maps.paths.widgets.PathOptionsScrollBarWidget;
 import com.wynntils.screens.maps.paths.widgets.PathTextureOptionWidget;
 import com.wynntils.screens.maps.paths.widgets.PathToggleOptionWidget;
+import com.wynntils.services.mapdata.MapPathsService;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
 import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.attributes.impl.MapPathAttributesImpl;
@@ -286,10 +287,11 @@ public final class PathCreationScreen extends WynntilsScreen {
             saveButton =
                     button(saveX, y + 282, left + 546 - saveX, "save", Texture.MANAGER_WIDGET_BACKGROUND_GREEN, () -> {
                         configure();
-                        if (Services.MapPaths.save(label).isEmpty()) {
-                            error = Component.translatable("command.wynntils.map.path.saveFailed")
-                                    .getString();
-                            McUtils.sendErrorToClient(error);
+                        MapPathsService.SaveResult result = Services.MapPaths.save(label);
+                        if (result != MapPathsService.SaveResult.SAVED) {
+                            error = result.getMessage().getString();
+                            McUtils.sendWynntilsPrefixMessage(
+                                    result.getMessage().withStyle(ChatFormatting.RED));
 
                             return;
                         }
@@ -475,9 +477,14 @@ public final class PathCreationScreen extends WynntilsScreen {
     }
 
     private void updateButtons() {
-        if (saveButton != null) {
-            saveButton.active = Services.MapPaths.hasDraft() && Services.MapPaths.getPointCount() >= 2;
-        }
+        if (saveButton == null) return;
+
+        boolean canSave = Services.MapPaths.hasDraft() && Services.MapPaths.getPointCount() >= 2;
+        if (saveButton.active == canSave) return;
+
+        saveButton.active = canSave;
+        saveButton.setTooltip(Tooltip.create(
+                canSave ? text("save.tooltip") : MapPathsService.SaveResult.TOO_FEW_POINTS.getMessage()));
     }
 
     private Component text(String key, Object... arguments) {

@@ -28,6 +28,7 @@ import com.wynntils.services.mapdata.paths.RecordingPathProvider;
 import com.wynntils.services.mapdata.providers.json.JsonProviderInfo;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -39,6 +40,7 @@ import java.util.Set;
 import java.util.UUID;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.world.phys.Vec3;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -311,17 +313,17 @@ public final class MapPathsService extends Service {
         return removed;
     }
 
-    public Optional<StoredPath> save(String name) {
+    public SaveResult save(String name) {
         if (!draft || points.size() < 2) {
             WynntilsMod.warn("Record at least two path points before saving");
 
-            return Optional.empty();
+            return SaveResult.TOO_FEW_POINTS;
         }
 
         if (name.isBlank()) {
             WynntilsMod.warn("A path label is required");
 
-            return Optional.empty();
+            return SaveResult.MISSING_LABEL;
         }
 
         label = name;
@@ -331,25 +333,24 @@ public final class MapPathsService extends Service {
         if (editing != null) {
             file = editing.file();
             providerId = editing.providerId();
-            if (!MapPathFiles.update(file, path)) return Optional.empty();
+            if (!MapPathFiles.update(file, path)) return SaveResult.WRITE_FAILED;
         } else {
             file = MapDataService.LOCAL_PROVIDERS.toPath().resolve(MapPathFiles.filename(name));
             providerId = file.getFileName().toString().replaceFirst("\\.json$", "");
-            if (Services.MapData.getJsonProviderInfos().containsKey(providerId)) {
+            if (Services.MapData.getJsonProviderInfos().containsKey(providerId) || Files.exists(file)) {
                 WynntilsMod.warn("A provider with that name already exists: " + providerId);
 
-                return Optional.empty();
+                return SaveResult.NAME_EXISTS;
             }
 
-            if (!MapPathFiles.write(file, MapPathFiles.provider(path), false)) return Optional.empty();
+            if (!MapPathFiles.write(file, MapPathFiles.provider(path), false)) return SaveResult.WRITE_FAILED;
         }
 
         Services.MapData.addJsonProvider(
                 JsonProviderInfo.createLocal(providerId, file.toAbsolutePath().toString()));
-        StoredPath saved = new StoredPath(providerId, file, path);
         cancel();
 
-        return Optional.of(saved);
+        return SaveResult.SAVED;
     }
 
     public List<StoredPath> getStoredPaths() {
@@ -447,6 +448,24 @@ public final class MapPathsService extends Service {
         if (points.isEmpty() || points.getLast().distanceToSqr(position) >= 4) {
             points.add(position);
             publish();
+        }
+    }
+
+    public enum SaveResult {
+        SAVED("success"),
+        TOO_FEW_POINTS("saveTooFewPoints"),
+        MISSING_LABEL("saveMissingLabel"),
+        NAME_EXISTS("saveNameExists"),
+        WRITE_FAILED("saveFailed");
+
+        private final String messageKey;
+
+        SaveResult(String messageKey) {
+            this.messageKey = "command.wynntils.map.path." + messageKey;
+        }
+
+        public MutableComponent getMessage() {
+            return Component.translatable(messageKey);
         }
     }
 

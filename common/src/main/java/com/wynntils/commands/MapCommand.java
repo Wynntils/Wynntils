@@ -436,13 +436,9 @@ public class MapCommand extends Command {
     }
 
     private static int savePath(CommandContext<CommandSourceStack> context) {
-        if (Services.MapPaths.save(StringArgumentType.getString(context, "label"))
-                .isEmpty()) {
-            context.getSource()
-                    .sendFailure(Component.translatable("command.wynntils.map.path.saveFailed")
-                            .withStyle(ChatFormatting.RED));
-
-            return 0;
+        MapPathsService.SaveResult result = Services.MapPaths.save(StringArgumentType.getString(context, "label"));
+        if (result != MapPathsService.SaveResult.SAVED) {
+            return pathError(context, result.getMessage());
         }
 
         return pathSuccess(context);
@@ -452,11 +448,11 @@ public class MapCommand extends Command {
         Optional<MapPathsService.StoredPath> path =
                 Services.MapPaths.findPathByName(StringArgumentType.getString(context, "name"));
         if (path.isEmpty()) {
-            return pathError(context, "Path not found or multiple paths match; use the feature ID instead");
+            return pathError(context, "pathNotFound");
         }
 
         if (!Services.MapPaths.edit(path.get())) {
-            return pathError(context, "Save or cancel your current path before editing another");
+            return pathError(context, "editInProgress");
         }
 
         openPathScreen();
@@ -466,7 +462,7 @@ public class MapCommand extends Command {
 
     private static int addNote(CommandContext<CommandSourceStack> context) {
         if (!Services.MapPaths.addNote(Component.literal(StringArgumentType.getString(context, "text")))) {
-            return pathError(context, "Start recording or edit a path before adding notes");
+            return pathError(context, "noteRequiresDraft");
         }
 
         return pathSuccess(context);
@@ -487,7 +483,7 @@ public class MapCommand extends Command {
 
     private static int deleteNote(CommandContext<CommandSourceStack> context) {
         if (!Services.MapPaths.deleteNote(BlockPosArgument.getBlockPos(context, "pos"))) {
-            return pathError(context, "Note not found");
+            return pathError(context, "noteNotFound");
         }
 
         return pathSuccess(context);
@@ -495,11 +491,11 @@ public class MapCommand extends Command {
 
     private static int addHighlight(CommandContext<CommandSourceStack> context, BlockPos pos) {
         if (!Services.MapPaths.isRecording()) {
-            return pathError(context, "Start recording a path before adding highlights");
+            return pathError(context, "highlightRequiresRecording");
         }
 
         if (!Services.MapPaths.addHighlight(Vec3.atLowerCornerOf(pos))) {
-            return pathError(context, "A highlight already exists at this position");
+            return pathError(context, "highlightAlreadyExists");
         }
 
         return pathSuccess(context);
@@ -507,7 +503,7 @@ public class MapCommand extends Command {
 
     private static int removeHighlight(CommandContext<CommandSourceStack> context) {
         if (!Services.MapPaths.removeHighlight(BlockPosArgument.getBlockPos(context, "pos"))) {
-            return pathError(context, "Highlight not found");
+            return pathError(context, "highlightNotFound");
         }
 
         return pathSuccess(context);
@@ -555,10 +551,12 @@ public class MapCommand extends Command {
         return 1;
     }
 
-    private static int pathError(CommandContext<CommandSourceStack> context, String message) {
-        context.getSource()
-                .sendFailure(Component.translatable("command.wynntils.map.path.error", message)
-                        .withStyle(ChatFormatting.RED));
+    private static int pathError(CommandContext<CommandSourceStack> context, String key) {
+        return pathError(context, Component.translatable("command.wynntils.map.path." + key));
+    }
+
+    private static int pathError(CommandContext<CommandSourceStack> context, Component message) {
+        context.getSource().sendFailure(message.copy().withStyle(ChatFormatting.RED));
 
         return 0;
     }
