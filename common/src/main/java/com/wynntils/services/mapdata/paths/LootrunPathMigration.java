@@ -13,6 +13,7 @@ import com.wynntils.services.mapdata.providers.json.JsonProvider;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
+import java.nio.file.LinkOption;
 import java.nio.file.Path;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -135,7 +136,14 @@ public final class LootrunPathMigration {
 
                     Path archive = legacyDirectory.resolve("migrated");
                     Files.createDirectories(archive);
-                    Files.move(source, archive.resolve(source.getFileName()));
+                    String archivedLabel = label;
+                    Path archivedFile = archive.resolve(archivedLabel + ".json");
+                    while (Files.exists(archivedFile, LinkOption.NOFOLLOW_LINKS)) {
+                        archivedLabel += "-duplicate";
+                        archivedFile = archive.resolve(archivedLabel + ".json");
+                    }
+
+                    Files.move(source, archivedFile);
                 } catch (Exception e) {
                     WynntilsMod.warn("Could not migrate lootrun '" + source + "'; original file retained", e);
                 }
