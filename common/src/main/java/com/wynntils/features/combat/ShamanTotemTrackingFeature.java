@@ -27,16 +27,16 @@ public class ShamanTotemTrackingFeature extends Feature {
     private final Config<Boolean> highlightShamanTotems = new Config<>(true);
 
     @Persisted
-    private final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE).withShaderColors();
+    private final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
 
     @Persisted
-    private final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE).withShaderColors();
+    private final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
 
     @Persisted
-    private final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED).withShaderColors();
+    private final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
 
     @Persisted
-    private final Config<CustomColor> fourthTotemColor = new Config<>(CommonColors.GREEN).withShaderColors();
+    private final Config<CustomColor> fourthTotemColor = new Config<>(CommonColors.GREEN);
 
     public ShamanTotemTrackingFeature() {
         super(ProfileDefault.ENABLED);
