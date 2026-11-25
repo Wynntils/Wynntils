@@ -30,6 +30,7 @@ import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
+import com.wynntils.models.containers.containers.PlayerTradeContainer;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.encoding.type.EncodingSettings;
@@ -210,7 +211,9 @@ public class ChatItemFeature extends Feature {
         if (item instanceof PagedItemProperty pagedItem
                 && !(hoveredSlot.getItem() instanceof FakeItemStack)
                 && McUtils.screen() instanceof AbstractContainerScreen<?> screen
-                && screen.getMenu() == McUtils.containerMenu()) {
+                && screen.getMenu() == McUtils.containerMenu()
+                // Trade menu currently does not support swapping pages
+                && !(Models.Container.getCurrentContainer() instanceof PlayerTradeContainer)) {
             ItemSharingScreen sharingScreen = share && showSharingScreen.get()
                     ? ItemSharingScreen.createParsing(item, hoveredSlot.getItem(), (pagedItem.currentPage() + 1) % 3)
                     : null;

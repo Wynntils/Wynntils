@@ -22,6 +22,7 @@ import com.wynntils.models.combat.bossbar.DamageBar;
 import com.wynntils.models.combat.label.DamageLabelParser;
 import com.wynntils.models.combat.label.KillLabelParser;
 import com.wynntils.models.containers.containers.AbilityTreeContainer;
+import com.wynntils.models.containers.containers.PlayerTradeContainer;
 import com.wynntils.models.gear.GearModel;
 import com.wynntils.models.guild.GuildModel;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
@@ -798,6 +799,18 @@ public class TestRegex {
         PatternTester p = new PatternTester(PersonalStorageUtilitiesFeature.class, "PAGE_PATTERN");
         p.shouldMatch("§7- §f\uE006§8 Page 1");
         p.shouldMatch("§7- §f\uE007§8 Page 3");
+    }
+
+    @Test
+    public void PlayerTradeContainer_TITLE_PATTERN() {
+        PatternTester p = new PatternTester(PlayerTradeContainer.class, "TITLE_PATTERN");
+        p.shouldMatch("ShadowCat118         ShadowCat11");
+        p.shouldMatch("ShadowCat117         ShadowCat11");
+        p.shouldMatch("ShadowCat117         Wanytails");
+        p.shouldMatch("Wanytails            ShadowCat11");
+        p.shouldNotMatch("AUsernameLongerThan21ShadowCat");
+        p.shouldNotMatch("NameWithUnicode\uE007   ShadowCat");
+        p.shouldNotMatch("TooFewSpaces ShadowCat");
     }
 
     @Test
