@@ -4,105 +4,80 @@
  */
 package com.wynntils.core.persisted.upfixers.config;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.Upfixer;
-import com.wynntils.services.mapdata.paths.MapPathFiles;
+import com.wynntils.services.mapdata.attributes.MapAttributesBuilder;
 import com.wynntils.services.mapdata.paths.PathCategoriesProvider;
+import com.wynntils.services.mapdata.providers.json.JsonOverrideProvider;
 import com.wynntils.services.mapdata.type.MapIcon;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.colors.WynncraftShaderColor;
-import java.nio.file.Files;
-import java.nio.file.Path;
+import java.util.Locale;
 import java.util.Set;
 
 public final class LootrunPathSettingsUpfixer implements Upfixer {
+    private static final String LEGACY_PREFIX = "lootrunFeature.";
+
     @Override
     public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
-        if (configObject.keySet().stream().noneMatch(key -> key.startsWith("lootrunFeature."))) return true;
+        if (configObject.keySet().stream().noneMatch(key -> key.startsWith(LEGACY_PREFIX))) return true;
 
-        Path destination =
-                WynntilsMod.getModStorageDir("localProviders").toPath().resolve("lootrun-category-settings.json");
         try {
-            JsonObject migrated = convert(configObject);
-            if (Files.exists(destination)) {
-                if (!migrated.equals(MapPathFiles.read(destination))) {
-                    WynntilsMod.warn(
-                            "Lootrun category settings provider already exists with different contents; leaving old config intact");
-
-                    return false;
-                }
-            } else if (!MapPathFiles.write(destination, migrated, false)) {
-                return false;
+            CustomColor activeColor = readColor(configObject, "activePathColor");
+            CustomColor recordingColor = readColor(configObject, "recordingPathColor");
+            if (configObject.has(LEGACY_PREFIX + "rainbowLootRun")
+                    && configObject.get(LEGACY_PREFIX + "rainbowLootRun").getAsBoolean()) {
+                activeColor = WynncraftShaderColor.RAINBOW.color;
             }
 
-            configObject.entrySet().removeIf(entry -> entry.getKey().startsWith("lootrunFeature."));
+            String icon = readIcon(configObject);
+            saveOverride(PathCategoriesProvider.PATH_CATEGORY, activeColor, icon);
+            saveOverride(PathCategoriesProvider.RECORDING_CATEGORY, recordingColor, icon);
+            configObject.entrySet().removeIf(entry -> entry.getKey().startsWith(LEGACY_PREFIX));
 
             return true;
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             WynntilsMod.warn("Could not migrate lootrun rendering settings; leaving old config intact", e);
 
             return false;
         }
     }
 
-    public static JsonObject convert(JsonObject configObject) {
-        JsonArray categories = new JsonArray();
+    private static CustomColor readColor(JsonObject configObject, String key) {
+        return Managers.Json.GSON.fromJson(configObject.get(LEGACY_PREFIX + key), CustomColor.class);
+    }
 
-        JsonObject attrs = new JsonObject();
-        if (configObject.has("lootrunFeature.activePathColor")) {
-            attrs.add(
-                    "pathColor",
-                    configObject.get("lootrunFeature.activePathColor").deepCopy());
+    private static String readIcon(JsonObject configObject) {
+        if (!configObject.has(LEGACY_PREFIX + "pathType")) return null;
+
+        return switch (configObject
+                .get(LEGACY_PREFIX + "pathType")
+                .getAsString()
+                .toUpperCase(Locale.ROOT)) {
+            case "TEXTURED" -> PathCategoriesProvider.ARROW_ICON;
+            case "LINE" -> MapIcon.NO_ICON_ID;
+            default -> null;
+        };
+    }
+
+    private static void saveOverride(String categoryId, CustomColor worldColor, String icon) {
+        if (worldColor == null && icon == null) return;
+
+        JsonOverrideProvider provider = new JsonOverrideProvider(
+                "map_path_override:" + categoryId,
+                new MapAttributesBuilder()
+                        .setPathColor(worldColor)
+                        .setPathIcon(icon)
+                        .asPathAttributes()
+                        .build(),
+                Set.of(),
+                Set.of(categoryId));
+        if (Services.MapData.getOverrideProvider(provider.getProviderId()) == null) {
+            Services.MapData.addOverrideProvider(provider);
         }
-
-        if (configObject.has("lootrunFeature.rainbowLootRun")
-                && configObject.get("lootrunFeature.rainbowLootRun").getAsBoolean()) {
-            attrs.addProperty("pathColor", WynncraftShaderColor.RAINBOW.color.toHexString());
-        }
-
-        if (configObject.has("lootrunFeature.pathType")
-                && configObject.get("lootrunFeature.pathType").getAsString().equalsIgnoreCase("line")) {
-            attrs.addProperty("pathIcon", MapIcon.NO_ICON_ID);
-        }
-
-        JsonObject category = new JsonObject();
-        category.addProperty("id", PathCategoriesProvider.PATH_CATEGORY);
-        category.add("attributes", attrs);
-        categories.add(category);
-
-        JsonObject recordingAttrs = new JsonObject();
-        if (configObject.has("lootrunFeature.recordingPathColor")) {
-            recordingAttrs.add(
-                    "pathColor",
-                    configObject.get("lootrunFeature.recordingPathColor").deepCopy());
-            recordingAttrs.add(
-                    "pathFillColor",
-                    configObject.get("lootrunFeature.recordingPathColor").deepCopy());
-        }
-
-        if (attrs.has("pathIcon")) {
-            recordingAttrs.add("pathIcon", attrs.get("pathIcon").deepCopy());
-        }
-
-        JsonObject recordingCategory = new JsonObject();
-        recordingCategory.addProperty("id", PathCategoriesProvider.RECORDING_CATEGORY);
-        recordingCategory.add("attributes", recordingAttrs);
-        categories.add(recordingCategory);
-
-        JsonObject provider = new JsonObject();
-        provider.addProperty("version", 1);
-        provider.addProperty("description", "Migrated lootrun category settings");
-
-        JsonObject features = new JsonObject();
-        features.add("locations", new JsonArray());
-        features.add("areas", new JsonArray());
-        features.add("paths", new JsonArray());
-        provider.add("features", features);
-        provider.add("categories", categories);
-        provider.add("icons", new JsonArray());
-
-        return provider;
     }
 }
