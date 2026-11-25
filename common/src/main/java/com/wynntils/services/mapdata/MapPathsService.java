@@ -406,7 +406,11 @@ public final class MapPathsService extends Service {
         editing = stored;
         draft = true;
         featureId = stored.path().getFeatureId();
-        category = stored.path().getCategoryId();
+        String categoryId = stored.path().getCategoryId();
+        String rootCategory = PathCategoriesProvider.PATH_CATEGORY;
+        category = categoryId.equals(rootCategory) || categoryId.startsWith(rootCategory + ":")
+                ? categoryId
+                : rootCategory;
         attributes = new MapAttributesBuilder()
                 .from(stored.path().getAttributes().orElse(null))
                 .asPathAttributes()

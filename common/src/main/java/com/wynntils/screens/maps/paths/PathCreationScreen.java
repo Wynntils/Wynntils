@@ -32,6 +32,7 @@ import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.features.impl.MapPathImpl;
 import com.wynntils.services.mapdata.features.type.MapPath;
+import com.wynntils.services.mapdata.paths.PathCategoriesProvider;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -127,7 +128,7 @@ public final class PathCreationScreen extends WynntilsScreen {
             configure();
             McUtils.setScreen(new FeatureCategoryScreen(
                     this,
-                    "",
+                    PathCategoriesProvider.PATH_CATEGORY,
                     category,
                     Services.MapData.allPossibleCategories(),
                     () -> Services.MapData.getProviderInfos().values().stream()
