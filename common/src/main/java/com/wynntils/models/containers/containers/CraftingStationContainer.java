@@ -8,12 +8,17 @@ import com.wynntils.models.containers.Container;
 import com.wynntils.models.containers.type.ContainerBounds;
 import com.wynntils.models.containers.type.HighlightableProfessionProperty;
 import com.wynntils.models.profession.type.ProfessionType;
+import java.util.List;
 import java.util.regex.Pattern;
 
 public class CraftingStationContainer extends Container implements HighlightableProfessionProperty {
-    private final ProfessionType professionType;
-
     private static final String CRAFTING_STATION_TITLE_PREFIX = "\uDAFF\uDFF8\uE053\uDAFF\uDF80";
+    public static final int MATERIAL_SLOT_ONE = 0;
+    public static final int MATERIAL_SLOT_TWO = 9;
+    public static final int CRAFT_SLOT = 13;
+    public static final List<Integer> INGREDIENT_SLOTS = List.of(2, 3, 11, 12, 20, 21);
+
+    private final ProfessionType professionType;
 
     public CraftingStationContainer(ProfessionType professionType) {
         super(Pattern.compile(CRAFTING_STATION_TITLE_PREFIX + getContainerTitleChar(professionType)));
