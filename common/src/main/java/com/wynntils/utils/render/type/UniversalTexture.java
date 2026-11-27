@@ -1,9 +1,12 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render.type;
 
+import com.wynntils.core.persisted.config.UntranslatableEnum;
+
+@UntranslatableEnum
 public enum UniversalTexture implements BarTexture {
     A(0, 16, 8),
     B(16, 32, 8),

@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
 
+import com.google.common.base.CaseFormat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
@@ -11,10 +12,12 @@ import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.type.PersistedMetadata;
 import com.wynntils.utils.EnumUtils;
 import java.util.EnumMap;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Stream;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.network.chat.Component;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
@@ -102,6 +105,10 @@ public class Config<T> extends PersistedValue<T> {
         return getMetadata().valueType() instanceof Class<?> clazz && clazz.isEnum();
     }
 
+    public boolean isTranslatableEnum() {
+        return isEnum() && !((Class<?>) getType()).isAnnotationPresent(UntranslatableEnum.class);
+    }
+
     public T getDefaultValue() {
         PersistedMetadata<T> metadata = getMetadata();
         T defaultValue = metadata.defaultValue();
@@ -143,6 +150,18 @@ public class Config<T> extends PersistedValue<T> {
         }
 
         return get().toString();
+    }
+
+    public Component getValueComponent() {
+        if (!isTranslatableEnum()) {
+            return Component.literal(getValueString());
+        }
+
+        return Component.translatable("enums.wynntils."
+                + CaseFormat.UPPER_CAMEL.to(
+                        CaseFormat.LOWER_CAMEL, get().getClass().getSimpleName())
+                + "."
+                + ((Enum<?>) get()).name().toLowerCase(Locale.ROOT));
     }
 
     public boolean userEdited() {

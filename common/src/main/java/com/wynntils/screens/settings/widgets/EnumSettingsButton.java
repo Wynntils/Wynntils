@@ -18,7 +18,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
     private final List<E> enumConstants;
 
     public EnumSettingsButton(int x, int y, Config<E> config, List<Component> tooltip, int maskTopY, int maskBottomY) {
-        super(x, y, 90, 20, Component.literal(config.getValueString()), tooltip, maskTopY, maskBottomY);
+        super(x, y, 90, 20, config.getValueComponent(), tooltip, maskTopY, maskBottomY);
         this.config = config;
         enumConstants = EnumSet.allOf((Class<E>) config.getType()).stream().toList();
     }
@@ -41,7 +41,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
         int nextIndex = (enumConstants.indexOf(value) + addToIndex + enumConstants.size()) % enumConstants.size();
         E nextValue = enumConstants.get(nextIndex);
         config.setValue(nextValue);
-        setMessage(Component.literal(config.getValueString()));
+        setMessage(config.getValueComponent());
 
         playDownSound(McUtils.mc().getSoundManager());
 

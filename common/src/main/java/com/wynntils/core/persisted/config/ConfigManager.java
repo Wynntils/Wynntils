@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.persisted.config;
 
+import com.google.common.base.CaseFormat;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -30,6 +31,7 @@ import com.wynntils.handlers.actionbar.event.ActionBarUpdatedEvent;
 import com.wynntils.models.character.actionbar.segments.CharacterCreationSegment;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.settings.ConfigProfileScreen;
+import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -42,11 +44,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.neoforged.bus.api.SubscribeEvent;
 import org.apache.commons.lang3.ClassUtils;
@@ -409,6 +413,19 @@ public final class ConfigManager extends Manager {
                     WynntilsMod.error("Config description is empty for " + configObj.getDisplayName());
                     throw new AssertionError("Missing i18n for " + configObj.getDisplayName());
                 }
+                if (configObj.isTranslatableEnum()) {
+                    Class<?> clazz = (Class<?>) configObj.getType();
+                    for (Enum<?> enumConstant : EnumUtils.getEnumConstants(clazz)) {
+                        String key = "enums.wynntils."
+                                + CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, clazz.getSimpleName())
+                                + "."
+                                + enumConstant.name().toLowerCase(Locale.ROOT);
+                        if (isMissingI18n(I18n.get(key))) {
+                            WynntilsMod.warn("Config enum translation is missing for " + key);
+                            throw new AssertionError("Missing i18n for " + key);
+                        }
+                    }
+                }
             }
         }
         return configObj;
@@ -417,7 +434,8 @@ public final class ConfigManager extends Manager {
     private static boolean isMissingI18n(String value) {
         return value.startsWith("feature.wynntils.")
                 || value.startsWith("model.wynntils.")
-                || value.startsWith("service.wynntils.");
+                || value.startsWith("service.wynntils.")
+                || value.startsWith("enums.wynntils.");
     }
 
     public Stream<Config<?>> getConfigs() {

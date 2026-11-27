@@ -14,6 +14,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.UntranslatableEnum;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -258,6 +259,7 @@ public class WynncraftButtonFeature extends Feature {
         }
     }
 
+    @UntranslatableEnum
     private enum ServerType {
         LOBBY("lobby"),
         GAME("play"),

@@ -1,9 +1,12 @@
 /*
- * Copyright © Wynntils 2024.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds.type;
 
+import com.wynntils.core.persisted.config.UntranslatableEnum;
+
+@UntranslatableEnum
 public enum ServerRegion {
     WC,
     NA,
