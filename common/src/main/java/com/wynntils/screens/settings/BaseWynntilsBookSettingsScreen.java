@@ -703,6 +703,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
     }
 
     public void populateConfigurables() {
+        hoveredConfigurable = null;
         configurables.clear();
 
         populateConfigurableEntries(configurables, configurableList, 21 + offsetY);
@@ -789,7 +790,7 @@ public abstract class BaseWynntilsBookSettingsScreen extends WynntilsScreen {
         populateConfigs();
 
         // If we are already on this configurable, then we don't want to scroll to any matching configs
-        if (skipScroll) return;
+        if (skipScroll || selectedConfigurable == null) return;
 
         // If there is a search query, scroll the configs list so that the matching config
         // is found unless the configurable itself matches the search query
