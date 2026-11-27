@@ -16,7 +16,14 @@ public final class MapPathAttributesImpl extends MapAttributesImpl implements Ma
             String description,
             MapVisibilityImpl labelVisibility,
             CustomColor labelColor,
-            TextShadow labelShadow) {
+            TextShadow labelShadow,
+            String pathIcon,
+            CustomColor pathColor,
+            Boolean hasPath,
+            CustomColor pathFillColor,
+            Float pathWidth,
+            CustomColor pathBorderColor,
+            Float pathBorderWidth) {
         super(
                 priority,
                 level,
@@ -32,7 +39,14 @@ public final class MapPathAttributesImpl extends MapAttributesImpl implements Ma
                 null,
                 null,
                 null,
-                null);
+                null,
+                pathIcon,
+                pathFillColor,
+                pathBorderColor,
+                pathBorderWidth,
+                pathWidth,
+                pathColor,
+                hasPath);
     }
 
     public MapPathAttributesImpl(MapAttributesImpl attributes) {

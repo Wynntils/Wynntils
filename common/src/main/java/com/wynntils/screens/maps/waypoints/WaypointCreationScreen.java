@@ -14,6 +14,7 @@ import com.wynntils.screens.base.widgets.ColorPickerWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.AbstractMapScreen;
+import com.wynntils.screens.maps.FeatureCategoryScreen;
 import com.wynntils.screens.maps.managers.IconSelectionScreen;
 import com.wynntils.screens.maps.waypoints.widgets.IconButton;
 import com.wynntils.services.mapdata.attributes.DefaultMapAttributes;
@@ -225,8 +226,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             labelColorInput.setTextBoxInput("#FFFFFF");
         }
 
-        labelColorPicker =
-                new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 14), 20, 20, labelColorInput);
+        labelColorPicker = new ColorPickerWidget(
+                (int) (dividedWidth * 29), (int) (dividedHeight * 14), 20, 20, labelColorInput, true);
         this.addRenderableWidget(labelColorPicker);
         // endregion
 
@@ -279,8 +280,8 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
             iconColorInput.setTextBoxInput("#FFFFFF");
         }
 
-        iconColorPicker =
-                new ColorPickerWidget((int) (dividedWidth * 29), (int) (dividedHeight * 22), 20, 20, iconColorInput);
+        iconColorPicker = new ColorPickerWidget(
+                (int) (dividedWidth * 29), (int) (dividedHeight * 22), 20, 20, iconColorInput, false);
         this.addRenderableWidget(iconColorPicker);
         // endregion
 
@@ -420,7 +421,19 @@ public final class WaypointCreationScreen extends AbstractMapScreen {
         // region Category
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.waypointCreation.changeCategory"),
-                        (button) -> McUtils.setScreen(WaypointCategoryScreen.create(this, category)))
+                        (button) -> McUtils.setScreen(new FeatureCategoryScreen(
+                                this,
+                                DEFAULT_CATEGORY,
+                                fullCategory,
+                                Services.Waypoints.getCategories().stream(),
+                                () -> Services.Waypoints.getWaypoints().stream(),
+                                parsedXInput == null || parsedYInput == null || parsedZInput == null
+                                        ? null
+                                        : new Location(parsedXInput, parsedYInput, parsedZInput),
+                                selected -> setCategory(
+                                        selected.equals(DEFAULT_CATEGORY)
+                                                ? ""
+                                                : selected.substring(DEFAULT_CATEGORY.length() + 1)))))
                 .pos((int) (dividedWidth * 18), (int) (dividedHeight * 48))
                 .size((int) (dividedWidth * 9), 20)
                 .build());

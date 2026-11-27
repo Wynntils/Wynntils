@@ -35,7 +35,14 @@ public final class MapAreaAttributesImpl extends MapAttributesImpl implements Ma
                 null,
                 fillColor,
                 borderColor,
-                borderWidth);
+                borderWidth,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null,
+                null);
     }
 
     public MapAreaAttributesImpl(MapAttributesImpl attributes) {

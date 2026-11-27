@@ -1,0 +1,11 @@
+{
+  "providers": [
+    {
+      "ascent": 7,
+      "chars": ["\uE000"],
+      "file": "wynntils:render/white_pixel.png",
+      "height": 12,
+      "type": "bitmap"
+    }
+  ]
+}

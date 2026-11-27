@@ -27,7 +27,7 @@ import net.minecraft.network.chat.Style;
 
 public class MomentumBarOverlay extends BaseBarOverlay {
     @Persisted
-    private final Config<CustomColor> maximumColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> maximumColor = new Config<>(CommonColors.GREEN).withShaderColors();
 
     public MomentumBarOverlay() {
         super(

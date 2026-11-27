@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -22,7 +22,7 @@ public class GuardianAngelsTrackerOverlay extends TextOverlay {
                     .formatted(GUARDIAN_ANGELS_SYMBOL);
 
     @Persisted
-    private final Config<CustomColor> textColor = new Config<>(CommonColors.YELLOW);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.YELLOW).withShaderColors();
 
     public GuardianAngelsTrackerOverlay() {
         super(

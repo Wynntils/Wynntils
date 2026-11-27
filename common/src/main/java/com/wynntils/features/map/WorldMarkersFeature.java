@@ -26,7 +26,6 @@ import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.CustomBeaconRenderer;
@@ -57,7 +56,6 @@ import org.joml.Vector4f;
 @ConfigCategory(Category.MAP)
 public class WorldMarkersFeature extends Feature {
     private static final float MINIMUM_RENDER_VISIBILITY = 0.1f;
-    private static final int RAINBOW_CHANGE_RATE = 10;
 
     @Persisted
     private final Config<Float> textBackgroundOpacity = new Config<>(0.2f);
@@ -90,7 +88,6 @@ public class WorldMarkersFeature extends Feature {
     private final Config<Integer> maxMarkerDistance = new Config<>(5000);
 
     private final List<RenderedMapLocation> renderedMapLocations = new ArrayList<>();
-    private CustomColor currentRainbowColor = CommonColors.RED;
 
     public WorldMarkersFeature() {
         super(ProfileDefault.ENABLED);
@@ -98,28 +95,6 @@ public class WorldMarkersFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        int r = currentRainbowColor.r();
-        int g = currentRainbowColor.g();
-        int b = currentRainbowColor.b();
-
-        if (r > 0 && b == 0) {
-            r -= RAINBOW_CHANGE_RATE;
-            g += RAINBOW_CHANGE_RATE;
-        }
-        if (g > 0 && r == 0) {
-            g -= RAINBOW_CHANGE_RATE;
-            b += RAINBOW_CHANGE_RATE;
-        }
-        if (b > 0 && g == 0) {
-            r += RAINBOW_CHANGE_RATE;
-            b -= RAINBOW_CHANGE_RATE;
-        }
-
-        r = MathUtils.clamp(r, 0, 255);
-        g = MathUtils.clamp(g, 0, 255);
-        b = MathUtils.clamp(b, 0, 255);
-        currentRainbowColor = new CustomColor(r, g, b, 255);
-
         removeReachedWaypoints();
     }
 
@@ -170,11 +145,11 @@ public class WorldMarkersFeature extends Feature {
                 continue;
             }
 
-            int colorInt;
-            if (color == WynncraftShaderColor.RAINBOW.color) {
-                colorInt = currentRainbowColor.withAlpha((float) visibility).asInt();
-            } else {
-                colorInt = color.withAlpha((float) visibility).asInt();
+            int colorInt =
+                    color.withAlpha(color.a() / 255f * (float) visibility).asInt();
+            if ((colorInt >>> 24) == 0) {
+                poseStack.popPose();
+                continue;
             }
 
             float partial = McUtils.mc().getDeltaTracker().getGameTimeDeltaPartialTick(false);

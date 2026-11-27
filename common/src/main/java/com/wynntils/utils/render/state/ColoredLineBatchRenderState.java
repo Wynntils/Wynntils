@@ -7,11 +7,13 @@ package com.wynntils.utils.render.state;
 import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.CircleMask;
 import java.util.List;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.render.TextureSetup;
 import net.minecraft.client.gui.render.state.GuiElementRenderState;
 import org.joml.Matrix3x2f;
+import org.joml.Vector2f;
 
 // Batches many colored line segments (e.g. a chunk grid, polygon borders, route paths) into a single
 // GuiElementRenderState submission, instead of one submission per segment.
@@ -20,18 +22,34 @@ public record ColoredLineBatchRenderState(
         TextureSetup textureSetup,
         Matrix3x2f pose,
         List<Segment> segments,
+        CircleMask circularMask,
         ScreenRectangle scissorArea,
         ScreenRectangle bounds)
         implements GuiElementRenderState {
-    public record Segment(float x1, float y1, float x2, float y2, float width, CustomColor color) {}
-
     public ColoredLineBatchRenderState(
             RenderPipeline pipeline,
             TextureSetup textureSetup,
             Matrix3x2f pose,
             List<Segment> segments,
             ScreenRectangle scissorArea) {
-        this(pipeline, textureSetup, pose, segments, scissorArea, computeBounds(segments, pose, scissorArea));
+        this(pipeline, textureSetup, pose, segments, null, scissorArea);
+    }
+
+    public ColoredLineBatchRenderState(
+            RenderPipeline pipeline,
+            TextureSetup textureSetup,
+            Matrix3x2f pose,
+            List<Segment> segments,
+            CircleMask circularMask,
+            ScreenRectangle scissorArea) {
+        this(
+                pipeline,
+                textureSetup,
+                pose,
+                segments,
+                circularMask,
+                scissorArea,
+                computeBounds(segments, pose, scissorArea));
     }
 
     @Override
@@ -50,14 +68,23 @@ public record ColoredLineBatchRenderState(
 
             CustomColor color = segment.color();
 
-            consumer.addVertexWith2DPose(pose, segment.x1() - perpX, segment.y1() - perpY)
-                    .setColor(color.r(), color.g(), color.b(), color.a());
-            consumer.addVertexWith2DPose(pose, segment.x1() + perpX, segment.y1() + perpY)
-                    .setColor(color.r(), color.g(), color.b(), color.a());
-            consumer.addVertexWith2DPose(pose, segment.x2() + perpX, segment.y2() + perpY)
-                    .setColor(color.r(), color.g(), color.b(), color.a());
-            consumer.addVertexWith2DPose(pose, segment.x2() - perpX, segment.y2() - perpY)
-                    .setColor(color.r(), color.g(), color.b(), color.a());
+            addVertex(consumer, segment.x1() - perpX, segment.y1() - perpY, color);
+            addVertex(consumer, segment.x1() + perpX, segment.y1() + perpY, color);
+            addVertex(consumer, segment.x2() + perpX, segment.y2() + perpY, color);
+            addVertex(consumer, segment.x2() - perpX, segment.y2() - perpY, color);
+        }
+    }
+
+    private void addVertex(VertexConsumer consumer, float x, float y, CustomColor color) {
+        VertexConsumer vertex =
+                consumer.addVertexWith2DPose(pose, x, y).setColor(color.r(), color.g(), color.b(), color.a());
+        if (circularMask != null) {
+            // UV0 is a floating-point mask coordinate for the existing circle_mask shader.
+            // Transform first so the mask stays fixed in screen space as the geometry moves.
+            Vector2f absolute = pose.transformPosition(new Vector2f(x, y));
+            vertex.setUv(
+                    (absolute.x() - circularMask.centerX()) / circularMask.radiusX(),
+                    (absolute.y() - circularMask.centerY()) / circularMask.radiusY());
         }
     }
 
@@ -77,10 +104,14 @@ public record ColoredLineBatchRenderState(
             maxY = Math.max(maxY, Math.max(segment.y1(), segment.y2()) + halfWidth);
         }
 
+        int left = (int) Math.floor(minX);
+        int top = (int) Math.floor(minY);
         ScreenRectangle bounds = new ScreenRectangle(
-                        (int) minX, (int) minY, (int) Math.ceil(maxX - minX), (int) Math.ceil(maxY - minY))
+                        left, top, (int) Math.ceil(maxX) - left, (int) Math.ceil(maxY) - top)
                 .transformMaxBounds(pose);
 
         return scissorArea != null ? scissorArea.intersection(bounds) : bounds;
     }
+
+    public record Segment(float x1, float y1, float x2, float y2, float width, CustomColor color) {}
 }

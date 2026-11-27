@@ -5,13 +5,16 @@
 package com.wynntils.screens.colorpicker;
 
 import com.wynntils.core.consumers.screens.WynntilsScreen;
+import com.wynntils.core.text.fonts.wynnfonts.WynntilsColorSwatchFont;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.colorpicker.widgets.AlphaSlider;
 import com.wynntils.screens.colorpicker.widgets.HueSlider;
 import com.wynntils.screens.colorpicker.widgets.PresetColorButton;
 import com.wynntils.screens.colorpicker.widgets.SaturationBrightnessWidget;
+import com.wynntils.screens.colorpicker.widgets.ShaderColorPresetButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.colors.WynncraftShaderColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -46,6 +49,15 @@ public final class ColorPickerScreen extends WynntilsScreen {
             CommonColors.ORANGE,
             CommonColors.WHITE);
 
+    private static final List<WynncraftShaderColor> SHADER_COLORS = List.of(
+            WynncraftShaderColor.BLINK,
+            WynncraftShaderColor.FADE,
+            WynncraftShaderColor.GRADIENT,
+            WynncraftShaderColor.GRADIENT_2,
+            WynncraftShaderColor.RAINBOW,
+            WynncraftShaderColor.SHINE);
+
+    private final boolean showShaderColors;
     private final Screen previousScreen;
     private final TextInputBoxWidget inputWidget;
 
@@ -62,17 +74,28 @@ public final class ColorPickerScreen extends WynntilsScreen {
     private int offsetX;
     private int offsetY;
 
-    private ColorPickerScreen(Screen previousScreen, TextInputBoxWidget inputWidget) {
+    private ColorPickerScreen(
+            Screen previousScreen, TextInputBoxWidget inputWidget, boolean showShaderColors, CustomColor initialColor) {
         super(Component.literal("Color Picker Screen"));
 
         this.previousScreen = previousScreen;
+        this.showShaderColors = showShaderColors;
         this.inputWidget = inputWidget;
 
-        color = CustomColor.fromHexString(inputWidget.getTextBoxInput());
+        color = initialColor;
     }
 
-    public static Screen create(Screen previousScreen, TextInputBoxWidget inputWidget) {
-        return new ColorPickerScreen(previousScreen, inputWidget);
+    public static Screen create(Screen previousScreen, TextInputBoxWidget inputWidget, boolean showShaderColors) {
+        return create(
+                previousScreen,
+                inputWidget,
+                showShaderColors,
+                CustomColor.fromHexString(inputWidget.getTextBoxInput()));
+    }
+
+    public static Screen create(
+            Screen previousScreen, TextInputBoxWidget inputWidget, boolean showShaderColors, CustomColor initialColor) {
+        return new ColorPickerScreen(previousScreen, inputWidget, showShaderColors, initialColor);
     }
 
     @Override
@@ -135,6 +158,13 @@ public final class ColorPickerScreen extends WynntilsScreen {
                 y += 20;
             }
         }
+
+        if (showShaderColors) {
+            for (int i = 0; i < SHADER_COLORS.size(); i++) {
+                addRenderableWidget(new ShaderColorPresetButton(
+                        offsetX + 357 + (i % 3) * 24, offsetY + 161 + (i / 3) * 20, SHADER_COLORS.get(i), this));
+            }
+        }
     }
 
     @Override
@@ -144,7 +174,11 @@ public final class ColorPickerScreen extends WynntilsScreen {
 
     @Override
     public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.drawTexturedRect(guiGraphics, Texture.COLOR_PICKER_BACKGROUND, offsetX, offsetY);
+        RenderUtils.drawTexturedRect(
+                guiGraphics,
+                showShaderColors ? Texture.COLOR_PICKER_SHADERS_BACKGROUND : Texture.COLOR_PICKER_BACKGROUND,
+                offsetX,
+                offsetY);
 
         renderSelectedColor(guiGraphics, offsetX + 11, offsetY + 15);
 
@@ -215,6 +249,10 @@ public final class ColorPickerScreen extends WynntilsScreen {
     }
 
     private void renderSelectedColor(GuiGraphics guiGraphics, int x, int y) {
-        RenderUtils.drawRect(guiGraphics, color, x, y, 82, 66);
+        if (showShaderColors && SHADER_COLORS.stream().anyMatch(shader -> shader.color.equals(color))) {
+            WynntilsColorSwatchFont.render(guiGraphics, x, y, 82, 66, color);
+        } else {
+            RenderUtils.drawRect(guiGraphics, color, x, y, 82, 66);
+        }
     }
 }

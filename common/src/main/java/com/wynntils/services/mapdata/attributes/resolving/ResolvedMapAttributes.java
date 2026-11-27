@@ -25,4 +25,11 @@ public record ResolvedMapAttributes(
         ResolvedMarkerOptions markerOptions,
         List<CustomColor> fillColor,
         List<CustomColor> borderColor,
-        float borderWidth) {}
+        float borderWidth,
+        String pathIconId,
+        CustomColor pathFillColor,
+        CustomColor pathBorderColor,
+        float pathBorderWidth,
+        float pathWidth,
+        CustomColor pathColor,
+        boolean hasPath) {}

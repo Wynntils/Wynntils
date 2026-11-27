@@ -19,6 +19,21 @@ public abstract class AbstractMapPathAttributes extends AbstractMapAttributes im
     }
 
     @Override
+    public final Optional<List<CustomColor>> getFillColors() {
+        return Optional.empty();
+    }
+
+    @Override
+    public final Optional<List<CustomColor>> getBorderColors() {
+        return Optional.empty();
+    }
+
+    @Override
+    public final Optional<Float> getBorderWidth() {
+        return Optional.empty();
+    }
+
+    @Override
     public final Optional<MapVisibility> getIconVisibility() {
         return Optional.empty();
     }
@@ -40,21 +55,6 @@ public abstract class AbstractMapPathAttributes extends AbstractMapAttributes im
 
     @Override
     public final Optional<MapMarkerOptions> getMarkerOptions() {
-        return Optional.empty();
-    }
-
-    @Override
-    public final Optional<List<CustomColor>> getFillColors() {
-        return Optional.empty();
-    }
-
-    @Override
-    public final Optional<List<CustomColor>> getBorderColors() {
-        return Optional.empty();
-    }
-
-    @Override
-    public final Optional<Float> getBorderWidth() {
         return Optional.empty();
     }
 }

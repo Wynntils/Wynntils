@@ -16,7 +16,6 @@ import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.ExtendedSeasonLeaderboardFeature;
 import com.wynntils.features.HideCrosshairInCutscenesFeature;
 import com.wynntils.features.HideTripwiresFeature;
-import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.ValuableFoundFeature;
 import com.wynntils.features.chat.BombBellRelayFeature;
@@ -244,9 +243,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new PacketDebuggerFeature());
         registerFeature(new PlayerInfoFooterDebuggerFeature());
         registerFeature(new TextureRecorderFeature());
-
-        // always on
-        registerFeature(new LootrunFeature());
 
         // region chat
         registerFeature(new BombBellRelayFeature());

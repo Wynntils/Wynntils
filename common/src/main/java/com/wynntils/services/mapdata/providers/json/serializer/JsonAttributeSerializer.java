@@ -90,7 +90,7 @@ public final class JsonAttributeSerializer
         attributesJson.entrySet().forEach(entry -> {
             String attribute = entry.getKey();
             JsonElement value = entry.getValue();
-            if (value != null) {
+            if (value != null && !value.isJsonNull()) {
                 result.add(attribute, value);
             }
         });

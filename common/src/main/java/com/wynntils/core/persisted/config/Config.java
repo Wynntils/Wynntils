@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
@@ -20,10 +20,22 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class Config<T> extends PersistedValue<T> {
     private boolean userEdited = false;
+    private boolean showShaderColors;
     private final Map<ConfigProfile, T> profileDefaults = new EnumMap<>(ConfigProfile.class);
 
     public Config(T value) {
         super(value);
+    }
+
+    /** Whether to allow Wynncraft shader colors when used with a CustomColor config */
+    public Config<T> withShaderColors() {
+        showShaderColors = true;
+
+        return this;
+    }
+
+    public boolean showShaderColors() {
+        return showShaderColors;
     }
 
     public Config<T> withDefault(ConfigProfile profile, T value) {

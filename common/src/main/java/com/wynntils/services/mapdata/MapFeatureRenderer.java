@@ -12,21 +12,28 @@ import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.features.type.MapArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
+import com.wynntils.services.mapdata.features.type.MapPath;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.PathStrokeGeometry;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.pipelines.CustomRenderPipelines;
+import com.wynntils.utils.render.state.ColoredTriangleBatchRenderState;
 import com.wynntils.utils.render.type.CircleMask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingPolygon;
+import com.wynntils.utils.type.PathGeometry;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.render.TextureSetup;
+import org.joml.Matrix3x2f;
 import org.joml.Vector2f;
 import org.joml.Vector2i;
 
@@ -81,7 +88,22 @@ public final class MapFeatureRenderer {
                     zoomRenderScale,
                     featureRenderScale,
                     hovered,
-                    fullscreenMap);
+                    fullscreenMap,
+                    circularMask);
+        } else if (feature instanceof MapPath path) {
+            renderMapPath(
+                    guiGraphics,
+                    path,
+                    attributes,
+                    mapCenter,
+                    screenCenter,
+                    rotationVector,
+                    zoomLevel,
+                    zoomRenderScale,
+                    featureRenderScale,
+                    hovered,
+                    fullscreenMap,
+                    circularMask);
         } else {
             WynntilsMod.warn(
                     "Could not render feature of type " + feature.getClass().getSimpleName() + " with ID "
@@ -225,7 +247,8 @@ public final class MapFeatureRenderer {
             float zoomRenderScale,
             float featureRenderScale,
             boolean hovered,
-            boolean fullscreenMap) {
+            boolean fullscreenMap,
+            CircleMask circularMask) {
         List<Vector2f> worldVertices = area.getBoundingPolygon().vertices();
 
         // Transform area vertices to screen coordinates
@@ -238,7 +261,8 @@ public final class MapFeatureRenderer {
                 attributes.fillColor(),
                 attributes.borderColor(),
                 attributes.borderWidth() + (hovered ? 1 : 0),
-                screenVertices);
+                screenVertices,
+                circularMask);
 
         BoundingPolygon boundingPolygon = BoundingPolygon.fromVertices(screenVertices);
         Vector2f centroid = boundingPolygon.centroid();
@@ -248,6 +272,19 @@ public final class MapFeatureRenderer {
         float maxLabelWidth = area.getBoundingPolygon().maxWidth() * zoomRenderScale * featureRenderScale;
         float labelScaleModifier = Math.max(1f, labelWidth / maxLabelWidth);
         float textScale = TEXT_SCALE * featureRenderScale / labelScaleModifier;
+
+        if (circularMask != null) {
+            float halfWidth = labelWidth / labelScaleModifier / 2f + textScale * 2f;
+            float halfHeight = FontRenderer.getInstance().getFont().lineHeight * textScale / 2f + textScale * 2f;
+
+            for (float x : new float[] {centroid.x() - halfWidth, centroid.x() + halfWidth}) {
+                for (float y : new float[] {centroid.y() - halfHeight, centroid.y() + halfHeight}) {
+                    Vector2f absolute = guiGraphics.pose().transformPosition(new Vector2f(x, y));
+
+                    if (!circularMask.contains(absolute.x(), absolute.y())) return;
+                }
+            }
+        }
 
         FontRenderer.getInstance()
                 .renderText(
@@ -278,6 +315,100 @@ public final class MapFeatureRenderer {
                             TextShadow.OUTLINE,
                             TEXT_SCALE);
         }
+    }
+
+    private static void renderMapPath(
+            GuiGraphics guiGraphics,
+            MapPath path,
+            ResolvedMapAttributes attributes,
+            Vector2f mapCenter,
+            Vector2f screenCenter,
+            Vector2f rotationVector,
+            float zoomLevel,
+            float zoomRenderScale,
+            float featureRenderScale,
+            boolean hovered,
+            boolean fullscreenMap,
+            CircleMask circularMask) {
+        List<Vector2f> vertices = getPathScreenVertices(path, mapCenter, screenCenter, rotationVector, zoomRenderScale);
+        if (vertices.size() < 2) return;
+
+        List<ColoredTriangleBatchRenderState.Triangle> triangles = PathStrokeGeometry.createTriangles(
+                vertices,
+                attributes.pathFillColor(),
+                (attributes.pathWidth() + (hovered ? 1 : 0)) * featureRenderScale,
+                attributes.pathBorderColor(),
+                attributes.pathBorderWidth() * featureRenderScale);
+        if (!triangles.isEmpty()) {
+            guiGraphics.guiRenderState.submitGuiElement(new ColoredTriangleBatchRenderState(
+                    circularMask != null
+                            ? CustomRenderPipelines.CIRCLE_MASK_PIPELINE
+                            : CustomRenderPipelines.POSITION_COLOR_QUAD_PIPELINE,
+                    TextureSetup.noTexture(),
+                    new Matrix3x2f(guiGraphics.pose()),
+                    triangles,
+                    circularMask,
+                    guiGraphics.scissorStack.peek()));
+        }
+
+        float labelAlpha = Services.MapData.calculateVisibility(attributes.labelVisibility(), zoomLevel);
+        if (!fullscreenMap || (labelAlpha <= MINIMUM_RENDER_ALPHA && !hovered)) return;
+
+        Vector2f midpoint = PathGeometry.midpoint(vertices);
+        FontRenderer.getInstance()
+                .renderText(
+                        guiGraphics,
+                        StyledText.fromString(attributes.label()),
+                        midpoint.x(),
+                        midpoint.y(),
+                        attributes.labelColor().withAlpha(hovered ? 1f : labelAlpha),
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
+                        attributes.labelShadow(),
+                        TEXT_SCALE * featureRenderScale);
+        if (hovered) {
+            float y = midpoint.y() + FontRenderer.getInstance().getFont().lineHeight * TEXT_SCALE * featureRenderScale;
+            if (attributes.level() > 0) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                StyledText.fromString("[Lv. " + attributes.level() + "]"),
+                                midpoint.x(),
+                                y,
+                                attributes.labelColor(),
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.MIDDLE,
+                                attributes.labelShadow(),
+                                TEXT_SCALE * featureRenderScale);
+                y += FontRenderer.getInstance().getFont().lineHeight * TEXT_SCALE * featureRenderScale;
+            }
+
+            if (!attributes.description().isEmpty()) {
+                FontRenderer.getInstance()
+                        .renderText(
+                                guiGraphics,
+                                StyledText.fromString(attributes.description()),
+                                midpoint.x(),
+                                y,
+                                attributes.labelColor(),
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.MIDDLE,
+                                attributes.labelShadow(),
+                                TEXT_SCALE * featureRenderScale);
+            }
+        }
+    }
+
+    private static List<Vector2f> getPathScreenVertices(
+            MapPath path, Vector2f mapCenter, Vector2f screenCenter, Vector2f rotationVector, float zoomRenderScale) {
+        return path.getMapPath().stream()
+                .map(location -> getRenderLocation(
+                        mapCenter,
+                        screenCenter,
+                        rotationVector,
+                        zoomRenderScale,
+                        new Vector2f((float) location.x(), (float) location.z())))
+                .toList();
     }
 
     public static boolean isHovered(
@@ -341,6 +472,30 @@ public final class MapFeatureRenderer {
             }
 
             // Level and decoration are not considered for hovering
+
+            return false;
+        }
+
+        if (mapFeature instanceof MapPath path) {
+            if (attributes.pathWidth() <= 0) return false;
+
+            boolean hasFill = attributes.pathFillColor().a() > 0;
+            boolean hasBorder = attributes.pathBorderWidth() > 0
+                    && attributes.pathBorderColor().a() > 0;
+            if (!hasFill && !hasBorder) return false;
+
+            List<Vector2f> vertices =
+                    getPathScreenVertices(path, mapCenter, screenCenter, rotationVector, zoomRenderScale);
+            float hoverRadius = Math.max(
+                    3f,
+                    (attributes.pathWidth() / 2f + (hasBorder ? attributes.pathBorderWidth() : 0))
+                            * featureRenderScale);
+            for (int i = 1; i < vertices.size(); i++) {
+                Vector2f a = vertices.get(i - 1);
+                Vector2f b = vertices.get(i);
+                if (PathGeometry.distanceSquaredToSegment(mousePos.x(), mousePos.y(), a.x(), a.y(), b.x(), b.y())
+                        <= hoverRadius * hoverRadius) return true;
+            }
 
             return false;
         }

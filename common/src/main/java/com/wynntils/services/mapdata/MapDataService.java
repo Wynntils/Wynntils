@@ -184,8 +184,7 @@ public class MapDataService extends Service {
         List<MapAttributes> resolvedAttributes = new ArrayList<>();
 
         overrideProviders.values().stream()
-                .filter(provider -> provider.getOverridenCategoryIds()
-                        .anyMatch(id -> categoryId.startsWith(id) && !id.equals(categoryId)))
+                .filter(provider -> provider.getOverridenCategoryIds().anyMatch(id -> categoryId.startsWith(id + ":")))
                 .map(provider -> provider.getOverrideAttributes(null))
                 .filter(Objects::nonNull)
                 .forEach(resolvedAttributes::add);
@@ -272,14 +271,15 @@ public class MapDataService extends Service {
     }
 
     public Optional<MapAttributes> getOverrideAttributesForFeature(MapFeature feature) {
+        String categoryId = feature.getCategoryId();
         return OverrideMapAttributes.from(Stream.concat(
                         overrideProviders.values().stream()
                                 .filter(attr -> attr.getOverridenFeatureIds()
                                         .anyMatch(attrFeatureId -> attrFeatureId.equals(feature.getFeatureId()))),
                         overrideProviders.values().stream()
                                 .filter(attr -> attr.getOverridenCategoryIds()
-                                        .anyMatch(attrCategoryId ->
-                                                feature.getCategoryId().startsWith(attrCategoryId))))
+                                        .anyMatch(attrCategoryId -> categoryId.equals(attrCategoryId)
+                                                || categoryId.startsWith(attrCategoryId + ":"))))
                 .map(provider -> provider.getOverrideAttributes(feature))
                 .toList());
     }
@@ -292,13 +292,14 @@ public class MapDataService extends Service {
     // can be added just from disk, or downloaded from an url
     public void addJsonProvider(JsonProviderInfo providerInfo) {
         JsonProviderInfo oldInfo = jsonProviders.get().put(providerInfo.providerId(), providerInfo);
-        if (oldInfo != null && !oldInfo.completeId().equals(providerInfo.completeId())) {
+        boolean isNewProvider = oldInfo == null || !oldInfo.completeId().equals(providerInfo.completeId());
+        if (oldInfo != null && isNewProvider) {
             unregisterProvider(oldInfo.completeId());
         }
         jsonProviders.touched();
 
         // Newly added providers are always enabled
-        if (providerEnabledOverrides.get().remove(providerInfo.completeId()) != null) {
+        if (isNewProvider && providerEnabledOverrides.get().remove(providerInfo.completeId()) != null) {
             providerEnabledOverrides.touched();
         }
 

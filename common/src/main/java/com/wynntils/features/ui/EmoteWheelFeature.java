@@ -41,10 +41,10 @@ public class EmoteWheelFeature extends Feature implements ExternalConfigurationS
     public final Config<WheelButtonStyle> buttonStyle = new Config<>(WheelButtonStyle.BUTTON);
 
     @Persisted
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
+    public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE).withShaderColors();
 
     @Persisted
-    public final Config<CustomColor> textColorHovered = new Config<>(CommonColors.WHITE);
+    public final Config<CustomColor> textColorHovered = new Config<>(CommonColors.WHITE).withShaderColors();
 
     @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);

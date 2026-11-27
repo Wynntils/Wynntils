@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -19,7 +19,7 @@ public class AnnihilationSunOverlay extends TextOverlay {
             "{if_str(at_cap(annihilation_sun_progress);\"\";concat(\"Sun Forming: \";str(curr(annihilation_sun_progress));\"%\"))}";
 
     @Persisted
-    private final Config<CustomColor> textColor = new Config<>(CommonColors.RED);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.RED).withShaderColors();
 
     public AnnihilationSunOverlay() {
         super(

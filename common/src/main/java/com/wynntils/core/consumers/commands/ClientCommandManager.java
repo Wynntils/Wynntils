@@ -17,7 +17,6 @@ import com.wynntils.commands.ConfigCommand;
 import com.wynntils.commands.FeatureCommand;
 import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LocateCommand;
-import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.MapCommand;
 import com.wynntils.commands.OnlineMembersCommand;
 import com.wynntils.commands.PingCommand;
@@ -186,7 +185,6 @@ public final class ClientCommandManager extends Manager {
         registerCommand(new FeatureCommand());
         registerCommand(new FunctionCommand());
         registerCommand(new LocateCommand());
-        registerCommand(new LootrunCommand());
         registerCommand(new MapCommand());
         registerCommand(new OnlineMembersCommand());
         registerCommand(new PingCommand());

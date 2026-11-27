@@ -13,7 +13,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.managers.type.OptionCategory;
 import com.wynntils.screens.maps.managers.type.OverrideType;
 import com.wynntils.screens.maps.managers.widgets.ManagerSearchWidget;
-import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryInfoWidget;
+import com.wynntils.screens.maps.managers.widgets.StyledInfoButton;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.CategoryTreeWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.DeleteButtonWidget;
 import com.wynntils.screens.maps.managers.widgets.categorymanager.OptionsScrollBarWidget;
@@ -35,8 +35,11 @@ import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -55,7 +58,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     public CategoryTreeWidget categoryTreeWidget;
 
     public OverrideSelectionWidget overrideSelectionWidget;
-    public CategoryInfoWidget infoWidget;
+    private StyledInfoButton infoWidget;
     public SaveButtonWidget saveButtonWidget;
     public ResetButtonWidget resetButtonWidget;
     public DeleteButtonWidget deleteButtonWidget;
@@ -92,6 +95,17 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     public ColorOptionWidget fillColorOptionWidget;
     public ColorOptionWidget borderColorOptionWidget;
     public FloatSliderOptionWidget borderWidthOptionWidget;
+    // endregion
+
+    // region Path Attributes
+
+    public FloatSliderOptionWidget pathWidthOptionWidget;
+    public IconOptionWidget pathIconOptionWidget;
+    public ColorOptionWidget pathFillColorOptionWidget;
+    public ColorOptionWidget pathBorderColorOptionWidget;
+    public FloatSliderOptionWidget pathBorderWidthOptionWidget;
+    public ToggleOptionWidget hasPathOptionWidget;
+    public ColorOptionWidget pathColorOptionWidget;
 
     // endregion
 
@@ -134,7 +148,11 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         offsetX = (int) ((this.width - Texture.MANAGER_BACKGROUND.width()) / 2f);
         offsetY = (int) ((this.height - Texture.MANAGER_BACKGROUND.height()) / 2f);
 
-        infoWidget = new CategoryInfoWidget(offsetX + WIDTH_OFFSET + 546 - 20, offsetY + HEIGHT_OFFSET, 20, 20, this);
+        infoWidget = new StyledInfoButton(
+                offsetX + WIDTH_OFFSET + 546 - 20,
+                offsetY + HEIGHT_OFFSET,
+                Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.title"),
+                buildInfoTooltip());
         this.addRenderableWidget(infoWidget);
 
         categorySearchWidget = new ManagerSearchWidget(
@@ -207,7 +225,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.labelColor.description"),
                 OptionCategory.LABEL,
                 MapAttributes::getLabelColor,
-                this);
+                this,
+                true);
 
         labelShadowOptionWidget = new TextShadowOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.labelShadow"),
@@ -228,7 +247,12 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityFade"),
                 Component.translatable("screens.wynntils.map.managers.categoryManager.labelVisibilityFade.description"),
                 MapAttributes::getLabelVisibility,
-                this);
+                this,
+                () -> {
+                    if (optionsScrollBar != null) {
+                        optionsScrollBar.updateWidgetPositions();
+                    }
+                });
 
         // endregion
 
@@ -245,7 +269,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.iconColor.description"),
                 OptionCategory.ICON,
                 MapAttributes::getIconColor,
-                this);
+                this,
+                false);
 
         iconVisibilityOptionWidget = new VisiblityOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibility"),
@@ -260,7 +285,12 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityFade"),
                 Component.translatable("screens.wynntils.map.managers.categoryManager.iconVisibilityFade.description"),
                 MapAttributes::getIconVisibility,
-                this);
+                this,
+                () -> {
+                    if (optionsScrollBar != null) {
+                        optionsScrollBar.updateWidgetPositions();
+                    }
+                });
 
         // endregion
 
@@ -307,7 +337,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.markerBeaconColor.description"),
                 OptionCategory.MARKER,
                 attrs -> attrs.getMarkerOptions().flatMap(MapMarkerOptions::getBeaconColor),
-                this);
+                this,
+                true);
 
         markerHasLabelOptionWidget = new ToggleOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.markerHasLabel"),
@@ -337,6 +368,57 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.fillColor.description"),
                 OptionCategory.AREA_BORDER,
                 attrs -> MapAttributes.firstColor(attrs.getFillColors()),
+                this,
+                false);
+
+        hasPathOptionWidget = new ToggleOptionWidget(
+                Component.translatable("screens.wynntils.map.paths.hasPath"),
+                Component.translatable("screens.wynntils.map.paths.hasPath.description"),
+                OptionCategory.PATH,
+                MapAttributes::getHasPath);
+        pathColorOptionWidget = new ColorOptionWidget(
+                Component.translatable("screens.wynntils.map.paths.pathColor"),
+                Component.translatable("screens.wynntils.map.paths.pathColor.description"),
+                OptionCategory.PATH,
+                MapAttributes::getPathColor,
+                this,
+                true);
+
+        pathIconOptionWidget = new IconOptionWidget(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathIcon"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathIcon.description"),
+                OptionCategory.PATH,
+                MapAttributes::getPathIconId);
+        pathFillColorOptionWidget = new ColorOptionWidget(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathFillColor"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathFillColor.description"),
+                OptionCategory.MAP_PATH,
+                MapAttributes::getPathFillColor,
+                this,
+                false);
+        pathBorderColorOptionWidget = new ColorOptionWidget(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathBorderColor"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathBorderColor.description"),
+                OptionCategory.MAP_PATH,
+                MapAttributes::getPathBorderColor,
+                this,
+                false);
+        pathBorderWidthOptionWidget = new FloatSliderOptionWidget(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathBorderWidth"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathBorderWidth.description"),
+                OptionCategory.MAP_PATH,
+                0f,
+                10f,
+                MapAttributes::getPathBorderWidth,
+                this);
+
+        pathWidthOptionWidget = new FloatSliderOptionWidget(
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathWidth"),
+                Component.translatable("screens.wynntils.map.managers.categoryManager.pathWidth.description"),
+                OptionCategory.MAP_PATH,
+                0f,
+                20f,
+                MapAttributes::getPathWidth,
                 this);
 
         borderColorOptionWidget = new ColorOptionWidget(
@@ -344,7 +426,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
                 Component.translatable("screens.wynntils.map.managers.categoryManager.borderColor.description"),
                 OptionCategory.AREA_BORDER,
                 attrs -> MapAttributes.firstColor(attrs.getBorderColors()),
-                this);
+                this,
+                false);
 
         borderWidthOptionWidget = new FloatSliderOptionWidget(
                 Component.translatable("screens.wynntils.map.managers.categoryManager.borderWidth"),
@@ -383,6 +466,14 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         optionsScrollBar.addWidget(markerHasIconOptionWidget);
 
         optionsScrollBar.addWidget(fillColorOptionWidget);
+        optionsScrollBar.addWidget(pathIconOptionWidget);
+        optionsScrollBar.addWidget(hasPathOptionWidget);
+        optionsScrollBar.addWidget(pathColorOptionWidget);
+
+        optionsScrollBar.addWidget(pathFillColorOptionWidget);
+        optionsScrollBar.addWidget(pathBorderColorOptionWidget);
+        optionsScrollBar.addWidget(pathWidthOptionWidget);
+        optionsScrollBar.addWidget(pathBorderWidthOptionWidget);
         optionsScrollBar.addWidget(borderColorOptionWidget);
         optionsScrollBar.addWidget(borderWidthOptionWidget);
 
@@ -449,6 +540,95 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         return handled;
     }
 
+    private List<Component> buildInfoTooltip() {
+        List<Component> lines = new ArrayList<>();
+
+        lines.add(Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.title")
+                .withStyle(ChatFormatting.GOLD));
+
+        Component description = Component.translatable(
+                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.description");
+
+        lines.add(description.copy().withStyle(ChatFormatting.GRAY));
+
+        lines.add(Component.empty());
+
+        lines.add(Component.literal("- ")
+                .withStyle(ChatFormatting.GOLD)
+                .append(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.inherited.title")
+                        .withStyle(ChatFormatting.WHITE)));
+
+        Component inheritedDescription = Component.translatable(
+                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.inherited.description");
+
+        lines.add(inheritedDescription.copy().withStyle(ChatFormatting.GRAY));
+
+        lines.add(Component.empty());
+
+        lines.add(Component.literal("- ")
+                .withStyle(ChatFormatting.GOLD)
+                .append(Component.translatable(
+                                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.notInherited.title")
+                        .withStyle(ChatFormatting.WHITE)));
+
+        Component notInheritedDescription = Component.translatable(
+                "screens.wynntils.map.managers.categoryManager.infoWidget.inheritance.notInherited.description");
+
+        lines.add(notInheritedDescription.copy().withStyle(ChatFormatting.GRAY));
+
+        lines.add(Component.empty());
+
+        lines.add(Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.override.title")
+                .withStyle(ChatFormatting.GOLD));
+
+        Component overrideTypeIntro =
+                Component.translatable("screens.wynntils.map.managers.categoryManager.infoWidget.override.description");
+
+        lines.add(overrideTypeIntro.copy().withStyle(ChatFormatting.GRAY));
+
+        OverrideType currentType = selectedOverrideType;
+
+        OverrideType[] overrideTypes = OverrideType.values();
+
+        for (OverrideType type : overrideTypes) {
+            lines.add(Component.empty());
+
+            boolean isCurrent = type == currentType;
+            ChatFormatting labelColor = isCurrent ? ChatFormatting.RED : ChatFormatting.WHITE;
+
+            Component typeLabel = Component.literal(type.getDisplayName()).withStyle(labelColor);
+
+            if (isCurrent) {
+                typeLabel = typeLabel
+                        .copy()
+                        .append(" ")
+                        .append(Component.translatable(
+                                        "screens.wynntils.map.managers.categoryManager.infoWidget.override.current")
+                                .withStyle(labelColor));
+            }
+
+            lines.add(Component.literal("- ").withStyle(ChatFormatting.GOLD).append(typeLabel));
+
+            Component typeDescription =
+                    switch (type) {
+                        case MAP_LOCATION_OVERRIDE ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.categoryManager.infoWidget.override.mapLocationOverride.description");
+                        case MAP_PATH_OVERRIDE ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.categoryManager.infoWidget.override.mapPathOverride.description");
+                        case MAP_AREA_OVERRIDE ->
+                            Component.translatable(
+                                    "screens.wynntils.map.managers.categoryManager.infoWidget.override.mapAreaOverride.description");
+                    };
+
+            lines.add(typeDescription.copy().withStyle(ChatFormatting.GRAY));
+        }
+
+        return lines;
+    }
+
     private void renderTooltips(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         for (GuiEventListener child : children()) {
             if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
@@ -513,6 +693,7 @@ public final class CategoryManagementScreen extends WynntilsScreen {
 
         boolean isLocation = selectedOverrideType == OverrideType.MAP_LOCATION_OVERRIDE;
         boolean isArea = selectedOverrideType == OverrideType.MAP_AREA_OVERRIDE;
+        boolean isPath = selectedOverrideType == OverrideType.MAP_PATH_OVERRIDE;
 
         // Feature (common) Attributes - always visible
         priorityOptionWidget.display = true;
@@ -540,8 +721,15 @@ public final class CategoryManagementScreen extends WynntilsScreen {
         markerHasDistanceLabelOptionWidget.display = isLocation;
         markerHasIconOptionWidget.display = isLocation;
 
-        // Area & Border Attributes - MapArea only
+        // Paths have a colored interior and an independently sized border.
         fillColorOptionWidget.display = isArea;
+        pathWidthOptionWidget.display = isPath;
+        pathIconOptionWidget.display = isPath;
+        pathFillColorOptionWidget.display = isPath;
+        pathBorderColorOptionWidget.display = isPath;
+        pathBorderWidthOptionWidget.display = isPath;
+        hasPathOptionWidget.display = isPath;
+        pathColorOptionWidget.display = isPath;
         borderColorOptionWidget.display = isArea;
         borderWidthOptionWidget.display = isArea;
 
@@ -563,7 +751,8 @@ public final class CategoryManagementScreen extends WynntilsScreen {
     public void setSelectedOverrideType(OverrideType newOverrideType) {
         selectedOverrideType = newOverrideType;
         updateOptionWidgetsVisibility();
-        infoWidget.generateTooltip();
+        updateOptionWidgets();
+        infoWidget.setTooltipLines(buildInfoTooltip());
         saveButtonWidget.generateTooltip();
         deleteButtonWidget.generateTooltip();
     }

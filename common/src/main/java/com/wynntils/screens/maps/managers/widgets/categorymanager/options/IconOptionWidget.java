@@ -82,8 +82,7 @@ public class IconOptionWidget extends AbstractOptionWidget<String> {
 
         if (isNoneIcon) {
             Font font = FontRenderer.getInstance().getFont();
-            Component noneText =
-                    Component.translatable("screens.wynntils.map.managers.categoryManager.iconOptionWidget.noneText");
+            Component noneText = getNoneText();
             int textWidth = font.width(noneText);
             int textHeight = font.lineHeight;
 
@@ -133,6 +132,10 @@ public class IconOptionWidget extends AbstractOptionWidget<String> {
                     iconWidth,
                     iconHeight);
         }
+    }
+
+    protected Component getNoneText() {
+        return Component.translatable("screens.wynntils.map.managers.categoryManager.iconOptionWidget.noneText");
     }
 
     @Override

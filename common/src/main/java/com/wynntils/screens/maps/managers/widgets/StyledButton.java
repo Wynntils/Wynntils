@@ -47,23 +47,26 @@ public final class StyledButton extends AbstractWidget {
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        handleCursor(guiGraphics);
+        if (active) {
+            handleCursor(guiGraphics);
+        }
 
         RenderUtils.drawNineSliceScalingTexturedRect(
                 guiGraphics,
-                this.active ? backgroundTexture : inactiveBackgroundTexture,
+                active ? backgroundTexture : inactiveBackgroundTexture,
                 getX(),
                 getY(),
                 getWidth(),
                 getHeight());
 
         FontRenderer.getInstance()
-                .renderText(
+                .renderScrollingText(
                         guiGraphics,
                         StyledText.fromString(getMessage().getString()),
                         getX() + getWidth() / 2f,
                         getY() + getHeight() / 2f,
-                        CommonColors.WHITE,
+                        getWidth() - 12,
+                        active ? CommonColors.WHITE : CommonColors.GRAY,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);

@@ -18,18 +18,15 @@ import com.wynntils.screens.maps.waypoints.GatheringNodeFilterScreen;
 import com.wynntils.screens.maps.waypoints.WaypointCreationScreen;
 import com.wynntils.screens.maps.waypoints.WaypointManagementScreen;
 import com.wynntils.screens.maps.widgets.MapButton;
-import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
 import com.wynntils.services.mapdata.features.builtin.TerritoryArea;
 import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.type.MapArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.LocationUtils;
@@ -295,23 +292,6 @@ public final class MainMapScreen extends AbstractMapScreen {
                 Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .pointerType
                         .get());
-
-        LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
-
-        if (currentLootrun != null) {
-            MapRenderer.renderLootrunLine(
-                    guiGraphics,
-                    currentLootrun,
-                    2f,
-                    3f,
-                    centerX,
-                    centerZ,
-                    mapCenterX,
-                    mapCenterZ,
-                    zoomRenderScale,
-                    CommonColors.LIGHT_BLUE,
-                    CommonColors.BLACK);
-        }
 
         RenderUtils.disableScissor(guiGraphics);
 

@@ -12,9 +12,7 @@ import com.wynntils.core.text.fonts.wynnfonts.WynncraftKeybindsFont;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.maps.managers.CategoryManagementScreen;
 import com.wynntils.screens.maps.managers.type.OverrideType;
-import com.wynntils.screens.maps.waypoints.WaypointCategoryScreen;
 import com.wynntils.services.mapdata.attributes.resolving.ResolvedMapAttributes;
-import com.wynntils.services.mapdata.features.builtin.WaypointLocation;
 import com.wynntils.services.mapdata.features.type.MapArea;
 import com.wynntils.services.mapdata.features.type.MapFeature;
 import com.wynntils.services.mapdata.features.type.MapLocation;
@@ -52,32 +50,35 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
     private final String categoryId;
     private final MapIcon icon;
 
-    private final WaypointCategoryScreen waypointParent;
+    private final boolean readOnly;
     private final boolean interactive;
+    private final Location referenceLocation;
 
     private List<Component> generatedTooltip = new ArrayList<>();
 
     public FeatureEntryWidget(int x, int y, int width, int height, MapFeature<?> mapFeature, String providerId) {
-        this(null, providerId, x, y, width, height, mapFeature);
+        this(x, y, width, height, mapFeature, providerId, false, null);
     }
 
     public FeatureEntryWidget(
-            int x, int y, int width, int height, WaypointLocation waypoint, WaypointCategoryScreen parent) {
-        this(parent, null, x, y, width, height, waypoint);
+            int x, int y, int width, int height, MapFeature<?> mapFeature, Location referenceLocation) {
+        this(x, y, width, height, mapFeature, null, true, referenceLocation);
     }
 
     private FeatureEntryWidget(
-            WaypointCategoryScreen waypointParent,
-            String providerId,
             int x,
             int y,
             int width,
             int height,
-            MapFeature<?> mapFeature) {
+            MapFeature<?> mapFeature,
+            String providerId,
+            boolean readOnly,
+            Location referenceLocation) {
         super(x, y, width, height, Component.literal(mapFeature.getFeatureId()));
         this.mapFeature = mapFeature;
-        this.waypointParent = waypointParent;
-        this.interactive = providerId == null || Services.MapData.isProviderEnabled(providerId);
+        this.readOnly = readOnly;
+        this.interactive = !readOnly && Services.MapData.isProviderEnabled(providerId);
+        this.referenceLocation = referenceLocation;
 
         this.attributes = Services.MapData.resolveMapAttributes(mapFeature, providerId);
         this.featureId = mapFeature.getFeatureId();
@@ -92,7 +93,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     protected void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        if (!isWaypointEntry() && interactive) {
+        if (interactive) {
             handleCursor(guiGraphics);
         }
 
@@ -161,7 +162,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
     @Override
     public boolean mouseClicked(MouseButtonEvent event, boolean isDoubleClick) {
-        if (isWaypointEntry() || !interactive) return false;
+        if (!interactive) return false;
 
         if (!isMouseOver(event.x(), event.y())) return false;
         if (event.button() == InputConstants.MOUSE_BUTTON_LEFT && mapFeature instanceof MapLocation mapLocation) {
@@ -187,22 +188,15 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
         return Collections.unmodifiableList(this.generatedTooltip);
     }
 
-    private boolean isWaypointEntry() {
-        return waypointParent != null;
-    }
-
     private Component getSecondLine() {
-        if (isWaypointEntry() && mapFeature instanceof MapLocation mapLocation) {
+        if (referenceLocation != null && mapFeature instanceof MapLocation mapLocation) {
             Location location = mapLocation.getLocation();
 
             return Component.literal(location.asChatCoordinates())
                     .withStyle(ChatFormatting.GRAY)
                     .append(Component.literal(" (%dm)"
-                                    .formatted(Math.round(Math.sqrt(waypointParent
-                                            .creationScreen
-                                            .getWaypoint()
-                                            .getLocation()
-                                            .distanceToSqr(location.toPosition())))))
+                                    .formatted(Math.round(
+                                            Math.sqrt(referenceLocation.distanceToSqr(location.toPosition())))))
                             .withStyle(ChatFormatting.DARK_GRAY));
         }
 
@@ -224,7 +218,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
 
         this.generatedTooltip.add(Component.literal(featureId).withStyle(ChatFormatting.GOLD));
 
-        if (!isWaypointEntry()) {
+        if (!readOnly) {
             if (mapFeature instanceof MapLocation) {
                 addLine(
                         Component.translatable("screens.wynntils.map.managers.providerManager.entryWidgets.type"),
@@ -269,7 +263,7 @@ public class FeatureEntryWidget extends AbstractWidget implements TooltipProvide
             }
         }
 
-        if (isWaypointEntry()) return;
+        if (readOnly) return;
 
         if (mapFeature instanceof MapLocation mapLocation) {
             Location location = mapLocation.getLocation();

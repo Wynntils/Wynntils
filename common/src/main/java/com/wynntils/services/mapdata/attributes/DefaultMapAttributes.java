@@ -10,6 +10,7 @@ import com.wynntils.services.mapdata.attributes.type.MapAttributes;
 import com.wynntils.services.mapdata.attributes.type.MapDecoration;
 import com.wynntils.services.mapdata.attributes.type.MapMarkerOptions;
 import com.wynntils.services.mapdata.attributes.type.MapVisibility;
+import com.wynntils.services.mapdata.paths.PathCategoriesProvider;
 import com.wynntils.services.mapdata.type.MapIcon;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -112,5 +113,40 @@ public final class DefaultMapAttributes implements MapAttributes {
     @Override
     public Optional<Float> getBorderWidth() {
         return Optional.of(1.0f);
+    }
+
+    @Override
+    public Optional<String> getPathIconId() {
+        return Optional.of(PathCategoriesProvider.ARROW_ICON);
+    }
+
+    @Override
+    public Optional<CustomColor> getPathFillColor() {
+        return Optional.of(CommonColors.LIGHT_BLUE);
+    }
+
+    @Override
+    public Optional<CustomColor> getPathBorderColor() {
+        return Optional.of(CommonColors.BLACK);
+    }
+
+    @Override
+    public Optional<Float> getPathBorderWidth() {
+        return Optional.of(1f);
+    }
+
+    @Override
+    public Optional<Float> getPathWidth() {
+        return Optional.of(4f);
+    }
+
+    @Override
+    public Optional<CustomColor> getPathColor() {
+        return Optional.of(CommonColors.LIGHT_BLUE);
+    }
+
+    @Override
+    public Optional<Boolean> getHasPath() {
+        return Optional.of(true);
     }
 }

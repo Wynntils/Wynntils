@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.overlays;
@@ -19,7 +19,7 @@ public class TowerVolleyTimerOverlay extends TextOverlay {
             "{if_string(gte(volley_timer; 0); concat(\"Volley: : \"; string(volley_timer:1); \"s\"); \"\")}";
 
     @Persisted
-    private final Config<CustomColor> textColor = new Config<>(CommonColors.MAGENTA);
+    private final Config<CustomColor> textColor = new Config<>(CommonColors.MAGENTA).withShaderColors();
 
     public TowerVolleyTimerOverlay() {
         super(

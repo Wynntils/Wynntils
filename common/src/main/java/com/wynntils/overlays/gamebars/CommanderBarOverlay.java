@@ -24,7 +24,7 @@ import net.minecraft.client.gui.GuiGraphics;
 
 public class CommanderBarOverlay extends BaseBarOverlay {
     @Persisted
-    private final Config<CustomColor> activatedColor = new Config<>(CommonColors.GREEN);
+    private final Config<CustomColor> activatedColor = new Config<>(CommonColors.GREEN).withShaderColors();
 
     public CommanderBarOverlay() {
         super(

@@ -28,6 +28,7 @@ import com.wynntils.core.persisted.upfixers.config.HorseMountFeatureToMountKeybi
 import com.wynntils.core.persisted.upfixers.config.ItemHighlightFeatureCosmeticToStoreUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ItemStatInfoConfigRenameUpfixer;
 import com.wynntils.core.persisted.upfixers.config.ItemStatInfoRollStyleUpfixer;
+import com.wynntils.core.persisted.upfixers.config.LootrunPathSettingsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MaxItensityToMaxIntensityUpfixer;
 import com.wynntils.core.persisted.upfixers.config.MobTotemTimerOverlayFeatureToBonusTotemTimerOverlayFeature;
@@ -118,6 +119,7 @@ public class UpfixerManager extends Manager {
         registerConfigUpfixer(new WorldMarkersRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersWaypointConfigsRenameUpfixer());
         registerConfigUpfixer(new WorldMarkersFeatureRenamesUpfixer());
+        registerConfigUpfixer(new LootrunPathSettingsUpfixer());
 
         // Register storage upfixers here, in order of run priority
         registerStorageUpfixer(new BankToAccountBankUpfixer());
