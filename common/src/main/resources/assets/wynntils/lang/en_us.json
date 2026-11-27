@@ -813,6 +813,7 @@
   "feature.wynntils.hades.shareWithGuild.name": "Share Info With Guild",
   "feature.wynntils.hades.shareWithParty.description": "Do you want your data (location, health, mana) to be shared with party members?",
   "feature.wynntils.hades.shareWithParty.name": "Share Info With Party",
+  "feature.wynntils.healthPotionBlocker.aboveThreshold": "Already above %s%% of your max health!",
   "feature.wynntils.healthPotionBlocker.description": "Blocks the use of health potions while above a certain health threshold.",
   "feature.wynntils.healthPotionBlocker.healthFull": "Already at full health!",
   "feature.wynntils.healthPotionBlocker.name": "Health Potion Blocker",

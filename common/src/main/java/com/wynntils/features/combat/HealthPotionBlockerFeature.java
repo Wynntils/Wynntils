@@ -19,6 +19,7 @@ import com.wynntils.models.elements.type.PotionType;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
 import com.wynntils.models.items.items.game.MultiHealthPotionItem;
 import com.wynntils.models.items.items.game.PotionItem;
+import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Optional;
@@ -77,17 +78,26 @@ public class HealthPotionBlockerFeature extends Feature {
         }
 
         CappedValue health = healthOpt.get();
-        int percentage = health.getPercentageInt();
+        StatusEffect overHealth = Models.StatusEffect.searchStatusEffectByName("Extra Health");
 
-        if (percentage >= threshold.get()) {
-            MutableComponent response = (percentage < 100)
-                    ? Component.translatable("feature.wynntils.healthPotionBlocker.thresholdReached", percentage)
-                    : Component.translatable("feature.wynntils.healthPotionBlocker.healthFull");
-            Managers.Notification.queueMessage(response.withStyle(ChatFormatting.RED));
-            return true;
+        int percentage = overHealth != null
+                ? (int) Math.round(((health.current() - overHealth.getModifierValue()) / health.max()) * 100)
+                : health.getPercentageInt();
+
+        int limit = threshold.get();
+        if (percentage < limit) return false;
+
+        MutableComponent response;
+        if (overHealth != null) {
+            response = Component.translatable("feature.wynntils.healthPotionBlocker.aboveThreshold", limit);
+        } else if (percentage < 100) {
+            response = Component.translatable("feature.wynntils.healthPotionBlocker.thresholdReached", percentage);
+        } else {
+            response = Component.translatable("feature.wynntils.healthPotionBlocker.healthFull");
         }
 
-        return false;
+        Managers.Notification.queueMessage(response.withStyle(ChatFormatting.RED));
+        return true;
     }
 
     private boolean isHealingPotion(ItemStack itemStack) {
