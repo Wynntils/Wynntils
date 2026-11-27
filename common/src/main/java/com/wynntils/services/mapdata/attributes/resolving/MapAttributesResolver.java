@@ -23,13 +23,19 @@ import java.util.stream.Stream;
  */
 public final class MapAttributesResolver {
     private final MapFeature feature;
+    private final String includedProviderId;
 
-    private MapAttributesResolver(MapFeature feature) {
+    private MapAttributesResolver(MapFeature feature, String includedProviderId) {
         this.feature = feature;
+        this.includedProviderId = includedProviderId;
     }
 
     public static ResolvedMapAttributes resolve(MapFeature feature) {
-        MapAttributesResolver resolver = new MapAttributesResolver(feature);
+        return resolve(feature, null);
+    }
+
+    public static ResolvedMapAttributes resolve(MapFeature feature, String includedProviderId) {
+        MapAttributesResolver resolver = new MapAttributesResolver(feature, includedProviderId);
 
         return new ResolvedMapAttributes(
                 resolver.getAttribute(MapAttributes::getPriority),
@@ -45,8 +51,8 @@ public final class MapAttributesResolver {
                 resolver.getAttribute(MapAttributes::getIconDecoration),
                 resolver.getAttribute(MapAttributes::getHasMarker),
                 resolver.getResolvedMarkerOptions(MapAttributes::getMarkerOptions),
-                resolver.getAttribute(MapAttributes::getFillColor),
-                resolver.getAttribute(MapAttributes::getBorderColor),
+                resolver.getAttribute(MapAttributes::getFillColors),
+                resolver.getAttribute(MapAttributes::getBorderColors),
                 resolver.getAttribute(MapAttributes::getBorderWidth));
     }
 
@@ -162,7 +168,7 @@ public final class MapAttributesResolver {
     private <T> Stream<T> getAttributesForCategoryId(
             Function<MapAttributes, Optional<T>> attributeGetter, String categoryId) {
         // Find all provided MapAttributes for this category level
-        Stream<MapAttributes> allAttributes = Services.MapData.getCategoryDefinitions(categoryId)
+        Stream<MapAttributes> allAttributes = Services.MapData.getCategoryDefinitions(categoryId, includedProviderId)
                 .map(MapCategory::getAttributes)
                 .filter(Optional::isPresent)
                 .map(Optional::get);
