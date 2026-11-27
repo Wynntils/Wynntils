@@ -37,8 +37,8 @@ public class RecipeInfoRegistry {
         registry.registerDownload(UrlId.DATA_STATIC_RECIPES).handleJsonObject(this::handleRecipes);
     }
 
-    public RecipeInfo getFromRecipeName(String toolName) {
-        return recipeInfoLookup.get(toolName);
+    public RecipeInfo getFromRecipeName(String recipeName) {
+        return recipeInfoLookup.get(recipeName);
     }
 
     public Stream<RecipeInfo> getRecipeInfoStream() {
@@ -115,8 +115,23 @@ public class RecipeInfoRegistry {
                 durabilityOrDuration = RangedValue.of(durabilityMin, durabilityMax);
             }
 
+            Map<String, Integer> materialAmounts = new HashMap<>();
+            for (JsonElement materialElement : json.getAsJsonArray("materials")) {
+                JsonObject material = materialElement.getAsJsonObject();
+                materialAmounts.put(
+                        material.get("item").getAsString(),
+                        material.get("amount").getAsInt());
+            }
+
             return new RecipeInfo(
-                    name, durabilityOrDuration, healthOrDamage, level, professionType, craftedItemType, xp);
+                    name,
+                    durabilityOrDuration,
+                    healthOrDamage,
+                    level,
+                    materialAmounts,
+                    professionType,
+                    craftedItemType,
+                    xp);
         }
     }
 }

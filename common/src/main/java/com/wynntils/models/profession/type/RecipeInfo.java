@@ -5,12 +5,14 @@
 package com.wynntils.models.profession.type;
 
 import com.wynntils.utils.type.RangedValue;
+import java.util.Map;
 
 public record RecipeInfo(
         String recipeName,
         RangedValue durabilityOrDuration,
         RangedValue healthOrDamage,
         RangedValue level,
+        Map<String, Integer> recipe,
         ProfessionType professionType,
         CraftedItemType craftedItemType,
         int xp) {}
