@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2024-2025.
+ * Copyright © Wynntils 2024-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.chat;
@@ -22,5 +22,6 @@ public class RemoveWynncraftChatWrapFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onChatReceived(ChatMessageEvent.Edit event) {
         event.setMessage(StyledTextUtils.unwrap(event.getMessage()));
+        event.disableRewrap();
     }
 }
