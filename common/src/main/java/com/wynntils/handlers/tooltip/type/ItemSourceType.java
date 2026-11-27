@@ -10,5 +10,7 @@ public enum ItemSourceType {
     // Fake items that have been decoded
     ENCODED,
     // Items displayed in the guide screen
-    GUIDE
+    GUIDE,
+    // Items displayed in the crafted preview screen
+    CRAFTED_PREVIEW
 }

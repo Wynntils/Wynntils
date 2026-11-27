@@ -25,6 +25,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.OptionalBoolean;
 import com.wynntils.utils.type.Pair;
+import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -147,6 +148,15 @@ public final class RequirementsLineBuilder {
                 Component.literal(String.valueOf(levelRequirement)).withStyle(CommonStyles.GRAY_LANGUAGE_WYNNCRAFT));
     }
 
+    public static TooltipElement buildLevelRequirementLine(RangedValue levelRequirement) {
+        return buildRequirementLine(
+                "Combat Level",
+                Models.CombatXp.getCombatLevel().current() >= levelRequirement.high()
+                        ? OptionalBoolean.TRUE
+                        : OptionalBoolean.FALSE,
+                Component.literal(levelRequirement.asString()).withStyle(CommonStyles.GRAY_LANGUAGE_WYNNCRAFT));
+    }
+
     public static TooltipElement buildProfessionLevelRequirementLine(
             ProfessionType professionType, int levelRequirement, boolean includeIcon) {
         MutableComponent professionName = Component.empty().withStyle(CommonStyles.WHITE_LANGUAGE_WYNNCRAFT);
@@ -186,7 +196,7 @@ public final class RequirementsLineBuilder {
         return TooltipLine.leftRight(requirementCondition, requirementValue);
     }
 
-    private static List<TooltipElement> buildSkillReqLines(
+    public static List<TooltipElement> buildSkillReqLines(
             List<Pair<Skill, Integer>> skillReqs, GearInstanceRequirements gearInstanceRequirements, GearTier tier) {
         List<TooltipElement> lines = new ArrayList<>();
 

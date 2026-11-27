@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.handlers.tooltip.builders.CraftedConsumableTooltipBuilder;
 import com.wynntils.handlers.tooltip.builders.CraftedGearTooltipBuilder;
+import com.wynntils.handlers.tooltip.builders.CraftedItemRecipeTooltipBuilder;
 import com.wynntils.handlers.tooltip.builders.IdentifiableTooltipBuilder;
 import com.wynntils.handlers.tooltip.builders.MountTooltipBuilder;
 import com.wynntils.handlers.tooltip.type.ItemSourceType;
@@ -19,6 +20,7 @@ import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.MountItem;
 import com.wynntils.models.items.properties.IdentifiableItemProperty;
 import com.wynntils.models.items.properties.PagedItemProperty;
+import com.wynntils.models.profession.type.CraftedItemRecipe;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -57,6 +59,11 @@ public final class TooltipHandler extends Handler {
     public CraftedConsumableTooltipBuilder buildFromItemStack(
             ItemStack itemStack, CraftedConsumableItem craftedConsumableItem) {
         return CraftedConsumableTooltipBuilder.buildFromItemStack(itemStack, craftedConsumableItem);
+    }
+
+    public CraftedItemRecipeTooltipBuilder buildNew(
+            CraftedItemRecipe craftedItemRecipe, ItemSourceType sourceType, String source) {
+        return CraftedItemRecipeTooltipBuilder.buildNewItem(craftedItemRecipe, sourceType, source);
     }
     // endregion
 

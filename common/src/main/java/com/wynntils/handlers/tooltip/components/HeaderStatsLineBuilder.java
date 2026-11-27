@@ -23,6 +23,7 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class HeaderStatsLineBuilder {
@@ -34,8 +35,22 @@ public final class HeaderStatsLineBuilder {
         return buildhighlightStatLine(String.format("%,d", dps), "DPS", tier);
     }
 
+    public static TooltipElement buildDpsLine(double lowRollDps, double highRollDps, GearTier tier) {
+        Component value = Component.literal(
+                String.format("%,d", Math.round(lowRollDps)) + " - " + String.format("%,d", Math.round(highRollDps)));
+        return buildhighlightStatLine(value, "DPS", TooltipBuilder.getDividerColor(tier));
+    }
+
     public static TooltipElement buildHealthLine(int health, GearTier tier) {
         return buildhighlightStatLine(StringUtils.toSignedCommaString(health), "Health", tier);
+    }
+
+    public static TooltipElement buildHealthLine(RangedValue healthRange, GearTier tier) {
+        return buildhighlightStatLine(
+                StringUtils.toSignedCommaString(healthRange.low()) + " - "
+                        + StringUtils.toSignedCommaString(healthRange.high()),
+                "Health",
+                tier);
     }
 
     public static TooltipElement buildhighlightStatLine(String value, String label, GearTier tier) {
@@ -43,10 +58,15 @@ public final class HeaderStatsLineBuilder {
     }
 
     public static TooltipElement buildhighlightStatLine(String value, String label, CustomColor highlightColor) {
+        return buildhighlightStatLine(Component.literal(value), label, highlightColor);
+    }
+
+    private static TooltipElement buildhighlightStatLine(Component value, String label, CustomColor highlightColor) {
         return TooltipLine.left(Component.empty()
-                .append(Component.literal(value)
+                .append(Component.empty()
                         .withStyle(
-                                Style.EMPTY.withFont(CommonFonts.OFFSET_QUAD_12).withColor(highlightColor.asInt())))
+                                Style.EMPTY.withFont(CommonFonts.OFFSET_QUAD_12).withColor(highlightColor.asInt()))
+                        .append(value))
                 .append(Component.literal(" " + label).withStyle(CommonStyles.WHITE_LANGUAGE_WYNNCRAFT)));
     }
 
@@ -74,21 +94,46 @@ public final class HeaderStatsLineBuilder {
     }
 
     public static TooltipGrid buildDamageGrid(List<Pair<DamageType, RangedValue>> damages) {
+        return buildFormattedDamageGrid(damages.stream()
+                .map(damage -> Pair.<DamageType, Component>of(
+                        damage.a(), Component.literal(damage.b().asString())))
+                .toList());
+    }
+
+    public static TooltipGrid buildDamageRangesGrid(List<Pair<DamageType, List<RangedValue>>> damages) {
+        return buildFormattedDamageGrid(damages.stream()
+                .map(damage -> Pair.of(damage.a(), formatDamageRanges(damage.b())))
+                .toList());
+    }
+
+    private static Component formatDamageRanges(List<RangedValue> ranges) {
+        MutableComponent value = Component.empty();
+        for (int i = 0; i < ranges.size(); i++) {
+            if (i > 0) {
+                value.append(Component.literal(" - "));
+            }
+
+            value.append(ranges.get(i).asString());
+        }
+        return value;
+    }
+
+    private static TooltipGrid buildFormattedDamageGrid(List<Pair<DamageType, Component>> damages) {
         TooltipGrid.Builder grid = TooltipGrid.builder(DAMAGE_GRID_COLUMNS)
                 .spacing(Component.literal(" ")
                         .withStyle(Style.EMPTY.withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)));
 
-        for (Pair<DamageType, RangedValue> damage : damages) {
+        for (Pair<DamageType, Component> damage : damages) {
             Component cell = Component.empty()
                     .append(Component.literal(paddedAttributeSprite(damage.a().getTooltipSprite()))
                             .withStyle(Style.EMPTY
                                     .withFont(CommonFonts.TOOLTIP_ATTRIBUTE_SPRITE_FONT)
                                     .withoutShadow()))
-                    .append(Component.literal(
-                                    " " + damage.b().low() + "-" + damage.b().high())
+                    .append(Component.literal(" ")
                             .withStyle(Style.EMPTY
                                     .withFont(CommonFonts.WYNNTILS_LANGUAGE_WYNNCRAFT_FONT)
-                                    .withColor(ChatFormatting.GRAY)));
+                                    .withColor(ChatFormatting.GRAY))
+                            .append(damage.b()));
 
             grid.add(cell, TooltipAlignment.LEFT);
         }

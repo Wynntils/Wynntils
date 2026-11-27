@@ -5,6 +5,7 @@
 package com.wynntils.models.wynnitem.type;
 
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.profession.type.CraftedItemType;
 import java.util.Locale;
 
 public record ItemEmblem(ItemEmblemShape itemEmblemShape, int variant) {
@@ -30,6 +31,22 @@ public record ItemEmblem(ItemEmblemShape itemEmblemShape, int variant) {
             itemEmblemShape = ItemEmblemShape.STICKER;
         } else if (gearType.isArmor()) {
             itemEmblemShape = ItemEmblemShape.SHIELD;
+        } else {
+            itemEmblemShape = ItemEmblemShape.DIAMOND;
+        }
+
+        return new ItemEmblem(itemEmblemShape, 4);
+    }
+
+    public static ItemEmblem fromCraftedItemRecipe(CraftedItemType craftedItemType) {
+        ItemEmblemShape itemEmblemShape;
+
+        if (craftedItemType.isAccessory()) {
+            itemEmblemShape = ItemEmblemShape.STICKER;
+        } else if (craftedItemType.isArmor()) {
+            itemEmblemShape = ItemEmblemShape.SHIELD;
+        } else if (!craftedItemType.isGear()) {
+            itemEmblemShape = ItemEmblemShape.HEXAGON;
         } else {
             itemEmblemShape = ItemEmblemShape.DIAMOND;
         }

@@ -8,11 +8,9 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.DownloadRegistry;
 import com.wynntils.models.ingredients.type.IngredientInfo;
-import com.wynntils.models.ingredients.type.IngredientPosition;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Stream;
 
 public final class IngredientModel extends Model {
@@ -52,20 +50,6 @@ public final class IngredientModel extends Model {
     }
 
     public static int[][] createPositionModifierGrid(IngredientInfo ingredientInfo) {
-        Map<IngredientPosition, Integer> modifiers = ingredientInfo.positionModifiers();
-        int left = modifiers.getOrDefault(IngredientPosition.LEFT, 0);
-        int right = modifiers.getOrDefault(IngredientPosition.RIGHT, 0);
-        int above = modifiers.getOrDefault(IngredientPosition.ABOVE, 0);
-        int under = modifiers.getOrDefault(IngredientPosition.UNDER, 0);
-        int touching = modifiers.getOrDefault(IngredientPosition.TOUCHING, 0);
-        int notTouching = modifiers.getOrDefault(IngredientPosition.NOT_TOUCHING, 0);
-
-        return new int[][] {
-            {notTouching, above + notTouching, notTouching},
-            {notTouching, above + touching, notTouching},
-            {left + touching, 0, right + touching},
-            {notTouching, under + touching, notTouching},
-            {notTouching, under + notTouching, notTouching}
-        };
+        return Models.Crafting.createPositionModifierGrid(ingredientInfo.positionModifiers());
     }
 }
