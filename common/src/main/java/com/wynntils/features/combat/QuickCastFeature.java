@@ -50,16 +50,16 @@ public class QuickCastFeature extends Feature {
             List.of(CombatClickType.PRIMARY, CombatClickType.PRIMARY, CombatClickType.SECONDARY);
 
     @RegisterKeyBind
-    private final KeyBind castFirstSpell = KeyBindDefinition.CAST_FIRST_SPELL.create(() -> {});
+    private final KeyBind castFirstSpell = KeyBindDefinition.CAST_FIRST_SPELL.create();
 
     @RegisterKeyBind
-    private final KeyBind castSecondSpell = KeyBindDefinition.CAST_SECOND_SPELL.create(() -> {});
+    private final KeyBind castSecondSpell = KeyBindDefinition.CAST_SECOND_SPELL.create();
 
     @RegisterKeyBind
-    private final KeyBind castThirdSpell = KeyBindDefinition.CAST_THIRD_SPELL.create(() -> {});
+    private final KeyBind castThirdSpell = KeyBindDefinition.CAST_THIRD_SPELL.create();
 
     @RegisterKeyBind
-    private final KeyBind castFourthSpell = KeyBindDefinition.CAST_FOURTH_SPELL.create(() -> {});
+    private final KeyBind castFourthSpell = KeyBindDefinition.CAST_FOURTH_SPELL.create();
 
     @RegisterKeyBind
     private final KeyBind castMeleeAttack = KeyBindDefinition.CAST_MELEE_ATTACK.create(() -> {});
@@ -320,8 +320,9 @@ public class QuickCastFeature extends Feature {
 
     private void refreshInputSelectionState() {
         for (int i = 0; i < spellBindings.length; i++) {
-            boolean isDown = spellBindings[i].keyBind().getKeyMapping().isDown();
-            boolean justPressed = isDown && !spellKeysWereDown[i];
+            KeyBind keyBind = spellBindings[i].keyBind();
+            boolean isDown = keyBind.getKeyMapping().isDown();
+            boolean justPressed = keyBind.consumePress();
             spellKeysJustPressed[i] = justPressed;
 
             if (justPressed) {
@@ -368,6 +369,10 @@ public class QuickCastFeature extends Feature {
     }
 
     private void clearInputSelectionState() {
+        // Inputs recorded before a reset must not become a new pending spell.
+        for (SpellBinding spellBinding : spellBindings) {
+            spellBinding.keyBind().resetPress();
+        }
         Arrays.fill(spellKeysWereDown, false);
         Arrays.fill(spellKeysJustPressed, false);
         Arrays.fill(spellPressOrders, 0L);

@@ -26,6 +26,11 @@ public record KeyBindDefinition(
         return Collections.unmodifiableList(DEFINITIONS);
     }
 
+    /** Creates a binding whose presses are consumed directly instead of through a callback. */
+    public KeyBind create() {
+        return Managers.KeyBind.createKeyBind(this, null, null);
+    }
+
     public KeyBind create(Runnable onPress) {
         return Managers.KeyBind.createKeyBind(this, onPress, null);
     }

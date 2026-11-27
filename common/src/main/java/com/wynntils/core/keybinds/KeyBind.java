@@ -14,12 +14,13 @@ public class KeyBind {
     private final Runnable onPress;
     private final Consumer<Slot> onInventoryPress;
 
-    private final KeyMapping keyMapping;
-
-    private boolean isPressed = false;
+    private final WynntilsKeyMapping keyMapping;
 
     public KeyBind(
-            KeyBindDefinition definition, KeyMapping keyMapping, Runnable onPress, Consumer<Slot> onInventoryPress) {
+            KeyBindDefinition definition,
+            WynntilsKeyMapping keyMapping,
+            Runnable onPress,
+            Consumer<Slot> onInventoryPress) {
         this.definition = definition;
         this.keyMapping = keyMapping;
         this.onPress = onPress;
@@ -38,12 +39,21 @@ public class KeyBind {
         return definition.firstPress();
     }
 
-    public boolean isPressed() {
-        return isPressed;
+    public boolean consumePress() {
+        return keyMapping.consumePress();
     }
 
-    public void setIsPressed(boolean pressed) {
-        this.isPressed = pressed;
+    public void resetPress() {
+        keyMapping.resetPress();
+    }
+
+    void trigger() {
+        if (onPress == null) return;
+
+        boolean justPressed = consumePress();
+        if (onlyFirstPress() ? justPressed : justPressed || keyMapping.isDown()) {
+            onPress();
+        }
     }
 
     public void onPress() {
