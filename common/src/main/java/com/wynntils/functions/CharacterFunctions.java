@@ -15,6 +15,7 @@ import com.wynntils.models.abilities.type.ShamanMaskType;
 import com.wynntils.models.character.type.VehicleType;
 import com.wynntils.models.characterstats.type.PowderSpecialInfo;
 import com.wynntils.models.objectives.WynnObjective;
+import com.wynntils.models.players.type.wynnplayer.WynnPlayerInfo;
 import com.wynntils.services.leaderboard.type.LeaderboardType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -481,7 +482,11 @@ public class CharacterFunctions {
 
             if (leaderboardType == null) return 0;
 
-            return Models.Account.getPlayerInfo().leaderboardPlacements().getOrDefault(leaderboardType, 0);
+            WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
+
+            if (playerInfo == null) return 0;
+
+            return playerInfo.leaderboardPlacements().getOrDefault(leaderboardType, 0);
         }
 
         @Override
