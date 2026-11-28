@@ -210,6 +210,7 @@ public class OverlayButton extends WynntilsButton {
             editInput.visible = false;
 
             if (overlay instanceof CustomNameProperty customNameOverlay) {
+                settingsScreen.beginSettingEdit(overlay, customNameOverlay.getCustomName());
                 customNameOverlay.setCustomName(editInput.getTextBoxInput());
 
                 if (editInput.getTextBoxInput().isEmpty()) {
