@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2023-2025.
+ * Copyright © Wynntils 2023-2026.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
@@ -125,6 +125,9 @@ public class CombatXpFunctions {
             if (!Models.CombatXp.getCombatLevel().isAtCap()) return 0L;
 
             WynnPlayerInfo playerInfo = Models.Account.getPlayerInfo();
+
+            if (playerInfo == null) return 0L;
+
             CharacterData characterData;
             // Use the id we parsed to find the active character instead of what the API has as the active
             // character as that will be outdated until the next call to the API
